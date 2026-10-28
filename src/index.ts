@@ -9,3 +9,5 @@ export { createFilterModel, filterExample } from './models/filter.js';
 export type { FilterModel, FilterParameters, FilterState, FilterEvent } from './models/filter.js';
 export { createSeededScanModel, createUnseededScanModel, seededScanExample, unseededScanExample } from './models/scan.js';
 export type { ScanSeed, ScanParameters, ScanArguments, ScanState, ScanEvent, ScanModel } from './models/scan.js';
+export { createDebounceTimeModel, debounceTimeExample, runDebounceTimeTrace } from './models/debounceTime.js';
+export type { DebounceTimeParameters, DebounceTimeState, DebounceTimeEvent, DebounceTimeModel } from './models/debounceTime.js';

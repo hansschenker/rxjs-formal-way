@@ -2,21 +2,23 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { createTakeModel, takeExample, createMapModel, mapExample, createFilterModel, filterExample,
   createSeededScanModel, createUnseededScanModel, seededScanExample, unseededScanExample,
+  createDebounceTimeModel, debounceTimeExample, runDebounceTimeTrace,
   toManifest, runTrace, renderTable, renderBdd, renderDiagram, renderObligations, renderBehavior, renderTrace } from '../dist/index.js';
 
-// Canonical examples specify callback outcomes; generation never executes user callbacks.
+// Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
   ['map', createMapModel(), mapExample, 'map-example'],
   ['filter', createFilterModel(), filterExample, 'filter-example'],
   ['scan-seeded', createSeededScanModel(0), seededScanExample, 'scan-seeded-example'],
   ['scan-unseeded', createUnseededScanModel(), unseededScanExample, 'scan-unseeded-example'],
+  ['debounceTime', createDebounceTimeModel(3), debounceTimeExample, 'debounceTime-3-example', runDebounceTimeTrace],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
-for (const [name, model, inputs, executionId] of examples) {
+for (const [name, model, inputs, executionId, traceRunner = runTrace] of examples) {
   const manifest = toManifest(model);
-  const trace = runTrace(model, inputs, { executionId });
+  const trace = traceRunner(model, inputs, { executionId });
   for (const [path, content] of [
     [`generated/${name}.manifest.json`, json(manifest)],
     [`generated/${name}.stt.md`, renderTable(manifest)],

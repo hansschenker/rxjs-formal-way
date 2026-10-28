@@ -1,0 +1,341 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "debounceTime-3",
+    "operator": "debounceTime",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Keep the latest pending value and emit it after silence, or flush it on source completion.",
+    "cardinality": {
+      "signature": "debounceTime(d) : T* -> T*",
+      "conditions": [
+        "Outputs are an ordered subsequence of source values; replacement drops pending values.",
+        "Completion may flush before the deadline. Error and cancellation do not flush.",
+        "No universal minimum output gap is claimed: completion flush is an exception."
+      ]
+    },
+    "scope": {
+      "parameters": "Nonnegative safe-integer dueTime; all clock readings, deadlines and generations remain in the safe-integer domain",
+      "callbacks": "No user callback. Source and observer delivery and teardown are non-reentrant and nonthrowing.",
+      "time": "One externally supplied monotone clock. Scheduling is deferred, even for delay zero. A deadline is not a delivery guarantee; explicit timer.fire events cause work.",
+      "reentrancy": "Atomic external reactions after source subscription setup; equal-time order is supplied explicitly, not inferred from timestamps.",
+      "exclusions": [
+        "Inline zero-delay schedulers such as queueScheduler, clock rollback, fractional/negative/nonfinite durations and unsafe arithmetic.",
+        "Reentrant source/observer/finalizer activity and cancellation inside downstream delivery.",
+        "Exact host timer IDs, wall-clock latency bounds, arbitrary SchedulerLike behavior and synchronous setup finalizer ordering.",
+        "A production timer interpreter or universal equivalence proof."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire the source; the first next, not subscription, schedules a task."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing introduced. Pending values, deadlines and timer identities belong to each result subscription.",
+      "reset": "Fresh bookkeeping per execution; Closed has no legal events. Payloads are retained by reference, not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current execution"
+        },
+        {
+          "id": "debounce-timer",
+          "kind": "timer",
+          "owner": "current execution; generation identifies each scheduled invocation"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "scheduled",
+      "actionSemantics": "An external driver supplies clock readings and timer firings. A rearm consumes the old invocation and schedules a new generation, potentially on the same RxJS Action object. Cancel-timer releases that logical task even when executing. For post-setup source error/cancel, source release precedes task release.",
+      "cancellationCheckpoints": [
+        "Between source/timer reactions; no completion or pending-value flush.",
+        "No external event is implicitly prioritized when timestamps tie."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a fresh downstream execution subscribes"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source delivers a value at the supplied clock time"
+      },
+      {
+        "type": "timer.fire",
+        "origin": "timer",
+        "category": "time",
+        "description": "the currently scheduled invocation fires at the supplied clock time"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source completes"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source errors"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream unsubscribes"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "schedule",
+      "cancel-timer",
+      "notify",
+      "unsubscribe"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not connected",
+        "terminal": false
+      },
+      {
+        "id": "Idle",
+        "description": "source connected, no pending value or timer",
+        "terminal": false
+      },
+      {
+        "id": "Pending",
+        "description": "latest value and silence deadline plus a scheduled invocation",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "complete, errored or cancelled, no owned live resources",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/debounceTime.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned debounce scheduling, terminal cleanup and virtual same-frame ordering"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned debounce scheduling, terminal cleanup and virtual same-frame ordering"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned debounce scheduling, terminal cleanup and virtual same-frame ordering"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/scheduler/VirtualTimeScheduler.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned debounce scheduling, terminal cleanup and virtual same-frame ordering"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/m02c-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/m02c-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/M02-C.md"
+    }
+  },
+  "parameters": {
+    "dueTime": 3
+  },
+  "rules": [
+    {
+      "id": "DEBOUNCE-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "fresh execution and valid clock",
+      "to": "Idle",
+      "actions": [
+        "subscribe to the source; schedule no timer"
+      ],
+      "nextState": "idle with no pending value and timer generation zero",
+      "obligations": [
+        "M02C-RX-01"
+      ],
+      "explanation": "Subscribing connects to the source without scheduling a timer or emitting a value. Constructing the pipeline alone does not connect it."
+    },
+    {
+      "id": "DEBOUNCE-START",
+      "from": "Idle",
+      "event": "source.next",
+      "guard": "valid clock/deadline and a fresh timer identity is available",
+      "to": "Pending",
+      "actions": [
+        "schedule a timer invocation after dueTime; emit no value"
+      ],
+      "nextState": "pending with the incoming value, its time, deadline and scheduled wake-up",
+      "obligations": [
+        "M02C-RX-02",
+        "M02C-RX-10"
+      ],
+      "explanation": "When a value arrives with no timer active, remember that value and its arrival time and schedule a wake-up after dueTime. The value is not emitted yet, including at dueTime zero under this deferred-scheduler profile."
+    },
+    {
+      "id": "DEBOUNCE-REPLACE",
+      "from": "Pending",
+      "event": "source.next",
+      "guard": "valid nondecreasing clock and representable deadline",
+      "to": "Pending",
+      "actions": [],
+      "nextState": "pending with the latest value and deadline, retaining the already scheduled invocation",
+      "obligations": [
+        "M02C-RX-03",
+        "M02C-RX-04",
+        "M02C-RX-15"
+      ],
+      "explanation": "While a timer is active, another value replaces the pending value and moves the silence deadline to its arrival time plus dueTime. RxJS 7.8.2 does not immediately cancel or reschedule the active task on this path."
+    },
+    {
+      "id": "DEBOUNCE-REARM",
+      "from": "Pending",
+      "event": "timer.fire",
+      "guard": "matching due invocation; now < latest deadline; fresh identity available",
+      "to": "Pending",
+      "actions": [
+        "schedule a new invocation for deadline minus now; emit no value"
+      ],
+      "nextState": "pending with the same value and deadline and a new scheduled-invocation generation",
+      "obligations": [
+        "M02C-RX-03",
+        "M02C-RX-04"
+      ],
+      "explanation": "When the scheduled task wakes before the latest silence deadline, it schedules another wake-up for the remaining duration. The pending value is retained and nothing is emitted."
+    },
+    {
+      "id": "DEBOUNCE-EMIT",
+      "from": "Pending",
+      "event": "timer.fire",
+      "guard": "matching due invocation; now >= latest deadline",
+      "to": "Idle",
+      "actions": [
+        "release the active timer task",
+        "emit the pending value unchanged"
+      ],
+      "nextState": "idle with no pending value or active timer",
+      "obligations": [
+        "M02C-RX-02",
+        "M02C-RX-12",
+        "M02C-RX-15"
+      ],
+      "explanation": "When the current task wakes at or after the latest deadline, release the task and emit the pending value unchanged. Return to idle without completing the result. A late wake-up emits when it runs, not retroactively at the deadline."
+    },
+    {
+      "id": "DEBOUNCE-COMPLETE-IDLE",
+      "from": "Idle",
+      "event": "source.complete",
+      "guard": "valid nondecreasing clock",
+      "to": "Closed",
+      "actions": [
+        "complete downstream",
+        "release the source subscription"
+      ],
+      "nextState": "closed by complete, with no pending value or timer",
+      "obligations": [
+        "M02C-RX-06"
+      ],
+      "explanation": "If the source completes while idle, forward completion and release upstream without emitting another value."
+    },
+    {
+      "id": "DEBOUNCE-ERROR-IDLE",
+      "from": "Idle",
+      "event": "source.error",
+      "guard": "valid nondecreasing clock",
+      "to": "Closed",
+      "actions": [
+        "forward the source error unchanged",
+        "release the source subscription"
+      ],
+      "nextState": "closed by error, with no pending value or timer",
+      "obligations": [
+        "M02C-RX-07"
+      ],
+      "explanation": "A source error is forwarded unchanged and upstream is released. No completion follows the error."
+    },
+    {
+      "id": "DEBOUNCE-CANCEL-IDLE",
+      "from": "Idle",
+      "event": "cancel",
+      "guard": "valid nondecreasing clock",
+      "to": "Closed",
+      "actions": [
+        "release the source subscription"
+      ],
+      "nextState": "closed by cancel, with no pending value or timer",
+      "obligations": [
+        "M02C-RX-08"
+      ],
+      "explanation": "Downstream cancellation releases upstream without sending completion."
+    },
+    {
+      "id": "DEBOUNCE-COMPLETE-PENDING",
+      "from": "Pending",
+      "event": "source.complete",
+      "guard": "valid nondecreasing clock",
+      "to": "Closed",
+      "actions": [
+        "release the active timer task",
+        "emit the pending value unchanged",
+        "complete downstream",
+        "release the source subscription"
+      ],
+      "nextState": "closed by complete, with no pending value or timer",
+      "obligations": [
+        "M02C-RX-05"
+      ],
+      "explanation": "If the source completes with a value pending, release its timer and emit that value immediately, then complete and release upstream. Completion can flush before the silence deadline."
+    },
+    {
+      "id": "DEBOUNCE-ERROR-PENDING",
+      "from": "Pending",
+      "event": "source.error",
+      "guard": "valid nondecreasing clock",
+      "to": "Closed",
+      "actions": [
+        "forward the source error unchanged",
+        "release the source subscription",
+        "release the active timer task and discard the pending value"
+      ],
+      "nextState": "closed by error, with no pending value or timer",
+      "obligations": [
+        "M02C-RX-07"
+      ],
+      "explanation": "A source error is forwarded unchanged and upstream is released. Any pending value is discarded and its timer is released. No completion follows the error."
+    },
+    {
+      "id": "DEBOUNCE-CANCEL-PENDING",
+      "from": "Pending",
+      "event": "cancel",
+      "guard": "valid nondecreasing clock",
+      "to": "Closed",
+      "actions": [
+        "release the source subscription",
+        "release the active timer task and discard the pending value"
+      ],
+      "nextState": "closed by cancel, with no pending value or timer",
+      "obligations": [
+        "M02C-RX-08"
+      ],
+      "explanation": "Downstream cancellation releases upstream without sending completion. It also releases the timer and discards the pending value without emitting it."
+    }
+  ]
+}

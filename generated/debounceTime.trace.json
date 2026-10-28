@@ -1,0 +1,319 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "now": 8,
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "debounceTime-3",
+      "executionId": "debounceTime-3-example",
+      "ruleId": "DEBOUNCE-INIT",
+      "event": {
+        "type": "subscribe",
+        "now": 0
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Idle",
+        "now": 0,
+        "nextTimer": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "debounceTime-3",
+      "executionId": "debounceTime-3-example",
+      "ruleId": "DEBOUNCE-START",
+      "event": {
+        "type": "source.next",
+        "now": 1,
+        "value": "a"
+      },
+      "before": {
+        "phase": "Idle",
+        "now": 0,
+        "nextTimer": 0
+      },
+      "after": {
+        "phase": "Pending",
+        "now": 1,
+        "nextTimer": 1,
+        "value": "a",
+        "lastTime": 1,
+        "deadline": 4,
+        "scheduledFor": 4,
+        "timer": {
+          "id": "debounce-timer",
+          "generation": 0
+        }
+      },
+      "actions": [
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "debounce-timer",
+            "generation": 0
+          },
+          "delay": 3
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 3,
+      "modelId": "debounceTime-3",
+      "executionId": "debounceTime-3-example",
+      "ruleId": "DEBOUNCE-REPLACE",
+      "event": {
+        "type": "source.next",
+        "now": 3,
+        "value": "b"
+      },
+      "before": {
+        "phase": "Pending",
+        "now": 1,
+        "nextTimer": 1,
+        "value": "a",
+        "lastTime": 1,
+        "deadline": 4,
+        "scheduledFor": 4,
+        "timer": {
+          "id": "debounce-timer",
+          "generation": 0
+        }
+      },
+      "after": {
+        "phase": "Pending",
+        "now": 3,
+        "nextTimer": 1,
+        "value": "b",
+        "lastTime": 3,
+        "deadline": 6,
+        "scheduledFor": 4,
+        "timer": {
+          "id": "debounce-timer",
+          "generation": 0
+        }
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 4,
+      "modelId": "debounceTime-3",
+      "executionId": "debounceTime-3-example",
+      "ruleId": "DEBOUNCE-REARM",
+      "event": {
+        "type": "timer.fire",
+        "now": 4,
+        "resource": {
+          "id": "debounce-timer",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Pending",
+        "now": 3,
+        "nextTimer": 1,
+        "value": "b",
+        "lastTime": 3,
+        "deadline": 6,
+        "scheduledFor": 4,
+        "timer": {
+          "id": "debounce-timer",
+          "generation": 0
+        }
+      },
+      "after": {
+        "phase": "Pending",
+        "now": 4,
+        "nextTimer": 2,
+        "value": "b",
+        "lastTime": 3,
+        "deadline": 6,
+        "scheduledFor": 6,
+        "timer": {
+          "id": "debounce-timer",
+          "generation": 1
+        }
+      },
+      "actions": [
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "debounce-timer",
+            "generation": 1
+          },
+          "delay": 2
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 6,
+      "modelId": "debounceTime-3",
+      "executionId": "debounceTime-3-example",
+      "ruleId": "DEBOUNCE-EMIT",
+      "event": {
+        "type": "timer.fire",
+        "now": 6,
+        "resource": {
+          "id": "debounce-timer",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Pending",
+        "now": 4,
+        "nextTimer": 2,
+        "value": "b",
+        "lastTime": 3,
+        "deadline": 6,
+        "scheduledFor": 6,
+        "timer": {
+          "id": "debounce-timer",
+          "generation": 1
+        }
+      },
+      "after": {
+        "phase": "Idle",
+        "now": 6,
+        "nextTimer": 2
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "debounce-timer",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 7,
+      "modelId": "debounceTime-3",
+      "executionId": "debounceTime-3-example",
+      "ruleId": "DEBOUNCE-START",
+      "event": {
+        "type": "source.next",
+        "now": 7,
+        "value": "c"
+      },
+      "before": {
+        "phase": "Idle",
+        "now": 6,
+        "nextTimer": 2
+      },
+      "after": {
+        "phase": "Pending",
+        "now": 7,
+        "nextTimer": 3,
+        "value": "c",
+        "lastTime": 7,
+        "deadline": 10,
+        "scheduledFor": 10,
+        "timer": {
+          "id": "debounce-timer",
+          "generation": 2
+        }
+      },
+      "actions": [
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "debounce-timer",
+            "generation": 2
+          },
+          "delay": 3
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 8,
+      "modelId": "debounceTime-3",
+      "executionId": "debounceTime-3-example",
+      "ruleId": "DEBOUNCE-COMPLETE-PENDING",
+      "event": {
+        "type": "source.complete",
+        "now": 8
+      },
+      "before": {
+        "phase": "Pending",
+        "now": 7,
+        "nextTimer": 3,
+        "value": "c",
+        "lastTime": 7,
+        "deadline": 10,
+        "scheduledFor": 10,
+        "timer": {
+          "id": "debounce-timer",
+          "generation": 2
+        }
+      },
+      "after": {
+        "phase": "Closed",
+        "now": 8,
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "debounce-timer",
+            "generation": 2
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "c"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

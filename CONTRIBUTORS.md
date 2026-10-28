@@ -25,6 +25,10 @@
 
 - **GPT-6 Astra Pro (OpenAI)** — main contributor to seeded/unseeded scan profiles, typed accumulator/value requests, seed-reference ownership analysis, generated views, model/type/runtime tests and milestone evidence, under Hans Schenker's direction.
 
+## M02-C implementation
+
+- **GPT-6 Astra Pro (OpenAI)** — main contributor to the debounceTime temporal profile, deadline/wake-up distinction, clock-aware traces, scheduler instrumentation, model/type/runtime tests, generated views and checkpoint evidence, under Hans Schenker's direction.
+
 The new commits use `Co-authored-by: GPT-6 Astra Pro <gpt-6-astra-pro@example.invalid>` as an explicit AI-assistance record. This reserved-domain placeholder is not a verified mailbox or GitHub account, and does not promise an entry in GitHub's account-based contributor graph.
 
 ## Source-project contributions
