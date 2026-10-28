@@ -1,0 +1,136 @@
+import type { Action, OperatorModel, Rule, TimedEvent } from '../schema.js';
+import { validateActionWord } from '../runner.js';
+
+export type TakeParameters = Readonly<{ count: number }>;
+export type TakeState =
+  | Readonly<{ phase: 'Unsubscribed' }>
+  | Readonly<{ phase: 'Active'; seen: number }>
+  | Readonly<{ phase: 'Closed'; reason: 'quota' | 'complete' | 'error' | 'cancel' }>;
+export type TakeEvent<T> =
+  | Readonly<{ type: 'subscribe' }>
+  | Readonly<{ type: 'cancel' }>
+  | Readonly<{ type: 'source.complete' }>
+  | Readonly<{ type: 'source.next'; value: T }>
+  | Readonly<{ type: 'source.error'; error: unknown }>;
+export type TakeModel<T> = OperatorModel<TakeParameters, TakeState, TakeEvent<T>, Action<T>>;
+const source = { id: 'source', generation: 0 } as const;
+const release = { type: 'unsubscribe', resource: source } as const;
+const complete = { type: 'notify', target: 'downstream', notification: { kind: 'C' } } as const;
+const closed = (reason: Extract<TakeState, { phase: 'Closed' }>['reason']): TakeState => ({ phase: 'Closed', reason });
+const upstream = 'https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/';
+
+/** Scoped reference model; deliberately not a replacement OperatorFunction. */
+export function createTakeModel<T>(count: number): TakeModel<T> {
+  if (!Number.isSafeInteger(count) || count < 0) throw new RangeError('M01 take requires a nonnegative safe integer count');
+  const rules: readonly Rule<TakeParameters, TakeState, TakeEvent<T>, Action<T>>[] = [
+    {
+      description: { id: 'TAKE-INIT-ZERO', explanation: 'When the requested count is zero, subscribing completes the result immediately. The source is never subscribed to.', from: 'Unsubscribed', event: 'subscribe', guard: 'count = 0', to: 'Closed',
+        actions: ['complete downstream without subscribing to the source'], nextState: 'closed because the quota is zero', obligations: ['M01-RX-01'] },
+      enabled: (_s, _e, p) => p.count === 0,
+      react: () => ({ state: closed('quota'), actions: [complete] }),
+    },
+    {
+      description: { id: 'TAKE-INIT-POSITIVE', explanation: 'When the requested count is positive, subscribing creates a fresh counter and subscribes to the source. Constructing the model or pipeline does not connect the source.', from: 'Unsubscribed', event: 'subscribe', guard: 'count > 0', to: 'Active',
+        actions: ['subscribe to the source'], nextState: 'active with seen = 0', obligations: ['M01-RX-02', 'M01-RX-08'] },
+      enabled: (_s, _e, p) => p.count > 0,
+      react: () => ({ state: { phase: 'Active', seen: 0 }, actions: [{ type: 'subscribe', resource: source }] }),
+    },
+    {
+      description: { id: 'TAKE-NEXT-PASS', explanation: 'Each source value is forwarded unchanged while the accepted-value count remains below the requested limit. The operator remembers how many values it has forwarded.', from: 'Active', event: 'source.next', guard: 'seen + 1 < count', to: 'Active',
+        actions: ['forward the incoming value unchanged'], nextState: 'active with seen increased by one', obligations: ['M01-RX-02', 'M01-RX-09'] },
+      enabled: (s, _e, p) => s.phase === 'Active' && s.seen + 1 < p.count,
+      react: (s, e) => {
+        if (s.phase !== 'Active' || e.type !== 'source.next') throw new Error('invalid pass input');
+        return { state: { phase: 'Active', seen: s.seen + 1 }, actions: [{ type: 'notify', target: 'downstream', notification: { kind: 'N', value: e.value } }] };
+      },
+    },
+    {
+      description: { id: 'TAKE-NEXT-LAST', explanation: 'When the value that reaches the limit arrives, the operator forwards that value, completes the result, and releases the source subscription. The source need not complete first.', from: 'Active', event: 'source.next', guard: 'seen + 1 = count', to: 'Closed',
+        actions: ['forward the incoming value unchanged', 'complete downstream', 'release the source subscription'],
+        nextState: 'closed because the quota was reached', obligations: ['M01-RX-02', 'M01-RX-06', 'M01-RX-07'] },
+      enabled: (s, _e, p) => s.phase === 'Active' && s.seen + 1 === p.count,
+      react: (_s, e) => {
+        if (e.type !== 'source.next') throw new Error('invalid last input');
+        return { state: closed('quota'), actions: [{ type: 'notify', target: 'downstream', notification: { kind: 'N', value: e.value } }, complete, release] };
+      },
+    },
+    {
+      description: { id: 'TAKE-SOURCE-COMPLETE', explanation: 'When the source completes before the limit, the result completes with the values already forwarded. No extra value is produced, and the source subscription is released.', from: 'Active', event: 'source.complete', guard: 'source completes before the quota', to: 'Closed',
+        actions: ['complete downstream', 'release the source subscription'], nextState: 'closed because the source completed', obligations: ['M01-RX-03'] },
+      enabled: () => true,
+      react: () => ({ state: closed('complete'), actions: [complete, release] }),
+    },
+    {
+      description: { id: 'TAKE-SOURCE-ERROR', explanation: 'When the source errors before the limit, the same error is forwarded and the source subscription is released. No completion notification follows the error.', from: 'Active', event: 'source.error', guard: 'source errors before the quota', to: 'Closed',
+        actions: ['forward the source error unchanged', 'release the source subscription'], nextState: 'closed because the source errored', obligations: ['M01-RX-04'] },
+      enabled: () => true,
+      react: (_s, e) => {
+        if (e.type !== 'source.error') throw new Error('invalid error input');
+        return { state: closed('error'), actions: [{ type: 'notify', target: 'downstream', notification: { kind: 'E', error: e.error } }, release] };
+      },
+    },
+    {
+      description: { id: 'TAKE-CANCEL', explanation: 'When downstream unsubscribes before termination, the source subscription is released. Unsubscription does not send a completion notification.', from: 'Active', event: 'cancel', guard: 'downstream cancels before termination', to: 'Closed',
+        actions: ['release the source subscription without notifying downstream'], nextState: 'closed because downstream cancelled', obligations: ['M01-RX-05', 'M01-RX-10'] },
+      enabled: () => true,
+      react: () => ({ state: closed('cancel'), actions: [release] }),
+    },
+  ];
+  return {
+    parameters: { count },
+    metadata: {
+      schemaVersion: '1.0', id: `take-${count}`, operator: 'take', rxjsVersion: '7.8.2',
+      purpose: 'Forward up to count values, then complete and release the source subscription.',
+      cardinality: { signature: 'take(n) : T* -> T[0..n]', conditions: ['The count n is a nonnegative safe integer.', 'The bound counts next notifications, not lifecycle actions.', 'Reaching n values completes; an earlier source terminal or cancellation may stop with fewer values.'] },
+      scope: { parameters: 'count is a nonnegative safe integer', callbacks: 'No supplied callback; observers must not reenter, cancel during delivery, or throw.',
+        time: 'No internal clock; caller supplies nonnegative trace times and same-time order.',
+        reentrancy: 'Atomic non-reentrant steps, observed at quiescence. No nested delivery model.',
+        exclusions: ['Negative/fractional counts, NaN, Infinity and unsafe integers.', 'Nested synchronous input and cancellation inside notification handlers.', 'Teardown exceptions, unrelated external resources, and arbitrary source side effects.'] },
+      initialization: { control: 'Unsubscribed', event: 'subscribe', sourceSubscription: 'Only when count > 0; count = 0 completes without acquisition.' },
+      ownership: { state: 'subscription-local', sharing: 'No sharing introduced; source hot/cold character is preserved.', reset: 'Each run creates fresh state; no reset within a closed execution.',
+        resources: [{ id: 'source', kind: 'subscription', owner: 'current execution' }] },
+      dispatch: { policy: 'atomic-non-reentrant', actionSemantics: 'Ordered notification calls and source lifecycle observations at quiescence, not an effect interpreter. Release is idempotent and does not prescribe every internal finalizer microstep.',
+        cancellationCheckpoints: ['Before the next external input; cancellation emits no complete notification.', 'Intra-notification cancellation is outside this atomic profile.'] },
+      inputs: [
+        { type: 'subscribe', origin: 'downstream', category: 'lifecycle', description: 'a fresh downstream execution subscribes' },
+        { type: 'source.next', origin: 'source', category: 'notification', description: 'the source delivers a value' },
+        { type: 'source.complete', origin: 'source', category: 'notification', description: 'the source completes' },
+        { type: 'source.error', origin: 'source', category: 'notification', description: 'the source errors' },
+        { type: 'cancel', origin: 'downstream', category: 'lifecycle', description: 'downstream unsubscribes' },
+      ],
+      actionTypes: ['notify', 'subscribe', 'unsubscribe'],
+      controls: [
+        { id: 'Unsubscribed', description: 'execution has not connected', terminal: false },
+        { id: 'Active', description: 'source connected; seen values are below the quota', terminal: false },
+        { id: 'Closed', description: 'terminated or cancelled; no further legal inputs', terminal: true },
+      ],
+      sources: ['src/internal/operators/take.ts', 'src/internal/Subscriber.ts', 'src/internal/observable/empty.ts'].map(path => ({ url: upstream + path, revision: 'e5351d02e225e275ac0e497c7b66eaa5f0c88791', purpose: 'Pinned implementation and lifecycle boundary' })),
+      evidence: { modelTests: ['tests/m01-model.test.mjs'], runtimeTests: ['tests/m01-rxjs.test.mjs'], status: 'source-inspected', record: 'evidence/M01.md' },
+    },
+    initialState: () => ({ phase: 'Unsubscribed' }),
+    control: state => state.phase,
+    validateState: (state, p) => {
+      if (state.phase === 'Active') return Number.isSafeInteger(state.seen) && state.seen >= 0 && state.seen < p.count ? [] : ['invalid active counter'];
+      if (state.phase === 'Unsubscribed') return [];
+      if (state.phase === 'Closed' && ['quota', 'complete', 'error', 'cancel'].includes(state.reason)) return [];
+      return ['invalid control state'];
+    },
+    validateReaction: (_before, _event, result) => {
+      const errors = [...validateActionWord(result.actions)];
+      for (const a of result.actions) {
+        if (!['notify', 'subscribe', 'unsubscribe'].includes(a.type)) errors.push('undeclared action type');
+        if (a.type === 'notify' && a.target !== 'downstream') errors.push('unknown subscriber');
+        if (a.type !== 'notify' && (a.resource.id !== 'source' || a.resource.generation !== 0)) errors.push('unknown resource');
+      }
+      return errors;
+    },
+    rules,
+  };
+}
+
+/** Legal, reproducible input path. These inputs are not runtime evidence by themselves. */
+export const takeExample: readonly TimedEvent<TakeEvent<string>>[] = [
+  { time: 0, event: { type: 'subscribe' } },
+  { time: 10, event: { type: 'source.next', value: 'a' } },
+  { time: 20, event: { type: 'source.next', value: 'b' } },
+];

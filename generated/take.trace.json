@@ -1,0 +1,108 @@
+{
+  "status": "finished-input",
+  "consumed": 3,
+  "state": {
+    "phase": "Closed",
+    "reason": "quota"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "take-2",
+      "executionId": "take-2-example",
+      "ruleId": "TAKE-INIT-POSITIVE",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 10,
+      "modelId": "take-2",
+      "executionId": "take-2-example",
+      "ruleId": "TAKE-NEXT-PASS",
+      "event": {
+        "type": "source.next",
+        "value": "a"
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 0
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 20,
+      "modelId": "take-2",
+      "executionId": "take-2-example",
+      "ruleId": "TAKE-NEXT-LAST",
+      "event": {
+        "type": "source.next",
+        "value": "b"
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 1
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "quota"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "b"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

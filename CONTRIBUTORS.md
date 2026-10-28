@@ -13,7 +13,11 @@
 - **GPT-6 Astra Pro (OpenAI)** — main contributor to the 28 October 2026 source review, composition and ownership guidance, semantic corrections, regression tests, and validation setup.
 - **Gemini discussion supplied by Hans Schenker** — inspiration for cascade composition, explicit feedback, pure-core/interpreter separation, and shared-machine addressed output. See the [provenance and review](docs/reviews/2026-10-28-gemini-mealy.md). Its implementation claims were reviewed rather than copied as authority.
 
-The new commit uses `Co-authored-by: GPT-6 Astra Pro <gpt-6-astra-pro@example.invalid>` as an explicit AI-assistance record. This reserved-domain placeholder is not a verified mailbox or GitHub account, and does not promise an entry in GitHub's account-based contributor graph.
+## M01 implementation
+
+- **GPT-6 Astra Pro (OpenAI)** — main contributor to canonical TypeScript schema 1.0, the pure model runner, the scoped take model, deterministic projections, model/type/runtime tests and milestone documentation, under Hans Schenker's direction.
+
+The new commits use `Co-authored-by: GPT-6 Astra Pro <gpt-6-astra-pro@example.invalid>` as an explicit AI-assistance record. This reserved-domain placeholder is not a verified mailbox or GitHub account, and does not promise an entry in GitHub's account-based contributor graph.
 
 ## Source-project contributions
 
