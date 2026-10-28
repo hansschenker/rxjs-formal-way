@@ -331,6 +331,133 @@ A complete operator page should eventually contain:
 
 The final section is intentionally understandable without reading any formal notation.
 
+
+
+## Six formal methods for one RxJS operator
+
+The project now treats six methods as complementary views of one operator rather than as separate descriptions:
+
+| Method | Role | Core question |
+|---|---|---|
+| Cω type notation | Dataflow shape and cardinality | What can flow? |
+| Dependent Types | Type the operator's Mealy machine | Which complete behaviors are legal? |
+| Mealy machine | Operational semantics | What happens for this event in this state? |
+| BDD | Human-readable behavioral rules | How do we state the transition as a scenario? |
+| Four-lane operator diagram | Execution visualization | How do time, input, state, and output evolve together? |
+| Test cases | Conformance evidence | Does the real RxJS operator exhibit the specified behavior? |
+
+The central relationship is:
+
+```text
+                 RxJS Operator
+                       │
+        ┌──────────────┼──────────────┐
+        ↓              ↓              ↓
+      Cω Type     Dependent Type    Mealy
+        │              │              │
+ shape/cardinality  types the       transition
+                    Mealy machine    semantics
+        │              │              │
+        └──────────────┼──────────────┘
+                       ↓
+                      BDD
+                       ↓
+             human-readable behavior
+                       ↓
+            Four-lane execution view
+                       ↓
+                    Test cases
+                       ↓
+             runtime conformance evidence
+```
+
+### Dependent Types type the Mealy machine
+
+This is the key refinement.
+
+The ordinary Mealy form:
+
+```text
+S × E -> S × A
+```
+
+can be strengthened into a dependent behavioral type:
+
+```text
+Behavior :
+  (state : S) ->
+  (event : E state) ->
+  Σ (nextState : S).
+    Actions state event nextState
+```
+
+This means the dependent type is not merely typing the operator state. It types the **whole legal behavior of the Mealy machine**:
+
+```text
+current state
+    ↓ constrains
+legal event
+    ↓ constrains
+legal next state
+    ↓ constrains
+legal actions
+```
+
+So:
+
+```text
+Cω
+= types the dataflow shape
+
+Dependent Types
+= type the Mealy machine
+
+Mealy
+= defines the transition semantics
+
+BDD
+= projects those semantics into readable rules
+
+Four-lane diagram
+= projects a concrete execution over time
+
+Test cases
+= verify the model against RxJS runtime behavior
+```
+
+A useful summary is:
+
+> **Dependent Types turn the Mealy machine from an untyped behavioral relation into a typed space of legal operator behaviors.**
+
+Illegal combinations can have no inhabitant. For example, a `switchMap` model can exclude `InnerNext` while no inner is active, or exclude any next state containing two active inners.
+
+### End-to-end formal analysis flow
+
+```text
+RxJS source / operator contract
+        ↓
+Cω signature
+        ↓
+Mealy machine
+        ↓
+Dependent typing of the Mealy behavior
+        ↓
+Guarded transition rules
+        ↓
+BDD scenarios
+        ↓
+Four-lane execution traces
+        ↓
+Test obligations
+        ↓
+RxJS TestScheduler / lifecycle tests
+        ↓
+Plain-language documentation
+```
+
+The plain-language explanation is therefore not guessed first. It is derived from the formal analysis underneath.
+
+
 ## Repository structure
 
 ```text
