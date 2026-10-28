@@ -6,11 +6,16 @@ export type Notification<T> =
 
 /** Generation is local to a trace's executionId, not a globally unique identifier. */
 export type ResourceRef = Readonly<{ id: string; generation: number }>;
-export type Action<T> =
+/** A callback request is data. Its resource generation identifies one invocation, not a subscription. */
+export type CallbackInvocation<T> = Readonly<{
+  type: 'invoke-callback'; resource: ResourceRef; value: T; index: number;
+}>;
+export type Action<T, Input = unknown> =
   | Readonly<{ type: 'notify'; target: string; notification: Notification<T> }>
   | Readonly<{ type: 'subscribe' | 'unsubscribe'; resource: ResourceRef }>
   | Readonly<{ type: 'schedule'; resource: ResourceRef; delay: number }>
-  | Readonly<{ type: 'cancel-timer'; resource: ResourceRef }>;
+  | Readonly<{ type: 'cancel-timer'; resource: ResourceRef }>
+  | CallbackInvocation<Input>;
 
 export type Event = Readonly<{ type: string }>;
 export type Control = Readonly<{ id: string; description: string; terminal: boolean }>;
@@ -22,7 +27,7 @@ export type InputDescriptor = Readonly<{
 }>;
 export type SourceReference = Readonly<{ url: string; revision: string; purpose: string }>;
 export type ModelMetadata = Readonly<{
-  schemaVersion: '1.0';
+  schemaVersion: '1.0' | '1.1';
   id: string;
   operator: string;
   rxjsVersion: string;
@@ -40,7 +45,7 @@ export type ModelMetadata = Readonly<{
     state: 'subscription-local' | 'connection-generation' | 'external-instance';
     sharing: string;
     reset: string;
-    resources: readonly Readonly<{ id: string; kind: 'subscription' | 'timer'; owner: string }>[];
+    resources: readonly Readonly<{ id: string; kind: 'subscription' | 'timer' | 'callback'; owner: string }>[];
   }>;
   dispatch: Readonly<{
     policy: 'atomic-non-reentrant' | 'immediate-reentrant' | 'fifo' | 'scheduled';

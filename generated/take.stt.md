@@ -2,7 +2,7 @@
 
 > Generated from the canonical model by npm run generate. Do not edit this projection.
 
-Symbolic rules for the declared parameter domain. Guarded rows may be unreachable for a particular count.
+Symbolic rules for the declared parameter domain. Guarded rows may be unreachable for a particular configuration.
 
 | Rule | Current control | Event | Guard | Ordered actions | Next state | Obligations |
 |---|---|---|---|---|---|---|

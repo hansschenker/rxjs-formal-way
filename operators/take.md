@@ -33,4 +33,8 @@ When downstream unsubscribes before termination, the source subscription is rele
 
 **Sharing:** No sharing introduced; source hot/cold character is preserved.
 
-The runtime is not generated from these paragraphs. Evidence is reported separately in the milestone record.
+**Callbacks:** No supplied callback; observers must not reenter, cancel during delivery, or throw.
+
+**Excluded:** Negative/fractional counts, NaN, Infinity and unsafe integers. Nested synchronous input and cancellation inside notification handlers. Teardown exceptions, unrelated external resources, and arbitrary source side effects.
+
+The runtime is not generated from these paragraphs. [Evidence](../evidence/M01.md) is reported separately from this specification.

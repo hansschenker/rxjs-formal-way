@@ -1,21 +1,33 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import { createTakeModel, takeExample, toManifest, runTrace, renderTable, renderBdd, renderDiagram, renderObligations, renderBehavior, renderTrace } from '../dist/index.js';
+import { createTakeModel, takeExample, createMapModel, mapExample, createFilterModel, filterExample,
+  toManifest, runTrace, renderTable, renderBdd, renderDiagram, renderObligations, renderBehavior, renderTrace } from '../dist/index.js';
 
-const model = createTakeModel(2);
-const manifest = toManifest(model);
-const trace = runTrace(model, takeExample, { executionId: 'take-2-example' });
+// Canonical examples specify callback outcomes; generation never executes user callbacks.
+const examples = [
+  ['take', createTakeModel(2), takeExample, 'take-2-example'],
+  ['map', createMapModel(), mapExample, 'map-example'],
+  ['filter', createFilterModel(), filterExample, 'filter-example'],
+];
 const json = value => JSON.stringify(value, null, 2) + '\n';
-const files = new Map([
-  ['generated/take.manifest.json', json(manifest)],
-  ['generated/take.stt.md', renderTable(manifest)],
-  ['generated/take.bdd.md', renderBdd(manifest)],
-  ['generated/take.diagram.md', renderDiagram(manifest)],
-  ['generated/take.obligations.md', renderObligations(manifest)],
-  ['generated/take.trace.json', json(trace)],
-  ['generated/take.trace.md', renderTrace(trace)],
-  ['operators/take.md', renderBehavior(manifest)],
-]);
+const files = new Map();
+for (const [name, model, inputs, executionId] of examples) {
+  const manifest = toManifest(model);
+  const trace = runTrace(model, inputs, { executionId });
+  for (const [path, content] of [
+    [`generated/${name}.manifest.json`, json(manifest)],
+    [`generated/${name}.stt.md`, renderTable(manifest)],
+    [`generated/${name}.bdd.md`, renderBdd(manifest)],
+    [`generated/${name}.diagram.md`, renderDiagram(manifest)],
+    [`generated/${name}.obligations.md`, renderObligations(manifest)],
+    [`generated/${name}.trace.json`, json(trace)],
+    [`generated/${name}.trace.md`, renderTrace(trace)],
+    [`operators/${name}.md`, renderBehavior(manifest)],
+  ]) {
+    if (files.has(path)) throw new Error(`Duplicate generation target: ${path}`);
+    files.set(path, content);
+  }
+}
 const check = process.argv.includes('--check');
 let failures = 0;
 for (const [path, content] of files) {

@@ -1,0 +1,195 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "filter-predicate",
+      "executionId": "filter-example",
+      "ruleId": "FILTER-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 10,
+      "modelId": "filter-predicate",
+      "executionId": "filter-example",
+      "ruleId": "FILTER-CALL",
+      "event": {
+        "type": "source.next",
+        "value": 3
+      },
+      "before": {
+        "phase": "Active",
+        "index": 0
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 1,
+        "callId": 0,
+        "input": 3
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate",
+            "generation": 0
+          },
+          "index": 0,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 10,
+      "modelId": "filter-predicate",
+      "executionId": "filter-example",
+      "ruleId": "FILTER-DROP",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "predicate",
+          "generation": 0
+        },
+        "value": false
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 1,
+        "callId": 0,
+        "input": 3
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 20,
+      "modelId": "filter-predicate",
+      "executionId": "filter-example",
+      "ruleId": "FILTER-CALL",
+      "event": {
+        "type": "source.next",
+        "value": 4
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 2,
+        "callId": 1,
+        "input": 4
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate",
+            "generation": 1
+          },
+          "index": 1,
+          "value": 4
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 20,
+      "modelId": "filter-predicate",
+      "executionId": "filter-example",
+      "ruleId": "FILTER-PASS",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "predicate",
+          "generation": 1
+        },
+        "value": true
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 2,
+        "callId": 1,
+        "input": 4
+      },
+      "after": {
+        "phase": "Active",
+        "index": 2
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 4
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 30,
+      "modelId": "filter-predicate",
+      "executionId": "filter-example",
+      "ruleId": "FILTER-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 2
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -6,34 +6,33 @@ A coherent method for describing, analyzing, documenting, visualizing, and testi
 
 The project grew from stateful transducers, through six-component Mealy analysis, to transition tables, diagrams, BDD and test obligations. Formal machinery supports the explanation; an RxJS user should not need automata theory to understand the final operator description.
 
-## M01: the first executable vertical slice
+## Current checkpoint: M02-A
 
-The canonical TypeScript model, pure trace runner and first end-to-end operator profile are implemented. Read [M01 — Canonical model](docs/M01-CANONICAL-MODEL.md) and its [validation record](evidence/M01.md) for scope and executed results.
+M01 established the canonical TypeScript model, pure trace runner and take profile. M02-A adds **map and filter**, including callback indices, correlated return/throw outcomes, cancellation and subscription-local ownership. Read the [M02 guide](docs/M02-VALUE-SELECTION.md), [evidence](evidence/M02.md) and [roadmap](docs/ROADMAP.md). M02's remaining reference operators are not yet implemented.
 
-```text
-src/models/take.ts   ONE rule set
-         |
-         +--> JSON manifest / BDD / STT / state diagram
-         +--> test obligations / readable operator page
-         +--> concrete trace / four-lane view
-         |
-model predictions <--> RxJS 7.8.2 runtime observations
-```
+| Operator | Readable behavior | BDD | Transition table | State diagram | Four lanes |
+|---|---|---|---|---|---|
+| take | [Page](operators/take.md) | [BDD](generated/take.bdd.md) | [STT](generated/take.stt.md) | [STD](generated/take.diagram.md) | [Trace](generated/take.trace.md) |
+| map | [Page](operators/map.md) | [BDD](generated/map.bdd.md) | [STT](generated/map.stt.md) | [STD](generated/map.diagram.md) | [Trace](generated/map.trace.md) |
+| filter | [Page](operators/filter.md) | [BDD](generated/filter.bdd.md) | [STT](generated/filter.stt.md) | [STD](generated/filter.diagram.md) | [Trace](generated/filter.trace.md) |
 
-Start with the generated [take operator page](operators/take.md), [BDD](generated/take.bdd.md), [transition table](generated/take.stt.md), [state diagram](generated/take.diagram.md) and [four-lane trace](generated/take.trace.md). These eight projections are checked for drift in CI. The model covers nonnegative safe-integer counts and atomic, non-reentrant execution; it is not a universal RxJS replacement.
+Each has eight generated projections: the five linked above, a JSON manifest, JSON trace and test-obligation document. All **24** are checked for drift. These are scoped reference models, not replacement RxJS operators.
 
 ## Start here
 
 | Document | Role |
 |---|---|
-| [M01 schema and workflow](docs/M01-CANONICAL-MODEL.md) | Executable contract, first profile, generated artifacts and acceptance boundary |
-| [Formal method](docs/FORMAL-METHOD.md) | Canonical six-tuple analysis, guarded transitions, lifecycle and evidence |
-| [Composition and ownership](docs/COMPOSITION-AND-OWNERSHIP.md) | Connected machines, feedback, shared state, action ordering and execution contracts |
+| [Operator profiles](operators/README.md) | Implemented profiles and canonical sources |
+| [M01 schema and workflow](docs/M01-CANONICAL-MODEL.md) | First executable contract and take profile |
+| [M02 value selection](docs/M02-VALUE-SELECTION.md) | Callback-separated map/filter profiles and schema 1.1 |
+| [Roadmap](docs/ROADMAP.md) | Implemented and remaining checkpoints |
+| [Formal method](docs/FORMAL-METHOD.md) | Six-tuple analysis, guarded transitions, lifecycle and evidence |
+| [Composition and ownership](docs/COMPOSITION-AND-OWNERSHIP.md) | Connected machines, feedback, shared state and execution contracts |
 | [Dependent types](docs/DEPENDENT-TYPES.md) | State-indexed legal behavior, not merely a type for state |
-| [Imported-document review](docs/reviews/2026-10-28-gemini-mealy.md) | Adopted ideas, corrected claims, provenance and pinned primary sources |
-| [Operator document template](docs/OPERATOR-DOCUMENT-TEMPLATE.md) | Formal analysis through to a standalone plain-language explanation |
-| [Migration map](docs/MIGRATION-MAP.md) | What to preserve from the earlier repositories |
-| [M01 evidence](evidence/M01.md) | Schema/model/type checks, bounded runtime comparisons and remaining limits |
+| [Imported-document review](docs/reviews/2026-10-28-gemini-mealy.md) | Adopted ideas, corrected claims, provenance and pinned sources |
+| [Operator document template](docs/OPERATOR-DOCUMENT-TEMPLATE.md) | Formal analysis through to plain-language explanation |
+| [Migration map](docs/MIGRATION-MAP.md) | Original consolidation plan and source repositories |
+| [M01 evidence](evidence/M01.md) / [M02 evidence](evidence/M02.md) | Executed results, bounded comparisons and remaining limits |
 | [Earlier validation](evidence/2026-10-28-insights.md) | Retained 29-test baseline and its historical run |
 
 ## One behavioral model
@@ -53,7 +52,7 @@ Pinned RxJS source + exact configuration + execution scope
                     Four-lane view       Evidence
 ```
 
-A state-transition diagram (STD) and state-transition table (STT) are views of the same rules. Traces instantiate paths through those rules. Tests compare model predictions with actual RxJS behavior. They are not required to form a strictly serial conversion chain.
+A state-transition diagram and state-transition table are views of the same rules. Traces instantiate paths through them. Tests compare predictions with actual RxJS behavior; these artifacts need not form a strictly serial conversion chain.
 
 | Component | Meaning | Question |
 |---|---|---|
@@ -69,9 +68,27 @@ T : S × Z → S
 G : S × Z → A*
 ```
 
-Both functions use the same pre-event state. A combined step can compute the pair once; the notation does not require evaluating a supplied callback twice. Arbitrary payloads, counters, buffers and inner identities make this an **extended, potentially symbolic Mealy-style transducer**, not automatically a finite automaton.
+Both functions use the same pre-event state. A combined reaction computes the pair once. Arbitrary payloads, counters, buffers and identities make this an extended, potentially symbolic Mealy-style transducer, not automatically a finite automaton.
 
-Source/outer/inner next, error and completion have explicit origins. Subscription and cancellation are control events, not notifications. Timer firings carry identities; sources and schedulers supply time. Initialization can complete without subscribing upstream.
+Source/outer/inner notifications have explicit origins. Subscription and cancellation are control events, not notifications. Timer firings carry identities; sources and schedulers supply time. Initialization can complete without acquiring the source, as take(0) demonstrates.
+
+## Callback boundary added in M02-A
+
+```text
+source.next(value)
+       ↓
+request one callback invocation(value, index)
+       ↓
+correlated callback.return(result) or callback.throw(error)
+       ↓
+map: forward result
+filter: forward original input or emit nothing
+throw: error and release source
+```
+
+The pure model never executes a business function in a guard or reaction. A named callback binding replaces executable code in the model declaration. Calling is a synchronous logical phase, not a timer, Promise conversion, or queued execution policy. The test-only adapter supplies concrete outcomes; a production effect interpreter remains future work.
+
+Map and filter each remember a per-subscription index. A dropped filter value still consumes an index. The source may be hot while the operator's counter remains subscription-local. No sharing is introduced by these profiles.
 
 ## Six complementary methods
 
@@ -81,7 +98,7 @@ Source/outer/inner next, error and completion have explicit origins. Subscriptio
 | Dependent types | Which whole transitions are legal in the model |
 | Mealy analysis | State, events, next state and ordered actions |
 | BDD | User-readable projection of behavioral rules |
-| Four-lane diagram | Time, inputs, control state and outputs in one concrete trace |
+| Four-lane diagram | Time, inputs, control state and outputs in one trace |
 | Test cases | Independent conformance evidence against RxJS |
 
 ```text
@@ -91,9 +108,7 @@ Behavior :
   Σ (nextState : S). Actions state event nextState
 ```
 
-Dependent types constrain the whole legal behavior, not only state. That is a specification discipline, not an implemented proof of the RxJS runtime. TypeScript can encode some related constraints but is not itself a dependent proof assistant. M01 uses discriminated unions and runtime legality checks, not a claim of full dependent typing.
-
-Cω-inspired teaching shorthand:
+Dependent types constrain the whole legal behavior, not only state. Our TypeScript implementation uses discriminated unions and runtime legality checks; it is not a dependent proof assistant or a proof of RxJS's implementation.
 
 ```text
 T!       exactly one value
@@ -105,7 +120,7 @@ A + B    either
 (T*)*    streams of streams
 ```
 
-These markers count values, not completion/error/control actions. For example, seeded `reduce` has exactly-one final-value behavior **conditional on successful completion, a successful reducer, and no early cancellation**. Errors, cancellation and noncompletion must not be hidden by an unqualified `T* → A!` claim. M01 uses `T[0..n]` as an explicit project extension for take's upper bound, not original Cω syntax.
+These Cω-inspired markers count values, not terminal/control actions. Seeded reduce's exactly-one final value requires successful completion and no earlier cancellation or reducer error. `T[0..n]` is a project extension for take's upper bound, not original Cω syntax.
 
 ## Readable behavior on top
 
@@ -117,26 +132,11 @@ Then  <ordered action>
 And   <next state>
 ```
 
-In this project's restricted Convertible BDD profile, `And` denotes the next state; this is not a claim about general Gherkin syntax. The corresponding Mealy-DSL uses `While` instead of `Given`.
+In this restricted Convertible BDD profile, And denotes the next state, not general Gherkin conjunction. Mealy-DSL uses While instead of Given. English annotations live beside executable rules; generation retains their IDs and prevents file drift but does not prove prose equivalent to code. Literal assertions and independent runtime observations provide separate evidence.
 
-For a scoped, successful `switchMap` replacement:
+The final operator page remains the teaching outcome. A reader need not inspect the formal tuple to understand what flows over time or what happens on a new value.
 
-```text
-Given an inner subscription is active
-When the outer source emits a new value
-Then unsubscribe the current inner
-Then project the new value
-Then subscribe to the new inner
-And the new inner is active
-```
-
-Projection throws, synchronous completion and reentry need separate rules or explicit scope. The reader-facing prose must be traceable to rules rather than independently maintained. M01's annotations live beside executable rules; generation preserves rule IDs but does not prove that English matches code.
-
-## From operators to connected machines
-
-The imported Gemini discussion contributes useful ideas for composition, feedback and subscriber-addressed output. The [review](docs/reviews/2026-10-28-gemini-mealy.md) separates those ideas from claims that need correction.
-
-The adopted extension is:
+## Connected machines and execution contracts
 
 ```text
 local transition models
@@ -148,45 +148,38 @@ explicit execution contract
 pipeline and shared-machine behavior
 ```
 
-Pure finite-word cascade composition is a useful starting point. Full RxJS behavior also needs reverse cancellation, initialization, resource lifetimes, callback ordering, scheduling and sharing/reset policies. A FIFO interpreter is an explicit policy, not a semantics-neutral fix for reentrancy.
+The imported Gemini discussion motivates composition, feedback and addressed output. The [review](docs/reviews/2026-10-28-gemini-mealy.md) distinguishes those ideas from corrected implementation claims. Pure finite-word cascade composition is useful, but full RxJS behavior also needs reverse cancellation, initialization, resources, callback order, scheduling and sharing/reset policies. A FIFO interpreter is not a semantics-neutral fix for reentrancy.
 
-Flattening policies remain practical descriptions: `mergeMap` allows overlap; `switchMap` keeps the latest; `concatMap` queues; `exhaustMap` ignores while busy. The guide adds a corrected `expand` admission rule and distinguishes subscription feedback from recursive value expansion.
+Flattening policies remain practical: mergeMap allows overlap, switchMap keeps the latest, concatMap queues and exhaustMap ignores while busy. The composition guide includes corrected expand admission semantics and distinguishes subscription feedback from recursive value expansion.
 
-## Test obligations and evidence
+## Tests, generated artifacts and evidence
 
-> **Every reachable, behaviorally distinct transition creates a minimum test obligation.**
+> Every reachable, behaviorally distinct transition creates a minimum test obligation.
 
-One obligation can need multiple concrete tests. A scenario should reach its state through public inputs, deliver the event, assert notifications and resource consequences, and use a distinguishing suffix when necessary. Row coverage is not exhaustive behavior coverage.
+One obligation can require multiple tests. Reach the state through public inputs, provide the target event, assert notifications and resource consequences, then use a distinguishing suffix when necessary. Row coverage is not exhaustive behavior coverage.
 
-The retained suite contains **29 named runtime characterization tests**, including subscription marbles, synchronous cancellation, replay expiry, sharing resets, recursion order and callback-index-sensitive composition. M01 adds **25 model tests and 11 RxJS test cases**, including **465 bounded differential scenarios**. Consult the [M01 evidence](evidence/M01.md) for executed results rather than treating test-file counts as proof.
+M01's baseline has 65 named tests, including 465 bounded take comparisons. M02-A adds 31 model tests and 23 runtime cases, with 1302 additional bounded comparisons in one case. Eight new negative type assertions supplement M01's six. Refer to the milestone evidence records for actual execution results rather than treating these counts as proof.
 
 ```sh
 npm ci --ignore-scripts
 npm run check
-npm run generate          # intentionally refresh the eight generated views
+npm run test:model
+npm run generate          # intentionally refresh 24 projections
 npm run check:generated   # read-only drift check
 ```
 
-Node 22.16.0 is used by CI. RxJS is pinned to 7.8.2 and TypeScript to 5.8.3; the lockfile also pins tslib. The read-only GitHub Actions workflow runs on pushes to main, pull requests, and manual dispatch. It does not commit or publish generated files.
+Node 22.16.0, RxJS 7.8.2 and TypeScript 5.8.3 are the declared validation baseline; the lockfile also pins tslib. The existing read-only GitHub Actions workflow installs dependencies and checks types, tests, syntax and generated files. It does not commit or publish artifacts.
 
-## Core invariants
+## Invariants, migration and provenance
 
-Keep terminal exclusivity, post-terminal silence, cancellation distinct from completion, payload correctness, resource release, timer identity, state ownership and reset behavior explicit. Separate equal-time execution order from timestamps, and ordinary atomic transitions from nested synchronous delivery.
+Keep terminal exclusivity, post-terminal silence, cancellation distinct from completion, payload identity, resource release, timer/call identity, state ownership and reset behavior explicit. Separate equal-time ordering from timestamps and scoped atomic reactions from arbitrary nested delivery. Fresh executions must not accidentally share mutable model state.
 
-For sharing, name the state owner and connection generation. For temporal behavior, distinguish a timestamp provider from scheduled callbacks. For a fresh subscription, do not accidentally reuse mutable reference-model state.
+Earlier repositories remain provenance, not material to delete: rxjs-mealy-analysis, rxjs-operator-mealy-analysis, rxjs-operator-mealy-tuples, rxjs-mealy-to-testcase, bdd-to-mealy, rxjs-comega-type-notation-and-mealy-machine-tuples, and the Mealy-to-documentation experiments.
 
-## Migration and status
-
-The earlier projects remain provenance, not material to delete:
-
-`rxjs-mealy-analysis`, `rxjs-operator-mealy-analysis`, `rxjs-operator-mealy-tuples`, `rxjs-mealy-to-testcase`, `bdd-to-mealy`, `rxjs-comega-type-notation-and-mealy-machine-tuples`, and the Mealy-to-documentation experiments.
-
-M00 established the method and the composition/ownership review. **M01 now has an implemented canonical model and one end-to-end reference profile**, with acceptance and execution results recorded in [evidence/M01.md](evidence/M01.md). The [migration map](docs/MIGRATION-MAP.md) is the original plan; M01's detailed checkpoint and adjustments are documented in [the milestone guide](docs/M01-CANONICAL-MODEL.md).
-
-Next is **M02: extend the reference set**, starting with map and filter, then scan, debounceTime, switchMap and share. Full generators across all families, catalogue migration, an effect interpreter and interactive visualization remain later work. The existing [operator template](docs/OPERATOR-DOCUMENT-TEMPLATE.md) remains the detailed page target; the first generated take page is the readable entry point, with its formal projections linked separately.
+M02 continues next with scan, then time-sensitive, higher-order and shared profiles. Full catalogue migration, a general effect interpreter, dependent proofs and interactive visualization remain later work. The [roadmap](docs/ROADMAP.md) is the current implementation tracker; the migration map retains the original broader plan.
 
 ## Collaboration
 
-Hans Schenker directs the research and teaching goals. The initial consolidation credits **GPT-5.6 Sol (OpenAI)** in the project history. **GPT-6 Astra Pro** is the main contributor to the source review, composition/ownership guidance, regression harness and M01 implementation. The imported Gemini discussion is credited as inspiration, not as authoritative implementation evidence.
+Hans Schenker directs the research and teaching goals. The initial consolidation credits **GPT-5.6 Sol (OpenAI)** in project history. **GPT-6 Astra Pro** is the main contributor to the source review, composition/ownership guidance, regression harness and M01/M02-A implementations. The supplied Gemini discussion is credited as inspiration, not authoritative implementation evidence.
 
 See [CONTRIBUTORS.md](CONTRIBUTORS.md). This is an independent project, not an official RxJS or OpenAI specification.

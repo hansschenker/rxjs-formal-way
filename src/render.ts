@@ -5,7 +5,7 @@ const header = (title: string): string => `# ${title}\n\n> Generated from the ca
 
 export function renderTable<P>(manifest: OperatorManifest<P>): string {
   return header(`${manifest.metadata.id}: state transition table`) +
-    'Symbolic rules for the declared parameter domain. Guarded rows may be unreachable for a particular count.\n\n' +
+    'Symbolic rules for the declared parameter domain. Guarded rows may be unreachable for a particular configuration.\n\n' +
     '| Rule | Current control | Event | Guard | Ordered actions | Next state | Obligations |\n|---|---|---|---|---|---|---|\n' +
     manifest.rules.map(r => `| ${[r.id, r.from, r.event, r.guard, r.actions.join('; ') || 'no actions', r.nextState, r.obligations.join(', ')].map(cell).join(' | ')} |`).join('\n') + '\n';
 }
@@ -21,7 +21,7 @@ export function renderDiagram<P>(manifest: OperatorManifest<P>): string {
   const names = new Map(manifest.metadata.controls.map((s, index) => [s.id, `s${index}`]));
   const label = (text: string): string => text.replaceAll('"', "'").replaceAll('\n', ' ');
   return header(`${manifest.metadata.id}: state diagram`) +
-    'Finite control-state projection; stored counters and guards remain in the table. Edges are not timing assertions.\n\n```mermaid\nstateDiagram-v2\n' +
+    'Finite control-state projection; stored data and guards remain in the table. Edges are not timing assertions.\n\n```mermaid\nstateDiagram-v2\n' +
     manifest.metadata.controls.map(s => `    state "${label(s.id)}" as ${names.get(s.id)}`).join('\n') +
     `\n    [*] --> ${names.get(manifest.metadata.initialization.control)}\n` +
     manifest.rules.map(r => `    ${names.get(r.from)} --> ${names.get(r.to)} : ${r.id} ${r.event} [${label(r.guard)}]`).join('\n') +
@@ -30,7 +30,7 @@ export function renderDiagram<P>(manifest: OperatorManifest<P>): string {
 
 export function renderObligations<P>(manifest: OperatorManifest<P>): string {
   return header(`${manifest.metadata.id}: test obligations`) +
-    'A rule creates an obligation, not a proof of exhaustive behavior. Test identifiers below resolve in tests/m01-rxjs.test.mjs.\n\n' +
+    `A rule creates an obligation, not a proof of exhaustive behavior. Test identifiers below resolve in ${manifest.metadata.evidence.runtimeTests.join(', ')}.\n\n` +
     manifest.rules.map(r => `## ${r.id}\n\nReach **${r.from}** with **${r.guard}**, then provide **${r.event}**.\n\nExpect, in order: ${r.actions.join('; ') || 'no actions'}.\n\nResulting state: ${r.nextState}. Verify future silence after termination and source lifetime independently of value assertions.\n\nRuntime witnesses: ${r.obligations.join(', ')}.\n`).join('\n');
 }
 
@@ -41,13 +41,16 @@ export function renderBehavior<P>(manifest: OperatorManifest<P>): string {
     `**Dataflow shape:** \`${m.cardinality.signature}\`. ${m.cardinality.conditions.join(' ')}\n\n` +
     manifest.rules.map(r => `<!-- ${r.id} -->\n${r.explanation}\n`).join('\n') +
     `\n**Time:** ${m.scope.time}\n\n**Sharing:** ${m.ownership.sharing}\n\n` +
-    'The runtime is not generated from these paragraphs. Evidence is reported separately in the milestone record.\n';
+    `**Callbacks:** ${m.scope.callbacks}\n\n**Excluded:** ${m.scope.exclusions.join(' ')}\n\n` +
+    `The runtime is not generated from these paragraphs. [Evidence](../${m.evidence.record}) is reported separately from this specification.\n`;
 }
 
 const json = (value: unknown): string => JSON.stringify(value);
 const actionText = <T>(action: Action<T>): string => action.type === 'notify'
   ? `${action.target}.${action.notification.kind}(${action.notification.kind === 'N' ? json(action.notification.value) : action.notification.kind === 'E' ? json(action.notification.error) : ''})`
-  : `${action.type}(${action.resource.id}#${action.resource.generation}${action.type === 'schedule' ? `, delay=${action.delay}` : ''})`;
+  : action.type === 'invoke-callback'
+    ? `invoke(${action.resource.id}#${action.resource.generation}, value=${json(action.value)}, index=${action.index})`
+    : `${action.type}(${action.resource.id}#${action.resource.generation}${action.type === 'schedule' ? `, delay=${action.delay}` : ''})`;
 
 export function renderTrace<S, E extends Event, T>(trace: Trace<S, E, Action<T>>): string {
   return header(`${trace.steps[0]?.modelId ?? 'empty'}: concrete trace and four-lane view`) +

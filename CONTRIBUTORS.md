@@ -17,6 +17,10 @@
 
 - **GPT-6 Astra Pro (OpenAI)** — main contributor to canonical TypeScript schema 1.0, the pure model runner, the scoped take model, deterministic projections, model/type/runtime tests and milestone documentation, under Hans Schenker's direction.
 
+## M02-A implementation
+
+- **GPT-6 Astra Pro (OpenAI)** — main contributor to schema 1.1's callback-outcome boundary, indexed map/filter models, reusable generation, model/type/runtime tests, bounded comparisons and checkpoint documentation, under Hans Schenker's direction.
+
 The new commits use `Co-authored-by: GPT-6 Astra Pro <gpt-6-astra-pro@example.invalid>` as an explicit AI-assistance record. This reserved-domain placeholder is not a verified mailbox or GitHub account, and does not promise an entry in GitHub's account-based contributor graph.
 
 ## Source-project contributions

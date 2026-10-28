@@ -19,7 +19,8 @@ export function validateModel<P, S, E extends Event, A>(model: OperatorModel<P, 
   unique(m.ownership.resources.map(x => x.id), 'resources');
   const controls = new Set(m.controls.map(x => x.id));
   const inputs = new Set(m.inputs.map(x => x.type));
-  if (!m.id || m.schemaVersion !== '1.0') errors.push('invalid identity/version');
+  if (!m.id || !['1.0', '1.1'].includes(m.schemaVersion)) errors.push('invalid identity/version');
+  if (m.schemaVersion === '1.0' && m.actionTypes.includes('invoke-callback')) errors.push('callback actions require schema 1.1');
   if (!controls.has(m.initialization.control)) errors.push('undeclared initial control');
   if (!inputs.has(m.initialization.event)) errors.push('undeclared initialization event');
   if (!m.sources.length || !m.evidence.record) errors.push('missing provenance/evidence record');
@@ -97,6 +98,7 @@ export function validateActionWord<T>(actions: readonly Action<T>[]): readonly s
     } else {
       if (!action.resource.id || !Number.isSafeInteger(action.resource.generation) || action.resource.generation < 0) errors.push('invalid resource identity');
       if (action.type === 'schedule' && (!Number.isFinite(action.delay) || action.delay < 0)) errors.push('invalid timer delay');
+      if (action.type === 'invoke-callback' && (!Number.isSafeInteger(action.index) || action.index < 0 || action.resource.generation !== action.index)) errors.push('invalid callback index/generation');
     }
   }
   return errors;

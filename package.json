@@ -9,10 +9,10 @@
     "build": "tsc -p tsconfig.json",
     "check:types": "tsc -p tsconfig.types.json",
     "test": "npm run build && node --test tests/*.test.mjs",
-    "test:model": "npm run build && node --test tests/m01-model.test.mjs",
+    "test:model": "npm run build && node --test tests/*-model.test.mjs",
     "generate": "npm run build && node scripts/generate.mjs",
     "check:generated": "npm run build && node scripts/generate.mjs --check",
-    "check:syntax": "node --check tests/insights.test.mjs && node --check tests/m01-model.test.mjs && node --check tests/m01-rxjs.test.mjs && node --check scripts/generate.mjs",
+    "check:syntax": "node scripts/check-syntax.mjs",
     "check": "npm run check:syntax && npm run check:types && npm test && npm run check:generated"
   },
   "dependencies": { "rxjs": "7.8.2" },

@@ -2,7 +2,7 @@
 
 > Generated from the canonical model by npm run generate. Do not edit this projection.
 
-Finite control-state projection; stored counters and guards remain in the table. Edges are not timing assertions.
+Finite control-state projection; stored data and guards remain in the table. Edges are not timing assertions.
 
 ```mermaid
 stateDiagram-v2
