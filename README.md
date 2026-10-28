@@ -2,531 +2,171 @@
 
 A coherent method for describing, analyzing, documenting, visualizing, and testing **RxJS 7.8.2 operator behavior** from one explicit semantic model.
 
-This repository consolidates the strongest reusable ideas developed across the Mealy-related RxJS repositories into one workflow.
+> **One semantic model, many projections; independent runtime evidence.**
 
-> **Core principle:** define operator behavior once, then derive the readable documentation, transition tables, diagrams, traces, and test obligations from that same model.
+The project grew from stateful transducers, through six-component Mealy analysis, to transition tables, diagrams, BDD and test obligations. Formal machinery supports the explanation; an RxJS user should not need automata theory to understand the final operator description.
 
-## Why this repository exists
+## Start here
 
-The project grew through a sequence of discoveries:
+| Document | Role |
+|---|---|
+| [Formal method](docs/FORMAL-METHOD.md) | Canonical six-tuple analysis, guarded transitions, lifecycle and evidence |
+| [Composition and ownership](docs/COMPOSITION-AND-OWNERSHIP.md) | New: connected machines, feedback, shared state, action ordering and execution contracts |
+| [Dependent types](docs/DEPENDENT-TYPES.md) | State-indexed legal behavior, not merely a type for state |
+| [Imported-document review](docs/reviews/2026-10-28-gemini-mealy.md) | Adopted ideas, corrected claims, provenance and pinned primary sources |
+| [Operator document template](docs/OPERATOR-DOCUMENT-TEMPLATE.md) | Formal analysis through to a standalone plain-language explanation |
+| [Migration map](docs/MIGRATION-MAP.md) | What to preserve from the earlier repositories |
+| [Validation record](evidence/2026-10-28-insights.md) | Executed checks, runtime-test status and remaining limits |
 
-```text
-Stateful Transducer
-        ↓
-Mealy-style state machine
-        ↓
-Six-component operator analysis
-        ↓
-Guarded State Transition Table
-        ↓
-BDD / Mealy-DSL readable projection
-        ↓
-Execution traces + four-lane timelines
-        ↓
-Test obligations
-        ↓
-Concrete RxJS TestScheduler / lifecycle tests
-        ↓
-Plain-language operator documentation
-```
-
-The important result is not the terminology. It is the **traceable chain from behavior to evidence**.
-
-An RxJS user should not need to understand automata theory to read an operator description. The formal model is the semantic engine underneath; BDD and plain language are the user-facing views.
-
-## Baseline
-
-- RxJS: **7.8.2**
-- JavaScript / TypeScript
-- Observable protocol: ordered `next` notifications followed by at most one terminal `error` or `complete`
-- Subscription, cancellation, teardown, timers, scheduling, and sharing are modeled explicitly when they affect behavior.
-
-## The unified workflow
+## One behavioral model
 
 ```text
-Pinned RxJS source + operator configuration
-                  │
-                  ▼
-        Behavioral contract
-                  │
-                  ▼
-     Extended Mealy-style model
-       M = (S, S₀, Z, A, T, G)
-                  │
-                  ▼
-     Guarded State Transition Table
-          ┌───────┼────────┐
-          ▼       ▼        ▼
-        BDD     Trace    State diagram
-          │       │
-          │       └──────► four-lane timeline
-          │
-          └──────────────► plain-language behavior
-                  │
-                  ▼
-          Test obligations
-                  │
-          ┌───────┴────────┐
-          ▼                ▼
-      model tests      RxJS runtime tests
-                           │
-                           ▼
-                    evidence / comparison
+Pinned RxJS source + exact configuration + execution scope
+                           ↓
+                 M = (S, S₀, Z, A, T, G)
+                           ↓
+                Guarded transition rules
+           ┌───────────────┼─────────────────┐
+           ↓               ↓                 ↓
+       BDD / prose      STT / diagram       Test obligations
+                           ↓                 ↓
+                    Concrete traces     RxJS runtime checks
+                           ↓                 ↓
+                    Four-lane view       Evidence
 ```
 
-The arrows mean **derivation and traceability**, not that every artifact must be generated mechanically in the first implementation.
+A state-transition diagram (STD) and state-transition table (STT) are views of the same rules. Traces instantiate paths through those rules. Tests compare model predictions with actual RxJS behavior. They are not required to form a strictly serial conversion chain.
 
-## The semantic core
-
-We use an extended Mealy-style transducer:
-
-```text
-M = (S, S₀, Z, A, T, G)
-```
-
-| Component | Meaning | RxJS question |
+| Component | Meaning | Question |
 |---|---|---|
-| `S` | State space | What must the operator remember? |
-| `S₀` | Initial state | What is true when execution begins? |
-| `Z` | Input alphabet | Which events can make the operator react? |
-| `A` | Output alphabet | Which notifications/control observations can it produce? |
-| `T` | Transition function | What state follows this event? |
-| `G` | Action / output function | What ordered output/effects result? |
-
-For RxJS, one input may produce **zero, one, or several** observable outputs, so `G` is treated as sequence-valued when appropriate.
-
-The model may be symbolic rather than finite. Payloads, counters, buffers, inner subscription identities, and deadlines can make a literal finite-state interpretation inappropriate.
-
-## RxJS input alphabets
-
-A single-source operator usually begins with:
+| S | State space | What can this execution remember? |
+| S₀ | Initial state | What is established at initialization? |
+| Z | Input alphabet | Which events can make it react? |
+| A | Action/output alphabet | Which notification or resource actions can it produce? |
+| T | Transition function | What state follows the event? |
+| G | Action function | What ordered action word follows the event? |
 
 ```text
-subscribe
-source.next(value)
-source.error(error)
-source.complete
-unsubscribe
+T : S × Z → S
+G : S × Z → A*
 ```
 
-Higher-order operators add outer/inner distinctions:
+Both functions use the same pre-event state. A combined step can compute the pair once; the notation does not require evaluating a supplied callback twice. Arbitrary payloads, counters, buffers and inner identities make this an **extended, potentially symbolic Mealy-style transducer**, not automatically a finite automaton.
+
+Source/outer/inner next, error and completion have explicit origins. Subscription and cancellation are control events, not notifications. Timer firings carry identities; sources and schedulers supply time. Initialization can complete without subscribing upstream.
+
+## Six complementary methods
+
+| Method | Role |
+|---|---|
+| Cω-style notation | Dataflow shape and qualified cardinality |
+| Dependent types | Which whole transitions are legal in the model |
+| Mealy analysis | State, events, next state and ordered actions |
+| BDD | User-readable projection of behavioral rules |
+| Four-lane diagram | Time, inputs, control state and outputs in one concrete trace |
+| Test cases | Independent conformance evidence against RxJS |
 
 ```text
-outer.next(value)
-outer.error(error)
-outer.complete
-
-inner.next(id, value)
-inner.error(id, error)
-inner.complete(id)
+Behavior :
+  (state : S) →
+  (event : E state) →
+  Σ (nextState : S). Actions state event nextState
 ```
 
-Time-sensitive operators add explicit scheduler/timer events:
+Dependent types constrain the whole legal behavior, not only state. That is a specification discipline, not an implemented proof of the RxJS runtime. TypeScript can encode some related constraints but is not itself a dependent proof assistant.
+
+Cω-inspired teaching shorthand:
 
 ```text
-timer.fire(id)
+T!       exactly one value
+T?       zero or one
+T+       one or more
+T*       zero or more
+A × B    both
+A + B    either
+(T*)*    streams of streams
 ```
 
-Time is therefore not hidden inside the prose. It appears as an event source that can change the machine.
+These markers count values, not completion/error/control actions. For example, seeded `reduce` has exactly-one final-value behavior **conditional on successful completion, a successful reducer, and no early cancellation**. Errors, cancellation and noncompletion must not be hidden by an unqualified `T* → A!` claim.
 
-## BDD is the readable projection
-
-Formal semantics should not force RxJS users to read tuple notation.
-
-Canonical readable rule:
+## Readable behavior on top
 
 ```text
-Given <current state>
+Given <current state and precondition>
 When  <input event>
-Then  <Action Policy>
-Then  <Action Policy>
+Then  <ordered action>
+Then  <ordered action>
 And   <next state>
 ```
 
-Equivalent machine-oriented form:
+In this project's restricted Convertible BDD profile, `And` denotes the next state; this is not a claim about general Gherkin syntax. The corresponding Mealy-DSL uses `While` instead of `Given`.
 
-```text
-While <current state>
-When  <input event>
-Then  <Action Policy>
-And   <next state>
-```
-
-Example for `switchMap`:
+For a scoped, successful `switchMap` replacement:
 
 ```text
 Given an inner subscription is active
 When the outer source emits a new value
 Then unsubscribe the current inner
-Then project the new outer value
+Then project the new value
 Then subscribe to the new inner
-And an inner subscription is active
+And the new inner is active
 ```
 
-The BDD is not a second specification. It is a human-readable projection of the same transition rule.
+Projection throws, synchronous completion and reentry need separate rules or explicit scope. The reader-facing prose must be traceable to rules rather than independently maintained.
 
-## State Transition Table
+## New: from operators to connected machines
 
-Each reachable, behaviorally distinct rule becomes one guarded STT row.
+The imported Gemini discussion contributes useful ideas for composition, feedback and subscriber-addressed output. The [review](docs/reviews/2026-10-28-gemini-mealy.md) separates those ideas from claims that need correction.
 
-Minimum columns:
-
-| ID | Current state | Input | Guard | Action / outputs | Next state |
-|---|---|---|---|---|---|
-
-For conformance work we additionally track:
-
-- state-reaching prefix
-- lifecycle observations
-- distinguishing suffix
-- test IDs
-- execution status
-- evidence
-- exclusions / scope
-
-### Fundamental testing rule
-
-> **Every reachable, behaviorally distinct transition is a minimum test obligation.**
-
-This is stronger and more precise than “one row = one test.” One row may require several concrete tests for timing, payload partitions, reentrancy, scheduler ordering, resource ownership, or lifecycle boundaries.
-
-## Test derivation
+The adopted extension is:
 
 ```text
-Behavior
-   ↓
-Formal model
-   ↓
-Reachable guarded transition
-   ↓
-Test obligation
-   ↓
-State-reaching input sequence
-   ↓
-Expected notifications + lifecycle consequences
-   ↓
-RxJS test
+local transition models
+         +
+connection / ownership graph
+         +
+explicit execution contract
+         ↓
+pipeline and shared-machine behavior
 ```
 
-Tests should reach a state through the public observable protocol whenever practical rather than mutating imagined internal fields.
+Pure finite-word cascade composition is a useful starting point. Full RxJS behavior also needs reverse cancellation, initialization, resource lifetimes, callback ordering, scheduling and sharing/reset policies. A FIFO interpreter is an explicit policy, not a semantics-neutral fix for reentrancy.
 
-Use separate assertions for:
+Flattening policies remain practical descriptions: `mergeMap` allows overlap; `switchMap` keeps the latest; `concatMap` queues; `exhaustMap` ignores while busy. The new guide adds a corrected `expand` admission rule and distinguishes subscription feedback from recursive value expansion.
 
-- values and terminal notifications
-- subscriptions/unsubscriptions
-- timer/resource lifecycle
-- ordering
-- sharing/reset behavior
-- cancellation
+## Test obligations and evidence
 
-A generated model is an oracle candidate, not proof of the actual RxJS implementation. Runtime comparisons remain separate evidence.
+> **Every reachable, behaviorally distinct transition creates a minimum test obligation.**
 
-## BDD → STT → tests
+One obligation can need multiple concrete tests. A scenario should reach its state through public inputs, deliver the event, assert notifications and resource consequences, and use a distinguishing suffix when necessary. Row coverage is not exhaustive behavior coverage.
 
-The readable and formal views stay traceable:
+The new suite contains **29 named runtime characterization tests**, including subscription marbles, synchronous cancellation, replay expiry, sharing resets, recursion order and callback-index-sensitive composition. Their execution status is recorded separately in [evidence](evidence/2026-10-28-insights.md).
 
-```text
-Given state S
-When event E
-Then action A₁
-Then action A₂
-And state S′
+```sh
+npm ci --ignore-scripts
+npm run check
 ```
 
-corresponds to:
-
-```text
-STT:
-S | E | guard | A₁, A₂ | S′
-```
-
-which creates the obligation:
-
-```text
-Reach S
-→ provide E
-→ observe A₁, A₂
-→ verify future behavior corresponds to S′
-```
-
-## Static cardinality: Cω companion notation
-
-Erik Meijer's Cω stream cardinality notation is useful as a compact **static** description:
-
-```text
-T!   exactly one
-T?   zero or one
-T+   one or more
-T*   zero or more
-(T*)* nested streams
-```
-
-It complements, but does not replace, the dynamic model.
-
-Example:
-
-```text
-map    : (T → U) → T* → U*
-filter : (T → boolean) → T* → T*
-reduce : (A → T → A) → A → T* → A!
-```
-
-Cω says something about stream cardinality. The Mealy-style model explains **how the operator behaves over time to realize it**.
-
-## Four-lane execution view
-
-For teaching and debugging, a concrete trace can be rendered as:
-
-```text
-1. Time / scheduler frames
-2. Input notifications
-3. Operator control state
-4. Output notifications
-```
-
-This is especially useful for time-based and concurrency-sensitive operators because it separates:
-
-- when something happens,
-- what arrives,
-- what the operator remembers,
-- what leaves the operator.
+Node 22.16.0 is used by CI. RxJS is pinned to 7.8.2; the lockfile also pins tslib. The read-only GitHub Actions workflow runs on pushes to main, pull requests, and manual dispatch. No universal interpreter, completed canonical schema, generated operator catalogue, or interactive simulator is claimed by this update.
 
 ## Core invariants
 
-The analysis must make the following explicit:
+Keep terminal exclusivity, post-terminal silence, cancellation distinct from completion, payload correctness, resource release, timer identity, state ownership and reset behavior explicit. Separate equal-time execution order from timestamps, and ordinary atomic transitions from nested synchronous delivery.
 
-- terminal exclusivity: one subscription does not both error and complete
-- post-terminal silence
-- cancellation is not completion
-- payload transformation/preservation
-- subscription independence unless sharing is explicit
-- teardown/resource ownership
-- timer cancellation
-- current vs stale inner subscriptions
-- equal-time ordering assumptions
-- reentrancy boundaries
-- sharing/reset policy where applicable
+For sharing, name the state owner and connection generation. For temporal behavior, distinguish a timestamp provider from scheduled callbacks. For a fresh subscription, do not accidentally reuse mutable reference-model state.
 
-## Operator document target
+## Migration and status
 
-A complete operator page should eventually contain:
+The earlier projects remain provenance, not material to delete:
 
-1. Operator name and short purpose
-2. Cω-style stream type / cardinality signature
-3. Plain-language behavior
-4. Input events
-5. State / remembered data
-6. Six-component formal model
-7. BDD scenarios
-8. Guarded State Transition Table
-9. State diagram
-10. Representative execution trace
-11. Four-lane timeline where useful
-12. Concurrency / cancellation / time policy
-13. Lifecycle behavior
-14. Invariants and edge cases
-15. Test obligations
-16. Runtime conformance evidence
-17. Final operator behavior in plain language
+`rxjs-mealy-analysis`, `rxjs-operator-mealy-analysis`, `rxjs-operator-mealy-tuples`, `rxjs-mealy-to-testcase`, `bdd-to-mealy`, `rxjs-comega-type-notation-and-mealy-machine-tuples`, and the Mealy-to-documentation experiments.
 
-The final section is intentionally understandable without reading any formal notation.
+M00 establishes the method. This update adds the composition/ownership review and a scoped regression harness. **M01 remains open:** define the canonical schema with initialization, ownership, dispatch and ordered actions, then migrate one operator end to end before expanding to `map`, `filter`, `take`, `scan`, `debounceTime`, `switchMap` and `share`.
 
-
-
-## Six formal methods for one RxJS operator
-
-The project now treats six methods as complementary views of one operator rather than as separate descriptions:
-
-| Method | Role | Core question |
-|---|---|---|
-| Cω type notation | Dataflow shape and cardinality | What can flow? |
-| Dependent Types | Type the operator's Mealy machine | Which complete behaviors are legal? |
-| Mealy machine | Operational semantics | What happens for this event in this state? |
-| BDD | Human-readable behavioral rules | How do we state the transition as a scenario? |
-| Four-lane operator diagram | Execution visualization | How do time, input, state, and output evolve together? |
-| Test cases | Conformance evidence | Does the real RxJS operator exhibit the specified behavior? |
-
-The central relationship is:
-
-```text
-                 RxJS Operator
-                       │
-        ┌──────────────┼──────────────┐
-        ↓              ↓              ↓
-      Cω Type     Dependent Type    Mealy
-        │              │              │
- shape/cardinality  types the       transition
-                    Mealy machine    semantics
-        │              │              │
-        └──────────────┼──────────────┘
-                       ↓
-                      BDD
-                       ↓
-             human-readable behavior
-                       ↓
-            Four-lane execution view
-                       ↓
-                    Test cases
-                       ↓
-             runtime conformance evidence
-```
-
-### Dependent Types type the Mealy machine
-
-This is the key refinement.
-
-The ordinary Mealy form:
-
-```text
-S × E -> S × A
-```
-
-can be strengthened into a dependent behavioral type:
-
-```text
-Behavior :
-  (state : S) ->
-  (event : E state) ->
-  Σ (nextState : S).
-    Actions state event nextState
-```
-
-This means the dependent type is not merely typing the operator state. It types the **whole legal behavior of the Mealy machine**:
-
-```text
-current state
-    ↓ constrains
-legal event
-    ↓ constrains
-legal next state
-    ↓ constrains
-legal actions
-```
-
-So:
-
-```text
-Cω
-= types the dataflow shape
-
-Dependent Types
-= type the Mealy machine
-
-Mealy
-= defines the transition semantics
-
-BDD
-= projects those semantics into readable rules
-
-Four-lane diagram
-= projects a concrete execution over time
-
-Test cases
-= verify the model against RxJS runtime behavior
-```
-
-A useful summary is:
-
-> **Dependent Types turn the Mealy machine from an untyped behavioral relation into a typed space of legal operator behaviors.**
-
-Illegal combinations can have no inhabitant. For example, a `switchMap` model can exclude `InnerNext` while no inner is active, or exclude any next state containing two active inners.
-
-### End-to-end formal analysis flow
-
-```text
-RxJS source / operator contract
-        ↓
-Cω signature
-        ↓
-Mealy machine
-        ↓
-Dependent typing of the Mealy behavior
-        ↓
-Guarded transition rules
-        ↓
-BDD scenarios
-        ↓
-Four-lane execution traces
-        ↓
-Test obligations
-        ↓
-RxJS TestScheduler / lifecycle tests
-        ↓
-Plain-language documentation
-```
-
-The plain-language explanation is therefore not guessed first. It is derived from the formal analysis underneath.
-
-
-## Repository structure
-
-```text
-rxjs-formal-way/
-├─ README.md
-├─ CONTRIBUTORS.md
-├─ docs/
-│  ├─ FORMAL-METHOD.md
-│  ├─ MIGRATION-MAP.md
-│  └─ OPERATOR-DOCUMENT-TEMPLATE.md
-├─ model/                 # machine-readable semantic models
-├─ operators/             # one canonical operator artifact per RxJS operator
-├─ generated/             # derived STTs, diagrams, traces, prose
-├─ tests/
-│  ├─ model/              # reference-model tests
-│  └─ rxjs/               # actual RxJS 7.8.2 tests
-└─ evidence/              # execution results and coverage records
-```
-
-Empty directories will be introduced when implementation artifacts are migrated; Git itself does not retain empty directories.
-
-## Source projects being consolidated
-
-The repository is intended to absorb the reusable concepts from:
-
-- `rxjs-mealy-analysis`
-- `rxjs-operator-mealy-analysis`
-- `rxjs-operator-mealy-tuples`
-- `rxjs-mealy-to-testcase`
-- `bdd-to-mealy`
-- `rxjs-comega-type-notation-and-mealy-machine-tuples`
-- the Mealy-to-documentation experiments
-
-The source repositories remain valuable historical records. Consolidation should preserve provenance rather than erase it.
-
-See [MIGRATION-MAP.md](docs/MIGRATION-MAP.md).
-
-## Design rule
-
-The repository should resist parallel competing truths.
-
-```text
-ONE semantic model
-        ↓
-many projections
-```
-
-not:
-
-```text
-formal document
-BDD document
-test plan
-diagram
-plain prose
-        ↓
-five independently maintained descriptions
-```
-
-The latter inevitably drifts.
-
-## Status
-
-This repository is the consolidation point. The first milestone establishes the unified method and migration map. The next milestone is to define the canonical machine-readable schema and migrate one reference operator end-to-end before importing the full operator catalogue.
+The [operator template](docs/OPERATOR-DOCUMENT-TEMPLATE.md) remains the detailed page format. Apply the schema and acceptance requirements in the new composition guide alongside it; its final plain-language explanation remains the teaching outcome.
 
 ## Collaboration
 
-This consolidation grew from Hans Schenker's RxJS analysis work and repeated design sessions with OpenAI models, together with useful contributions preserved in the source repositories from other AI-assisted experiments.
+Hans Schenker directs the research and teaching goals. The initial consolidation credits **GPT-5.6 Sol (OpenAI)** in the project history. **GPT-6 Astra Pro** is the main contributor to this source review, composition/ownership guidance and regression-harness update. The imported Gemini discussion is credited as inspiration, not as authoritative implementation evidence.
 
-**GPT-5.6 Sol (OpenAI)** designed this initial consolidation architecture for `rxjs-formal-way` with Hans Schenker.
-
-See [CONTRIBUTORS.md](CONTRIBUTORS.md).
+See [CONTRIBUTORS.md](CONTRIBUTORS.md). This is an independent project, not an official RxJS or OpenAI specification.

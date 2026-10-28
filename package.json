@@ -1,0 +1,14 @@
+{
+  "name": "rxjs-formal-way",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Traceable RxJS operator specifications and scoped runtime evidence",
+  "engines": { "node": ">=22.16.0" },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check:syntax": "node --check tests/insights.test.mjs",
+    "check": "npm run check:syntax && npm test"
+  },
+  "dependencies": { "rxjs": "7.8.2" }
+}
