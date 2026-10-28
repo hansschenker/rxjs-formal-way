@@ -6,17 +6,19 @@ A coherent method for describing, analyzing, documenting, visualizing, and testi
 
 The project grew from stateful transducers, through six-component Mealy analysis, to transition tables, diagrams, BDD and test obligations. Formal machinery supports the explanation; an RxJS user should not need automata theory to understand the final operator description.
 
-## Current checkpoint: M02-A
+## Current checkpoint: M02-B
 
-M01 established the canonical TypeScript model, pure trace runner and take profile. M02-A adds **map and filter**, including callback indices, correlated return/throw outcomes, cancellation and subscription-local ownership. Read the [M02 guide](docs/M02-VALUE-SELECTION.md), [evidence](evidence/M02.md) and [roadmap](docs/ROADMAP.md). M02's remaining reference operators are not yet implemented.
+M01 established the canonical TypeScript model, pure trace runner and take profile. M02-A added map and filter with indexed callback outcomes. M02-B adds **seeded and unseeded scan**, including accumulation, seed presence, reducer indices, throws and seed-reference ownership. Read the [scan guide](docs/M02-B-SCAN.md), [evidence](evidence/M02-B.md) and [roadmap](docs/ROADMAP.md). Timing, higher-order and shared reference profiles remain to be implemented.
 
-| Operator | Readable behavior | BDD | Transition table | State diagram | Four lanes |
+| Operator/profile | Readable behavior | BDD | Transition table | State diagram | Four lanes |
 |---|---|---|---|---|---|
 | take | [Page](operators/take.md) | [BDD](generated/take.bdd.md) | [STT](generated/take.stt.md) | [STD](generated/take.diagram.md) | [Trace](generated/take.trace.md) |
 | map | [Page](operators/map.md) | [BDD](generated/map.bdd.md) | [STT](generated/map.stt.md) | [STD](generated/map.diagram.md) | [Trace](generated/map.trace.md) |
 | filter | [Page](operators/filter.md) | [BDD](generated/filter.bdd.md) | [STT](generated/filter.stt.md) | [STD](generated/filter.diagram.md) | [Trace](generated/filter.trace.md) |
+| scan, seeded | [Page](operators/scan-seeded.md) | [BDD](generated/scan-seeded.bdd.md) | [STT](generated/scan-seeded.stt.md) | [STD](generated/scan-seeded.diagram.md) | [Trace](generated/scan-seeded.trace.md) |
+| scan, unseeded | [Page](operators/scan-unseeded.md) | [BDD](generated/scan-unseeded.bdd.md) | [STT](generated/scan-unseeded.stt.md) | [STD](generated/scan-unseeded.diagram.md) | [Trace](generated/scan-unseeded.trace.md) |
 
-Each has eight generated projections: the five linked above, a JSON manifest, JSON trace and test-obligation document. All **24** are checked for drift. These are scoped reference models, not replacement RxJS operators.
+Each configured profile has eight generated projections: the five linked above, a JSON manifest, JSON trace and test-obligation document. All **40** are checked for drift. These are scoped reference models, not replacement RxJS operators.
 
 ## Start here
 
@@ -25,6 +27,7 @@ Each has eight generated projections: the five linked above, a JSON manifest, JS
 | [Operator profiles](operators/README.md) | Implemented profiles and canonical sources |
 | [M01 schema and workflow](docs/M01-CANONICAL-MODEL.md) | First executable contract and take profile |
 | [M02 value selection](docs/M02-VALUE-SELECTION.md) | Callback-separated map/filter profiles and schema 1.1 |
+| [M02-B accumulation](docs/M02-B-SCAN.md) | Seeded/unseeded scan, typed reducer inputs and reference ownership |
 | [Roadmap](docs/ROADMAP.md) | Implemented and remaining checkpoints |
 | [Formal method](docs/FORMAL-METHOD.md) | Six-tuple analysis, guarded transitions, lifecycle and evidence |
 | [Composition and ownership](docs/COMPOSITION-AND-OWNERSHIP.md) | Connected machines, feedback, shared state and execution contracts |
@@ -32,7 +35,7 @@ Each has eight generated projections: the five linked above, a JSON manifest, JS
 | [Imported-document review](docs/reviews/2026-10-28-gemini-mealy.md) | Adopted ideas, corrected claims, provenance and pinned sources |
 | [Operator document template](docs/OPERATOR-DOCUMENT-TEMPLATE.md) | Formal analysis through to plain-language explanation |
 | [Migration map](docs/MIGRATION-MAP.md) | Original consolidation plan and source repositories |
-| [M01 evidence](evidence/M01.md) / [M02 evidence](evidence/M02.md) | Executed results, bounded comparisons and remaining limits |
+| [M01 evidence](evidence/M01.md) / [M02-A evidence](evidence/M02.md) / [M02-B evidence](evidence/M02-B.md) | Executed results, bounded comparisons and remaining limits |
 | [Earlier validation](evidence/2026-10-28-insights.md) | Retained 29-test baseline and its historical run |
 
 ## One behavioral model
@@ -89,6 +92,8 @@ throw: error and release source
 The pure model never executes a business function in a guard or reaction. A named callback binding replaces executable code in the model declaration. Calling is a synchronous logical phase, not a timer, Promise conversion, or queued execution policy. The test-only adapter supplies concrete outcomes; a production effect interpreter remains future work.
 
 Map and filter each remember a per-subscription index. A dropped filter value still consumes an index. The source may be hot while the operator's counter remains subscription-local. No sharing is introduced by these profiles.
+
+M02-B reuses this boundary with `{ accumulator, value }` as the typed callback payload plus the source index. A successful result becomes both the next accumulation and the emitted value. An absent seed has a separate first-value rule; an explicit undefined seed is still present. See the [scan profile guide](operators/scan.md).
 
 ## Six complementary methods
 
@@ -158,13 +163,13 @@ Flattening policies remain practical: mergeMap allows overlap, switchMap keeps t
 
 One obligation can require multiple tests. Reach the state through public inputs, provide the target event, assert notifications and resource consequences, then use a distinguishing suffix when necessary. Row coverage is not exhaustive behavior coverage.
 
-M01's baseline has 65 named tests, including 465 bounded take comparisons. M02-A adds 31 model tests and 23 runtime cases, with 1302 additional bounded comparisons in one case. Eight new negative type assertions supplement M01's six. Refer to the milestone evidence records for actual execution results rather than treating these counts as proof.
+M01's baseline has 65 named tests, including 465 bounded take comparisons. M02-A adds 31 model tests and 23 runtime cases, with 1302 additional bounded comparisons in one case. M02-B adds 29 model tests and 23 runtime cases, with 1860 additional comparisons. Ten new negative type assertions supplement the earlier fourteen. Refer to the milestone evidence records for actual execution results rather than treating these counts as proof.
 
 ```sh
 npm ci --ignore-scripts
 npm run check
 npm run test:model
-npm run generate          # intentionally refresh 24 projections
+npm run generate          # intentionally refresh 40 projections
 npm run check:generated   # read-only drift check
 ```
 
@@ -172,14 +177,14 @@ Node 22.16.0, RxJS 7.8.2 and TypeScript 5.8.3 are the declared validation baseli
 
 ## Invariants, migration and provenance
 
-Keep terminal exclusivity, post-terminal silence, cancellation distinct from completion, payload identity, resource release, timer/call identity, state ownership and reset behavior explicit. Separate equal-time ordering from timestamps and scoped atomic reactions from arbitrary nested delivery. Fresh executions must not accidentally share mutable model state.
+Keep terminal exclusivity, post-terminal silence, cancellation distinct from completion, payload identity, resource release, timer/call identity, state ownership and reset behavior explicit. Separate equal-time ordering from timestamps and scoped atomic reactions from arbitrary nested delivery. Fresh executions need separate bookkeeping; supplied seed objects are not automatically cloned, as scan's ownership tests make explicit.
 
 Earlier repositories remain provenance, not material to delete: rxjs-mealy-analysis, rxjs-operator-mealy-analysis, rxjs-operator-mealy-tuples, rxjs-mealy-to-testcase, bdd-to-mealy, rxjs-comega-type-notation-and-mealy-machine-tuples, and the Mealy-to-documentation experiments.
 
-M02 continues next with scan, then time-sensitive, higher-order and shared profiles. Full catalogue migration, a general effect interpreter, dependent proofs and interactive visualization remain later work. The [roadmap](docs/ROADMAP.md) is the current implementation tracker; the migration map retains the original broader plan.
+M02 continues next with debounceTime, then higher-order and shared profiles. Full catalogue migration, a general effect interpreter, dependent proofs and interactive visualization remain later work. The [roadmap](docs/ROADMAP.md) is the current implementation tracker; the migration map retains the original broader plan.
 
 ## Collaboration
 
-Hans Schenker directs the research and teaching goals. The initial consolidation credits **GPT-5.6 Sol (OpenAI)** in project history. **GPT-6 Astra Pro** is the main contributor to the source review, composition/ownership guidance, regression harness and M01/M02-A implementations. The supplied Gemini discussion is credited as inspiration, not authoritative implementation evidence.
+Hans Schenker directs the research and teaching goals. The initial consolidation credits **GPT-5.6 Sol (OpenAI)** in project history. **GPT-6 Astra Pro** is the main contributor to the source review, composition/ownership guidance, regression harness and M01/M02-A/M02-B implementations. The supplied Gemini discussion is credited as inspiration, not authoritative implementation evidence.
 
 See [CONTRIBUTORS.md](CONTRIBUTORS.md). This is an independent project, not an official RxJS or OpenAI specification.

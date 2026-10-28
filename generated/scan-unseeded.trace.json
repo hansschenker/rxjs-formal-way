@@ -1,0 +1,175 @@
+{
+  "status": "finished-input",
+  "consumed": 5,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "scan-unseeded-accumulator",
+      "executionId": "scan-unseeded-example",
+      "ruleId": "SCAN-INIT-UNSEEDED",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Empty",
+        "index": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 10,
+      "modelId": "scan-unseeded-accumulator",
+      "executionId": "scan-unseeded-example",
+      "ruleId": "SCAN-FIRST",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Empty",
+        "index": 0
+      },
+      "after": {
+        "phase": "Active",
+        "accumulator": 1,
+        "index": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 20,
+      "modelId": "scan-unseeded-accumulator",
+      "executionId": "scan-unseeded-example",
+      "ruleId": "SCAN-CALL",
+      "event": {
+        "type": "source.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "accumulator": 1,
+        "index": 1
+      },
+      "after": {
+        "phase": "Calling",
+        "accumulator": 1,
+        "input": 2,
+        "callId": 1,
+        "index": 2
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "accumulator",
+            "generation": 1
+          },
+          "value": {
+            "accumulator": 1,
+            "value": 2
+          },
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 20,
+      "modelId": "scan-unseeded-accumulator",
+      "executionId": "scan-unseeded-example",
+      "ruleId": "SCAN-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "accumulator",
+          "generation": 1
+        },
+        "value": 3
+      },
+      "before": {
+        "phase": "Calling",
+        "accumulator": 1,
+        "input": 2,
+        "callId": 1,
+        "index": 2
+      },
+      "after": {
+        "phase": "Active",
+        "accumulator": 3,
+        "index": 2
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 3
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 30,
+      "modelId": "scan-unseeded-accumulator",
+      "executionId": "scan-unseeded-example",
+      "ruleId": "SCAN-ACTIVE-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "accumulator": 3,
+        "index": 2
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

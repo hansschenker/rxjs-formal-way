@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { createTakeModel, takeExample, createMapModel, mapExample, createFilterModel, filterExample,
+  createSeededScanModel, createUnseededScanModel, seededScanExample, unseededScanExample,
   toManifest, runTrace, renderTable, renderBdd, renderDiagram, renderObligations, renderBehavior, renderTrace } from '../dist/index.js';
 
 // Canonical examples specify callback outcomes; generation never executes user callbacks.
@@ -8,6 +9,8 @@ const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
   ['map', createMapModel(), mapExample, 'map-example'],
   ['filter', createFilterModel(), filterExample, 'filter-example'],
+  ['scan-seeded', createSeededScanModel(0), seededScanExample, 'scan-seeded-example'],
+  ['scan-unseeded', createUnseededScanModel(), unseededScanExample, 'scan-unseeded-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();

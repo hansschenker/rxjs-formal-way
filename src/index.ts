@@ -7,3 +7,5 @@ export { createMapModel, mapExample } from './models/map.js';
 export type { MapModel, MapParameters, MapState, MapEvent } from './models/map.js';
 export { createFilterModel, filterExample } from './models/filter.js';
 export type { FilterModel, FilterParameters, FilterState, FilterEvent } from './models/filter.js';
+export { createSeededScanModel, createUnseededScanModel, seededScanExample, unseededScanExample } from './models/scan.js';
+export type { ScanSeed, ScanParameters, ScanArguments, ScanState, ScanEvent, ScanModel } from './models/scan.js';

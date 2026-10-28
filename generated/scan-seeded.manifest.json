@@ -1,0 +1,289 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "scan-seeded-accumulator",
+    "operator": "scan",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Remember each reducer result and emit it as values arrive, starting from a supplied but un-emitted seed.",
+    "cardinality": {
+      "signature": "scan : ((A + S)! x T! x Index! -> A!) x S! -> T* -> A*",
+      "conditions": [
+        "Cω-inspired project shorthand for successful value flow; Index is the zero-based source index.",
+        "One value per successfully processed source next while active; errors and cancellation can end the execution earlier.",
+        "An empty source emits no accumulated value. Completion adds no final value.",
+        "S is the seed type, which may differ from the reducer result type A. The seed itself is not emitted."
+      ]
+    },
+    "scope": {
+      "parameters": "seeded scan; a named reducer binding and safe-integer source indices",
+      "callbacks": "The pure model requests a call with { accumulator, value } and index; an external adapter invokes reducer(accumulator, value, index) exactly once and returns a correlated outcome.",
+      "time": "No clock or timer. Source and callback-outcome events use supplied timestamps and explicit sequence order.",
+      "reentrancy": "Non-reentrant source, reducer and observer; cancellation only between resolved value reactions.",
+      "exclusions": [
+        "Nested input or cancellation during reducer/observer delivery; throwing finalizers or observers.",
+        "Index precision loss, invalid reducer arguments, and universal symbolic equivalence.",
+        "Deep cloning or freezing of seed/results, lossless arbitrary-value JSON encoding, and a production interpreter.",
+        "Arbitrary mutation of referenced objects is not represented as a separate state event; immutable reducers are the differential-test domain."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire the source; never emit the seed or invoke the reducer at subscription."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "Each subscription owns its index and accumulation binding; no sharing or replay is introduced. Seed/result object references are not cloned and may be externally shared.",
+      "reset": "A new execution creates fresh bookkeeping but uses the same supplied seed reference. Closed executions have no legal inputs.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current execution"
+        },
+        {
+          "id": "accumulator",
+          "kind": "callback",
+          "owner": "external reducer binding; call generation is the source index"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Calling is a logical synchronous phase. Only its matching return/throw may resolve it; actions are data, not executed by the model runner.",
+      "cancellationCheckpoints": [
+        "Empty or Active between resolved source reactions; release upstream without completion.",
+        "Calling and observer-delivery cancellation are outside this profile; no FIFO queue is silently introduced."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a fresh execution subscribes"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source delivers a value"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "the pending reducer returns a result"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "the pending reducer throws"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source completes"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source errors"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream unsubscribes"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "invoke-callback",
+      "notify",
+      "unsubscribe"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "has an accumulation and the next source index",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "retains prior accumulation, input and pending reducer identity",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminated or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/scan.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Seed presence, index advancement, reducer outcomes and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/scanInternals.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Seed presence, index advancement, reducer outcomes and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Seed presence, index advancement, reducer outcomes and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Seed presence, index advancement, reducer outcomes and lifecycle"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/m02b-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/m02b-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/M02-B.md"
+    }
+  },
+  "parameters": {
+    "callbackId": "accumulator",
+    "seed": {
+      "provided": true,
+      "value": 0
+    }
+  },
+  "rules": [
+    {
+      "id": "SCAN-INIT-SEEDED",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "fresh execution",
+      "to": "Active",
+      "actions": [
+        "subscribe to the source without emitting a value or invoking the reducer"
+      ],
+      "nextState": "active with the seed reference and index zero",
+      "obligations": [
+        "M02B-SCAN-01",
+        "M02B-SCAN-02",
+        "M02B-SCAN-03"
+      ],
+      "explanation": "On subscription, scan remembers the supplied seed, even when it is undefined, and connects to the source. It does not emit the seed or call the reducer yet."
+    },
+    {
+      "id": "SCAN-CALL",
+      "from": "Active",
+      "event": "source.next",
+      "guard": "index < Number.MAX_SAFE_INTEGER",
+      "to": "Calling",
+      "actions": [
+        "request one reducer call with the previous accumulation, incoming value and current source index"
+      ],
+      "nextState": "calling with prior accumulation and input retained; next index increased by one",
+      "obligations": [
+        "M02B-SCAN-04",
+        "M02B-SCAN-05",
+        "M02B-SCAN-06"
+      ],
+      "explanation": "Once an accumulation exists, each source value invokes the reducer once with the previous accumulation, the new value and its source index. The first index is 0 with a seed and 1 without a seed."
+    },
+    {
+      "id": "SCAN-RETURN",
+      "from": "Calling",
+      "event": "callback.return",
+      "guard": "outcome identifies the pending invocation",
+      "to": "Active",
+      "actions": [
+        "emit the returned accumulation once"
+      ],
+      "nextState": "active with the returned accumulation and the already advanced index",
+      "obligations": [
+        "M02B-SCAN-04",
+        "M02B-SCAN-05",
+        "M02B-SCAN-07",
+        "M02B-SCAN-08"
+      ],
+      "explanation": "A successful reducer result becomes the new accumulation and is emitted unchanged. An undefined result is still a stored value. Equal successive results are not suppressed, and Observable results are not subscribed to."
+    },
+    {
+      "id": "SCAN-THROW",
+      "from": "Calling",
+      "event": "callback.throw",
+      "guard": "outcome identifies the pending invocation",
+      "to": "Closed",
+      "actions": [
+        "forward the thrown error unchanged",
+        "release the source subscription"
+      ],
+      "nextState": "closed because the reducer threw",
+      "obligations": [
+        "M02B-SCAN-09"
+      ],
+      "explanation": "If the reducer throws, scan forwards the thrown value through the error channel and releases the source subscription. It emits no accumulated value for the failing input and does not complete afterwards."
+    },
+    {
+      "id": "SCAN-ACTIVE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "guard": "no pending reducer",
+      "to": "Closed",
+      "actions": [
+        "complete downstream without another value",
+        "release the source subscription"
+      ],
+      "nextState": "closed because the source completed",
+      "obligations": [
+        "M02B-SCAN-02",
+        "M02B-SCAN-10"
+      ],
+      "explanation": "Source completion completes the result and releases upstream. There is no extra final accumulated value, even when a seed was supplied."
+    },
+    {
+      "id": "SCAN-ACTIVE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "guard": "no pending reducer",
+      "to": "Closed",
+      "actions": [
+        "forward the source error unchanged",
+        "release the source subscription"
+      ],
+      "nextState": "closed because the source errored",
+      "obligations": [
+        "M02B-SCAN-11"
+      ],
+      "explanation": "A source error while an accumulation exists is forwarded without invoking the reducer or emitting an extra accumulation. The source is released."
+    },
+    {
+      "id": "SCAN-ACTIVE-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "guard": "between resolved value reactions",
+      "to": "Closed",
+      "actions": [
+        "release the source subscription without notifying downstream"
+      ],
+      "nextState": "closed because downstream cancelled",
+      "obligations": [
+        "M02B-SCAN-12"
+      ],
+      "explanation": "Cancellation between accumulated values releases the source and stops further work. It does not emit an accumulation or completion."
+    }
+  ]
+}
