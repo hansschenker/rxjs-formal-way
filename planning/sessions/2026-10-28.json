@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-28",
+  "timezone": "Europe/Zurich",
+  "status": "closed",
+  "selectedNames": [
+    "take",
+    "map",
+    "filter",
+    "scan",
+    "debounceTime"
+  ],
+  "workedNames": [
+    "take",
+    "map",
+    "filter",
+    "scan",
+    "debounceTime"
+  ],
+  "completedNames": [
+    "take",
+    "map",
+    "filter",
+    "scan",
+    "debounceTime"
+  ],
+  "carryovers": [],
+  "evidence": "evidence/M02-C.md",
+  "notes": [
+    "Historic baseline, reconstructed from accepted reference milestones; not a 2026-10-29 generation."
+  ]
+}

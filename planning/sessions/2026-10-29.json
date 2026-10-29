@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-29",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-10-29T08:25:41+01:00",
+  "startingCommit": "63a93a18c568a503fb65094621303c95eb2a2f79",
+  "selectedNames": [
+    "switchMap",
+    "mergeMap",
+    "concatMap",
+    "exhaustMap",
+    "share"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "switchMap",
+    "mergeMap",
+    "concatMap",
+    "exhaustMap",
+    "share"
+  ],
+  "commits": [],
+  "checks": {
+    "syntax": "not-run",
+    "types": "not-run",
+    "model": "not-run",
+    "runtime": "not-run",
+    "generated": "not-run",
+    "ci": "not-run"
+  },
+  "notes": [
+    "New daily-plan and tracker initialized because neither existed on the live main branch; no prior 2026-10-29 session log was present.",
+    "Only selected five export names may be worked on in this session."
+  ]
+}

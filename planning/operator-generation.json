@@ -1,0 +1,695 @@
+{
+  "schemaVersion": 1,
+  "rxjsVersion": "7.8.2",
+  "sourceRevision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+  "sourceExportIndex": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/operators/index.ts",
+  "countDistinctExports": 113,
+  "baselineDate": "2026-10-28",
+  "baselineAccepted": [
+    "take",
+    "map",
+    "filter",
+    "scan",
+    "debounceTime"
+  ],
+  "queue": [
+    "switchMap",
+    "mergeMap",
+    "concatMap",
+    "exhaustMap",
+    "share",
+    "switchAll",
+    "mergeAll",
+    "concatAll",
+    "exhaustAll",
+    "shareReplay",
+    "distinctUntilChanged",
+    "distinctUntilKeyChanged",
+    "distinct",
+    "pairwise",
+    "startWith",
+    "skip",
+    "takeWhile",
+    "skipWhile",
+    "takeUntil",
+    "skipUntil",
+    "reduce",
+    "count",
+    "toArray",
+    "min",
+    "max",
+    "audit",
+    "auditTime",
+    "buffer",
+    "bufferCount",
+    "bufferTime",
+    "bufferToggle",
+    "bufferWhen",
+    "catchError",
+    "combineAll",
+    "combineLatestAll",
+    "combineLatest",
+    "combineLatestWith",
+    "concat",
+    "concatMapTo",
+    "concatWith",
+    "connect",
+    "debounce",
+    "defaultIfEmpty",
+    "delay",
+    "delayWhen",
+    "dematerialize",
+    "elementAt",
+    "endWith",
+    "every",
+    "exhaust",
+    "expand",
+    "finalize",
+    "find",
+    "findIndex",
+    "first",
+    "groupBy",
+    "ignoreElements",
+    "isEmpty",
+    "last",
+    "mapTo",
+    "materialize",
+    "merge",
+    "flatMap",
+    "mergeMapTo",
+    "mergeScan",
+    "mergeWith",
+    "multicast",
+    "observeOn",
+    "onErrorResumeNext",
+    "partition",
+    "pluck",
+    "publish",
+    "publishBehavior",
+    "publishLast",
+    "publishReplay",
+    "race",
+    "raceWith",
+    "repeat",
+    "repeatWhen",
+    "retry",
+    "retryWhen",
+    "refCount",
+    "sample",
+    "sampleTime",
+    "sequenceEqual",
+    "single",
+    "skipLast",
+    "subscribeOn",
+    "switchMapTo",
+    "switchScan",
+    "takeLast",
+    "tap",
+    "throttle",
+    "throttleTime",
+    "throwIfEmpty",
+    "timeInterval",
+    "timeout",
+    "timeoutWith",
+    "timestamp",
+    "window",
+    "windowCount",
+    "windowTime",
+    "windowToggle",
+    "windowWhen",
+    "withLatestFrom",
+    "zip",
+    "zipAll",
+    "zipWith"
+  ],
+  "operators": {
+    "audit": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "auditTime": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "buffer": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "bufferCount": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "bufferTime": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "bufferToggle": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "bufferWhen": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "catchError": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "combineAll": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "combineLatestAll": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "combineLatest": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "combineLatestWith": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "concat": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "concatAll": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "concatMap": {
+      "status": "in-progress",
+      "session": "2026-10-29",
+      "profiles": []
+    },
+    "concatMapTo": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "concatWith": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "connect": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "count": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "debounce": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "debounceTime": {
+      "status": "accepted",
+      "session": "2026-10-28",
+      "profiles": []
+    },
+    "defaultIfEmpty": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "delay": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "delayWhen": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "dematerialize": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "distinct": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "distinctUntilChanged": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "distinctUntilKeyChanged": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "elementAt": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "endWith": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "every": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "exhaust": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "exhaustAll": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "exhaustMap": {
+      "status": "in-progress",
+      "session": "2026-10-29",
+      "profiles": []
+    },
+    "expand": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "filter": {
+      "status": "accepted",
+      "session": "2026-10-28",
+      "profiles": []
+    },
+    "finalize": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "find": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "findIndex": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "first": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "groupBy": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "ignoreElements": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "isEmpty": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "last": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "map": {
+      "status": "accepted",
+      "session": "2026-10-28",
+      "profiles": []
+    },
+    "mapTo": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "materialize": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "max": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "merge": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "mergeAll": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "flatMap": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "mergeMap": {
+      "status": "in-progress",
+      "session": "2026-10-29",
+      "profiles": []
+    },
+    "mergeMapTo": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "mergeScan": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "mergeWith": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "min": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "multicast": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "observeOn": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "onErrorResumeNext": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "pairwise": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "partition": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "pluck": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "publish": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "publishBehavior": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "publishLast": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "publishReplay": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "race": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "raceWith": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "reduce": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "repeat": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "repeatWhen": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "retry": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "retryWhen": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "refCount": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "sample": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "sampleTime": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "scan": {
+      "status": "accepted",
+      "session": "2026-10-28",
+      "profiles": [
+        "seeded",
+        "unseeded"
+      ]
+    },
+    "sequenceEqual": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "share": {
+      "status": "in-progress",
+      "session": "2026-10-29",
+      "profiles": []
+    },
+    "shareReplay": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "single": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "skip": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "skipLast": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "skipUntil": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "skipWhile": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "startWith": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "subscribeOn": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "switchAll": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "switchMap": {
+      "status": "in-progress",
+      "session": "2026-10-29",
+      "profiles": []
+    },
+    "switchMapTo": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "switchScan": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "take": {
+      "status": "accepted",
+      "session": "2026-10-28",
+      "profiles": []
+    },
+    "takeLast": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "takeUntil": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "takeWhile": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "tap": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "throttle": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "throttleTime": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "throwIfEmpty": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "timeInterval": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "timeout": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "timeoutWith": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "timestamp": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "toArray": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "window": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "windowCount": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "windowTime": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "windowToggle": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "windowWhen": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "withLatestFrom": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "zip": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "zipAll": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    },
+    "zipWith": {
+      "status": "pending",
+      "session": null,
+      "profiles": []
+    }
+  }
+}
