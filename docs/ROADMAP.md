@@ -22,11 +22,11 @@ This is the current implementation tracker. The migration map preserves the orig
 
 ## Session 2: the reserved 29 October batch
 
-The already-started Europe/Zurich session is resumed, not duplicated. Its only names are switchMap, mergeMap, concatMap, exhaustMap and share. Earlier names and the established workflow are retained. The five new configured examples add 40 projections for 88 overall, subject to exact CI drift verification.
+The already-started Europe/Zurich session is resumed, not duplicated. Its only names are switchMap, mergeMap, concatMap, exhaustMap and share. Earlier names and the established workflow are retained. The five new configured examples add 40 projections for 88 overall.
 
 The four flattening models share explicitly parameterized machinery while preserving policy-specific rules, projection timing and cleanup ordering. Share uses a separate shared-instance registry and connection generation. The old schema, runner, renderer, source models, tests and dependencies are not replaced.
 
-The evidence record decides acceptance; implementation or test-file counts alone do not. A second read-only workflow_dispatch check is required on the generated-artifact commit because the existing push workflow regenerates views before checking them.
+The evidence record decides acceptance; implementation or test-file counts alone do not. The initial push run passed 415 tests. A separate read-only pull-request run checks the committed projections without regeneration. This uses the existing workflow unchanged; manual workflow dispatch is not exposed by the connector.
 
 ## Next pending batch
 

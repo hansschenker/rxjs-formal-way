@@ -6,9 +6,11 @@ A coherent method for describing, analyzing, documenting, visualizing, and testi
 
 The project grew from stateful transducers, through six-component Mealy analysis, to transition tables, diagrams, BDD and test obligations. Formal machinery supports the explanation; an RxJS user should not need automata theory to understand the final operator description.
 
-## Current checkpoint: M02-C
+## Current checkpoint: Session 2 — higher-order and shared execution
 
-M01 established the canonical TypeScript model, pure trace runner and take profile. M02-A added map/filter with indexed callback outcomes; M02-B added seeded/unseeded scan. M02-C adds **debounceTime**, with explicit clock readings, pending values, latest deadlines, scheduled wake-ups, generation-qualified timer events and terminal cleanup. Read the [temporal guide](docs/M02-C-DEBOUNCE-TIME.md), [evidence](evidence/M02-C.md) and [roadmap](docs/ROADMAP.md). Higher-order and shared reference profiles remain to be implemented.
+Session 2 resumes the existing **29 October 2026 Europe/Zurich** session and works on exactly five names: **switchMap, mergeMap, concatMap, exhaustMap and share**. M02-D and M02-E now have implemented profiles. The full push-run suite passed **415 tests**, and generated **88 views**. Final scoped acceptance is recorded in [Session 2 evidence](evidence/SESSION-02.md) after a separate check of committed files without regeneration. The [daily plan](docs/DAILY-GENERATION-PLAN.md), [machine-readable queue](planning/operator-generation.json), [dated session log](planning/sessions/2026-10-29.json) and [roadmap](docs/ROADMAP.md) govern continuation.
+
+The earlier five operators remain the accepted baseline. They are not counted again when their generated files are checked.
 
 | Operator/profile | Readable behavior | BDD | Transition table | State diagram | Four lanes |
 |---|---|---|---|---|---|
@@ -18,8 +20,13 @@ M01 established the canonical TypeScript model, pure trace runner and take profi
 | scan, seeded | [Page](operators/scan-seeded.md) | [BDD](generated/scan-seeded.bdd.md) | [STT](generated/scan-seeded.stt.md) | [STD](generated/scan-seeded.diagram.md) | [Trace](generated/scan-seeded.trace.md) |
 | scan, unseeded | [Page](operators/scan-unseeded.md) | [BDD](generated/scan-unseeded.bdd.md) | [STT](generated/scan-unseeded.stt.md) | [STD](generated/scan-unseeded.diagram.md) | [Trace](generated/scan-unseeded.trace.md) |
 | debounceTime | [Page](operators/debounceTime.md) | [BDD](generated/debounceTime.bdd.md) | [STT](generated/debounceTime.stt.md) | [STD](generated/debounceTime.diagram.md) | [Trace](generated/debounceTime.trace.md) |
+| switchMap | [Page](operators/switchMap.md) | [BDD](generated/switchMap.bdd.md) | [STT](generated/switchMap.stt.md) | [STD](generated/switchMap.diagram.md) | [Trace](generated/switchMap.trace.md) |
+| mergeMap, concurrency 2 | [Page](operators/mergeMap.md) | [BDD](generated/mergeMap.bdd.md) | [STT](generated/mergeMap.stt.md) | [STD](generated/mergeMap.diagram.md) | [Trace](generated/mergeMap.trace.md) |
+| concatMap | [Page](operators/concatMap.md) | [BDD](generated/concatMap.bdd.md) | [STT](generated/concatMap.stt.md) | [STD](generated/concatMap.diagram.md) | [Trace](generated/concatMap.trace.md) |
+| exhaustMap | [Page](operators/exhaustMap.md) | [BDD](generated/exhaustMap.bdd.md) | [STT](generated/exhaustMap.stt.md) | [STD](generated/exhaustMap.diagram.md) | [Trace](generated/exhaustMap.trace.md) |
+| share, default resets | [Page](operators/share.md) | [BDD](generated/share.bdd.md) | [STT](generated/share.stt.md) | [STD](generated/share.diagram.md) | [Trace](generated/share.trace.md) |
 
-Each configured profile has eight generated projections: the five linked above, a JSON manifest, JSON trace and test-obligation document. All **48** are checked for drift. These are scoped reference models, not replacement RxJS operators.
+Each configured example has eight generated projections: the five linked above, a JSON manifest, JSON trace and test-obligation document. The registry produces **88** views across eleven examples and ten distinct operator names. Test configurations additionally cover mergeMap concurrency 1/unbounded and all eight boolean share reset combinations. These are scoped reference models, not replacement RxJS operators.
 
 ## Start here
 
@@ -30,14 +37,17 @@ Each configured profile has eight generated projections: the five linked above, 
 | [M02 value selection](docs/M02-VALUE-SELECTION.md) | Callback-separated map/filter profiles and schema 1.1 |
 | [M02-B accumulation](docs/M02-B-SCAN.md) | Seeded/unseeded scan, typed reducer inputs and reference ownership |
 | [M02-C temporal behavior](docs/M02-C-DEBOUNCE-TIME.md) | Deadline versus wake-up, timer identities, zero delay and same-time order |
+| [Session 2 higher-order behavior](docs/SESSION-02-HIGHER-ORDER.md) | Four admission policies, per-operator six-tuples, legal behavior and inner generations |
+| [M02-E shared execution](docs/M02-E-SHARE.md) | Addressed subscribers, connection ownership and boolean reset policies |
 | [Roadmap](docs/ROADMAP.md) | Implemented and remaining checkpoints |
+| [Daily plan](docs/DAILY-GENERATION-PLAN.md) | One local-date session, at most five distinct pending names |
 | [Formal method](docs/FORMAL-METHOD.md) | Six-tuple analysis, guarded transitions, lifecycle and evidence |
 | [Composition and ownership](docs/COMPOSITION-AND-OWNERSHIP.md) | Connected machines, feedback, shared state and execution contracts |
 | [Dependent types](docs/DEPENDENT-TYPES.md) | State-indexed legal behavior, not merely a type for state |
 | [Imported-document review](docs/reviews/2026-10-28-gemini-mealy.md) | Adopted ideas, corrected claims, provenance and pinned sources |
 | [Operator document template](docs/OPERATOR-DOCUMENT-TEMPLATE.md) | Formal analysis through to plain-language explanation |
 | [Migration map](docs/MIGRATION-MAP.md) | Original consolidation plan and source repositories |
-| [M01](evidence/M01.md) / [M02-A](evidence/M02.md) / [M02-B](evidence/M02-B.md) / [M02-C](evidence/M02-C.md) evidence | Executed results, bounded comparisons and remaining limits |
+| [M01](evidence/M01.md) / [M02-A](evidence/M02.md) / [M02-B](evidence/M02-B.md) / [M02-C](evidence/M02-C.md) / [Session 2](evidence/SESSION-02.md) evidence | Executed results, bounded comparisons and remaining limits |
 | [Earlier validation](evidence/2026-10-28-insights.md) | Retained 29-test baseline and its historical run |
 
 ## One behavioral model
@@ -97,6 +107,8 @@ Map and filter each remember a per-subscription index. A dropped filter value st
 
 M02-B reuses this boundary with `{ accumulator, value }` as the typed callback payload plus the source index. A successful result becomes both the next accumulation and the emitted value. An absent seed has a separate first-value rule; an explicit undefined seed is still present. See the [scan profile guide](operators/scan.md).
 
+Session 2 reuses the same protocol for a projection returning an opaque inner-source token. Subscription identity is distinct from the source token. Queuing delays projection; exhaustMap's ignored arrivals do not consume its projection index. The model never executes or inspects an inner producer.
+
 ## Scheduler boundary added in M02-C
 
 A silence deadline and a scheduled wake-up are different state fields. RxJS 7.8.2 replaces the pending value/time on new input without immediately rescheduling an existing task. When that task fires early relative to the latest deadline, it rearms for the remaining duration. A due firing releases its task and emits; completion flushes; error and cancellation discard.
@@ -133,7 +145,7 @@ A + B    either
 (T*)*    streams of streams
 ```
 
-These Cω-inspired markers count values, not terminal/control actions. Seeded reduce's exactly-one final value requires successful completion and no earlier cancellation or reducer error. `T[0..n]` is a project extension for take's upper bound, not original Cω syntax.
+These Cω-inspired markers count values, not terminal/control actions. Seeded reduce's exactly-one final value requires successful completion and no earlier cancellation or reducer error. `T[0..n]` is a project extension for take's upper bound, not original Cω syntax. The share guide labels its `Shared(...)` ownership annotation as another project extension.
 
 ## Readable behavior on top
 
@@ -147,7 +159,7 @@ And   <next state>
 
 In this restricted Convertible BDD profile, And denotes the next state, not general Gherkin conjunction. Mealy-DSL uses While instead of Given. English annotations live beside executable rules; generation retains their IDs and prevents file drift but does not prove prose equivalent to code. Literal assertions and independent runtime observations provide separate evidence.
 
-The final operator page remains the teaching outcome. A reader need not inspect the formal tuple to understand what flows over time or what happens on a new value.
+The final operator page remains the teaching outcome. A reader need not inspect the formal tuple to understand what flows over time or what happens on a new value. Standalone generated files remain first-class outputs, with the milestone guides connecting the full analysis.
 
 ## Connected machines and execution contracts
 
@@ -165,23 +177,25 @@ The imported Gemini discussion motivates composition, feedback and addressed out
 
 Flattening policies remain practical: mergeMap allows overlap, switchMap keeps the latest, concatMap queues and exhaustMap ignores while busy. The composition guide includes corrected expand admission semantics and distinguishes subscription feedback from recursive value expansion.
 
+Share changes ownership: one coordinator for a shared Observable instance tracks downstream subscription occurrences and connection generations. A retained terminal state still accepts later subscribers. This does not silently add replay or a reset-notifier implementation.
+
 ## Tests, generated artifacts and evidence
 
 > Every reachable, behaviorally distinct transition creates a minimum test obligation.
 
 One obligation can require multiple tests. Reach the state through public inputs, provide the target event, assert notifications and resource consequences, then use a distinguishing suffix when necessary. Row coverage is not exhaustive behavior coverage.
 
-M01's baseline has 65 named tests, including 465 bounded take comparisons. M02-A adds 31 model tests and 23 runtime cases, with 1302 additional bounded comparisons in one case. M02-B adds 29 model tests and 23 runtime cases, with 1860 additional comparisons. M02-C adds 30 model tests, 22 runtime cases, eight negative type assertions and 5022 additional bounded scenarios, including instrumented-versus-native scheduler checks. The expected combined totals are 223 named tests and 32 negative type assertions. Refer to the milestone evidence records for actual execution results rather than treating these counts as proof.
+The pre-Session-2 baseline contains 223 named tests, 32 negative type assertions and 8649 bounded model/RxJS scenarios. Session 2 adds 107 pure-model tests, 85 native-RxJS cases, 16 negative type assertions and 14348 bounded comparisons. The first full CI run passed all 415 named tests, compiled 48 negative type assertions, checked 88 projections and exercised 22997 model/RxJS scenarios. The retained 5022 scheduler-transparency comparisons are a separate observation check. Consult the evidence records for exact revisions, committed-file verification and scope; counts are not a universal proof.
 
 ```sh
 npm ci --ignore-scripts
 npm run check
 npm run test:model
-npm run generate          # intentionally refresh 48 projections
+npm run generate          # intentionally refresh 88 projections
 npm run check:generated   # read-only drift check
 ```
 
-Node 22.16.0, RxJS 7.8.2 and TypeScript 5.8.3 are the declared validation baseline; the lockfile also pins tslib. The existing read-only GitHub Actions workflow installs dependencies and checks types, tests, syntax and generated files. It does not commit or publish artifacts.
+Node 22.16.0, RxJS 7.8.2 and TypeScript 5.8.3 are the validation baseline; the lockfile also pins tslib. The live workflow generates on main pushes, runs all checks, and commits changed generated artifacts only after success. Pull requests and manual dispatch run checks without regeneration or publication. The connector currently exposes no manual-dispatch action, so Session 2 uses a separate pull-request run to check the committed generated tree. This distinguishes regeneration success from a genuine committed-file drift check without changing the existing workflow.
 
 ## Invariants, migration and provenance
 
@@ -189,10 +203,10 @@ Keep terminal exclusivity, post-terminal silence, cancellation distinct from com
 
 Earlier repositories remain provenance, not material to delete: rxjs-mealy-analysis, rxjs-operator-mealy-analysis, rxjs-operator-mealy-tuples, rxjs-mealy-to-testcase, bdd-to-mealy, rxjs-comega-type-notation-and-mealy-machine-tuples, and the Mealy-to-documentation experiments.
 
-M02 continues next with switchMap, then the share profile. Full catalogue migration, a general effect interpreter, dependent proofs and interactive visualization remain later work. The [roadmap](docs/ROADMAP.md) is the current implementation tracker; the migration map retains the original broader plan.
+Continue only according to the live queue and dated session log. Unfinished names carry first; at most five distinct names are worked on per local-date session. The next untouched batch is switchAll, mergeAll, concatAll, exhaustAll and shareReplay. Full catalogue migration, a general effect interpreter, dependent proofs and interactive visualization remain later work. The migration map preserves the original broader plan.
 
 ## Collaboration
 
-Hans Schenker directs the research and teaching goals. The initial consolidation credits **GPT-5.6 Sol (OpenAI)** in project history. **GPT-6 Astra Pro** is the main contributor to the source review, composition/ownership guidance, regression harness and M01/M02-A/M02-B/M02-C implementations. The supplied Gemini discussion is credited as inspiration, not authoritative implementation evidence.
+Hans Schenker directs the research and teaching goals. The initial consolidation credits **GPT-5.6 Sol (OpenAI)** in project history. **GPT-6 Astra Pro** is the main contributor to the source review, composition/ownership guidance, regression harness and M01/M02/Session-2 implementations. The supplied Gemini discussion is credited as inspiration, not authoritative implementation evidence.
 
 See [CONTRIBUTORS.md](CONTRIBUTORS.md). This is an independent project, not an official RxJS or OpenAI specification.
