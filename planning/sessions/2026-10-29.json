@@ -12,7 +12,13 @@
     "exhaustMap",
     "share"
   ],
-  "workedNames": [],
+  "workedNames": [
+    "switchMap",
+    "mergeMap",
+    "concatMap",
+    "exhaustMap",
+    "share"
+  ],
   "completedNames": [],
   "carryovers": [
     "switchMap",
@@ -23,15 +29,20 @@
   ],
   "commits": [],
   "checks": {
-    "syntax": "not-run",
-    "types": "not-run",
-    "model": "not-run",
+    "syntax": "passed locally for new modules",
+    "types": "passed locally for new subset and 16 negative fixtures",
+    "model": "107 new model/view tests passed locally",
     "runtime": "not-run",
-    "generated": "not-run",
+    "generated": "40 new projections generated and checked locally; full CI pending",
     "ci": "not-run"
   },
   "notes": [
     "New daily-plan and tracker initialized because neither existed on the live main branch; no prior 2026-10-29 session log was present.",
-    "Only selected five export names may be worked on in this session."
-  ]
+    "Only selected five export names may be worked on in this session.",
+    "Explicit user request: continue Session 2. Resuming the same started log and same reserved names, not starting another local-date session.",
+    "Full runtime acceptance is pending retrieved CI. No completed name is recorded merely because its implementation or documentation was authored.",
+    "The existing CI workflow generates and commits validated views on push; a subsequent workflow_dispatch will check committed views without regeneration."
+  ],
+  "resumedAt": "2026-10-29T10:11:42+01:00",
+  "resumeBaseCommit": "21a4c64c7a0031db9735615f7c1f8bd057738cf5"
 }

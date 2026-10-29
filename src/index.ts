@@ -11,3 +11,7 @@ export { createSeededScanModel, createUnseededScanModel, seededScanExample, unse
 export type { ScanSeed, ScanParameters, ScanArguments, ScanState, ScanEvent, ScanModel } from './models/scan.js';
 export { createDebounceTimeModel, debounceTimeExample, runDebounceTimeTrace } from './models/debounceTime.js';
 export type { DebounceTimeParameters, DebounceTimeState, DebounceTimeEvent, DebounceTimeModel } from './models/debounceTime.js';
+export { createSwitchMapModel, createMergeMapModel, createConcatMapModel, createExhaustMapModel, switchMapExample, mergeMapExample, concatMapExample, exhaustMapExample } from './models/flatten.js';
+export type { FlattenOperator, FlattenParameters, InnerBinding, FlattenState, FlattenEvent, FlattenModel } from './models/flatten.js';
+export { createShareModel, shareExample } from './models/share.js';
+export type { ShareParameters, ShareState, ShareEvent, ShareModel } from './models/share.js';

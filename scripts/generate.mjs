@@ -5,6 +5,9 @@ import { createTakeModel, takeExample, createMapModel, mapExample, createFilterM
   createDebounceTimeModel, debounceTimeExample, runDebounceTimeTrace,
   toManifest, runTrace, renderTable, renderBdd, renderDiagram, renderObligations, renderBehavior, renderTrace } from '../dist/index.js';
 
+import { createSwitchMapModel, createMergeMapModel, createConcatMapModel, createExhaustMapModel,
+  switchMapExample, mergeMapExample, concatMapExample, exhaustMapExample, createShareModel, shareExample } from '../dist/index.js';
+
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
@@ -13,6 +16,11 @@ const examples = [
   ['scan-seeded', createSeededScanModel(0), seededScanExample, 'scan-seeded-example'],
   ['scan-unseeded', createUnseededScanModel(), unseededScanExample, 'scan-unseeded-example'],
   ['debounceTime', createDebounceTimeModel(3), debounceTimeExample, 'debounceTime-3-example', runDebounceTimeTrace],
+  ['switchMap', createSwitchMapModel(), switchMapExample, 'switchMap-session2-example'],
+  ['mergeMap', createMergeMapModel(2), mergeMapExample, 'mergeMap-session2-example'],
+  ['concatMap', createConcatMapModel(), concatMapExample, 'concatMap-session2-example'],
+  ['exhaustMap', createExhaustMapModel(), exhaustMapExample, 'exhaustMap-session2-example'],
+  ['share', createShareModel(), shareExample, 'share-session2-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
