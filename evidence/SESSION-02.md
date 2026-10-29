@@ -1,23 +1,40 @@
-# Session 2 — validation record
+# Session 2 — verified acceptance record
 
-## Scope and session identity
+## Acceptance and session identity
 
-Resumption of the existing **2026-10-29 Europe/Zurich** session, originally started at 08:25:41. No second daily session is created. Exactly five export names are worked on: switchMap, mergeMap, concatMap, exhaustMap and share. The earlier five accepted operators are retained, not counted again.
+**Accepted within the declared scopes: switchMap, mergeMap, concatMap, exhaustMap and share.** The existing **2026-10-29 Europe/Zurich** session is closed with five completed names and no carryovers. No sixth name or second daily batch was started. The earlier five accepted operators were retained, not counted again.
 
-RxJS 7.8.2, source revision e5351d02e225e275ac0e497c7b66eaa5f0c88791. Flattening profiles use valid Observable bindings, non-reentrant synchronous projections, and post-setup source/inner delivery for exact teardown comparisons. Share uses the default Subject connector and boolean resets. See the [higher-order guide](../docs/SESSION-02-HIGHER-ORDER.md) and [share guide](../docs/M02-E-SHARE.md).
+Baseline: RxJS 7.8.2 at source revision `e5351d02e225e275ac0e497c7b66eaa5f0c88791`. Flattening profiles use valid Observable bindings, non-reentrant synchronous projections, and post-setup source/inner delivery for exact teardown comparisons. Share uses the default Subject connector and boolean reset policies. See the [higher-order guide](../docs/SESSION-02-HIGHER-ORDER.md) and [share guide](../docs/M02-E-SHARE.md).
 
-## Verified push-run result
+## Exact revisions and retrieved CI evidence
 
-**415 passed, 0 failed, 0 cancelled, 0 skipped, 0 TODO.**
+| Role | Revision / result |
+|---|---|
+| Implementation | `b97b8c6cab720d903a1991e8551726b6558b3b8a` |
+| Forty generated files committed by validated push workflow | `145438f0ea8bfaa85c19acb7eff8e502baa9eb1f` |
+| Documentation-only verification PR head | `6e902fbb3de4c98d3f181ed3502f4b128dce62a8` |
+| Actual read-only PR checkout | `508db99746644c60d06cbeb7b4729eea976f15ad` |
+| Verified PR checkout and head tree | `1932bbb50ff6f8a2b37b8b603ec7d033257204e7` |
 
-- Implementation commit: `b97b8c6cab720d903a1991e8551726b6558b3b8a`.
-- Workflow run: [40852571860](https://github.com/hansschenker/rxjs-formal-way/actions/runs/40852571860), attempt 1, push on main.
-- Job: [123375446205 — characterize](https://github.com/hansschenker/rxjs-formal-way/actions/runs/40852571860/job/123375446205).
-- Retrieved log confirms successful dependency installation, generation, syntax checks, strict type fixtures, compilation, all tests and exact generated-file consistency.
-- The workflow committed exactly 40 new generated files as `145438f0ea8bfaa85c19acb7eff8e502baa9eb1f`; the prior generated views were not changed.
-- Environment: Node 22.16.0, npm 10.9.2; unchanged lockfile pins TypeScript 5.8.3, RxJS 7.8.2 and tslib 2.8.1.
+The Git API confirmed that the synthetic PR checkout and the documentation head have exactly the same tree. The final acceptance commit changes only documentation and planning records; it does not change the implementation, tests, dependencies, workflow or generated artifacts tested above.
 
-Inspected log summaries:
+### 1. Push run: generation and full validation
+
+- [Run 40852571860](https://github.com/hansschenker/rxjs-formal-way/actions/runs/40852571860), attempt 1, on implementation commit `b97b8c6`.
+- [Job 123375446205 — characterize](https://github.com/hansschenker/rxjs-formal-way/actions/runs/40852571860/job/123375446205).
+- Retrieved and inspected job log confirms dependency installation, generation, syntax checks, strict type fixtures, compilation, all tests and generation consistency succeeded.
+- The workflow committed exactly 40 new generated files as `145438f`; the previous generated files were unchanged.
+
+### 2. Read-only run: committed-file verification
+
+- [PR 1](https://github.com/hansschenker/rxjs-formal-way/pull/1), documentation-only verification branch.
+- [Run 40853083582](https://github.com/hansschenker/rxjs-formal-way/actions/runs/40853083582), attempt 1.
+- [Job 123377160945 — characterize](https://github.com/hansschenker/rxjs-formal-way/actions/runs/40853083582/job/123377160945).
+- Retrieved checkout log identifies `508db99746644c60d06cbeb7b4729eea976f15ad`.
+- **Generate projections: skipped. Commit generated projections: skipped.** The job ran `npm run check` directly on the committed files.
+- Syntax, type fixtures, compilation, model/native tests and the read-only `--check` comparison all passed.
+
+Both inspected logs report:
 
 ```text
 1..415
@@ -30,22 +47,51 @@ Inspected log summaries:
 Verified 88 deterministic projections.
 ```
 
-The push workflow regenerates before checking. Therefore a separate **read-only pull-request run** will validate the already-committed generated files before acceptance is recorded. The connector exposes no manual workflow-dispatch action; the existing pull_request path provides the same no-regeneration check without changing the workflow. No manual-dispatch execution is claimed.
+The connector exposed no manual workflow-dispatch action. The existing pull_request path supplied the no-regeneration verification instead; the workflow was not changed and no manual-dispatch execution is claimed.
 
-## Preparation checks actually executed
+## Verified counts
 
-Node 22.16.0 and TypeScript 5.8.3. The earlier local preparation subset used the byte-identical existing schema, runner and renderer, verified against their Git blob hashes. Strict compilation passed. Sixteen new negative TypeScript assertions passed. All 107 new model tests passed (62 flattening, 40 share, 5 generated-view tests). New JavaScript modules passed syntax checks. Forty new projections were generated and checked byte-for-byte locally.
+| Check | Result |
+|---|---:|
+| Retained named tests | 223 passed |
+| New pure-model and view tests | 107 passed: 62 flattening, 40 share, 5 views |
+| New actual RxJS cases | 85 passed: 69 flattening, 16 share |
+| Total named tests | **415 passed; zero failures** |
+| Negative TypeScript assertions | 48 checked: 32 retained and 16 new |
+| Generated views | **88 verified; 40 new and 48 retained** |
+| New flattening model/RxJS scenarios | 8100 passed |
+| New share model/RxJS scenarios | 6248 passed |
+| Total bounded model/RxJS scenarios | 22997 passed, including the retained 8649 |
 
-Direct Git cloning failed because github.com could not resolve in that preparation container, and RxJS was not installed locally. No local actual-RxJS or full-baseline success is claimed. GitHub Actions subsequently verified the complete committed implementation as recorded above. The interrupted conversation's local workspace was no longer mounted when work resumed; its already-uploaded Git tree was verified and committed rather than rebuilding or inventing local results.
+The retained 5022 instrumented/native scheduler-transparency comparisons are a separate observation check, not extra model inputs. Bounded comparisons occur inside named tests, not as extra named-test counts. Eleven generated examples cover ten distinct accepted export names; seeded and unseeded scan remain one operator.
 
-## Counts verified by the push run
+## Scope per accepted name
 
-223 retained + 107 new pure-model + 85 new native-RxJS cases = **415 named tests**. Sixteen new negative type assertions give 48 total. Five new configured examples produce 40 new views for 88 overall; seeded/unseeded scan remain two profiles of one already-accepted operator.
+| Operator | Accepted profile |
+|---|---|
+| switchMap | Current-inner replacement, projection outcomes, generation identity, completion waiting and cancellation |
+| mergeMap | Admission, active-set delivery and raw FIFO queue; concurrency 1, 2 and unbounded runtime configurations; generated example uses 2 |
+| concatMap | Serial admission with FIFO projection timing and completion draining |
+| exhaustMap | Ignore while busy without queueing, projection calls or consumed indices |
+| share | Default Subject, addressed subscriber lifecycle and all eight boolean reset combinations; generated example uses defaults |
 
-The new differential experiments contain 8100 flattening scenarios and 6248 share scenarios. Together with the retained 8649 comparisons, the model/RxJS domain totals 22997 scenarios. The prior 5022 scheduler-transparency comparisons remain a separate observation check, not extra model inputs. These comparisons occur inside named tests and are not extra named-test counts.
+Every instantiated rule has a legal state-reaching witness in the model tests. Independent native observations cover projection calls, values, source/inner lifetimes, teardown order and shared connection generations. Synchronous characterizations are separate from the exact post-setup action-trace comparison domain.
 
-## Acceptance boundaries
+## Preparation and environment
 
-No arbitrary reentry, deprecated resultSelector, general ObservableInput conversion, reset-notifier profile, producer-abort guarantee, production effect interpreter or universal equivalence proof is supplied. Native synchronous characterizations are separate from the post-setup action-trace equivalence domain. Generated manifests contain reviewed annotations, not serialized executable transition functions.
+The earlier preparation used Node 22.16.0 and TypeScript 5.8.3 with byte-identical baseline schema, runner and renderer. Its strict compilation, sixteen negative type fixtures, 107 model/view tests, syntax checks and forty new generated views passed locally. Direct cloning failed because github.com could not resolve in that container, and RxJS was not installed locally. No local full-suite or native-RxJS success is claimed.
 
-The five names remain pending final acceptance until the read-only committed-tree check is retrieved. Do not select a sixth name in this session.
+The uploaded Git tree survived the interrupted session and was verified before committing. GitHub Actions installed the unchanged lockfile and executed the complete repository. Both CI logs confirm Node 22.16.0 and npm 10.9.2; dependencies remain TypeScript 5.8.3, RxJS 7.8.2 and tslib 2.8.1.
+
+## Limits and next session
+
+No arbitrary reentry, deprecated resultSelector, general ObservableInput conversion, reset-notifier profile, producer-abort guarantee, production effect interpreter or universal equivalence proof is supplied. Generated manifests carry reviewed annotations, not serialized executable transition bodies.
+
+There are no unresolved acceptance blockers for these scopes. The next pending names are **switchAll, mergeAll, concatAll, exhaustAll and shareReplay**, on the next eligible local date, not a second session on 29 October. The inventory still has 103 pending names; recurring work should not be paused as if the full catalogue were complete.
+
+```sh
+npm ci --ignore-scripts
+npm run check
+```
+
+Future results must identify their own tested revision and retrieved CI log. The containing acceptance commit records prior verified execution; it does not retroactively label itself as the checkout used by those runs.

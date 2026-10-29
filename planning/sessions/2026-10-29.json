@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-10-29",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-10-29T08:25:41+01:00",
   "startingCommit": "63a93a18c568a503fb65094621303c95eb2a2f79",
   "selectedNames": [
@@ -19,30 +19,68 @@
     "exhaustMap",
     "share"
   ],
-  "completedNames": [],
-  "carryovers": [
+  "completedNames": [
     "switchMap",
     "mergeMap",
     "concatMap",
     "exhaustMap",
     "share"
   ],
-  "commits": [],
+  "carryovers": [],
+  "commits": [
+    "b97b8c6cab720d903a1991e8551726b6558b3b8a",
+    "145438f0ea8bfaa85c19acb7eff8e502baa9eb1f",
+    "6e902fbb3de4c98d3f181ed3502f4b128dce62a8"
+  ],
   "checks": {
-    "syntax": "passed locally for new modules",
-    "types": "passed locally for new subset and 16 negative fixtures",
-    "model": "107 new model/view tests passed locally",
-    "runtime": "not-run",
-    "generated": "40 new projections generated and checked locally; full CI pending",
-    "ci": "not-run"
+    "syntax": "passed in retrieved push and read-only PR CI logs",
+    "types": "strict checks passed; 48 negative assertions including 16 new",
+    "model": "107 new model/view tests passed; prior tests retained",
+    "runtime": "85 new actual RxJS cases passed; 415 named tests overall",
+    "generated": "88 committed projections verified without regeneration in PR CI; 40 new",
+    "ci": "both retrieved runs successful; generation and publication skipped in PR run"
   },
   "notes": [
     "New daily-plan and tracker initialized because neither existed on the live main branch; no prior 2026-10-29 session log was present.",
     "Only selected five export names may be worked on in this session.",
-    "Explicit user request: continue Session 2. Resuming the same started log and same reserved names, not starting another local-date session.",
-    "Full runtime acceptance is pending retrieved CI. No completed name is recorded merely because its implementation or documentation was authored.",
-    "The existing CI workflow generates and commits validated views on push; a subsequent workflow_dispatch will check committed views without regeneration."
+    "Explicit user request resumed the same started log and reserved names; no second session was opened.",
+    "Direct cloning was unavailable. Uploaded prepared code was committed through the connector and fully checked in GitHub Actions.",
+    "Manual workflow dispatch was not exposed by the connector. The existing pull_request workflow provided the read-only committed-file check instead, without workflow changes.",
+    "The read-only checkout tree equals the verification-head tree. The containing closing commit changes documentation and planning only, not executable or generated artifacts.",
+    "All five names are accepted within their documented scopes. No sixth name was selected; baseline names were not counted again."
   ],
   "resumedAt": "2026-10-29T10:11:42+01:00",
-  "resumeBaseCommit": "21a4c64c7a0031db9735615f7c1f8bd057738cf5"
+  "resumeBaseCommit": "21a4c64c7a0031db9735615f7c1f8bd057738cf5",
+  "closedAt": "2026-10-29T10:56:50+01:00",
+  "evidence": "evidence/SESSION-02.md",
+  "verification": {
+    "implementationCommit": "b97b8c6cab720d903a1991e8551726b6558b3b8a",
+    "generatedCommit": "145438f0ea8bfaa85c19acb7eff8e502baa9eb1f",
+    "pushRun": 40852571860,
+    "pushJob": 123375446205,
+    "prNumber": 1,
+    "prHeadCommit": "6e902fbb3de4c98d3f181ed3502f4b128dce62a8",
+    "testedCommit": "508db99746644c60d06cbeb7b4729eea976f15ad",
+    "testedTree": "1932bbb50ff6f8a2b37b8b603ec7d033257204e7",
+    "readOnlyRun": 40853083582,
+    "readOnlyJob": 123377160945,
+    "namedTestsPassed": 415,
+    "newNamedTests": 192,
+    "negativeTypeAssertions": 48,
+    "generatedViews": 88,
+    "newGeneratedViews": 40,
+    "boundedModelRxjsScenarios": 22997,
+    "newBoundedModelRxjsScenarios": 14348,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  },
+  "blockers": [],
+  "nextSessionNotBefore": "2026-10-30",
+  "nextQueue": [
+    "switchAll",
+    "mergeAll",
+    "concatAll",
+    "exhaustAll",
+    "shareReplay"
+  ]
 }

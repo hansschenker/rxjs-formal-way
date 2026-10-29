@@ -9,10 +9,12 @@ This is the current implementation tracker. The migration map preserves the orig
 | M02-A | Indexed map/filter, explicit callback outcomes, 16 additional projections | Accepted within scope; [119-test evidence](../evidence/M02.md) |
 | M02-B | Seeded and unseeded scan, accumulator/index, seed aliasing and throw behavior | Accepted within scope; [171-test evidence](../evidence/M02-B.md) |
 | M02-C | debounceTime, clock/deadline/wake-up distinction, timer identities and terminal policies | Accepted within scope; [223-test evidence](../evidence/M02-C.md) |
-| M02-D | switchMap, inner generations, replacement and completion | Implemented in Session 2; acceptance requires [Session 2 evidence](../evidence/SESSION-02.md) |
-| M02-D companions | mergeMap, concatMap and exhaustMap admission/queue/ignore policies | Implemented in the same five-name session; [guide](SESSION-02-HIGHER-ORDER.md) |
-| M02-E | share, connection ownership, addressed subscribers and boolean reset profiles | Implemented in Session 2; [guide](M02-E-SHARE.md) and [evidence](../evidence/SESSION-02.md) |
+| M02-D | switchMap, inner generations, replacement and completion | Accepted within scope; [Session 2 evidence](../evidence/SESSION-02.md) |
+| M02-D companions | mergeMap, concatMap and exhaustMap admission/queue/ignore policies | Accepted within scope in the same five-name session; [guide](SESSION-02-HIGHER-ORDER.md) |
+| M02-E | share, connection ownership, addressed subscribers and boolean reset profiles | Accepted within scope; [guide](M02-E-SHARE.md) and [evidence](../evidence/SESSION-02.md) |
 | M03+ | Broader generation, catalogue migration, family comparisons and visualization | Pending inventory work; not a completed universal interpreter |
+
+The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
 ## Retained checkpoints
 
@@ -20,16 +22,16 @@ This is the current implementation tracker. The migration map preserves the orig
 
 [M02-C](M02-C-DEBOUNCE-TIME.md) distinguishes the latest silence deadline from a scheduled wake-up. Replacement updates memory; an early wake-up rearms. Completion flushes; error/cancellation discard. Timer generations identify invocations, not physical Action objects. Equal-time order and deferred zero-delay assumptions are explicit.
 
-## Session 2: the reserved 29 October batch
+## Session 2 closed: 29 October 2026
 
-The already-started Europe/Zurich session is resumed, not duplicated. Its only names are switchMap, mergeMap, concatMap, exhaustMap and share. Earlier names and the established workflow are retained. The five new configured examples add 40 projections for 88 overall.
+The already-started Europe/Zurich session was resumed, not duplicated. Its only names were switchMap, mergeMap, concatMap, exhaustMap and share. All five are accepted with no carryovers. The earlier five names were retained, not counted again. Forty new projections bring the total to 88 across eleven examples and ten distinct operator names.
 
-The four flattening models share explicitly parameterized machinery while preserving policy-specific rules, projection timing and cleanup ordering. Share uses a separate shared-instance registry and connection generation. The old schema, runner, renderer, source models, tests and dependencies are not replaced.
+The four flattening models share explicitly parameterized machinery while preserving policy-specific rules, projection timing and cleanup ordering. Share uses a separate shared-instance registry and connection generation. The old schema, runner, renderer, source models, tests, workflow and dependencies were not replaced.
 
-The evidence record decides acceptance; implementation or test-file counts alone do not. The initial push run passed 415 tests. A separate read-only pull-request run checks the committed projections without regeneration. This uses the existing workflow unchanged; manual workflow dispatch is not exposed by the connector.
+Both the full push run and a separate read-only pull-request run passed **415 tests**. The PR job skipped generation and publication and verified all **88 committed projections**. Its exact checkout revision and tree, plus retrieved run/job evidence, are recorded in the evidence document. The connector lacked manual dispatch, so the existing PR path was used without weakening checks.
 
 ## Next pending batch
 
-After Session 2 is accepted, proceed on the next eligible local date with switchAll, mergeAll, concatAll, exhaustAll and shareReplay, subject to the live JSON queue. Any unfinished Session 2 names take precedence. Do not start a second batch on 29 October or count profiles as distinct operator names.
+The next eligible session is **30 October 2026** in Europe/Zurich. Follow the live JSON queue: switchAll, mergeAll, concatAll, exhaustAll and shareReplay. Do not open a second batch on 29 October or count profiles as distinct operator names. There are 103 pending names after this session.
 
 Keep notification and lifecycle assertions, legal-input constraints, time/cancellation/sharing declarations, generated-view consistency and retrieved CI evidence. Finite coverage remains evidence, not a universal proof.

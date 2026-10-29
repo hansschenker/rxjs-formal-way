@@ -51,7 +51,7 @@ The identical stream shape is intentional: it does not distinguish their policie
 | S0 | Unsubscribed | Unsubscribed | Unsubscribed | Unsubscribed |
 | Z | Subscription/cancel; outer next/error/complete; correlated projection outcome; generation-qualified inner next/error/complete | Same tagged alphabets | Same tagged alphabets | Same tagged alphabets |
 | A | Outer/inner acquire-release; invoke projection; downstream notifications | Same ordered action alphabet | Same ordered action alphabet | Same ordered action alphabet |
-| T | Replace active identity and advance admission index | Admit or enqueue; remove completed inner and dequeue | Admit one or enqueue; advance only when dequeued | Admit if idle; otherwise preserve state without advancing index |
+| T | Replace active identity and advance admission index | Admit or enqueue; remove completed inner and dequeue | Admit one or enqueue; advance the index on admission, including dequeuing | Admit if idle; otherwise preserve state without advancing index |
 | G | Release old inner before projection; forward only current inner values | Request admitted projections; forward all active inner values in delivery order | Request projections in FIFO admission order | No actions for busy arrivals; forward current inner values |
 
 The finite control projection is Unsubscribed, Active, Calling, Draining and Closed. Stored payloads, source tokens, queues and counters make the full model symbolic and potentially unbounded. Calling contains a reserved slot and a `resume` phase. Draining means the outer has completed, not that the result has completed.

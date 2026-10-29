@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "switchMap",
-    "mergeMap",
-    "concatMap",
-    "exhaustMap",
-    "share",
     "switchAll",
     "mergeAll",
     "concatAll",
@@ -194,9 +189,14 @@
       "profiles": []
     },
     "concatMap": {
-      "status": "in-progress",
+      "status": "accepted",
       "session": "2026-10-29",
-      "profiles": []
+      "profiles": [
+        "non-reentrant-Observable-projection"
+      ],
+      "evidence": "evidence/SESSION-02.md",
+      "testedCommit": "508db99746644c60d06cbeb7b4729eea976f15ad",
+      "verificationRun": 40853083582
     },
     "concatMapTo": {
       "status": "pending",
@@ -289,9 +289,14 @@
       "profiles": []
     },
     "exhaustMap": {
-      "status": "in-progress",
+      "status": "accepted",
       "session": "2026-10-29",
-      "profiles": []
+      "profiles": [
+        "non-reentrant-Observable-projection"
+      ],
+      "evidence": "evidence/SESSION-02.md",
+      "testedCommit": "508db99746644c60d06cbeb7b4729eea976f15ad",
+      "verificationRun": 40853083582
     },
     "expand": {
       "status": "pending",
@@ -379,9 +384,16 @@
       "profiles": []
     },
     "mergeMap": {
-      "status": "in-progress",
+      "status": "accepted",
       "session": "2026-10-29",
-      "profiles": []
+      "profiles": [
+        "concurrency-1",
+        "concurrency-2",
+        "unbounded"
+      ],
+      "evidence": "evidence/SESSION-02.md",
+      "testedCommit": "508db99746644c60d06cbeb7b4729eea976f15ad",
+      "verificationRun": 40853083582
     },
     "mergeMapTo": {
       "status": "pending",
@@ -517,9 +529,14 @@
       "profiles": []
     },
     "share": {
-      "status": "in-progress",
+      "status": "accepted",
       "session": "2026-10-29",
-      "profiles": []
+      "profiles": [
+        "Subject-boolean-resets"
+      ],
+      "evidence": "evidence/SESSION-02.md",
+      "testedCommit": "508db99746644c60d06cbeb7b4729eea976f15ad",
+      "verificationRun": 40853083582
     },
     "shareReplay": {
       "status": "pending",
@@ -567,9 +584,14 @@
       "profiles": []
     },
     "switchMap": {
-      "status": "in-progress",
+      "status": "accepted",
       "session": "2026-10-29",
-      "profiles": []
+      "profiles": [
+        "non-reentrant-Observable-projection"
+      ],
+      "evidence": "evidence/SESSION-02.md",
+      "testedCommit": "508db99746644c60d06cbeb7b4729eea976f15ad",
+      "verificationRun": 40853083582
     },
     "switchMapTo": {
       "status": "pending",
