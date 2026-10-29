@@ -1,0 +1,490 @@
+{
+  "status": "finished-input",
+  "consumed": 11,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "exhaustMap-1",
+      "executionId": "exhaustMap-session2-example",
+      "ruleId": "EXHAUSTMAP-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 0,
+        "active": [],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "exhaustMap-1",
+      "executionId": "exhaustMap-session2-example",
+      "ruleId": "EXHAUSTMAP-ADMIT",
+      "event": {
+        "type": "outer.next",
+        "value": "a"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 0,
+        "active": [],
+        "queue": []
+      },
+      "after": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 1,
+        "active": [],
+        "queue": [],
+        "callId": 0,
+        "input": "a"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "project",
+            "generation": 0
+          },
+          "value": "a",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "exhaustMap-1",
+      "executionId": "exhaustMap-session2-example",
+      "ruleId": "EXHAUSTMAP-RETURN-ACTIVE",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "project",
+          "generation": 0
+        },
+        "value": "A"
+      },
+      "before": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 1,
+        "active": [],
+        "queue": [],
+        "callId": 0,
+        "input": "a"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "A"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "exhaustMap-1",
+      "executionId": "exhaustMap-session2-example",
+      "ruleId": "EXHAUSTMAP-IGNORE",
+      "event": {
+        "type": "outer.next",
+        "value": "ignored"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "A"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "A"
+          }
+        ],
+        "queue": []
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 3,
+      "modelId": "exhaustMap-1",
+      "executionId": "exhaustMap-session2-example",
+      "ruleId": "EXHAUSTMAP-NEXT-ACTIVE",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 0
+        },
+        "value": "a1"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "A"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "A"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "a1"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 4,
+      "modelId": "exhaustMap-1",
+      "executionId": "exhaustMap-session2-example",
+      "ruleId": "EXHAUSTMAP-INNER-END-ACTIVE",
+      "event": {
+        "type": "inner.complete",
+        "resource": {
+          "id": "inner",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "A"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1,
+        "active": [],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 5,
+      "modelId": "exhaustMap-1",
+      "executionId": "exhaustMap-session2-example",
+      "ruleId": "EXHAUSTMAP-ADMIT",
+      "event": {
+        "type": "outer.next",
+        "value": "b"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1,
+        "active": [],
+        "queue": []
+      },
+      "after": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 2,
+        "active": [],
+        "queue": [],
+        "callId": 1,
+        "input": "b"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "project",
+            "generation": 1
+          },
+          "value": "b",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 5,
+      "modelId": "exhaustMap-1",
+      "executionId": "exhaustMap-session2-example",
+      "ruleId": "EXHAUSTMAP-RETURN-ACTIVE",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "project",
+          "generation": 1
+        },
+        "value": "B"
+      },
+      "before": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 2,
+        "active": [],
+        "queue": [],
+        "callId": 1,
+        "input": "b"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "B"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 6,
+      "modelId": "exhaustMap-1",
+      "executionId": "exhaustMap-session2-example",
+      "ruleId": "EXHAUSTMAP-OUTER-WAIT",
+      "event": {
+        "type": "outer.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "B"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "B"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 9,
+      "time": 7,
+      "modelId": "exhaustMap-1",
+      "executionId": "exhaustMap-session2-example",
+      "ruleId": "EXHAUSTMAP-NEXT-DRAINING",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 1
+        },
+        "value": "b1"
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "B"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "B"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "b1"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 10,
+      "time": 8,
+      "modelId": "exhaustMap-1",
+      "executionId": "exhaustMap-session2-example",
+      "ruleId": "EXHAUSTMAP-LAST-INNER",
+      "event": {
+        "type": "inner.complete",
+        "resource": {
+          "id": "inner",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "B"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        }
+      ]
+    }
+  ]
+}

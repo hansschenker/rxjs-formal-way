@@ -1,0 +1,509 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "mergeMap-2",
+    "operator": "mergeMap",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Allow overlap up to the concurrency limit; queue excess outer values before projection.",
+    "cardinality": {
+      "signature": "mergeMap : (T! x Index! -> R*) -> T* -> R*",
+      "conditions": [
+        "A projection describes an inner stream, not one guaranteed result; each accepted inner may emit zero, many or indefinitely many values.",
+        "The signature omits termination, cancellation and scheduling; the named rules supply those policies.",
+        "The index advances when projection starts, not while a value waits in a queue."
+      ]
+    },
+    "scope": {
+      "parameters": "Named projection binding; concurrency 2; nonnegative safe-integer invocation indices",
+      "callbacks": "A pure rule requests projection once; a correlated return names an external valid Observable binding. A driver resolves inner subscription resources through the returned source-token registry.",
+      "time": "No clock or scheduler is created. Outer and inner sources supply time; same-time delivery order is explicit in the input sequence.",
+      "reentrancy": "Non-reentrant reactions with synchronous projection outcomes. Exact teardown traces assume source initialization has returned before terminal events.",
+      "exclusions": [
+        "Deprecated resultSelector, arbitrary ObservableInput conversion, invalid project results and unsafe index overflow.",
+        "Reentrant source/projection/observer/finalizer calls, cancellation inside notification delivery, throwing observers or finalizers.",
+        "No producer-abort guarantee: unsubscribe stops this subscription; external work stops only if its teardown implements cancellation.",
+        "Synchronous inner notification behavior is characterized separately; post-setup cleanup order is not asserted for every synchronous producer."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire one outer subscription; no projection or inner subscription before an accepted outer value."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing or replay introduced. Each result subscription owns its counter, active-inner bindings and queue; an inner producer may itself be shared.",
+      "reset": "Fresh bookkeeping per result subscription. Closed has no admissible events. Payloads and source tokens are retained by reference.",
+      "resources": [
+        {
+          "id": "outer",
+          "kind": "subscription",
+          "owner": "this result subscription"
+        },
+        {
+          "id": "inner",
+          "kind": "subscription",
+          "owner": "this result subscription; generation is its admission index"
+        },
+        {
+          "id": "project",
+          "kind": "callback",
+          "owner": "external projection binding; generation correlates the invocation"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Commit next state, then interpret the ordered actions. A return is resolved before the next external input. Never replace RxJS delivery with an implicit event FIFO.",
+      "cancellationCheckpoints": [
+        "Between fully resolved reactions; release the outer if still open and all active inners; discard queued values without completing.",
+        "Outer completion is not cancellation of admitted or queued inner work."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a fresh result subscription connects"
+      },
+      {
+        "type": "outer.next",
+        "origin": "outer",
+        "category": "notification",
+        "description": "the outer source delivers a value"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "the pending projection returns a valid inner-source token"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "the pending projection throws"
+      },
+      {
+        "type": "inner.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "an admitted inner subscription delivers a value"
+      },
+      {
+        "type": "inner.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "an admitted inner subscription completes"
+      },
+      {
+        "type": "inner.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "an admitted inner subscription errors"
+      },
+      {
+        "type": "outer.complete",
+        "origin": "outer",
+        "category": "notification",
+        "description": "the outer source completes"
+      },
+      {
+        "type": "outer.error",
+        "origin": "outer",
+        "category": "notification",
+        "description": "the outer source errors"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream unsubscribes"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "invoke-callback",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "outer open; active inners and queue are explicit stored data",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "one unresolved synchronous projection, with a reserved concurrency slot",
+        "terminal": false
+      },
+      {
+        "id": "Draining",
+        "description": "outer completed; wait for admitted/queued work",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, errored or cancelled; owns no live subscriptions",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/mergeMap.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned admission, projection, completion and teardown behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/mergeInternals.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned admission, projection, completion and teardown behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned admission, projection, completion and teardown behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned admission, projection, completion and teardown behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned admission, projection, completion and teardown behavior"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session2-flatten-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session2-flatten-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-02.md"
+    }
+  },
+  "parameters": {
+    "operator": "mergeMap",
+    "concurrent": 2,
+    "callbackId": "project"
+  },
+  "rules": [
+    {
+      "id": "MERGEMAP-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "fresh execution",
+      "to": "Active",
+      "actions": [
+        "subscribe to the outer source"
+      ],
+      "nextState": "outer open with index zero and no active inners or queued values",
+      "explanation": "Subscription connects to the outer source. Pipeline construction alone starts no projection or inner execution.",
+      "obligations": [
+        "S2-MERGEMAP-01"
+      ]
+    },
+    {
+      "id": "MERGEMAP-ADMIT",
+      "from": "Active",
+      "event": "outer.next",
+      "guard": "a concurrency slot is available and the index can advance",
+      "to": "Calling",
+      "actions": [
+        "request one projection with the input and admission index"
+      ],
+      "nextState": "one pending projection; index advanced once",
+      "explanation": "An accepted outer value invokes the projection once with that value and the next zero-based admission index. The returned inner source is subscribed only after projection succeeds.",
+      "obligations": [
+        "S2-MERGEMAP-02"
+      ]
+    },
+    {
+      "id": "MERGEMAP-QUEUE",
+      "from": "Active",
+      "event": "outer.next",
+      "guard": "all concurrency slots are occupied",
+      "to": "Active",
+      "actions": [],
+      "nextState": "append the raw outer value to the FIFO queue without changing the projection index",
+      "explanation": "When all slots are occupied, retain the outer value in arrival order. Do not project it yet. A later inner completion admits the oldest queued value.",
+      "obligations": [
+        "S2-MERGEMAP-03"
+      ]
+    },
+    {
+      "id": "MERGEMAP-RETURN-ACTIVE",
+      "from": "Calling",
+      "event": "callback.return",
+      "guard": "matching invocation with resume=Active",
+      "to": "Active",
+      "actions": [
+        "subscribe the returned source under the pending invocation generation"
+      ],
+      "nextState": "new inner admitted; no outer value emitted directly",
+      "explanation": "A successful projection starts its inner subscription. The outer input itself is not forwarded; values come from the admitted inner.",
+      "obligations": [
+        "S2-MERGEMAP-04"
+      ]
+    },
+    {
+      "id": "MERGEMAP-RETURN-DRAINING",
+      "from": "Calling",
+      "event": "callback.return",
+      "guard": "matching invocation with resume=Draining",
+      "to": "Draining",
+      "actions": [
+        "subscribe the returned source under the pending invocation generation"
+      ],
+      "nextState": "new inner admitted; no outer value emitted directly",
+      "explanation": "Queued outer values still get projected after outer completion. Their inner subscriptions must also finish before the result can complete.",
+      "obligations": [
+        "S2-MERGEMAP-04"
+      ]
+    },
+    {
+      "id": "MERGEMAP-THROW",
+      "from": "Calling",
+      "event": "callback.throw",
+      "guard": "matching projection invocation",
+      "to": "Closed",
+      "actions": [
+        "error downstream with the thrown value",
+        "release the open outer and every remaining inner; discard the queue"
+      ],
+      "nextState": "closed by projection error",
+      "explanation": "If projection throws, forward that error and tear down all owned subscriptions. Queued values are discarded without projection, and no completion follows.",
+      "obligations": [
+        "S2-MERGEMAP-05"
+      ]
+    },
+    {
+      "id": "MERGEMAP-NEXT-ACTIVE",
+      "from": "Active",
+      "event": "inner.next",
+      "guard": "the notification belongs to an active inner generation",
+      "to": "Active",
+      "actions": [
+        "forward the inner value unchanged"
+      ],
+      "nextState": "retain the same active set and queue",
+      "explanation": "Values from admitted active inners are forwarded unchanged in actual delivery order.",
+      "obligations": [
+        "S2-MERGEMAP-06"
+      ]
+    },
+    {
+      "id": "MERGEMAP-INNER-ERROR-ACTIVE",
+      "from": "Active",
+      "event": "inner.error",
+      "guard": "the error belongs to an active inner generation",
+      "to": "Closed",
+      "actions": [
+        "error downstream unchanged",
+        "release all owned subscriptions and discard queued values"
+      ],
+      "nextState": "closed by inner error",
+      "explanation": "An active inner error ends the whole result, including the outer subscription and other active inners.",
+      "obligations": [
+        "S2-MERGEMAP-07"
+      ]
+    },
+    {
+      "id": "MERGEMAP-CANCEL-ACTIVE",
+      "from": "Active",
+      "event": "cancel",
+      "guard": "between resolved reactions",
+      "to": "Closed",
+      "actions": [
+        "release the open outer and active inners; discard the queue without notifying downstream"
+      ],
+      "nextState": "closed by cancellation",
+      "explanation": "Downstream cancellation unsubscribes from the outer and every active inner. It neither completes the result nor projects queued values.",
+      "obligations": [
+        "S2-MERGEMAP-08"
+      ]
+    },
+    {
+      "id": "MERGEMAP-DRAIN-ACTIVE",
+      "from": "Active",
+      "event": "inner.complete",
+      "guard": "matching inner; queue nonempty; projection index can advance",
+      "to": "Calling",
+      "actions": [
+        "release the completed inner",
+        "dequeue the oldest value and request its projection"
+      ],
+      "nextState": "one slot reserved for the dequeued input; other inners remain active",
+      "explanation": "When an inner completes, release it and admit the oldest queued value into the free slot. Its projection runs now, not when it originally arrived.",
+      "obligations": [
+        "S2-MERGEMAP-09"
+      ]
+    },
+    {
+      "id": "MERGEMAP-INNER-END-ACTIVE",
+      "from": "Active",
+      "event": "inner.complete",
+      "guard": "matching inner and empty queue",
+      "to": "Active",
+      "actions": [
+        "release the completed inner"
+      ],
+      "nextState": "remove that inner and keep waiting",
+      "explanation": "An inner completing does not complete the result while the outer is still open. Wait for more outer values or other active inners.",
+      "obligations": [
+        "S2-MERGEMAP-10"
+      ]
+    },
+    {
+      "id": "MERGEMAP-NEXT-DRAINING",
+      "from": "Draining",
+      "event": "inner.next",
+      "guard": "the notification belongs to an active inner generation",
+      "to": "Draining",
+      "actions": [
+        "forward the inner value unchanged"
+      ],
+      "nextState": "retain the same active set and queue",
+      "explanation": "After the outer completes, values from remaining inners continue to flow until those inners finish.",
+      "obligations": [
+        "S2-MERGEMAP-06"
+      ]
+    },
+    {
+      "id": "MERGEMAP-INNER-ERROR-DRAINING",
+      "from": "Draining",
+      "event": "inner.error",
+      "guard": "the error belongs to an active inner generation",
+      "to": "Closed",
+      "actions": [
+        "error downstream unchanged",
+        "release all owned subscriptions and discard queued values"
+      ],
+      "nextState": "closed by inner error",
+      "explanation": "An inner error while draining still ends the result immediately; other inner work and any queued values are discarded.",
+      "obligations": [
+        "S2-MERGEMAP-07"
+      ]
+    },
+    {
+      "id": "MERGEMAP-CANCEL-DRAINING",
+      "from": "Draining",
+      "event": "cancel",
+      "guard": "between resolved reactions",
+      "to": "Closed",
+      "actions": [
+        "release the open outer and active inners; discard the queue without notifying downstream"
+      ],
+      "nextState": "closed by cancellation",
+      "explanation": "Cancellation while draining releases the remaining inners and discards queued work without completion.",
+      "obligations": [
+        "S2-MERGEMAP-08"
+      ]
+    },
+    {
+      "id": "MERGEMAP-DRAIN-DRAINING",
+      "from": "Draining",
+      "event": "inner.complete",
+      "guard": "matching inner; queue nonempty; projection index can advance",
+      "to": "Calling",
+      "actions": [
+        "release the completed inner",
+        "dequeue the oldest value and request its projection"
+      ],
+      "nextState": "one slot reserved for the dequeued input; other inners remain active",
+      "explanation": "Outer completion does not discard the queue. Continue admitting queued values as inner subscriptions finish.",
+      "obligations": [
+        "S2-MERGEMAP-09"
+      ]
+    },
+    {
+      "id": "MERGEMAP-INNER-END-DRAINING",
+      "from": "Draining",
+      "event": "inner.complete",
+      "guard": "matching inner, empty queue, and another inner remains",
+      "to": "Draining",
+      "actions": [
+        "release the completed inner"
+      ],
+      "nextState": "remove that inner and keep waiting",
+      "explanation": "When one of several remaining inners completes, keep waiting for the others.",
+      "obligations": [
+        "S2-MERGEMAP-10"
+      ]
+    },
+    {
+      "id": "MERGEMAP-LAST-INNER",
+      "from": "Draining",
+      "event": "inner.complete",
+      "guard": "matching final inner and empty queue",
+      "to": "Closed",
+      "actions": [
+        "release the final inner",
+        "complete downstream"
+      ],
+      "nextState": "closed by successful completion",
+      "explanation": "The result completes only when the outer has completed and all admitted inner work, including any queue, is finished. The final cleanup order follows this operator family under the post-setup profile.",
+      "obligations": [
+        "S2-MERGEMAP-11"
+      ]
+    },
+    {
+      "id": "MERGEMAP-OUTER-WAIT",
+      "from": "Active",
+      "event": "outer.complete",
+      "guard": "at least one active inner",
+      "to": "Draining",
+      "actions": [
+        "release the completed outer subscription"
+      ],
+      "nextState": "outer done; preserve active inners and queued values",
+      "explanation": "Outer completion stops new arrivals but does not cancel the current inner work. Keep forwarding inner values and, where applicable, draining the queue.",
+      "obligations": [
+        "S2-MERGEMAP-12"
+      ]
+    },
+    {
+      "id": "MERGEMAP-OUTER-END",
+      "from": "Active",
+      "event": "outer.complete",
+      "guard": "no active inner and empty queue",
+      "to": "Closed",
+      "actions": [
+        "complete downstream",
+        "release the outer subscription"
+      ],
+      "nextState": "closed by successful completion",
+      "explanation": "If the outer completes with no inner work left, complete immediately and release the outer subscription.",
+      "obligations": [
+        "S2-MERGEMAP-13"
+      ]
+    },
+    {
+      "id": "MERGEMAP-OUTER-ERROR",
+      "from": "Active",
+      "event": "outer.error",
+      "guard": "outer still open",
+      "to": "Closed",
+      "actions": [
+        "error downstream unchanged",
+        "release the outer and active inners; discard the queue"
+      ],
+      "nextState": "closed by outer error",
+      "explanation": "An outer error is forwarded immediately. Unlike completion, it cancels active inners and discards queued values.",
+      "obligations": [
+        "S2-MERGEMAP-14"
+      ]
+    }
+  ]
+}

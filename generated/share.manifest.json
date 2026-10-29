@@ -1,0 +1,244 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "share-111",
+    "operator": "share",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Share one live source connection among subscribers using a Subject and explicit boolean reset policies.",
+    "cardinality": {
+      "signature": "share : T* -> Shared(T*)",
+      "conditions": [
+        "Shared is project teaching notation for a connection/ownership policy, not original Cω syntax.",
+        "A subscriber observes a subsequence determined by its connection interval, not a replay of all source values.",
+        "Broadcasts are addressed to subscriptions. Total addressed deliveries may exceed the number of source values."
+      ]
+    },
+    "scope": {
+      "parameters": "Subject connector with boolean resetOnError=true, resetOnComplete=true, resetOnRefCountZero=true",
+      "callbacks": "No custom connector or reset-notifier functions. Observer/source/finalizer activity is non-reentrant and nonthrowing.",
+      "time": "No timer or clock is introduced. Ordered source and subscriber events determine membership at each delivery.",
+      "reentrancy": "Atomic post-setup reactions. Each subscriber ID denotes one subscription occurrence and must not be reused.",
+      "exclusions": [
+        "Custom SubjectLike connectors, replay and notifier-driven delayed resets.",
+        "Reentrant joins/leaves during notification, source setup or teardown; throwing observers/finalizers.",
+        "Physical producer abortion, lossless snapshots and a production shared-effect interpreter."
+      ]
+    },
+    "initialization": {
+      "control": "Disconnected",
+      "event": "subscriber.subscribe",
+      "sourceSubscription": "Only the first live subscriber acquires a connection; later subscribers join it."
+    },
+    "ownership": {
+      "state": "external-instance",
+      "sharing": "One machine per shared Observable instance, not per subscriber. Each reset creates a fresh connection generation.",
+      "reset": "Boolean policies reset after error, completion or last live departure. Retained terminal subjects still accept late subscription events.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "shared Observable; connection generation distinguishes reconnects"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Commit registry/reset state before delivering addressed notifications; observe source release after terminal delivery under post-setup execution. IDs are unique subscription occurrences, not reusable observer names.",
+      "cancellationCheckpoints": [
+        "A leave affects one subscriber. Only a last leave with reset enabled disconnects the source.",
+        "Source termination ends existing subscriptions; resetting is not retrying those subscribers."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscriber.subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a fresh subscriber joins"
+      },
+      {
+        "type": "subscriber.unsubscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a registered subscriber leaves"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "the current connection delivers a value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "the current connection completes"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "the current connection errors"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Disconnected",
+        "description": "no current source connection",
+        "terminal": false
+      },
+      {
+        "id": "Connected",
+        "description": "one live source; zero or more observers according to reset policy",
+        "terminal": false
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/share.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned registration, addressed delivery, reset and source teardown policies"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subject.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned registration, addressed delivery, reset and source teardown policies"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned registration, addressed delivery, reset and source teardown policies"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned registration, addressed delivery, reset and source teardown policies"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session2-share-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session2-share-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-02.md"
+    }
+  },
+  "parameters": {
+    "resetOnError": true,
+    "resetOnComplete": true,
+    "resetOnRefCountZero": true
+  },
+  "rules": [
+    {
+      "id": "SHARE-CONNECT",
+      "from": "Disconnected",
+      "event": "subscriber.subscribe",
+      "guard": "fresh subscription ID and available connection generation",
+      "to": "Connected",
+      "actions": [
+        "subscribe to the source under a fresh connection generation"
+      ],
+      "nextState": "one registered subscriber and one connection",
+      "explanation": "Constructing the shared Observable starts nothing. Its first subscriber creates a Subject-backed connection to the source; that connection is shared by overlapping subscribers.",
+      "obligations": [
+        "S2-SHARE-01"
+      ]
+    },
+    {
+      "id": "SHARE-JOIN",
+      "from": "Connected",
+      "event": "subscriber.subscribe",
+      "guard": "fresh subscription ID",
+      "to": "Connected",
+      "actions": [],
+      "nextState": "append subscriber to the existing connection, without replay",
+      "explanation": "A subscriber joining a live connection receives future values, not past values. It does not create another source subscription. Sharing is not replay.",
+      "obligations": [
+        "S2-SHARE-02"
+      ]
+    },
+    {
+      "id": "SHARE-NEXT",
+      "from": "Connected",
+      "event": "source.next",
+      "guard": "current source generation",
+      "to": "Connected",
+      "actions": [
+        "forward the value to each currently registered subscriber in registration order"
+      ],
+      "nextState": "retain the connection and registry",
+      "explanation": "A source value is forwarded unchanged to each currently subscribed observer. With no observers, a retained connection can still receive values, but share stores none of them.",
+      "obligations": [
+        "S2-SHARE-03"
+      ]
+    },
+    {
+      "id": "SHARE-LEAVE",
+      "from": "Connected",
+      "event": "subscriber.unsubscribe",
+      "guard": "registered subscriber and at least one other remains",
+      "to": "Connected",
+      "actions": [],
+      "nextState": "remove only this subscriber",
+      "explanation": "When one subscriber leaves while others remain, remove only that subscriber. The shared source continues and no completion is sent to the departing observer.",
+      "obligations": [
+        "S2-SHARE-04"
+      ]
+    },
+    {
+      "id": "SHARE-LAST-RESET",
+      "from": "Connected",
+      "event": "subscriber.unsubscribe",
+      "guard": "the last registered subscriber leaves; resetOnRefCountZero=true",
+      "to": "Disconnected",
+      "actions": [
+        "unsubscribe the source"
+      ],
+      "nextState": "reset the connection with no live subscribers",
+      "explanation": "When the last subscriber leaves a nonterminated connection, resetOnRefCountZero=true disconnects and resets it. A future subscriber starts a new source execution. No completion notification is synthesized.",
+      "obligations": [
+        "S2-SHARE-05"
+      ]
+    },
+    {
+      "id": "SHARE-COMPLETE-RESET",
+      "from": "Connected",
+      "event": "source.complete",
+      "guard": "current generation; resetOnComplete=true",
+      "to": "Disconnected",
+      "actions": [
+        "send complete to each current subscriber",
+        "release the source connection"
+      ],
+      "nextState": "reset for a later fresh subscription",
+      "explanation": "On source complete, notify current subscribers and release that source connection. The configured reset permits a future subscriber to start fresh; it does not retry the terminated subscriptions.",
+      "obligations": [
+        "S2-SHARE-07"
+      ]
+    },
+    {
+      "id": "SHARE-ERROR-RESET",
+      "from": "Connected",
+      "event": "source.error",
+      "guard": "current generation; resetOnError=true",
+      "to": "Disconnected",
+      "actions": [
+        "send error to each current subscriber",
+        "release the source connection"
+      ],
+      "nextState": "reset for a later fresh subscription",
+      "explanation": "On source error, notify current subscribers and release that source connection. The configured reset permits a future subscriber to start fresh; it does not retry the terminated subscriptions.",
+      "obligations": [
+        "S2-SHARE-08"
+      ]
+    }
+  ]
+}

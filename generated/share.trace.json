@@ -1,0 +1,509 @@
+{
+  "status": "finished-input",
+  "consumed": 10,
+  "state": {
+    "phase": "Disconnected",
+    "nextConnection": 3,
+    "used": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ]
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "share-111",
+      "executionId": "share-session2-example",
+      "ruleId": "SHARE-CONNECT",
+      "event": {
+        "type": "subscriber.subscribe",
+        "subscriber": "A"
+      },
+      "before": {
+        "phase": "Disconnected",
+        "nextConnection": 0,
+        "used": []
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "A"
+        ],
+        "used": [
+          "A"
+        ],
+        "nextConnection": 1
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "share-111",
+      "executionId": "share-session2-example",
+      "ruleId": "SHARE-JOIN",
+      "event": {
+        "type": "subscriber.subscribe",
+        "subscriber": "B"
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "A"
+        ],
+        "used": [
+          "A"
+        ],
+        "nextConnection": 1
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "A",
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "share-111",
+      "executionId": "share-session2-example",
+      "ruleId": "SHARE-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": "x"
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "A",
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "A",
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "A",
+          "notification": {
+            "kind": "N",
+            "value": "x"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "B",
+          "notification": {
+            "kind": "N",
+            "value": "x"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "share-111",
+      "executionId": "share-session2-example",
+      "ruleId": "SHARE-LEAVE",
+      "event": {
+        "type": "subscriber.unsubscribe",
+        "subscriber": "A"
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "A",
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "share-111",
+      "executionId": "share-session2-example",
+      "ruleId": "SHARE-LAST-RESET",
+      "event": {
+        "type": "subscriber.unsubscribe",
+        "subscriber": "B"
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "after": {
+        "phase": "Disconnected",
+        "nextConnection": 1,
+        "used": [
+          "A",
+          "B"
+        ]
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "share-111",
+      "executionId": "share-session2-example",
+      "ruleId": "SHARE-CONNECT",
+      "event": {
+        "type": "subscriber.subscribe",
+        "subscriber": "C"
+      },
+      "before": {
+        "phase": "Disconnected",
+        "nextConnection": 1,
+        "used": [
+          "A",
+          "B"
+        ]
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 1
+        },
+        "subscribers": [
+          "C"
+        ],
+        "used": [
+          "A",
+          "B",
+          "C"
+        ],
+        "nextConnection": 2
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "share-111",
+      "executionId": "share-session2-example",
+      "ruleId": "SHARE-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 1
+        },
+        "value": "y"
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 1
+        },
+        "subscribers": [
+          "C"
+        ],
+        "used": [
+          "A",
+          "B",
+          "C"
+        ],
+        "nextConnection": 2
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 1
+        },
+        "subscribers": [
+          "C"
+        ],
+        "used": [
+          "A",
+          "B",
+          "C"
+        ],
+        "nextConnection": 2
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "C",
+          "notification": {
+            "kind": "N",
+            "value": "y"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 7,
+      "modelId": "share-111",
+      "executionId": "share-session2-example",
+      "ruleId": "SHARE-COMPLETE-RESET",
+      "event": {
+        "type": "source.complete",
+        "resource": {
+          "id": "source",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 1
+        },
+        "subscribers": [
+          "C"
+        ],
+        "used": [
+          "A",
+          "B",
+          "C"
+        ],
+        "nextConnection": 2
+      },
+      "after": {
+        "phase": "Disconnected",
+        "nextConnection": 2,
+        "used": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "C",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 8,
+      "modelId": "share-111",
+      "executionId": "share-session2-example",
+      "ruleId": "SHARE-CONNECT",
+      "event": {
+        "type": "subscriber.subscribe",
+        "subscriber": "D"
+      },
+      "before": {
+        "phase": "Disconnected",
+        "nextConnection": 2,
+        "used": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 2
+        },
+        "subscribers": [
+          "D"
+        ],
+        "used": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "nextConnection": 3
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 9,
+      "time": 9,
+      "modelId": "share-111",
+      "executionId": "share-session2-example",
+      "ruleId": "SHARE-ERROR-RESET",
+      "event": {
+        "type": "source.error",
+        "resource": {
+          "id": "source",
+          "generation": 2
+        },
+        "error": "fault"
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 2
+        },
+        "subscribers": [
+          "D"
+        ],
+        "used": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "nextConnection": 3
+      },
+      "after": {
+        "phase": "Disconnected",
+        "nextConnection": 3,
+        "used": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "D",
+          "notification": {
+            "kind": "E",
+            "error": "fault"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 2
+          }
+        }
+      ]
+    }
+  ]
+}

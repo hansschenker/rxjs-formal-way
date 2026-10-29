@@ -1,0 +1,29 @@
+# share-111: concrete trace and four-lane view
+
+> Generated from the canonical model by npm run generate. Do not edit this projection.
+
+**Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
+
+| Sequence | Time | Rule | Input | Before | Ordered actions | After |
+|---:|---:|---|---|---|---|---|
+| 0 | 0 | SHARE-CONNECT | {"type":"subscriber.subscribe","subscriber":"A"} | {"phase":"Disconnected","nextConnection":0,"used":[]} | subscribe(source#0) | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A"],"used":["A"],"nextConnection":1} |
+| 1 | 1 | SHARE-JOIN | {"type":"subscriber.subscribe","subscriber":"B"} | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A"],"used":["A"],"nextConnection":1} |  | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A","B"],"used":["A","B"],"nextConnection":1} |
+| 2 | 2 | SHARE-NEXT | {"type":"source.next","resource":{"id":"source","generation":0},"value":"x"} | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A","B"],"used":["A","B"],"nextConnection":1} | A.N("x"); B.N("x") | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A","B"],"used":["A","B"],"nextConnection":1} |
+| 3 | 3 | SHARE-LEAVE | {"type":"subscriber.unsubscribe","subscriber":"A"} | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A","B"],"used":["A","B"],"nextConnection":1} |  | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["B"],"used":["A","B"],"nextConnection":1} |
+| 4 | 4 | SHARE-LAST-RESET | {"type":"subscriber.unsubscribe","subscriber":"B"} | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["B"],"used":["A","B"],"nextConnection":1} | unsubscribe(source#0) | {"phase":"Disconnected","nextConnection":1,"used":["A","B"]} |
+| 5 | 5 | SHARE-CONNECT | {"type":"subscriber.subscribe","subscriber":"C"} | {"phase":"Disconnected","nextConnection":1,"used":["A","B"]} | subscribe(source#1) | {"phase":"Connected","connection":{"id":"source","generation":1},"subscribers":["C"],"used":["A","B","C"],"nextConnection":2} |
+| 6 | 6 | SHARE-NEXT | {"type":"source.next","resource":{"id":"source","generation":1},"value":"y"} | {"phase":"Connected","connection":{"id":"source","generation":1},"subscribers":["C"],"used":["A","B","C"],"nextConnection":2} | C.N("y") | {"phase":"Connected","connection":{"id":"source","generation":1},"subscribers":["C"],"used":["A","B","C"],"nextConnection":2} |
+| 7 | 7 | SHARE-COMPLETE-RESET | {"type":"source.complete","resource":{"id":"source","generation":1}} | {"phase":"Connected","connection":{"id":"source","generation":1},"subscribers":["C"],"used":["A","B","C"],"nextConnection":2} | C.C(); unsubscribe(source#1) | {"phase":"Disconnected","nextConnection":2,"used":["A","B","C"]} |
+| 8 | 8 | SHARE-CONNECT | {"type":"subscriber.subscribe","subscriber":"D"} | {"phase":"Disconnected","nextConnection":2,"used":["A","B","C"]} | subscribe(source#2) | {"phase":"Connected","connection":{"id":"source","generation":2},"subscribers":["D"],"used":["A","B","C","D"],"nextConnection":3} |
+| 9 | 9 | SHARE-ERROR-RESET | {"type":"source.error","resource":{"id":"source","generation":2},"error":"fault"} | {"phase":"Connected","connection":{"id":"source","generation":2},"subscribers":["D"],"used":["A","B","C","D"],"nextConnection":3} | D.E("fault"); unsubscribe(source#2) | {"phase":"Disconnected","nextConnection":3,"used":["A","B","C","D"]} |
+
+## Four lanes
+
+| Lane | step 0 | step 1 | step 2 | step 3 | step 4 | step 5 | step 6 | step 7 | step 8 | step 9 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Time | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+| Input | {"type":"subscriber.subscribe","subscriber":"A"} | {"type":"subscriber.subscribe","subscriber":"B"} | {"type":"source.next","resource":{"id":"source","generation":0},"value":"x"} | {"type":"subscriber.unsubscribe","subscriber":"A"} | {"type":"subscriber.unsubscribe","subscriber":"B"} | {"type":"subscriber.subscribe","subscriber":"C"} | {"type":"source.next","resource":{"id":"source","generation":1},"value":"y"} | {"type":"source.complete","resource":{"id":"source","generation":1}} | {"type":"subscriber.subscribe","subscriber":"D"} | {"type":"source.error","resource":{"id":"source","generation":2},"error":"fault"} |
+| Control / state | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A"],"used":["A"],"nextConnection":1} | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A","B"],"used":["A","B"],"nextConnection":1} | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A","B"],"used":["A","B"],"nextConnection":1} | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["B"],"used":["A","B"],"nextConnection":1} | {"phase":"Disconnected","nextConnection":1,"used":["A","B"]} | {"phase":"Connected","connection":{"id":"source","generation":1},"subscribers":["C"],"used":["A","B","C"],"nextConnection":2} | {"phase":"Connected","connection":{"id":"source","generation":1},"subscribers":["C"],"used":["A","B","C"],"nextConnection":2} | {"phase":"Disconnected","nextConnection":2,"used":["A","B","C"]} | {"phase":"Connected","connection":{"id":"source","generation":2},"subscribers":["D"],"used":["A","B","C","D"],"nextConnection":3} | {"phase":"Disconnected","nextConnection":3,"used":["A","B","C","D"]} |
+| Output notifications | none | none | A.N("x"); B.N("x") | none | none | none | C.N("y") | C.C() | none | D.E("fault") |
+
+The ordered-action column retains lifecycle observations omitted from the output-notification lane.
