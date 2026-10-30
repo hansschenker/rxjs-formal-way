@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-30",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-10-30T08:27:01+01:00",
+  "startingCommit": "6ba40c5ba2c8b49b94139ce698b8605cf664a104",
+  "selectedNames": [
+    "switchAll",
+    "mergeAll",
+    "concatAll",
+    "exhaustAll",
+    "shareReplay"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "switchAll",
+    "mergeAll",
+    "concatAll",
+    "exhaustAll",
+    "shareReplay"
+  ],
+  "commits": [],
+  "checks": {
+    "syntax": "not executed",
+    "types": "not executed",
+    "model": "not executed",
+    "runtime": "not executed",
+    "generated": "not executed",
+    "ci": "not executed"
+  },
+  "notes": [
+    "Selected from current live JSON queue after reading daily plan, roadmap and 29 October closed log.",
+    "Only these five distinct export names are allowed in this local-date session. Reuse Session 2 flattening and sharing models where their semantics are identical."
+  ],
+  "evidence": "evidence/SESSION-03.md"
+}
