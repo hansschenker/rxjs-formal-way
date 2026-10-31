@@ -135,4 +135,8 @@ alone.
 
 ## Read-only CI verification
 
-This documentation-only branch exists to run the unchanged pull-request validation workflow on already-committed generated files. Its CI path must **skip regeneration and artifact publication** and execute the complete `npm run check` against the checked-out tree. Acceptance must cite the retrieved result, not the existence of this paragraph.
+This documentation-only branch exists to run the unchanged pull-request validation workflow on already-committed generated files. Its CI path must **skip regeneration and artifact publication** and execute the complete `npm run check` against the checked-out tree. Acceptance is now recorded in [the evidence ledger](../evidence/SESSION-03.md):
+[read-only PR run 41182614115](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41182614115)
+checked out `8935af283b0db4d1a662f31872f5948407b3d141`,
+passed 511 named tests and verified 128 committed views. Both
+generation and publication were skipped in the PR run.

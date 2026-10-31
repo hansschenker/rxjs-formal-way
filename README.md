@@ -6,11 +6,23 @@ A coherent method for describing, analyzing, documenting, visualizing, and testi
 
 The project grew from stateful transducers, through six-component Mealy analysis, to transition tables, diagrams, BDD and test obligations. Formal machinery supports the explanation; an RxJS user should not need automata theory to understand the final operator description.
 
-## Current checkpoint: Session 2 — higher-order and shared execution
+## Current checkpoint: Session 3 — inner-source flattening and replay
 
-Session 2 resumes the existing **29 October 2026 Europe/Zurich** session and works on exactly five names: **switchMap, mergeMap, concatMap, exhaustMap and share**. M02-D and M02-E now have implemented profiles. The full push-run suite passed **415 tests**, and generated **88 views**. Final scoped acceptance is recorded in [Session 2 evidence](evidence/SESSION-02.md) after a separate check of committed files without regeneration. The [daily plan](docs/DAILY-GENERATION-PLAN.md), [machine-readable queue](planning/operator-generation.json), [dated session log](planning/sessions/2026-10-29.json) and [roadmap](docs/ROADMAP.md) govern continuation.
+The **31 October 2026 Europe/Zurich** session carried and completed five
+unfinished exports: **switchAll, mergeAll, concatAll, exhaustAll and
+shareReplay**. All five are accepted within their declared scopes.
+Both the full push CI and independent read-only PR CI passed **511
+named tests** and validated **128 deterministic projections**.
+[Session 3 evidence](evidence/SESSION-03.md) records exact tested
+commits and limits; [the guide](docs/SESSION-03-FLATTEN-AND-REPLAY.md)
+explains source, lifecycle and replay behavior.
 
-The earlier five operators remain the accepted baseline. They are not counted again when their generated files are checked.
+Earlier accepted exports are retained. The
+[daily plan](docs/DAILY-GENERATION-PLAN.md),
+[live queue](planning/operator-generation.json),
+[31 October session log](planning/sessions/2026-10-31.json),
+and [roadmap](docs/ROADMAP.md) govern continuation.
+**98 of 113 exports remain pending.**
 
 | Operator/profile | Readable behavior | BDD | Transition table | State diagram | Four lanes |
 |---|---|---|---|---|---|
@@ -25,8 +37,13 @@ The earlier five operators remain the accepted baseline. They are not counted ag
 | concatMap | [Page](operators/concatMap.md) | [BDD](generated/concatMap.bdd.md) | [STT](generated/concatMap.stt.md) | [STD](generated/concatMap.diagram.md) | [Trace](generated/concatMap.trace.md) |
 | exhaustMap | [Page](operators/exhaustMap.md) | [BDD](generated/exhaustMap.bdd.md) | [STT](generated/exhaustMap.stt.md) | [STD](generated/exhaustMap.diagram.md) | [Trace](generated/exhaustMap.trace.md) |
 | share, default resets | [Page](operators/share.md) | [BDD](generated/share.bdd.md) | [STT](generated/share.stt.md) | [STD](generated/share.diagram.md) | [Trace](generated/share.trace.md) |
+| switchAll | [Page](operators/switchAll.md) | [BDD](generated/switchAll.bdd.md) | [STT](generated/switchAll.stt.md) | [STD](generated/switchAll.diagram.md) | [Trace](generated/switchAll.trace.md) |
+| mergeAll | [Page](operators/mergeAll.md) | [BDD](generated/mergeAll.bdd.md) | [STT](generated/mergeAll.stt.md) | [STD](generated/mergeAll.diagram.md) | [Trace](generated/mergeAll.trace.md) |
+| concatAll | [Page](operators/concatAll.md) | [BDD](generated/concatAll.bdd.md) | [STT](generated/concatAll.stt.md) | [STD](generated/concatAll.diagram.md) | [Trace](generated/concatAll.trace.md) |
+| exhaustAll | [Page](operators/exhaustAll.md) | [BDD](generated/exhaustAll.bdd.md) | [STT](generated/exhaustAll.stt.md) | [STD](generated/exhaustAll.diagram.md) | [Trace](generated/exhaustAll.trace.md) |
+| shareReplay | [Page](operators/shareReplay.md) | [BDD](generated/shareReplay.bdd.md) | [STT](generated/shareReplay.stt.md) | [STD](generated/shareReplay.diagram.md) | [Trace](generated/shareReplay.trace.md) |
 
-Each configured example has eight generated projections: the five linked above, a JSON manifest, JSON trace and test-obligation document. The registry produces **88** views across eleven examples and ten distinct operator names. Test configurations additionally cover mergeMap concurrency 1/unbounded and all eight boolean share reset combinations. These are scoped reference models, not replacement RxJS operators.
+Each configured example has eight generated projections: the five linked above, a JSON manifest, JSON trace and test-obligation document. The registry produces **128** views across sixteen examples and fifteen distinct operator names. Test configurations additionally cover mergeMap concurrency 1/unbounded and all eight boolean share reset combinations. These are scoped reference models, not replacement RxJS operators.
 
 ## Start here
 
@@ -37,6 +54,7 @@ Each configured example has eight generated projections: the five linked above, 
 | [M02 value selection](docs/M02-VALUE-SELECTION.md) | Callback-separated map/filter profiles and schema 1.1 |
 | [M02-B accumulation](docs/M02-B-SCAN.md) | Seeded/unseeded scan, typed reducer inputs and reference ownership |
 | [M02-C temporal behavior](docs/M02-C-DEBOUNCE-TIME.md) | Deadline versus wake-up, timer identities, zero delay and same-time order |
+| [Session 3 — All family and replay](docs/SESSION-03-FLATTEN-AND-REPLAY.md) | Inner-source policies, shared replay memory, external time and verification |
 | [Session 2 higher-order behavior](docs/SESSION-02-HIGHER-ORDER.md) | Four admission policies, per-operator six-tuples, legal behavior and inner generations |
 | [M02-E shared execution](docs/M02-E-SHARE.md) | Addressed subscribers, connection ownership and boolean reset policies |
 | [Roadmap](docs/ROADMAP.md) | Implemented and remaining checkpoints |
@@ -191,7 +209,7 @@ The pre-Session-2 baseline contains 223 named tests, 32 negative type assertions
 npm ci --ignore-scripts
 npm run check
 npm run test:model
-npm run generate          # intentionally refresh 88 projections
+npm run generate          # intentionally refresh 128 projections
 npm run check:generated   # read-only drift check
 ```
 
@@ -203,9 +221,13 @@ Keep terminal exclusivity, post-terminal silence, cancellation distinct from com
 
 Earlier repositories remain provenance, not material to delete: rxjs-mealy-analysis, rxjs-operator-mealy-analysis, rxjs-operator-mealy-tuples, rxjs-mealy-to-testcase, bdd-to-mealy, rxjs-comega-type-notation-and-mealy-machine-tuples, and the Mealy-to-documentation experiments.
 
-Continue only according to the live queue and dated session log. Unfinished names carry first; at most five distinct names are worked on per local-date session. The next untouched batch is switchAll, mergeAll, concatAll, exhaustAll and shareReplay. Full catalogue migration, a general effect interpreter, dependent proofs and interactive visualization remain later work. The migration map preserves the original broader plan.
+Continue only according to the live queue and dated session log. Unfinished names carry first; at most five distinct names are worked on per local-date session. The next pending batch is distinctUntilChanged, distinctUntilKeyChanged, distinct, pairwise and startWith. Full catalogue migration, a general effect interpreter, dependent proofs and interactive visualization remain later work. The migration map preserves the original broader plan.
 
 ## Collaboration
+
+**GPT-6 (OpenAI)** is the main AI contributor to Session 3's
+identity-source flattening, shared replay models and independent runtime
+tests. Historical contributor credits remain intact.
 
 Hans Schenker directs the research and teaching goals. The initial consolidation credits **GPT-5.6 Sol (OpenAI)** in project history. **GPT-6 Astra Pro** is the main contributor to the source review, composition/ownership guidance, regression harness and M01/M02/Session-2 implementations. The supplied Gemini discussion is credited as inspiration, not authoritative implementation evidence.
 

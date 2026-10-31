@@ -40,3 +40,11 @@ The new commits use `Co-authored-by: GPT-6 Astra Pro <gpt-6-astra-pro@example.in
 The consolidated repository draws on earlier repositories that include substantial work produced in collaboration with multiple AI systems. Those repositories remain the authoritative provenance record for their original commits and contributor attributions.
 
 When artifacts are migrated into this repository, preserve source attribution in commit messages or migration notes rather than rewriting history.
+
+## Session 3 — 31 October 2026
+
+- **GPT-6 (OpenAI)** — main contributor to `switchAll`,
+  `mergeAll`, `concatAll`, `exhaustAll`, and `shareReplay`
+  canonical models, source-pinned analyses, guarded state rules,
+  independent actual RxJS comparisons, generated views and CI
+  evidence, under Hans Schenker's direction.
