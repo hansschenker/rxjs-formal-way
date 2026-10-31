@@ -38,7 +38,7 @@ for(const [name,factory,concurrent] of configurations){
     const xs=compare(name,factory,concurrent,[next(1,plan('a',5)),next(2,plan('b',5)),next(3,plan('c',5)),end(4)]).observations;
     const valueOrder=notifications(xs).filter(x=>x.kind==='N').map(x=>x.value);
     assert.deepEqual(valueOrder,name==='switchAll'?['c']:name==='exhaustAll'?['a']:['a','b','c']);
-    assert.equal(xs.at(-1).kind,'unsubscribe');
+    assert.deepEqual(xs.slice(-2).map(x => x.kind), name === 'mergeAll' || name === 'concatAll' ? ['unsubscribe', 'C'] : ['C', 'unsubscribe']);
   });
   test(label+': errors end the result and release resources without waiting',()=>{
     for(const fault of [undefined,null,{},new Error('fault')]){
