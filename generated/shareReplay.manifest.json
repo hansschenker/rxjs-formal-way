@@ -1,0 +1,277 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "shareReplay-2-6-0",
+    "operator": "shareReplay",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Share one producer and synchronously replay recent values to later subscribers, retaining successful completion.",
+    "cardinality": {
+      "signature": "shareReplay : T* -> SharedReplay(T*)",
+      "conditions": [
+        "SharedReplay is project notation for shared connection plus buffered late delivery, not a Cω primitive.",
+        "Live subscribers receive current values; late subscribers also receive up to bufferSize eligible previous values.",
+        "Each subscriber has its own output T*; replay fan-out changes total notification multiplicity, not source cardinality."
+      ]
+    },
+    "scope": {
+      "parameters": "ReplaySubject(bufferSize=2,windowTime=6), refCount=false; nonnegative safe-integer sizes and windows; zero clamped to one",
+      "callbacks": "No user callback, custom connector, observer side effects, or reset-notifier function is executed in the pure model.",
+      "time": "Source-clock values are supplied by event.now. Expiry happens when ReplaySubject trims on next/subscribe; expireAt <= now is excluded. No timer runs to evict values.",
+      "reentrancy": "Atomic, non-reentrant subscriber registration and source delivery after connection setup. Synchronous replay occurs before a retained terminal signal.",
+      "exclusions": [
+        "Arbitrary reentrant subscriptions/teardown and throwing observers or finalizers.",
+        "Custom timestamp providers not modeled as explicitly supplied event time, fractional/negative/infinite-boundary arithmetic, and arbitrary ObservableInput conversion.",
+        "No production effect interpreter or claim that finite tests establish full equivalence."
+      ]
+    },
+    "initialization": {
+      "control": "Disconnected",
+      "event": "subscriber.subscribe",
+      "sourceSubscription": "First subscriber registers to a fresh ReplaySubject and connects upstream; no initial value exists."
+    },
+    "ownership": {
+      "state": "external-instance",
+      "sharing": "One replay buffer and source connection per resulting shared Observable, not per subscriber.",
+      "reset": "Error always resets; successful completion never resets; last live departure resets only with refCount=true.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "shared Observable source connection generation"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "After state update, append replay notifications before the baseline terminal action; preserve addressed live delivery and release ordering.",
+      "cancellationCheckpoints": [
+        "One departure removes only that subscriber. Last departure disconnects only when refCount=true and source has not completed.",
+        "Reset clears replay memory; completion retains memory but later subscriptions still trim by the supplied source clock."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscriber.subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a fresh subscriber joins; event carries an external clock reading"
+      },
+      {
+        "type": "subscriber.unsubscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a registered subscriber leaves; event carries an external clock reading"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "the current connection delivers a value; event carries an external clock reading"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "the current connection completes; event carries an external clock reading"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "the current connection errors; event carries an external clock reading"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Disconnected",
+        "description": "no current source connection",
+        "terminal": false
+      },
+      {
+        "id": "Connected",
+        "description": "one live source; zero or more observers according to reset policy",
+        "terminal": false
+      },
+      {
+        "id": "Completed",
+        "description": "retained completed Subject; late subscription remains legal",
+        "terminal": false
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/shareReplay.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned configuration, replay window, source connection, lifecycle and reset behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/ReplaySubject.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned configuration, replay window, source connection, lifecycle and reset behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/share.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned configuration, replay window, source connection, lifecycle and reset behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subject.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned configuration, replay window, source connection, lifecycle and reset behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/scheduler/dateTimestampProvider.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned configuration, replay window, source connection, lifecycle and reset behavior"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session3-shareReplay-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session3-shareReplay-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-03.md"
+    }
+  },
+  "parameters": {
+    "bufferSize": 2,
+    "windowTime": 6,
+    "refCount": false
+  },
+  "rules": [
+    {
+      "id": "SHAREREPLAY-CONNECT",
+      "from": "Disconnected",
+      "event": "subscriber.subscribe",
+      "guard": "fresh subscription ID and available connection generation; environment clock must not move backwards",
+      "to": "Connected",
+      "actions": [
+        "replay the nonexpired cached values in FIFO order before the terminal notification (if any)",
+        "subscribe to the source under a fresh connection generation"
+      ],
+      "nextState": "one registered subscriber and one connection; replay memory retained, pruned or reset according to the event",
+      "explanation": "A joining subscriber receives the current replay buffer, oldest first, synchronously. A completed shared source replays its retained buffer and then completes without reconnecting. Constructing the shared Observable starts nothing. Its first subscriber creates a Subject-backed connection to the source; that connection is shared by overlapping subscribers.",
+      "obligations": [
+        "S3-SHAREREPLAY-01"
+      ]
+    },
+    {
+      "id": "SHAREREPLAY-JOIN",
+      "from": "Connected",
+      "event": "subscriber.subscribe",
+      "guard": "fresh subscription ID; environment clock must not move backwards",
+      "to": "Connected",
+      "actions": [
+        "replay the nonexpired cached values in FIFO order before the terminal notification (if any)"
+      ],
+      "nextState": "append subscriber to the existing connection, without replay; replay memory retained, pruned or reset according to the event",
+      "explanation": "A joining subscriber receives the current replay buffer, oldest first, synchronously. A completed shared source replays its retained buffer and then completes without reconnecting. A subscriber joining a live connection receives future values, not past values. It does not create another source subscription. Sharing is not replay.",
+      "obligations": [
+        "S3-SHAREREPLAY-02"
+      ]
+    },
+    {
+      "id": "SHAREREPLAY-NEXT",
+      "from": "Connected",
+      "event": "source.next",
+      "guard": "current source generation; environment clock must not move backwards",
+      "to": "Connected",
+      "actions": [
+        "append incoming value to time/count-bounded replay memory",
+        "forward the value to each currently registered subscriber in registration order"
+      ],
+      "nextState": "retain the connection and registry; replay memory retained, pruned or reset according to the event",
+      "explanation": "Store the unchanged value and its source-clock expiry (if finite); trim by count and time, then broadcast to currently subscribed observers. A retained connection continues buffering with zero observers.",
+      "obligations": [
+        "S3-SHAREREPLAY-03"
+      ]
+    },
+    {
+      "id": "SHAREREPLAY-LEAVE",
+      "from": "Connected",
+      "event": "subscriber.unsubscribe",
+      "guard": "registered subscriber and at least one other remains; environment clock must not move backwards",
+      "to": "Connected",
+      "actions": [
+        "discard replay memory if connection resets"
+      ],
+      "nextState": "remove only this subscriber; replay memory retained, pruned or reset according to the event",
+      "explanation": "Unsubscribe this subscriber without sending completion. Last departure disconnects and clears replay memory only with refCount=true; otherwise keep connection and replay memory.",
+      "obligations": [
+        "S3-SHAREREPLAY-04"
+      ]
+    },
+    {
+      "id": "SHAREREPLAY-LAST-RETAIN",
+      "from": "Connected",
+      "event": "subscriber.unsubscribe",
+      "guard": "the last registered subscriber leaves; resetOnRefCountZero=false; environment clock must not move backwards",
+      "to": "Connected",
+      "actions": [
+        "discard replay memory if connection resets"
+      ],
+      "nextState": "keep the source connected with an empty subscriber registry; replay memory retained, pruned or reset according to the event",
+      "explanation": "Unsubscribe this subscriber without sending completion. Last departure disconnects and clears replay memory only with refCount=true; otherwise keep connection and replay memory.",
+      "obligations": [
+        "S3-SHAREREPLAY-06"
+      ]
+    },
+    {
+      "id": "SHAREREPLAY-COMPLETE-RETAIN",
+      "from": "Connected",
+      "event": "source.complete",
+      "guard": "current generation; resetOnComplete=false; environment clock must not move backwards",
+      "to": "Completed",
+      "actions": [
+        "send complete to each current subscriber",
+        "release the source connection"
+      ],
+      "nextState": "retain terminal status with no live connection or registered subscribers; replay memory retained, pruned or reset according to the event",
+      "explanation": "Completion terminates present subscribers and releases the source, but retains the ReplaySubject buffer for late subscribers; time-window expiry continues to apply.",
+      "obligations": [
+        "S3-SHAREREPLAY-07"
+      ]
+    },
+    {
+      "id": "SHAREREPLAY-LATE-COMPLETE",
+      "from": "Completed",
+      "event": "subscriber.subscribe",
+      "guard": "fresh subscription ID; retained terminal Subject; environment clock must not move backwards",
+      "to": "Completed",
+      "actions": [
+        "replay the nonexpired cached values in FIFO order before the terminal notification (if any)",
+        "send the cached complete to this subscriber only"
+      ],
+      "nextState": "remain terminated without connecting or retaining the new subscriber; replay memory retained, pruned or reset according to the event",
+      "explanation": "A joining subscriber receives the current replay buffer, oldest first, synchronously. A completed shared source replays its retained buffer and then completes without reconnecting. A subscriber arriving after retained complete immediately receives that complete, with no replayed value and no new source connection.",
+      "obligations": [
+        "S3-SHAREREPLAY-09"
+      ]
+    },
+    {
+      "id": "SHAREREPLAY-ERROR-RESET",
+      "from": "Connected",
+      "event": "source.error",
+      "guard": "current generation; resetOnError=true; environment clock must not move backwards",
+      "to": "Disconnected",
+      "actions": [
+        "discard replay memory if connection resets",
+        "send error to each current subscriber",
+        "release the source connection"
+      ],
+      "nextState": "reset for a later fresh subscription; replay memory retained, pruned or reset according to the event",
+      "explanation": "A source error ends present subscribers, tears down the connection and resets the replay buffer, so a later subscriber starts a new execution.",
+      "obligations": [
+        "S3-SHAREREPLAY-08"
+      ]
+    }
+  ]
+}

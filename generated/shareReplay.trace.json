@@ -1,0 +1,627 @@
+{
+  "status": "finished-input",
+  "consumed": 8,
+  "state": {
+    "core": {
+      "phase": "Completed",
+      "nextConnection": 1,
+      "used": [
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    "buffer": [
+      {
+        "value": "b",
+        "expiresAt": 8
+      },
+      {
+        "value": "c",
+        "expiresAt": 10
+      }
+    ],
+    "clock": 7
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "shareReplay-2-6-0",
+      "executionId": "shareReplay-session3-example",
+      "ruleId": "SHAREREPLAY-CONNECT",
+      "event": {
+        "type": "subscriber.subscribe",
+        "subscriber": "A",
+        "now": 0
+      },
+      "before": {
+        "core": {
+          "phase": "Disconnected",
+          "nextConnection": 0,
+          "used": []
+        },
+        "buffer": [],
+        "clock": 0
+      },
+      "after": {
+        "core": {
+          "phase": "Connected",
+          "connection": {
+            "id": "source",
+            "generation": 0
+          },
+          "subscribers": [
+            "A"
+          ],
+          "used": [
+            "A"
+          ],
+          "nextConnection": 1
+        },
+        "buffer": [],
+        "clock": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "shareReplay-2-6-0",
+      "executionId": "shareReplay-session3-example",
+      "ruleId": "SHAREREPLAY-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": "a",
+        "now": 1
+      },
+      "before": {
+        "core": {
+          "phase": "Connected",
+          "connection": {
+            "id": "source",
+            "generation": 0
+          },
+          "subscribers": [
+            "A"
+          ],
+          "used": [
+            "A"
+          ],
+          "nextConnection": 1
+        },
+        "buffer": [],
+        "clock": 0
+      },
+      "after": {
+        "core": {
+          "phase": "Connected",
+          "connection": {
+            "id": "source",
+            "generation": 0
+          },
+          "subscribers": [
+            "A"
+          ],
+          "used": [
+            "A"
+          ],
+          "nextConnection": 1
+        },
+        "buffer": [
+          {
+            "value": "a",
+            "expiresAt": 7
+          }
+        ],
+        "clock": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "A",
+          "notification": {
+            "kind": "N",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "shareReplay-2-6-0",
+      "executionId": "shareReplay-session3-example",
+      "ruleId": "SHAREREPLAY-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": "b",
+        "now": 2
+      },
+      "before": {
+        "core": {
+          "phase": "Connected",
+          "connection": {
+            "id": "source",
+            "generation": 0
+          },
+          "subscribers": [
+            "A"
+          ],
+          "used": [
+            "A"
+          ],
+          "nextConnection": 1
+        },
+        "buffer": [
+          {
+            "value": "a",
+            "expiresAt": 7
+          }
+        ],
+        "clock": 1
+      },
+      "after": {
+        "core": {
+          "phase": "Connected",
+          "connection": {
+            "id": "source",
+            "generation": 0
+          },
+          "subscribers": [
+            "A"
+          ],
+          "used": [
+            "A"
+          ],
+          "nextConnection": 1
+        },
+        "buffer": [
+          {
+            "value": "a",
+            "expiresAt": 7
+          },
+          {
+            "value": "b",
+            "expiresAt": 8
+          }
+        ],
+        "clock": 2
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "A",
+          "notification": {
+            "kind": "N",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "shareReplay-2-6-0",
+      "executionId": "shareReplay-session3-example",
+      "ruleId": "SHAREREPLAY-JOIN",
+      "event": {
+        "type": "subscriber.subscribe",
+        "subscriber": "B",
+        "now": 3
+      },
+      "before": {
+        "core": {
+          "phase": "Connected",
+          "connection": {
+            "id": "source",
+            "generation": 0
+          },
+          "subscribers": [
+            "A"
+          ],
+          "used": [
+            "A"
+          ],
+          "nextConnection": 1
+        },
+        "buffer": [
+          {
+            "value": "a",
+            "expiresAt": 7
+          },
+          {
+            "value": "b",
+            "expiresAt": 8
+          }
+        ],
+        "clock": 2
+      },
+      "after": {
+        "core": {
+          "phase": "Connected",
+          "connection": {
+            "id": "source",
+            "generation": 0
+          },
+          "subscribers": [
+            "A",
+            "B"
+          ],
+          "used": [
+            "A",
+            "B"
+          ],
+          "nextConnection": 1
+        },
+        "buffer": [
+          {
+            "value": "a",
+            "expiresAt": 7
+          },
+          {
+            "value": "b",
+            "expiresAt": 8
+          }
+        ],
+        "clock": 3
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "B",
+          "notification": {
+            "kind": "N",
+            "value": "a"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "B",
+          "notification": {
+            "kind": "N",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "shareReplay-2-6-0",
+      "executionId": "shareReplay-session3-example",
+      "ruleId": "SHAREREPLAY-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": "c",
+        "now": 4
+      },
+      "before": {
+        "core": {
+          "phase": "Connected",
+          "connection": {
+            "id": "source",
+            "generation": 0
+          },
+          "subscribers": [
+            "A",
+            "B"
+          ],
+          "used": [
+            "A",
+            "B"
+          ],
+          "nextConnection": 1
+        },
+        "buffer": [
+          {
+            "value": "a",
+            "expiresAt": 7
+          },
+          {
+            "value": "b",
+            "expiresAt": 8
+          }
+        ],
+        "clock": 3
+      },
+      "after": {
+        "core": {
+          "phase": "Connected",
+          "connection": {
+            "id": "source",
+            "generation": 0
+          },
+          "subscribers": [
+            "A",
+            "B"
+          ],
+          "used": [
+            "A",
+            "B"
+          ],
+          "nextConnection": 1
+        },
+        "buffer": [
+          {
+            "value": "b",
+            "expiresAt": 8
+          },
+          {
+            "value": "c",
+            "expiresAt": 10
+          }
+        ],
+        "clock": 4
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "A",
+          "notification": {
+            "kind": "N",
+            "value": "c"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "B",
+          "notification": {
+            "kind": "N",
+            "value": "c"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "shareReplay-2-6-0",
+      "executionId": "shareReplay-session3-example",
+      "ruleId": "SHAREREPLAY-LEAVE",
+      "event": {
+        "type": "subscriber.unsubscribe",
+        "subscriber": "A",
+        "now": 5
+      },
+      "before": {
+        "core": {
+          "phase": "Connected",
+          "connection": {
+            "id": "source",
+            "generation": 0
+          },
+          "subscribers": [
+            "A",
+            "B"
+          ],
+          "used": [
+            "A",
+            "B"
+          ],
+          "nextConnection": 1
+        },
+        "buffer": [
+          {
+            "value": "b",
+            "expiresAt": 8
+          },
+          {
+            "value": "c",
+            "expiresAt": 10
+          }
+        ],
+        "clock": 4
+      },
+      "after": {
+        "core": {
+          "phase": "Connected",
+          "connection": {
+            "id": "source",
+            "generation": 0
+          },
+          "subscribers": [
+            "B"
+          ],
+          "used": [
+            "A",
+            "B"
+          ],
+          "nextConnection": 1
+        },
+        "buffer": [
+          {
+            "value": "b",
+            "expiresAt": 8
+          },
+          {
+            "value": "c",
+            "expiresAt": 10
+          }
+        ],
+        "clock": 5
+      },
+      "actions": []
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "shareReplay-2-6-0",
+      "executionId": "shareReplay-session3-example",
+      "ruleId": "SHAREREPLAY-COMPLETE-RETAIN",
+      "event": {
+        "type": "source.complete",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "now": 6
+      },
+      "before": {
+        "core": {
+          "phase": "Connected",
+          "connection": {
+            "id": "source",
+            "generation": 0
+          },
+          "subscribers": [
+            "B"
+          ],
+          "used": [
+            "A",
+            "B"
+          ],
+          "nextConnection": 1
+        },
+        "buffer": [
+          {
+            "value": "b",
+            "expiresAt": 8
+          },
+          {
+            "value": "c",
+            "expiresAt": 10
+          }
+        ],
+        "clock": 5
+      },
+      "after": {
+        "core": {
+          "phase": "Completed",
+          "nextConnection": 1,
+          "used": [
+            "A",
+            "B"
+          ]
+        },
+        "buffer": [
+          {
+            "value": "b",
+            "expiresAt": 8
+          },
+          {
+            "value": "c",
+            "expiresAt": 10
+          }
+        ],
+        "clock": 6
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "B",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 7,
+      "modelId": "shareReplay-2-6-0",
+      "executionId": "shareReplay-session3-example",
+      "ruleId": "SHAREREPLAY-LATE-COMPLETE",
+      "event": {
+        "type": "subscriber.subscribe",
+        "subscriber": "C",
+        "now": 7
+      },
+      "before": {
+        "core": {
+          "phase": "Completed",
+          "nextConnection": 1,
+          "used": [
+            "A",
+            "B"
+          ]
+        },
+        "buffer": [
+          {
+            "value": "b",
+            "expiresAt": 8
+          },
+          {
+            "value": "c",
+            "expiresAt": 10
+          }
+        ],
+        "clock": 6
+      },
+      "after": {
+        "core": {
+          "phase": "Completed",
+          "nextConnection": 1,
+          "used": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        "buffer": [
+          {
+            "value": "b",
+            "expiresAt": 8
+          },
+          {
+            "value": "c",
+            "expiresAt": 10
+          }
+        ],
+        "clock": 7
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "C",
+          "notification": {
+            "kind": "N",
+            "value": "b"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "C",
+          "notification": {
+            "kind": "N",
+            "value": "c"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "C",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}
