@@ -15,3 +15,7 @@ export { createSwitchMapModel, createMergeMapModel, createConcatMapModel, create
 export type { FlattenOperator, FlattenParameters, InnerBinding, FlattenState, FlattenEvent, FlattenModel } from './models/flatten.js';
 export { createShareModel, shareExample } from './models/share.js';
 export type { ShareParameters, ShareState, ShareEvent, ShareModel } from './models/share.js';
+export { createSwitchAllModel, createMergeAllModel, createConcatAllModel, createExhaustAllModel, switchAllExample, mergeAllExample, concatAllExample, exhaustAllExample } from './models/all.js';
+export type { AllOperator, AllState, AllEvent, AllModel } from './models/all.js';
+export { createShareReplayModel, shareReplayExample, runShareReplayTrace } from './models/shareReplay.js';
+export type { ShareReplayOptions, ShareReplayParameters, ReplayItem, ShareReplayState, ShareReplayEvent, ShareReplayModel } from './models/shareReplay.js';
