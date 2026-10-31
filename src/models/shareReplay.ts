@@ -192,8 +192,9 @@ export function createShareReplayModel<T>(options: ShareReplayOptions = {}): Sha
         if (before.core.phase === 'Connected' && remainder.length) errors.push('live join must not create another connection');
       }
       if (event.type === 'source.next' && before.core.phase === 'Connected') {
+        const subscribers = before.core.subscribers;
         const notifications = result.actions.filter(a => a.type === 'notify');
-        if (notifications.length !== before.core.subscribers.length || notifications.some((a, i) => a.target !== before.core.subscribers[i] ||
+        if (notifications.length !== subscribers.length || notifications.some((a, i) => a.target !== subscribers[i] ||
           a.notification.kind !== 'N' || !Object.is(a.notification.value, event.value))) errors.push('live broadcast incorrect');
       }
       if (event.type === 'subscriber.unsubscribe' && result.actions.some(a => a.type === 'notify')) errors.push('cancellation cannot notify');
