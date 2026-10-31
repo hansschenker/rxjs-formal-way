@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "switchAll",
-    "mergeAll",
-    "concatAll",
-    "exhaustAll",
-    "shareReplay",
     "distinctUntilChanged",
     "distinctUntilKeyChanged",
     "distinct",
@@ -184,9 +179,14 @@
       "profiles": []
     },
     "concatAll": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-10-31",
+      "profiles": [
+        "identity-serial-FIFO"
+      ],
+      "evidence": "evidence/SESSION-03.md",
+      "testedCommit": "8935af283b0db4d1a662f31872f5948407b3d141",
+      "verificationRun": 41182614115
     },
     "concatMap": {
       "status": "accepted",
@@ -284,9 +284,14 @@
       "profiles": []
     },
     "exhaustAll": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-10-31",
+      "profiles": [
+        "identity-ignore-while-busy"
+      ],
+      "evidence": "evidence/SESSION-03.md",
+      "testedCommit": "8935af283b0db4d1a662f31872f5948407b3d141",
+      "verificationRun": 41182614115
     },
     "exhaustMap": {
       "status": "accepted",
@@ -374,9 +379,16 @@
       "profiles": []
     },
     "mergeAll": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-10-31",
+      "profiles": [
+        "concurrency-1",
+        "concurrency-2",
+        "unbounded"
+      ],
+      "evidence": "evidence/SESSION-03.md",
+      "testedCommit": "8935af283b0db4d1a662f31872f5948407b3d141",
+      "verificationRun": 41182614115
     },
     "flatMap": {
       "status": "pending",
@@ -539,9 +551,17 @@
       "verificationRun": 40853083582
     },
     "shareReplay": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-10-31",
+      "profiles": [
+        "bufferSize-1-and-2",
+        "windowTime-3-and-unbounded",
+        "refCount-false-and-true",
+        "zero-clamp"
+      ],
+      "evidence": "evidence/SESSION-03.md",
+      "testedCommit": "8935af283b0db4d1a662f31872f5948407b3d141",
+      "verificationRun": 41182614115
     },
     "single": {
       "status": "pending",
@@ -579,9 +599,14 @@
       "profiles": []
     },
     "switchAll": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-10-31",
+      "profiles": [
+        "identity-latest"
+      ],
+      "evidence": "evidence/SESSION-03.md",
+      "testedCommit": "8935af283b0db4d1a662f31872f5948407b3d141",
+      "verificationRun": 41182614115
     },
     "switchMap": {
       "status": "accepted",

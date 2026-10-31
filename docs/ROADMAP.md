@@ -12,7 +12,9 @@ This is the current implementation tracker. The migration map preserves the orig
 | M02-D | switchMap, inner generations, replacement and completion | Accepted within scope; [Session 2 evidence](../evidence/SESSION-02.md) |
 | M02-D companions | mergeMap, concatMap and exhaustMap admission/queue/ignore policies | Accepted within scope in the same five-name session; [guide](SESSION-02-HIGHER-ORDER.md) |
 | M02-E | share, connection ownership, addressed subscribers and boolean reset profiles | Accepted within scope; [guide](M02-E-SHARE.md) and [evidence](../evidence/SESSION-02.md) |
-| M03+ | Broader generation, catalogue migration, family comparisons and visualization | Pending inventory work; not a completed universal interpreter |
+| M03-A | switchAll, mergeAll, concatAll, exhaustAll identity-source flattening | Accepted within scope; [evidence](../evidence/SESSION-03.md) |
+| M03-B | shareReplay, buffer/time/refCount behavior | Accepted within scope; [guide](SESSION-03-FLATTEN-AND-REPLAY.md) |
+| M03+ | Remaining catalogue and comparison work | 98 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -30,8 +32,29 @@ The four flattening models share explicitly parameterized machinery while preser
 
 Both the full push run and a separate read-only pull-request run passed **415 tests**. The PR job skipped generation and publication and verified all **88 committed projections**. Its exact checkout revision and tree, plus retrieved run/job evidence, are recorded in the evidence document. The connector lacked manual dispatch, so the existing PR path was used without weakening checks.
 
+## Session 3 closed: 31 October 2026
+
+The unworked 30 October batch (switchAll, mergeAll, concatAll,
+exhaustAll and shareReplay) was carried into one 31 October
+Europe/Zurich session and **all five are accepted within scope**.
+No sixth operator or second batch was opened. Source-identity
+flattening reuses the reviewed rules; shareReplay adds a clock-aware
+ReplaySubject buffer and shared connection lifecycle.
+
+[Push run 41182538761](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41182538761)
+and [read-only PR run 41182614115](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41182614115)
+both passed **511 named tests**. Read-only CI skipped generation and
+publication and confirmed **128 committed projections**. Exact SHAs,
+test counts, corrections and scope limits are recorded in the
+[evidence](../evidence/SESSION-03.md).
+
+**15 of 113 exports accepted; 98 pending.**
+
 ## Next pending batch
 
-The next eligible session is **30 October 2026** in Europe/Zurich. Follow the live JSON queue: switchAll, mergeAll, concatAll, exhaustAll and shareReplay. Do not open a second batch on 29 October or count profiles as distinct operator names. There are 103 pending names after this session.
-
-Keep notification and lifecycle assertions, legal-input constraints, time/cancellation/sharing declarations, generated-view consistency and retrieved CI evidence. Finite coverage remains evidence, not a universal proof.
+Not before **1 November 2026 Europe/Zurich**:
+**distinctUntilChanged, distinctUntilKeyChanged, distinct,
+pairwise, startWith**. Maintain the five-name maximum,
+carryovers-first selection, actual RxJS comparisons, time,
+cancellation, sharing, and retrieved CI evidence. Finite
+coverage is not universal proof.

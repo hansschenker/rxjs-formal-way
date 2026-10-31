@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-10-31",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-10-31T08:47:23+01:00",
   "startingCommit": "b228956d2551b207717f97d0d969fb9ca97f1bef",
   "selectedNames": [
@@ -12,27 +12,75 @@
     "exhaustAll",
     "shareReplay"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
+  "workedNames": [
     "switchAll",
     "mergeAll",
     "concatAll",
     "exhaustAll",
     "shareReplay"
   ],
-  "commits": [],
+  "completedNames": [
+    "switchAll",
+    "mergeAll",
+    "concatAll",
+    "exhaustAll",
+    "shareReplay"
+  ],
+  "carryovers": [],
+  "commits": [
+    "5c72fc644c15a2c07c14fa25cf18ea4e5fdbeab4",
+    "1ff3ac88b05e0fe5e84b402850e4a51fa969b40c",
+    "48a315fbda61078acbe77f85f9b923b055b785fd",
+    "e0e2691d33145ffbc51c7b2893f714da92edab7b",
+    "42e233c274cef5a8233428e2b6fcfa2cfbe27b81",
+    "04eda593a15ac36dc9c181668f147cc5269aa606",
+    "3e60aefb4ff676ee84bb818b9f27a3d5287cafbe"
+  ],
   "checks": {
-    "syntax": "not executed",
-    "types": "not executed",
-    "model": "not executed",
-    "runtime": "not executed",
-    "generated": "not executed",
-    "ci": "not executed"
+    "syntax": "passed in retrieved push and read-only CI job logs",
+    "types": "strict type checks passed; 64 negative assertions including 16 new",
+    "model": "45 new pure-model tests passed",
+    "runtime": "51 new actual RxJS cases passed; 511 total named tests",
+    "generated": "128 committed deterministic projections verified read-only; 40 new",
+    "ci": "both push 41182538761 and read-only PR 41182614115 succeeded; PR generation and publication skipped"
   },
   "notes": [
     "Carried all five unfinished names from 2026-10-30 started log; its workedNames and completedNames are empty.",
-    "Selected at most five distinct pending exports; no new names beyond the carryovers."
+    "Selected at most five distinct pending exports; no new names beyond the carryovers.",
+    "Only the five unfinished 30 October exports were worked on; no sixth name selected.",
+    "Two failed interim CI runs were fixed without weakening checks.",
+    "Exact read-only checkout tree equals verification head tree; final acceptance changes planning and documentation only."
   ],
-  "evidence": "evidence/SESSION-03.md"
+  "evidence": "evidence/SESSION-03.md",
+  "closedAt": "2026-10-31T09:01:58.627+01:00",
+  "verification": {
+    "implementationCommit": "e0e2691d33145ffbc51c7b2893f714da92edab7b",
+    "generatedCommit": "42e233c274cef5a8233428e2b6fcfa2cfbe27b81",
+    "pushRun": 41182538761,
+    "pushJob": 124482712054,
+    "prNumber": 2,
+    "prHeadCommit": "04eda593a15ac36dc9c181668f147cc5269aa606",
+    "testedCommit": "8935af283b0db4d1a662f31872f5948407b3d141",
+    "testedTree": "1809ad8acdce40a9a460ae23605959dc0dafdf11",
+    "readOnlyRun": 41182614115,
+    "readOnlyJob": 124482941168,
+    "namedTestsPassed": 511,
+    "newNamedTests": 96,
+    "negativeTypeAssertions": 64,
+    "generatedViews": 128,
+    "newGeneratedViews": 40,
+    "boundedModelRxjsScenarios": 34105,
+    "newBoundedModelRxjsScenarios": 11108,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  },
+  "blockers": [],
+  "nextSessionNotBefore": "2026-11-01",
+  "nextQueue": [
+    "distinctUntilChanged",
+    "distinctUntilKeyChanged",
+    "distinct",
+    "pairwise",
+    "startWith"
+  ]
 }
