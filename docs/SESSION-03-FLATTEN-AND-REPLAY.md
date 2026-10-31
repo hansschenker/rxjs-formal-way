@@ -132,3 +132,7 @@ Read [Session 3 evidence](../evidence/SESSION-03.md) for actual CI results,
 tested commit, bounded comparison counts, drift verification and declared
 unresolved boundaries. Do not infer acceptance from these specifications
 alone.
+
+## Read-only CI verification
+
+This documentation-only branch exists to run the unchanged pull-request validation workflow on already-committed generated files. Its CI path must **skip regeneration and artifact publication** and execute the complete `npm run check` against the checked-out tree. Acceptance must cite the retrieved result, not the existence of this paragraph.
