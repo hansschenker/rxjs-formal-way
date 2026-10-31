@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-31",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-10-31T08:47:23+01:00",
+  "startingCommit": "b228956d2551b207717f97d0d969fb9ca97f1bef",
+  "selectedNames": [
+    "switchAll",
+    "mergeAll",
+    "concatAll",
+    "exhaustAll",
+    "shareReplay"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "switchAll",
+    "mergeAll",
+    "concatAll",
+    "exhaustAll",
+    "shareReplay"
+  ],
+  "commits": [],
+  "checks": {
+    "syntax": "not executed",
+    "types": "not executed",
+    "model": "not executed",
+    "runtime": "not executed",
+    "generated": "not executed",
+    "ci": "not executed"
+  },
+  "notes": [
+    "Carried all five unfinished names from 2026-10-30 started log; its workedNames and completedNames are empty.",
+    "Selected at most five distinct pending exports; no new names beyond the carryovers."
+  ],
+  "evidence": "evidence/SESSION-03.md"
+}
