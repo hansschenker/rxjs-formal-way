@@ -244,19 +244,38 @@
       "profiles": []
     },
     "distinct": {
-      "status": "in_progress",
+      "status": "accepted",
       "session": "2026-11-01",
-      "profiles": []
+      "profiles": [
+        "SameValueZero-Set",
+        "selected-key",
+        "Observable-flush-notifier"
+      ],
+      "evidence": "evidence/SESSION-04.md",
+      "testedCommit": "9f25254cb7909f1f557acaccebb14f467a4b2b38",
+      "verificationRun": 41286526038
     },
     "distinctUntilChanged": {
-      "status": "in_progress",
+      "status": "accepted",
       "session": "2026-11-01",
-      "profiles": []
+      "profiles": [
+        "identity-strict",
+        "selected-custom-comparator"
+      ],
+      "evidence": "evidence/SESSION-04.md",
+      "testedCommit": "9f25254cb7909f1f557acaccebb14f467a4b2b38",
+      "verificationRun": 41286526038
     },
     "distinctUntilKeyChanged": {
-      "status": "in_progress",
+      "status": "accepted",
       "session": "2026-11-01",
-      "profiles": []
+      "profiles": [
+        "property-strict",
+        "property-custom-comparator"
+      ],
+      "evidence": "evidence/SESSION-04.md",
+      "testedCommit": "9f25254cb7909f1f557acaccebb14f467a4b2b38",
+      "verificationRun": 41286526038
     },
     "elementAt": {
       "status": "pending",
@@ -438,9 +457,14 @@
       "profiles": []
     },
     "pairwise": {
-      "status": "in_progress",
+      "status": "accepted",
       "session": "2026-11-01",
-      "profiles": []
+      "profiles": [
+        "overlapping-consecutive-pairs"
+      ],
+      "evidence": "evidence/SESSION-04.md",
+      "testedCommit": "9f25254cb7909f1f557acaccebb14f467a4b2b38",
+      "verificationRun": 41286526038
     },
     "partition": {
       "status": "pending",
@@ -584,9 +608,15 @@
       "profiles": []
     },
     "startWith": {
-      "status": "in_progress",
+      "status": "accepted",
       "session": "2026-11-01",
-      "profiles": []
+      "profiles": [
+        "synchronous-unscheduled-prefix",
+        "empty-prefix"
+      ],
+      "evidence": "evidence/SESSION-04.md",
+      "testedCommit": "9f25254cb7909f1f557acaccebb14f467a4b2b38",
+      "verificationRun": 41286526038
     },
     "subscribeOn": {
       "status": "pending",

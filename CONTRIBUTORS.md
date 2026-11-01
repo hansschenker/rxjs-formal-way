@@ -48,3 +48,7 @@ When artifacts are migrated into this repository, preserve source attribution in
   canonical models, source-pinned analyses, guarded state rules,
   independent actual RxJS comparisons, generated views and CI
   evidence, under Hans Schenker's direction.
+
+## Session 4 — comparison memory, Set flush, adjacent pairs and prefix execution
+
+- **GPT-6 (OpenAI)** — main contributor to the five source-reviewed reference models, shared pure infrastructure, guarded rules, Cω and six-tuple behavior analysis, independent RxJS tests and bounded comparisons, deterministic views and CI/evidence records under Hans Schenker's project direction. The Git commit trailers record AI assistance without implying a verified GitHub account.

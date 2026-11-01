@@ -19,6 +19,11 @@ Each configured profile has one canonical TypeScript rule set and eight generate
 | concatAll | [all.ts](../src/models/all.ts) | [Behavior](concatAll.md) | [Session 3](../evidence/SESSION-03.md) |
 | exhaustAll | [all.ts](../src/models/all.ts) | [Behavior](exhaustAll.md) | [Session 3](../evidence/SESSION-03.md) |
 | shareReplay | [shareReplay.ts](../src/models/shareReplay.ts) | [Behavior](shareReplay.md) | [Session 3](../evidence/SESSION-03.md) |
+| distinctUntilChanged | [adjacent.ts](../src/models/adjacent.ts) | [Behavior](distinctUntilChanged.md) | [Session 4](../evidence/SESSION-04.md) |
+| distinctUntilKeyChanged | [adjacent.ts](../src/models/adjacent.ts) | [Behavior](distinctUntilKeyChanged.md) | [Session 4](../evidence/SESSION-04.md) |
+| distinct | [distinct.ts](../src/models/distinct.ts) | [Behavior](distinct.md) | [Session 4](../evidence/SESSION-04.md) |
+| pairwise | [pairwise.ts](../src/models/pairwise.ts) | [Behavior](pairwise.md) | [Session 4](../evidence/SESSION-04.md) |
+| startWith | [startWith.ts](../src/models/startWith.ts) | [Behavior](startWith.md) | [Session 4](../evidence/SESSION-04.md) |
 
 Map/filter share their lifecycle specification in [value.ts](../src/models/value.ts), not their business functions. Callback functions are external to the pure models. [M02-A](../docs/M02-VALUE-SELECTION.md) explains the invocation/outcome boundary. [M02-B](../docs/M02-B-SCAN.md) reuses it with a typed accumulator/value product and two initialization policies. [M02-C](../docs/M02-C-DEBOUNCE-TIME.md) adds explicit clock readings, timer invocations and deadline checks without introducing a clock inside the model.
 
@@ -27,4 +32,4 @@ Map/filter share their lifecycle specification in [value.ts](../src/models/value
 [Session 3](../docs/SESSION-03-FLATTEN-AND-REPLAY.md) adds four
 identity-source flattening models and one clock-aware replay profile.
 
-Sixteen configured examples produce 128 views across fifteen distinct export names. These are scoped profiles, not a complete operator catalogue. Acceptance and executed checks live in the evidence records; the [roadmap](../docs/ROADMAP.md) and daily JSON tracker govern further work.
+Twenty-one configured examples produce 168 views across twenty accepted export names. [Session 4](../docs/SESSION-04-MEMORY-AND-ADJACENCY.md) adds adjacent-key selection, Set-backed history/flush, overlapping pairs, and prefix-before-source subscription. These are scoped profiles, not a complete operator catalogue. Acceptance and executed checks live in the evidence records; the [roadmap](../docs/ROADMAP.md) and daily JSON tracker govern further work.

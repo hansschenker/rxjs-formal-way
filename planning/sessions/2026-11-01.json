@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-01",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-01T08:35:02+01:00",
   "startingCommit": "26793ec55236b0881ce7a6eaee4b32f790cda477",
   "selectedNames": [
@@ -12,27 +12,55 @@
     "pairwise",
     "startWith"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
+  "workedNames": [
     "distinctUntilChanged",
     "distinctUntilKeyChanged",
     "distinct",
     "pairwise",
     "startWith"
   ],
-  "commits": [],
+  "completedNames": [
+    "distinctUntilChanged",
+    "distinctUntilKeyChanged",
+    "distinct",
+    "pairwise",
+    "startWith"
+  ],
+  "carryovers": [],
+  "commits": [
+    "678cd47f5851ade64db130f91b08afacd240afa5",
+    "d02dbb6a404f01df94455dd3f47704fe55380918",
+    "d577e16a330725f8ce264729cba39ad365055598",
+    "9da0a5211f02062f895cc03c164999e26726e7ec",
+    "a0879397cdc8fd98733a8bed21f7ad8cb16bcf26",
+    "ca71203a0878aa9aead1f5603856808630b20bf3",
+    "7433dbc94c6e2e9a01d1a9fc0d05b54a1f923be6",
+    "26d8069e1eedc2302e8f70cb853e0553d98d72ad",
+    "e5c92e1bb96a84dcb7999b7a0a28e4bf0e572311",
+    "2744dc4a90d684de744ae1f04cb4dd4715bd8f33",
+    "cac6e8b86eca62aef05467a184209281d1d5d89f",
+    "002eec6d3e98ac8bde491357c74389a88d9acbf7",
+    "7deb4510e99f1f1733ef2dade7fbb17177b167e7",
+    "4f95f72d62971c58b3e0dba2e589606e1c8d5e50",
+    "3de82c78095b15dd78c4126bc080acaa51f9166d"
+  ],
   "checks": {
-    "syntax": "not run",
-    "types": "not run",
-    "model": "not run",
-    "runtime": "not run",
-    "generated": "not run",
-    "ci": "not run"
+    "syntax": "passed in retrieved push and read-only PR CI logs",
+    "types": "strict TypeScript checks passed; 82 negative type assertions cumulative (18 new)",
+    "model": "29 new pure-model/view named tests passed",
+    "runtime": "21 new actual RxJS named tests passed, including a differential test with 2004 comparisons",
+    "generated": "168 committed deterministic projections passed read-only drift check; 40 new",
+    "ci": "push runs 41286286090 and 41286380454 passed; PR run 41286526038 checked unchanged committed projections with generation/publication skipped; 561 tests passed"
   },
   "notes": [
     "One Europe/Zurich local-date session; five distinct RxJS 7.8.2 exports selected.",
-    "Previous accepted fifteen names retained; no previous same-date log and no manual quota recorded."
+    "Previous accepted fifteen names retained; no previous same-date log and no manual quota recorded.",
+    "No earlier 1 November session existed; five pending exports reserved, no sixth export or catch-up batch started.",
+    "Pinned RxJS 7.8.2 implementations inspected for all five exports.",
+    "Two transient TypeScript compilation failures corrected without weakening strict types.",
+    "Two preliminary differential-suite failures were due solely to counting inadmissible event words. Corrected enumeration cardinality and expanded the bounded domain to depth four (2004 real comparisons).",
+    "CI push generated 40 new projections, and successful read-only PR #3 checked committed artifacts without generation/publication. Tested checkout tree equals PR head tree.",
+    "Exact scope excludes mutable property/getter effects for distinctUntilKeyChanged and SchedulerLike startWith overload. Final acceptance commit changes documentation and planning, not tested source, tests or generated artifacts."
   ],
   "blockers": [],
   "nextQueue": [
@@ -41,5 +69,35 @@
     "skipWhile",
     "takeUntil",
     "skipUntil"
-  ]
+  ],
+  "evidence": "evidence/SESSION-04.md",
+  "closedAt": "2026-11-01T08:53:45+01:00",
+  "verification": {
+    "implementationCommit": "002eec6d3e98ac8bde491357c74389a88d9acbf7",
+    "generatedCommit": "7433dbc94c6e2e9a01d1a9fc0d05b54a1f923be6",
+    "pushRun": 41286286090,
+    "pushJob": 124788143011,
+    "finalDocumentationPushRun": 41286380454,
+    "finalDocumentationPushJob": 124788412568,
+    "prNumber": 3,
+    "prHeadCommit": "4f95f72d62971c58b3e0dba2e589606e1c8d5e50",
+    "testedCommit": "9f25254cb7909f1f557acaccebb14f467a4b2b38",
+    "testedTree": "999a753d8fee9b4a9f01bb2d307e650e78e91986",
+    "readOnlyRun": 41286526038,
+    "readOnlyJob": 124788839236,
+    "mergedVerificationCommit": "3de82c78095b15dd78c4126bc080acaa51f9166d",
+    "namedTestsPassed": 561,
+    "newNamedTests": 50,
+    "newModelNamedTests": 29,
+    "newRuntimeNamedTests": 21,
+    "negativeTypeAssertions": 82,
+    "newNegativeTypeAssertions": 18,
+    "generatedViews": 168,
+    "newGeneratedViews": 40,
+    "boundedModelRxjsScenarios": 36109,
+    "newBoundedModelRxjsScenarios": 2004,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  },
+  "nextSessionNotBefore": "2026-11-02"
 }

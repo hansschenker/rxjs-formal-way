@@ -14,7 +14,9 @@ This is the current implementation tracker. The migration map preserves the orig
 | M02-E | share, connection ownership, addressed subscribers and boolean reset profiles | Accepted within scope; [guide](M02-E-SHARE.md) and [evidence](../evidence/SESSION-02.md) |
 | M03-A | switchAll, mergeAll, concatAll, exhaustAll identity-source flattening | Accepted within scope; [evidence](../evidence/SESSION-03.md) |
 | M03-B | shareReplay, buffer/time/refCount behavior | Accepted within scope; [guide](SESSION-03-FLATTEN-AND-REPLAY.md) |
-| M03+ | Remaining catalogue and comparison work | 98 exports pending; not a universal interpreter |
+| M04-A | distinctUntilChanged, distinctUntilKeyChanged and distinct, equality and Set/flush memory | Accepted within scope; [Session 4 evidence](../evidence/SESSION-04.md) |
+| M04-B | pairwise consecutive pairs and unscheduled startWith prefix | Accepted within scope; [Session 4 guide](SESSION-04-MEMORY-AND-ADJACENCY.md) |
+| M04+ | Remaining catalogue | 93 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -48,13 +50,18 @@ publication and confirmed **128 committed projections**. Exact SHAs,
 test counts, corrections and scope limits are recorded in the
 [evidence](../evidence/SESSION-03.md).
 
-**15 of 113 exports accepted; 98 pending.**
+**15 of 113 exports were accepted at the end of Session 3.**
+
+## Session 4 closed: 1 November 2026
+
+Exactly five pending exports—**distinctUntilChanged, distinctUntilKeyChanged, distinct, pairwise, startWith**—were modeled, independently tested and accepted in one Europe/Zurich session. The existing infrastructure produced 40 new projections, taking the inventory to **168 deterministic views across 20 accepted exports**. Strict types and syntax, 561 named tests, and read-only GitHub Actions drift verification passed. Full tested checkouts, 2,004 new bounded model/native comparisons and corrected preliminary test-harness failures are recorded in [evidence](../evidence/SESSION-04.md). No carryovers and no extra work beyond five names.
+
+**20 of 113 exports accepted; 93 pending.**
 
 ## Next pending batch
 
-Not before **1 November 2026 Europe/Zurich**:
-**distinctUntilChanged, distinctUntilKeyChanged, distinct,
-pairwise, startWith**. Maintain the five-name maximum,
+Not before **2 November 2026 Europe/Zurich**:
+**skip, takeWhile, skipWhile, takeUntil, skipUntil**. Maintain the five-name maximum,
 carryovers-first selection, actual RxJS comparisons, time,
 cancellation, sharing, and retrieved CI evidence. Finite
 coverage is not universal proof.

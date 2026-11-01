@@ -6,23 +6,12 @@ A coherent method for describing, analyzing, documenting, visualizing, and testi
 
 The project grew from stateful transducers, through six-component Mealy analysis, to transition tables, diagrams, BDD and test obligations. Formal machinery supports the explanation; an RxJS user should not need automata theory to understand the final operator description.
 
-## Current checkpoint: Session 3 — inner-source flattening and replay
+## Current checkpoint: Session 4 — equality, memory, pairs and prefix delivery
 
-The **31 October 2026 Europe/Zurich** session carried and completed five
-unfinished exports: **switchAll, mergeAll, concatAll, exhaustAll and
-shareReplay**. All five are accepted within their declared scopes.
-Both the full push CI and independent read-only PR CI passed **511
-named tests** and validated **128 deterministic projections**.
-[Session 3 evidence](evidence/SESSION-03.md) records exact tested
-commits and limits; [the guide](docs/SESSION-03-FLATTEN-AND-REPLAY.md)
-explains source, lifecycle and replay behavior.
+The **1 November 2026 Europe/Zurich** session accepted **distinctUntilChanged, distinctUntilKeyChanged, distinct, pairwise and startWith** within their explicit reference scopes. All five have canonical guarded TypeScript state machines, eight generated views apiece and independent actual RxJS tests. The successful push and independent **read-only** PR checks passed **561 named tests**, verified **168 committed deterministic projections** and compared **2,004 additional bounded model/RxJS traces**.
 
-Earlier accepted exports are retained. The
-[daily plan](docs/DAILY-GENERATION-PLAN.md),
-[live queue](planning/operator-generation.json),
-[31 October session log](planning/sessions/2026-10-31.json),
-and [roadmap](docs/ROADMAP.md) govern continuation.
-**98 of 113 exports remain pending.**
+Read [Session 4 evidence](evidence/SESSION-04.md), [the teaching and formal guide](docs/SESSION-04-MEMORY-AND-ADJACENCY.md), [daily plan](docs/DAILY-GENERATION-PLAN.md), [current queue](planning/operator-generation.json), [1 November session log](planning/sessions/2026-11-01.json), and [roadmap](docs/ROADMAP.md). **20 of 113 exports accepted; 93 pending.** No later batch has been started.
+
 
 | Operator/profile | Readable behavior | BDD | Transition table | State diagram | Four lanes |
 |---|---|---|---|---|---|
@@ -42,8 +31,13 @@ and [roadmap](docs/ROADMAP.md) govern continuation.
 | concatAll | [Page](operators/concatAll.md) | [BDD](generated/concatAll.bdd.md) | [STT](generated/concatAll.stt.md) | [STD](generated/concatAll.diagram.md) | [Trace](generated/concatAll.trace.md) |
 | exhaustAll | [Page](operators/exhaustAll.md) | [BDD](generated/exhaustAll.bdd.md) | [STT](generated/exhaustAll.stt.md) | [STD](generated/exhaustAll.diagram.md) | [Trace](generated/exhaustAll.trace.md) |
 | shareReplay | [Page](operators/shareReplay.md) | [BDD](generated/shareReplay.bdd.md) | [STT](generated/shareReplay.stt.md) | [STD](generated/shareReplay.diagram.md) | [Trace](generated/shareReplay.trace.md) |
+| distinctUntilChanged | [Page](operators/distinctUntilChanged.md) | [BDD](generated/distinctUntilChanged.bdd.md) | [STT](generated/distinctUntilChanged.stt.md) | [STD](generated/distinctUntilChanged.diagram.md) | [Trace](generated/distinctUntilChanged.trace.md) |
+| distinctUntilKeyChanged | [Page](operators/distinctUntilKeyChanged.md) | [BDD](generated/distinctUntilKeyChanged.bdd.md) | [STT](generated/distinctUntilKeyChanged.stt.md) | [STD](generated/distinctUntilKeyChanged.diagram.md) | [Trace](generated/distinctUntilKeyChanged.trace.md) |
+| distinct | [Page](operators/distinct.md) | [BDD](generated/distinct.bdd.md) | [STT](generated/distinct.stt.md) | [STD](generated/distinct.diagram.md) | [Trace](generated/distinct.trace.md) |
+| pairwise | [Page](operators/pairwise.md) | [BDD](generated/pairwise.bdd.md) | [STT](generated/pairwise.stt.md) | [STD](generated/pairwise.diagram.md) | [Trace](generated/pairwise.trace.md) |
+| startWith | [Page](operators/startWith.md) | [BDD](generated/startWith.bdd.md) | [STT](generated/startWith.stt.md) | [STD](generated/startWith.diagram.md) | [Trace](generated/startWith.trace.md) |
 
-Each configured example has eight generated projections: the five linked above, a JSON manifest, JSON trace and test-obligation document. The registry produces **128** views across sixteen examples and fifteen distinct operator names. Test configurations additionally cover mergeMap concurrency 1/unbounded and all eight boolean share reset combinations. These are scoped reference models, not replacement RxJS operators.
+Each configured example has eight generated projections: the five linked above, a JSON manifest, JSON trace and test-obligation document. The registry produces **168** views across twenty-one examples and twenty distinct operator names. Test configurations additionally cover mergeMap concurrency 1/unbounded and all eight boolean share reset combinations. These are scoped reference models, not replacement RxJS operators.
 
 ## Start here
 
@@ -54,6 +48,8 @@ Each configured example has eight generated projections: the five linked above, 
 | [M02 value selection](docs/M02-VALUE-SELECTION.md) | Callback-separated map/filter profiles and schema 1.1 |
 | [M02-B accumulation](docs/M02-B-SCAN.md) | Seeded/unseeded scan, typed reducer inputs and reference ownership |
 | [M02-C temporal behavior](docs/M02-C-DEBOUNCE-TIME.md) | Deadline versus wake-up, timer identities, zero delay and same-time order |
+| [Session 4 — memory and adjacency](docs/SESSION-04-MEMORY-AND-ADJACENCY.md) | Equality, Set flushes, pairwise memory, synchronous prefixes, and scoped evidence |
+| [Session 4 verification](evidence/SESSION-04.md) | Exactly tested SHA, read-only CI logs, bounded comparisons and limitations |
 | [Session 3 — All family and replay](docs/SESSION-03-FLATTEN-AND-REPLAY.md) | Inner-source policies, shared replay memory, external time and verification |
 | [Session 2 higher-order behavior](docs/SESSION-02-HIGHER-ORDER.md) | Four admission policies, per-operator six-tuples, legal behavior and inner generations |
 | [M02-E shared execution](docs/M02-E-SHARE.md) | Addressed subscribers, connection ownership and boolean reset policies |
