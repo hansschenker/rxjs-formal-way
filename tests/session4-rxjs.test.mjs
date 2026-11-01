@@ -147,19 +147,19 @@ test('S4-RX no artificial internal timers: equal-time arrival order determines p
 
 test('S4-RX-DIFF: 5 operator exports, multiple profiles, bounded words and exact subscription lifetimes',()=>{
   const configs=[
-    [createDistinctUntilChangedModel(),{},[N(1),N(2),N(NaN),C,E(error),cancel],3],
+    [createDistinctUntilChangedModel(),{},[N(1),N(2),N(NaN),C,E(error),cancel],4],
     [createDistinctUntilChangedModel({keyMode:'selected',compareMode:'custom'}),
      {keySelector:x=>x.key,comparator:(a,b)=>a.toLowerCase()===b.toLowerCase()},
-     [N({key:'A'}),N({key:'a'}),N({key:'B'}),C,E(error),cancel],3],
-    [createDistinctUntilKeyChangedModel('code'),{},[N({code:1}),N({code:2}),N({code:1}),C,E(error),cancel],3],
+     [N({key:'A'}),N({key:'a'}),N({key:'B'}),C,E(error),cancel],4],
+    [createDistinctUntilKeyChangedModel('code'),{},[N({code:1}),N({code:2}),N({code:1}),C,E(error),cancel],4],
     [createDistinctUntilKeyChangedModel('code','custom'),{comparator:(a,b)=>a.toLowerCase()===b.toLowerCase()},
-     [N({code:'A'}),N({code:'a'}),N({code:'B'}),C,E(error),cancel],3],
-    [createDistinctModel(),{},[N(1),N(2),N(NaN),C,E(error),cancel],3],
-    [createDistinctModel({withFlushes:true}),{},[N(1),N(2),F,C,E(error),cancel],3],
+     [N({code:'A'}),N({code:'a'}),N({code:'B'}),C,E(error),cancel],4],
+    [createDistinctModel(),{},[N(1),N(2),N(NaN),C,E(error),cancel],4],
+    [createDistinctModel({withFlushes:true}),{},[N(1),N(2),F,C,E(error),cancel],4],
     [createDistinctModel({selected:true,withFlushes:true}),{keySelector:x=>x.code},
-     [N({code:1}),N({code:2}),F,C,E(error),cancel],3],
-    [createPairwiseModel(),{},[N(1),N(2),N(undefined),C,E(error),cancel],3],
-    [createStartWithModel(['start','again']),{},[N(1),N(2),C,E(error),cancel],3],
+     [N({code:1}),N({code:2}),F,C,E(error),cancel],4],
+    [createPairwiseModel(),{},[N(1),N(2),N(undefined),C,E(error),cancel],4],
+    [createStartWithModel(['start','again']),{},[N(1),N(2),C,E(error),cancel],4],
   ];
   let comparisons=0;
   for(const [model,options,alphabet,depth] of configs){
@@ -167,6 +167,11 @@ test('S4-RX-DIFF: 5 operator exports, multiple profiles, bounded words and exact
       compare(model,word,options); comparisons++;
     }
   }
-  assert.equal(comparisons,configs.reduce((n,[,,,depth])=>n+[0,1,2,3].slice(0,depth+1).reduce((sum,k)=>sum+Math.pow(6,k),0),0));
+  const expectedCount = configs.reduce((sum,[,,alphabet,depth]) => {
+    const active = alphabet.filter(s => !['C','E','cancel','FE'].includes(s.kind)).length;
+    return sum + Array.from({length:depth+1},(_,k) => k === 0 ? 1 : alphabet.length * active ** (k-1))
+      .reduce((a,b)=>a+b,0);
+  },0);
+  assert.equal(comparisons,expectedCount);
   assert.ok(comparisons>1500);
 });
