@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "distinctUntilChanged",
-    "distinctUntilKeyChanged",
-    "distinct",
-    "pairwise",
-    "startWith",
     "skip",
     "takeWhile",
     "skipWhile",
@@ -249,18 +244,18 @@
       "profiles": []
     },
     "distinct": {
-      "status": "pending",
-      "session": null,
+      "status": "in_progress",
+      "session": "2026-11-01",
       "profiles": []
     },
     "distinctUntilChanged": {
-      "status": "pending",
-      "session": null,
+      "status": "in_progress",
+      "session": "2026-11-01",
       "profiles": []
     },
     "distinctUntilKeyChanged": {
-      "status": "pending",
-      "session": null,
+      "status": "in_progress",
+      "session": "2026-11-01",
       "profiles": []
     },
     "elementAt": {
@@ -443,8 +438,8 @@
       "profiles": []
     },
     "pairwise": {
-      "status": "pending",
-      "session": null,
+      "status": "in_progress",
+      "session": "2026-11-01",
       "profiles": []
     },
     "partition": {
@@ -589,8 +584,8 @@
       "profiles": []
     },
     "startWith": {
-      "status": "pending",
-      "session": null,
+      "status": "in_progress",
+      "session": "2026-11-01",
       "profiles": []
     },
     "subscribeOn": {

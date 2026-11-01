@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-01",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-01T08:35:02+01:00",
+  "startingCommit": "26793ec55236b0881ce7a6eaee4b32f790cda477",
+  "selectedNames": [
+    "distinctUntilChanged",
+    "distinctUntilKeyChanged",
+    "distinct",
+    "pairwise",
+    "startWith"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "distinctUntilChanged",
+    "distinctUntilKeyChanged",
+    "distinct",
+    "pairwise",
+    "startWith"
+  ],
+  "commits": [],
+  "checks": {
+    "syntax": "not run",
+    "types": "not run",
+    "model": "not run",
+    "runtime": "not run",
+    "generated": "not run",
+    "ci": "not run"
+  },
+  "notes": [
+    "One Europe/Zurich local-date session; five distinct RxJS 7.8.2 exports selected.",
+    "Previous accepted fifteen names retained; no previous same-date log and no manual quota recorded."
+  ],
+  "blockers": [],
+  "nextQueue": [
+    "skip",
+    "takeWhile",
+    "skipWhile",
+    "takeUntil",
+    "skipUntil"
+  ]
+}
