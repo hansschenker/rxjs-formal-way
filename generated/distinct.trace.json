@@ -1,0 +1,308 @@
+{
+  "status": "finished-input",
+  "consumed": 9,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "distinct-direct-flush",
+      "executionId": "distinct-session4-example",
+      "ruleId": "DISTINCT-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "keys": [],
+        "index": 0,
+        "flushOpen": true
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "flush",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "distinct-direct-flush",
+      "executionId": "distinct-session4-example",
+      "ruleId": "DISTINCT-DIRECT-PASS",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "keys": [],
+        "index": 0,
+        "flushOpen": true
+      },
+      "after": {
+        "phase": "Active",
+        "keys": [
+          1
+        ],
+        "index": 1,
+        "flushOpen": true
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "distinct-direct-flush",
+      "executionId": "distinct-session4-example",
+      "ruleId": "DISTINCT-DIRECT-DROP",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "keys": [
+          1
+        ],
+        "index": 1,
+        "flushOpen": true
+      },
+      "after": {
+        "phase": "Active",
+        "keys": [
+          1
+        ],
+        "index": 2,
+        "flushOpen": true
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "distinct-direct-flush",
+      "executionId": "distinct-session4-example",
+      "ruleId": "DISTINCT-DIRECT-PASS",
+      "event": {
+        "type": "source.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "keys": [
+          1
+        ],
+        "index": 2,
+        "flushOpen": true
+      },
+      "after": {
+        "phase": "Active",
+        "keys": [
+          1,
+          2
+        ],
+        "index": 3,
+        "flushOpen": true
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "distinct-direct-flush",
+      "executionId": "distinct-session4-example",
+      "ruleId": "DISTINCT-FLUSH",
+      "event": {
+        "type": "flush.next"
+      },
+      "before": {
+        "phase": "Active",
+        "keys": [
+          1,
+          2
+        ],
+        "index": 3,
+        "flushOpen": true
+      },
+      "after": {
+        "phase": "Active",
+        "keys": [],
+        "index": 3,
+        "flushOpen": true
+      },
+      "actions": []
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "distinct-direct-flush",
+      "executionId": "distinct-session4-example",
+      "ruleId": "DISTINCT-DIRECT-PASS",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "keys": [],
+        "index": 3,
+        "flushOpen": true
+      },
+      "after": {
+        "phase": "Active",
+        "keys": [
+          1
+        ],
+        "index": 4,
+        "flushOpen": true
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "distinct-direct-flush",
+      "executionId": "distinct-session4-example",
+      "ruleId": "DISTINCT-FLUSH-COMPLETE",
+      "event": {
+        "type": "flush.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "keys": [
+          1
+        ],
+        "index": 4,
+        "flushOpen": true
+      },
+      "after": {
+        "phase": "Active",
+        "keys": [
+          1
+        ],
+        "index": 4,
+        "flushOpen": false
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "flush",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 7,
+      "modelId": "distinct-direct-flush",
+      "executionId": "distinct-session4-example",
+      "ruleId": "DISTINCT-DIRECT-DROP",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "keys": [
+          1
+        ],
+        "index": 4,
+        "flushOpen": false
+      },
+      "after": {
+        "phase": "Active",
+        "keys": [
+          1
+        ],
+        "index": 5,
+        "flushOpen": false
+      },
+      "actions": []
+    },
+    {
+      "sequence": 8,
+      "time": 8,
+      "modelId": "distinct-direct-flush",
+      "executionId": "distinct-session4-example",
+      "ruleId": "DISTINCT-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "keys": [
+          1
+        ],
+        "index": 5,
+        "flushOpen": false
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

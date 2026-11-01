@@ -1,0 +1,222 @@
+{
+  "metadata": {
+    "id": "pairwise-reference",
+    "operator": "pairwise",
+    "purpose": "Emit overlapping adjacent pairs of ORIGINAL source values, starting at the second next notification.",
+    "cardinality": {
+      "signature": "pairwise : T* -> (T x T)*",
+      "conditions": [
+        "For n successfully delivered source values, exactly max(n-1,0) pairs are emitted before an error or cancellation.",
+        "Pair arrays are freshly allocated; their two item references retain identity."
+      ]
+    },
+    "scope": {
+      "parameters": "No user parameters.",
+      "callbacks": "No user function or projection is invoked.",
+      "time": "No timer or scheduling; the pair appears in the same logical source-delivery time point as its right member.",
+      "reentrancy": "Atomic non-reentrant delivery. Model updates previous before emitting.",
+      "exclusions": [
+        "Nested observer delivery, throwing subscriber/finalizer, physical source abort guarantees."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Connect to one source; do not synthesize a first pair."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "Does not create sharing. Each subscriber owns an independent previous-value slot.",
+      "reset": "Each subscription starts with no previous value; no reset while active.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Remember current source value before producing a pair; ordered notification and lifecycle actions are descriptive.",
+      "cancellationCheckpoints": [
+        "Between complete next reactions. Cancel without emitting an incomplete pair."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "new downstream subscription"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "source emits another item"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source completes"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source errors"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream unsubscribes"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not yet connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source live; previous value absent or present",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminated or cancelled",
+        "terminal": true
+      }
+    ],
+    "schemaVersion": "1.0",
+    "rxjsVersion": "7.8.2",
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/pairwise.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and lifecycle"
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "record": "evidence/SESSION-04.md",
+      "modelTests": [
+        "tests/session4-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session4-rxjs.test.mjs"
+      ]
+    }
+  },
+  "parameters": {
+    "pairsStartAtSecondValue": true
+  },
+  "rules": [
+    {
+      "id": "PAIRWISE-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "new execution",
+      "to": "Active",
+      "actions": [
+        "subscribe source; no previous value yet"
+      ],
+      "nextState": "active with no previous item",
+      "obligations": [
+        "S4-PAIRWISE-INIT"
+      ],
+      "explanation": "Pairwise subscribes lazily and starts with no previous value. It does not emit an initial pair."
+    },
+    {
+      "id": "PAIRWISE-FIRST",
+      "from": "Active",
+      "event": "source.next",
+      "guard": "no previous source value",
+      "to": "Active",
+      "actions": [
+        "remember the first source value without emitting"
+      ],
+      "nextState": "active remembering the first value",
+      "obligations": [
+        "S4-PAIRWISE-FIRST"
+      ],
+      "explanation": "The first source value is remembered, not emitted; it becomes the left member of the first pair."
+    },
+    {
+      "id": "PAIRWISE-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "guard": "previous value remembered",
+      "to": "Active",
+      "actions": [
+        "store current value before emitting [previous, current]"
+      ],
+      "nextState": "active remembering the current value",
+      "obligations": [
+        "S4-PAIRWISE-NEXT"
+      ],
+      "explanation": "Every subsequent value emits a fresh two-element array [previous, current], preserving the original value references; current becomes the next previous value before output."
+    },
+    {
+      "id": "PAIRWISE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "guard": "source finishes with any number of values",
+      "to": "Closed",
+      "actions": [
+        "forward completion without flushing an incomplete pair",
+        "release source"
+      ],
+      "nextState": "closed after completion",
+      "obligations": [
+        "S4-PAIRWISE-LIFECYCLE"
+      ],
+      "explanation": "An empty or singleton source produces no pair. Source completion forwards completion without inventing a final pair."
+    },
+    {
+      "id": "PAIRWISE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "guard": "source errors",
+      "to": "Closed",
+      "actions": [
+        "forward the original error",
+        "release source"
+      ],
+      "nextState": "closed after error",
+      "obligations": [
+        "S4-PAIRWISE-LIFECYCLE"
+      ],
+      "explanation": "An error forwards immediately; the stored previous value is not emitted or flushed."
+    },
+    {
+      "id": "PAIRWISE-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "guard": "downstream unsubscribes",
+      "to": "Closed",
+      "actions": [
+        "release source without completion"
+      ],
+      "nextState": "closed by cancellation",
+      "obligations": [
+        "S4-PAIRWISE-LIFECYCLE"
+      ],
+      "explanation": "Cancellation drops the retained previous value and releases the source without sending completion."
+    }
+  ]
+}

@@ -1,0 +1,376 @@
+{
+  "status": "finished-input",
+  "consumed": 10,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "distinctUntilChanged-identity-strict",
+      "executionId": "distinctUntilChanged-session4-example",
+      "ruleId": "DISTINCTUNTILCHANGED-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 0,
+        "hasPrevious": false
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "distinctUntilChanged-identity-strict",
+      "executionId": "distinctUntilChanged-session4-example",
+      "ruleId": "DISTINCTUNTILCHANGED-SELECT",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "index": 0,
+        "hasPrevious": false
+      },
+      "after": {
+        "phase": "Selecting",
+        "index": 1,
+        "callId": 0,
+        "input": 1,
+        "hasPrevious": false
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "key",
+            "generation": 0
+          },
+          "index": 0,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "distinctUntilChanged-identity-strict",
+      "executionId": "distinctUntilChanged-session4-example",
+      "ruleId": "DISTINCTUNTILCHANGED-FIRST",
+      "event": {
+        "type": "key.return",
+        "resource": {
+          "id": "key",
+          "generation": 0
+        },
+        "value": 1
+      },
+      "before": {
+        "phase": "Selecting",
+        "index": 1,
+        "callId": 0,
+        "input": 1,
+        "hasPrevious": false
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1,
+        "hasPrevious": true,
+        "previousKey": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "distinctUntilChanged-identity-strict",
+      "executionId": "distinctUntilChanged-session4-example",
+      "ruleId": "DISTINCTUNTILCHANGED-SELECT",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1,
+        "hasPrevious": true,
+        "previousKey": 1
+      },
+      "after": {
+        "phase": "Selecting",
+        "index": 2,
+        "callId": 1,
+        "input": 1,
+        "hasPrevious": true,
+        "previousKey": 1
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "key",
+            "generation": 1
+          },
+          "index": 1,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "distinctUntilChanged-identity-strict",
+      "executionId": "distinctUntilChanged-session4-example",
+      "ruleId": "DISTINCTUNTILCHANGED-COMPARE",
+      "event": {
+        "type": "key.return",
+        "resource": {
+          "id": "key",
+          "generation": 1
+        },
+        "value": 1
+      },
+      "before": {
+        "phase": "Selecting",
+        "index": 2,
+        "callId": 1,
+        "input": 1,
+        "hasPrevious": true,
+        "previousKey": 1
+      },
+      "after": {
+        "phase": "Comparing",
+        "index": 2,
+        "callId": 1,
+        "input": 1,
+        "previousKey": 1,
+        "key": 1
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "compare",
+            "generation": 1
+          },
+          "index": 1,
+          "value": {
+            "previous": 1,
+            "current": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 2,
+      "modelId": "distinctUntilChanged-identity-strict",
+      "executionId": "distinctUntilChanged-session4-example",
+      "ruleId": "DISTINCTUNTILCHANGED-SAME",
+      "event": {
+        "type": "compare.return",
+        "resource": {
+          "id": "compare",
+          "generation": 1
+        },
+        "same": true
+      },
+      "before": {
+        "phase": "Comparing",
+        "index": 2,
+        "callId": 1,
+        "input": 1,
+        "previousKey": 1,
+        "key": 1
+      },
+      "after": {
+        "phase": "Active",
+        "index": 2,
+        "hasPrevious": true,
+        "previousKey": 1
+      },
+      "actions": []
+    },
+    {
+      "sequence": 6,
+      "time": 3,
+      "modelId": "distinctUntilChanged-identity-strict",
+      "executionId": "distinctUntilChanged-session4-example",
+      "ruleId": "DISTINCTUNTILCHANGED-SELECT",
+      "event": {
+        "type": "source.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "index": 2,
+        "hasPrevious": true,
+        "previousKey": 1
+      },
+      "after": {
+        "phase": "Selecting",
+        "index": 3,
+        "callId": 2,
+        "input": 2,
+        "hasPrevious": true,
+        "previousKey": 1
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "key",
+            "generation": 2
+          },
+          "index": 2,
+          "value": 2
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 3,
+      "modelId": "distinctUntilChanged-identity-strict",
+      "executionId": "distinctUntilChanged-session4-example",
+      "ruleId": "DISTINCTUNTILCHANGED-COMPARE",
+      "event": {
+        "type": "key.return",
+        "resource": {
+          "id": "key",
+          "generation": 2
+        },
+        "value": 2
+      },
+      "before": {
+        "phase": "Selecting",
+        "index": 3,
+        "callId": 2,
+        "input": 2,
+        "hasPrevious": true,
+        "previousKey": 1
+      },
+      "after": {
+        "phase": "Comparing",
+        "index": 3,
+        "callId": 2,
+        "input": 2,
+        "previousKey": 1,
+        "key": 2
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "compare",
+            "generation": 2
+          },
+          "index": 2,
+          "value": {
+            "previous": 1,
+            "current": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 3,
+      "modelId": "distinctUntilChanged-identity-strict",
+      "executionId": "distinctUntilChanged-session4-example",
+      "ruleId": "DISTINCTUNTILCHANGED-CHANGE",
+      "event": {
+        "type": "compare.return",
+        "resource": {
+          "id": "compare",
+          "generation": 2
+        },
+        "same": false
+      },
+      "before": {
+        "phase": "Comparing",
+        "index": 3,
+        "callId": 2,
+        "input": 2,
+        "previousKey": 1,
+        "key": 2
+      },
+      "after": {
+        "phase": "Active",
+        "index": 3,
+        "hasPrevious": true,
+        "previousKey": 2
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 9,
+      "time": 4,
+      "modelId": "distinctUntilChanged-identity-strict",
+      "executionId": "distinctUntilChanged-session4-example",
+      "ruleId": "DISTINCTUNTILCHANGED-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 3,
+        "hasPrevious": true,
+        "previousKey": 2
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

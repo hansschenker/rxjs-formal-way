@@ -1,0 +1,346 @@
+{
+  "metadata": {
+    "id": "distinctUntilChanged-identity-strict",
+    "operator": "distinctUntilChanged",
+    "purpose": "Forward the first item and later items whose selected key differs from the previous FORWARDED key.",
+    "cardinality": {
+      "signature": "distinctUntilChanged : T* -> T*",
+      "conditions": [
+        "At most one original value is emitted per source value. The first is emitted if its key selection succeeds.",
+        "Errors and cancellation may truncate output; comparator equality is not suppression based on every past key."
+      ]
+    },
+    "scope": {
+      "parameters": "Key mode identity, comparator mode strict.",
+      "callbacks": "Key selection and comparator outcomes are external correlated microsteps, not functions executed inside model guards. Default identity/property selection and strict comparison are synthetic model steps, not physical user callback calls.",
+      "time": "No timers or scheduler introduced. Inputs supply timestamps and tie order; key and comparator microsteps resolve synchronously at the same time.",
+      "reentrancy": "Non-reentrant source and observer delivery; only plain stable property values are modeled for distinctUntilKeyChanged.",
+      "exclusions": [
+        "Arbitrary reentrant observer/callback behavior and subscriber cancellation DURING an unresolved callback.",
+        "Mutation/getter side effects between property comparisons, prototype proxies or throwing property access unless represented as explicit key errors.",
+        "Unbounded invocation-counter overflow, a production callback effect interpreter, deprecated overloads not selected here."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "One source connection; empty comparison memory."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "Does not multicast. Each result subscription owns its own last-emitted key.",
+      "reset": "Fresh subscribe starts with no previous key; closed executions are not reused.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result subscription"
+        },
+        {
+          "id": "key",
+          "kind": "callback",
+          "owner": "symbolic synchronous key resolution"
+        },
+        {
+          "id": "compare",
+          "kind": "callback",
+          "owner": "symbolic synchronous comparator result"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "One source.next requests its key, then optionally a comparison; both phases complete before the next source event.",
+      "cancellationCheckpoints": [
+        "After key/comparison resolution; cancellation releases upstream without notification."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream starts a fresh execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "a new source payload arrives"
+      },
+      {
+        "type": "key.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "the selected key is available for this source value"
+      },
+      {
+        "type": "key.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "key selection throws"
+      },
+      {
+        "type": "compare.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "the equality test returns a truthy or falsy result"
+      },
+      {
+        "type": "compare.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "comparison throws"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source completes"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source fails"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream cancels"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "invoke-callback",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no source connection or remembered key",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source live, optionally retaining last forwarded key",
+        "terminal": false
+      },
+      {
+        "id": "Selecting",
+        "description": "key resolution in progress",
+        "terminal": false
+      },
+      {
+        "id": "Comparing",
+        "description": "equality decision in progress",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal or cancelled; further input forbidden",
+        "terminal": true
+      }
+    ],
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/distinctUntilChanged.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and lifecycle"
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "record": "evidence/SESSION-04.md",
+      "modelTests": [
+        "tests/session4-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session4-rxjs.test.mjs"
+      ]
+    }
+  },
+  "parameters": {
+    "operator": "distinctUntilChanged",
+    "keyMode": "identity",
+    "compareMode": "strict"
+  },
+  "rules": [
+    {
+      "id": "DISTINCTUNTILCHANGED-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "fresh execution",
+      "to": "Active",
+      "actions": [
+        "subscribe to the source; remember no previous emitted key"
+      ],
+      "nextState": "active with no previous key and index zero",
+      "obligations": [
+        "S4-DISTINCTUNTILCHANGED-INIT"
+      ],
+      "explanation": "Subscription starts one independent comparison history. No values are emitted until the source sends one."
+    },
+    {
+      "id": "DISTINCTUNTILCHANGED-SELECT",
+      "from": "Active",
+      "event": "source.next",
+      "guard": "source index below safe-integer bound",
+      "to": "Selecting",
+      "actions": [
+        "resolve the incoming key (a synthetic identity/property microstep unless the user supplied a selector)"
+      ],
+      "nextState": "one key resolution pending; previous emitted key retained",
+      "obligations": [
+        "S4-DISTINCTUNTILCHANGED-SELECT"
+      ],
+      "explanation": "Every source value selects a key, including the first and every value later suppressed. Without a user selector this is an identity or property-access microstep; it is not an extra RxJS event or asynchronous task."
+    },
+    {
+      "id": "DISTINCTUNTILCHANGED-FIRST",
+      "from": "Selecting",
+      "event": "key.return",
+      "guard": "matching key resolution and no prior emitted key",
+      "to": "Active",
+      "actions": [
+        "store the selected key before forwarding the original value"
+      ],
+      "nextState": "active remembering the first emitted key",
+      "obligations": [
+        "S4-DISTINCTUNTILCHANGED-FIRST"
+      ],
+      "explanation": "The first source value is always forwarded; its selected key is saved before the notification is sent. A key selector, when configured, still runs for this first value."
+    },
+    {
+      "id": "DISTINCTUNTILCHANGED-COMPARE",
+      "from": "Selecting",
+      "event": "key.return",
+      "guard": "matching key resolution and a prior emitted key",
+      "to": "Comparing",
+      "actions": [
+        "compare previous emitted key with incoming key"
+      ],
+      "nextState": "one comparison outcome pending",
+      "obligations": [
+        "S4-DISTINCTUNTILCHANGED-COMPARE"
+      ],
+      "explanation": "Subsequent source values compare with the key of the last FORWARDED value, not necessarily the immediately preceding input. The comparator receives previous key first, current key second."
+    },
+    {
+      "id": "DISTINCTUNTILCHANGED-CHANGE",
+      "from": "Comparing",
+      "event": "compare.return",
+      "guard": "matching comparison with falsy equality result",
+      "to": "Active",
+      "actions": [
+        "replace the stored key before forwarding the original value"
+      ],
+      "nextState": "active with new previous emitted key",
+      "obligations": [
+        "S4-DISTINCTUNTILCHANGED-CHANGE"
+      ],
+      "explanation": "When the comparator says the keys differ, forward the original value and replace the remembered key before downstream delivery."
+    },
+    {
+      "id": "DISTINCTUNTILCHANGED-SAME",
+      "from": "Comparing",
+      "event": "compare.return",
+      "guard": "matching comparison with truthy equality result",
+      "to": "Active",
+      "actions": [],
+      "nextState": "active keeping the previous FORWARDED key",
+      "obligations": [
+        "S4-DISTINCTUNTILCHANGED-SAME"
+      ],
+      "explanation": "When the comparator says equal, emit nothing and do not replace the previous emitted key. Future values compare against the last value actually forwarded."
+    },
+    {
+      "id": "DISTINCTUNTILCHANGED-SELECT-ERROR",
+      "from": "Selecting",
+      "event": "key.throw",
+      "guard": "matching key resolution",
+      "to": "Closed",
+      "actions": [
+        "forward selector error unchanged",
+        "release source"
+      ],
+      "nextState": "closed on key-selection failure",
+      "obligations": [
+        "S4-DISTINCTUNTILCHANGED-THROW"
+      ],
+      "explanation": "If selecting the key throws, forward the exact error and release the source. No input value or completion follows."
+    },
+    {
+      "id": "DISTINCTUNTILCHANGED-COMPARE-ERROR",
+      "from": "Comparing",
+      "event": "compare.throw",
+      "guard": "matching comparator outcome",
+      "to": "Closed",
+      "actions": [
+        "forward comparator error unchanged",
+        "release source"
+      ],
+      "nextState": "closed on comparison failure",
+      "obligations": [
+        "S4-DISTINCTUNTILCHANGED-THROW"
+      ],
+      "explanation": "A comparator error terminates the stream immediately and releases the source without a final value."
+    },
+    {
+      "id": "DISTINCTUNTILCHANGED-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "guard": "no unresolved synchronous key or comparison",
+      "to": "Closed",
+      "actions": [
+        "complete downstream",
+        "release source"
+      ],
+      "nextState": "closed after source completion",
+      "obligations": [
+        "S4-DISTINCTUNTILCHANGED-LIFECYCLE"
+      ],
+      "explanation": "Source completion forwards completion without emitting a stored value, then releases the source subscription."
+    },
+    {
+      "id": "DISTINCTUNTILCHANGED-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "guard": "no unresolved synchronous key or comparison",
+      "to": "Closed",
+      "actions": [
+        "forward source error unchanged",
+        "release source"
+      ],
+      "nextState": "closed after source error",
+      "obligations": [
+        "S4-DISTINCTUNTILCHANGED-LIFECYCLE"
+      ],
+      "explanation": "A source error passes through unchanged, then source resources are released; no completion follows."
+    },
+    {
+      "id": "DISTINCTUNTILCHANGED-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "guard": "cancellation between resolved source values",
+      "to": "Closed",
+      "actions": [
+        "release source without downstream terminal"
+      ],
+      "nextState": "closed by cancellation",
+      "obligations": [
+        "S4-DISTINCTUNTILCHANGED-LIFECYCLE"
+      ],
+      "explanation": "Downstream cancellation releases source ownership without producing a completion notification."
+    }
+  ]
+}

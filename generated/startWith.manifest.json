@@ -1,0 +1,295 @@
+{
+  "metadata": {
+    "id": "startWith-unscheduled-2",
+    "operator": "startWith",
+    "purpose": "Before subscribing to source, synchronously emit all supplied prefix values in order, then forward source notifications.",
+    "cardinality": {
+      "signature": "startWith(P*) : T* -> (P + T)*",
+      "conditions": [
+        "Successful output begins with exactly the supplied prefix word, followed by the source word.",
+        "Prefix is not replayed in addition to each source value; cancellation during prefix prevents source acquisition."
+      ]
+    },
+    "scope": {
+      "parameters": "A finite frozen snapshot of supplied prefix values; no SchedulerLike argument.",
+      "callbacks": "No user projection. Prefix values are opaque and forwarded without inspection.",
+      "time": "Unscheduled prefix values are synchronous on subscription; source time begins only when subscribed. No internal clock or timer.",
+      "reentrancy": "Atomic non-reentrant prefix microsteps and source delivery; supports downstream cancellation between prefix emissions.",
+      "exclusions": [
+        "Deprecated SchedulerLike overload, which uses scheduling and changes when the source is subscribed.",
+        "Throwing observer/finalizer, nested synchronous reentry or guaranteed physical producer abort."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "After every prefix next, unless zero prefixes or downstream cancellation; no eager source connection."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No multicasting. Each result subscription repeats prefix and owns its own source subscription.",
+      "reset": "New subscription starts from prefix index zero; closed execution is not restarted.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result subscription, only after prefix"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Synthetic prefix.next and prefix.complete microsteps model the synchronous concat(values,source) behavior; they are not source events or timers.",
+      "cancellationCheckpoints": [
+        "After each prefix next and before source acquisition.",
+        "After source acquisition and between source events."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "fresh downstream subscription begins prefix delivery"
+      },
+      {
+        "type": "prefix.next",
+        "origin": "environment",
+        "category": "lifecycle",
+        "description": "next configured prefix item is delivered synchronously"
+      },
+      {
+        "type": "prefix.complete",
+        "origin": "environment",
+        "category": "lifecycle",
+        "description": "all prefix notifications finished; connect to source"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "source delivers value after prefix"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source completes"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source errors"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream cancels"
+      }
+    ],
+    "actionTypes": [
+      "notify",
+      "subscribe",
+      "unsubscribe"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not yet connected",
+        "terminal": false
+      },
+      {
+        "id": "Prefix",
+        "description": "emitting configured values; source not yet connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "prefix complete and source connected",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminated or cancelled",
+        "terminal": true
+      }
+    ],
+    "schemaVersion": "1.0",
+    "rxjsVersion": "7.8.2",
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/startWith.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/concat.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/util/args.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and lifecycle"
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "record": "evidence/SESSION-04.md",
+      "modelTests": [
+        "tests/session4-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session4-rxjs.test.mjs"
+      ]
+    }
+  },
+  "parameters": {
+    "prefix": [
+      "before-a",
+      "before-b"
+    ],
+    "scheduler": "none"
+  },
+  "rules": [
+    {
+      "id": "STARTWITH-INIT-EMPTY",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "zero supplied values",
+      "to": "Active",
+      "actions": [
+        "subscribe source immediately"
+      ],
+      "nextState": "active with source subscription",
+      "obligations": [
+        "S4-STARTWITH-EMPTY"
+      ],
+      "explanation": "Without prefix values, the source is subscribed to immediately and is forwarded unchanged."
+    },
+    {
+      "id": "STARTWITH-INIT-PREFIX",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "one or more prefix values",
+      "to": "Prefix",
+      "actions": [
+        "begin synchronous prefix delivery without subscribing to source"
+      ],
+      "nextState": "prefix phase with index zero",
+      "obligations": [
+        "S4-STARTWITH-PREFIX"
+      ],
+      "explanation": "At subscription, startWith emits its supplied values before connecting to the source. Construction of the pipeline is lazy."
+    },
+    {
+      "id": "STARTWITH-EMIT",
+      "from": "Prefix",
+      "event": "prefix.next",
+      "guard": "prefix index < configured length",
+      "to": "Prefix",
+      "actions": [
+        "emit the current prefix payload synchronously"
+      ],
+      "nextState": "prefix phase with advanced index",
+      "obligations": [
+        "S4-STARTWITH-PREFIX"
+      ],
+      "explanation": "Each configured prefix value is forwarded in argument order, including undefined, null and repeated values. It is emitted synchronously in the default unscheduled profile."
+    },
+    {
+      "id": "STARTWITH-CONNECT",
+      "from": "Prefix",
+      "event": "prefix.complete",
+      "guard": "every prefix value emitted",
+      "to": "Active",
+      "actions": [
+        "subscribe source after the last prefix notification returns"
+      ],
+      "nextState": "active; source now subscribed",
+      "obligations": [
+        "S4-STARTWITH-ORDER"
+      ],
+      "explanation": "Only after the entire prefix sequence completes does startWith subscribe to the source. An observer that cancels during the prefix prevents source acquisition."
+    },
+    {
+      "id": "STARTWITH-CANCEL-PREFIX",
+      "from": "Prefix",
+      "event": "cancel",
+      "guard": "cancel before source acquisition",
+      "to": "Closed",
+      "actions": [
+        "stop prefix delivery; no source subscription to release"
+      ],
+      "nextState": "closed before subscribing to source",
+      "obligations": [
+        "S4-STARTWITH-CANCEL"
+      ],
+      "explanation": "Cancellation during prefix delivery suppresses remaining prefix values and prevents the source from ever being subscribed."
+    },
+    {
+      "id": "STARTWITH-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "guard": "source connected",
+      "to": "Active",
+      "actions": [
+        "forward source value unchanged"
+      ],
+      "nextState": "active",
+      "obligations": [
+        "S4-STARTWITH-ORDER"
+      ],
+      "explanation": "After the prefix, all source values flow unchanged in their original order and arrival times."
+    },
+    {
+      "id": "STARTWITH-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "guard": "source completed after prefix",
+      "to": "Closed",
+      "actions": [
+        "complete downstream",
+        "release source"
+      ],
+      "nextState": "closed after completion",
+      "obligations": [
+        "S4-STARTWITH-LIFECYCLE"
+      ],
+      "explanation": "Once prefix delivery and the source finish, the output completes. An empty source still receives all prefix values first."
+    },
+    {
+      "id": "STARTWITH-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "guard": "source errored after prefix",
+      "to": "Closed",
+      "actions": [
+        "forward exact error",
+        "release source"
+      ],
+      "nextState": "closed after error",
+      "obligations": [
+        "S4-STARTWITH-LIFECYCLE"
+      ],
+      "explanation": "A source error arrives only after the prefix has been emitted. It passes through unchanged; no completion follows."
+    },
+    {
+      "id": "STARTWITH-CANCEL-ACTIVE",
+      "from": "Active",
+      "event": "cancel",
+      "guard": "source already subscribed",
+      "to": "Closed",
+      "actions": [
+        "release source without completion"
+      ],
+      "nextState": "closed by cancellation",
+      "obligations": [
+        "S4-STARTWITH-CANCEL"
+      ],
+      "explanation": "Cancellation after prefix completion releases the source and stops future values without synthesizing completion."
+    }
+  ]
+}

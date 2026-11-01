@@ -1,0 +1,412 @@
+{
+  "status": "finished-input",
+  "consumed": 10,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "distinctUntilKeyChanged-property-strict",
+      "executionId": "distinctUntilKeyChanged-session4-example",
+      "ruleId": "DISTINCTUNTILKEYCHANGED-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 0,
+        "hasPrevious": false
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "distinctUntilKeyChanged-property-strict",
+      "executionId": "distinctUntilKeyChanged-session4-example",
+      "ruleId": "DISTINCTUNTILKEYCHANGED-SELECT",
+      "event": {
+        "type": "source.next",
+        "value": {
+          "code": "a"
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "index": 0,
+        "hasPrevious": false
+      },
+      "after": {
+        "phase": "Selecting",
+        "index": 1,
+        "callId": 0,
+        "input": {
+          "code": "a"
+        },
+        "hasPrevious": false
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "key",
+            "generation": 0
+          },
+          "index": 0,
+          "value": {
+            "code": "a"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "distinctUntilKeyChanged-property-strict",
+      "executionId": "distinctUntilKeyChanged-session4-example",
+      "ruleId": "DISTINCTUNTILKEYCHANGED-FIRST",
+      "event": {
+        "type": "key.return",
+        "resource": {
+          "id": "key",
+          "generation": 0
+        },
+        "value": "a"
+      },
+      "before": {
+        "phase": "Selecting",
+        "index": 1,
+        "callId": 0,
+        "input": {
+          "code": "a"
+        },
+        "hasPrevious": false
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1,
+        "hasPrevious": true,
+        "previousKey": "a"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "code": "a"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "distinctUntilKeyChanged-property-strict",
+      "executionId": "distinctUntilKeyChanged-session4-example",
+      "ruleId": "DISTINCTUNTILKEYCHANGED-SELECT",
+      "event": {
+        "type": "source.next",
+        "value": {
+          "code": "a"
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1,
+        "hasPrevious": true,
+        "previousKey": "a"
+      },
+      "after": {
+        "phase": "Selecting",
+        "index": 2,
+        "callId": 1,
+        "input": {
+          "code": "a"
+        },
+        "hasPrevious": true,
+        "previousKey": "a"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "key",
+            "generation": 1
+          },
+          "index": 1,
+          "value": {
+            "code": "a"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "distinctUntilKeyChanged-property-strict",
+      "executionId": "distinctUntilKeyChanged-session4-example",
+      "ruleId": "DISTINCTUNTILKEYCHANGED-COMPARE",
+      "event": {
+        "type": "key.return",
+        "resource": {
+          "id": "key",
+          "generation": 1
+        },
+        "value": "a"
+      },
+      "before": {
+        "phase": "Selecting",
+        "index": 2,
+        "callId": 1,
+        "input": {
+          "code": "a"
+        },
+        "hasPrevious": true,
+        "previousKey": "a"
+      },
+      "after": {
+        "phase": "Comparing",
+        "index": 2,
+        "callId": 1,
+        "input": {
+          "code": "a"
+        },
+        "previousKey": "a",
+        "key": "a"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "compare",
+            "generation": 1
+          },
+          "index": 1,
+          "value": {
+            "previous": "a",
+            "current": "a"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 2,
+      "modelId": "distinctUntilKeyChanged-property-strict",
+      "executionId": "distinctUntilKeyChanged-session4-example",
+      "ruleId": "DISTINCTUNTILKEYCHANGED-SAME",
+      "event": {
+        "type": "compare.return",
+        "resource": {
+          "id": "compare",
+          "generation": 1
+        },
+        "same": true
+      },
+      "before": {
+        "phase": "Comparing",
+        "index": 2,
+        "callId": 1,
+        "input": {
+          "code": "a"
+        },
+        "previousKey": "a",
+        "key": "a"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 2,
+        "hasPrevious": true,
+        "previousKey": "a"
+      },
+      "actions": []
+    },
+    {
+      "sequence": 6,
+      "time": 3,
+      "modelId": "distinctUntilKeyChanged-property-strict",
+      "executionId": "distinctUntilKeyChanged-session4-example",
+      "ruleId": "DISTINCTUNTILKEYCHANGED-SELECT",
+      "event": {
+        "type": "source.next",
+        "value": {
+          "code": "b"
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "index": 2,
+        "hasPrevious": true,
+        "previousKey": "a"
+      },
+      "after": {
+        "phase": "Selecting",
+        "index": 3,
+        "callId": 2,
+        "input": {
+          "code": "b"
+        },
+        "hasPrevious": true,
+        "previousKey": "a"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "key",
+            "generation": 2
+          },
+          "index": 2,
+          "value": {
+            "code": "b"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 3,
+      "modelId": "distinctUntilKeyChanged-property-strict",
+      "executionId": "distinctUntilKeyChanged-session4-example",
+      "ruleId": "DISTINCTUNTILKEYCHANGED-COMPARE",
+      "event": {
+        "type": "key.return",
+        "resource": {
+          "id": "key",
+          "generation": 2
+        },
+        "value": "b"
+      },
+      "before": {
+        "phase": "Selecting",
+        "index": 3,
+        "callId": 2,
+        "input": {
+          "code": "b"
+        },
+        "hasPrevious": true,
+        "previousKey": "a"
+      },
+      "after": {
+        "phase": "Comparing",
+        "index": 3,
+        "callId": 2,
+        "input": {
+          "code": "b"
+        },
+        "previousKey": "a",
+        "key": "b"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "compare",
+            "generation": 2
+          },
+          "index": 2,
+          "value": {
+            "previous": "a",
+            "current": "b"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 3,
+      "modelId": "distinctUntilKeyChanged-property-strict",
+      "executionId": "distinctUntilKeyChanged-session4-example",
+      "ruleId": "DISTINCTUNTILKEYCHANGED-CHANGE",
+      "event": {
+        "type": "compare.return",
+        "resource": {
+          "id": "compare",
+          "generation": 2
+        },
+        "same": false
+      },
+      "before": {
+        "phase": "Comparing",
+        "index": 3,
+        "callId": 2,
+        "input": {
+          "code": "b"
+        },
+        "previousKey": "a",
+        "key": "b"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 3,
+        "hasPrevious": true,
+        "previousKey": "b"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "code": "b"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 9,
+      "time": 4,
+      "modelId": "distinctUntilKeyChanged-property-strict",
+      "executionId": "distinctUntilKeyChanged-session4-example",
+      "ruleId": "DISTINCTUNTILKEYCHANGED-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 3,
+        "hasPrevious": true,
+        "previousKey": "b"
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

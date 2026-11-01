@@ -1,0 +1,197 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "startWith-unscheduled-2",
+      "executionId": "startWith-session4-example",
+      "ruleId": "STARTWITH-INIT-PREFIX",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Prefix",
+        "index": 0
+      },
+      "actions": []
+    },
+    {
+      "sequence": 1,
+      "time": 0,
+      "modelId": "startWith-unscheduled-2",
+      "executionId": "startWith-session4-example",
+      "ruleId": "STARTWITH-EMIT",
+      "event": {
+        "type": "prefix.next"
+      },
+      "before": {
+        "phase": "Prefix",
+        "index": 0
+      },
+      "after": {
+        "phase": "Prefix",
+        "index": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "before-a"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 0,
+      "modelId": "startWith-unscheduled-2",
+      "executionId": "startWith-session4-example",
+      "ruleId": "STARTWITH-EMIT",
+      "event": {
+        "type": "prefix.next"
+      },
+      "before": {
+        "phase": "Prefix",
+        "index": 1
+      },
+      "after": {
+        "phase": "Prefix",
+        "index": 2
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "before-b"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 0,
+      "modelId": "startWith-unscheduled-2",
+      "executionId": "startWith-session4-example",
+      "ruleId": "STARTWITH-CONNECT",
+      "event": {
+        "type": "prefix.complete"
+      },
+      "before": {
+        "phase": "Prefix",
+        "index": 2
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 1,
+      "modelId": "startWith-unscheduled-2",
+      "executionId": "startWith-session4-example",
+      "ruleId": "STARTWITH-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 5
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 5
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 2,
+      "modelId": "startWith-unscheduled-2",
+      "executionId": "startWith-session4-example",
+      "ruleId": "STARTWITH-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 6
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 6
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 3,
+      "modelId": "startWith-unscheduled-2",
+      "executionId": "startWith-session4-example",
+      "ruleId": "STARTWITH-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}
