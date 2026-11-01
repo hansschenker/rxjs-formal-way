@@ -12,6 +12,13 @@ import { createSwitchAllModel, createMergeAllModel, createConcatAllModel, create
   switchAllExample, mergeAllExample, concatAllExample, exhaustAllExample,
   createShareReplayModel, shareReplayExample, runShareReplayTrace } from '../dist/index.js';
 
+import {
+  createDistinctUntilChangedModel, createDistinctUntilKeyChangedModel,
+  createDistinctModel, createPairwiseModel, createStartWithModel,
+  distinctUntilChangedExample, distinctUntilKeyChangedExample, distinctExample,
+  pairwiseExample, startWithExample,
+} from '../dist/index.js';
+
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
@@ -30,6 +37,11 @@ const examples = [
   ['concatAll', createConcatAllModel(), concatAllExample, 'concatAll-session3-example'],
   ['exhaustAll', createExhaustAllModel(), exhaustAllExample, 'exhaustAll-session3-example'],
   ['shareReplay', createShareReplayModel({ bufferSize: 2, windowTime: 6, refCount: false }), shareReplayExample, 'shareReplay-session3-example', runShareReplayTrace],
+  ['distinctUntilChanged', createDistinctUntilChangedModel(), distinctUntilChangedExample, 'distinctUntilChanged-session4-example'],
+  ['distinctUntilKeyChanged', createDistinctUntilKeyChangedModel('code'), distinctUntilKeyChangedExample, 'distinctUntilKeyChanged-session4-example'],
+  ['distinct', createDistinctModel({ withFlushes: true }), distinctExample, 'distinct-session4-example'],
+  ['pairwise', createPairwiseModel(), pairwiseExample, 'pairwise-session4-example'],
+  ['startWith', createStartWithModel(['before-a', 'before-b']), startWithExample, 'startWith-session4-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();

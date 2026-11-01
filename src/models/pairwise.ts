@@ -7,7 +7,7 @@ import {
 export type PairwiseParameters = Readonly<{ pairsStartAtSecondValue: true }>;
 export type PairwiseState<T> =
   | Readonly<{ phase: 'Unsubscribed' }>
-  | Readonly<{ phase: 'Active'; hasPrevious: boolean; previous?: T }>
+  | Readonly<{ phase: 'Active'; hasPrevious: boolean; previous?: T | undefined }>
   | Readonly<{ phase: 'Closed'; reason: 'complete' | 'error' | 'cancel' }>;
 export type PairwiseEvent<T> =
   | Readonly<{ type: 'subscribe' | 'cancel' | 'source.complete' }>

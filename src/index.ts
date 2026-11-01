@@ -19,3 +19,12 @@ export { createSwitchAllModel, createMergeAllModel, createConcatAllModel, create
 export type { AllOperator, AllState, AllEvent, AllModel } from './models/all.js';
 export { createShareReplayModel, shareReplayExample, runShareReplayTrace } from './models/shareReplay.js';
 export type { ShareReplayOptions, ShareReplayParameters, ReplayItem, ShareReplayState, ShareReplayEvent, ShareReplayModel } from './models/shareReplay.js';
+
+export { createDistinctUntilChangedModel, createDistinctUntilKeyChangedModel, distinctUntilChangedExample, distinctUntilKeyChangedExample } from './models/adjacent.js';
+export type { AdjacentOperator, AdjacentParameters, AdjacentState, AdjacentEvent, AdjacentModel } from './models/adjacent.js';
+export { createDistinctModel, distinctExample } from './models/distinct.js';
+export type { DistinctParameters, DistinctState, DistinctEvent, DistinctModel } from './models/distinct.js';
+export { createPairwiseModel, pairwiseExample } from './models/pairwise.js';
+export type { PairwiseParameters, PairwiseState, PairwiseEvent, PairwiseModel } from './models/pairwise.js';
+export { createStartWithModel, startWithExample } from './models/startWith.js';
+export type { StartWithParameters, StartWithState, StartWithEvent, StartWithModel } from './models/startWith.js';

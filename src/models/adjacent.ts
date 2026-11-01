@@ -9,7 +9,7 @@ export type AdjacentParameters = Readonly<{
   operator: AdjacentOperator; keyMode: 'identity' | 'selected' | 'property';
   property?: string; compareMode: 'strict' | 'custom';
 }>;
-type Memory<K> = Readonly<{ index: number; hasPrevious: boolean; previousKey?: K }>;
+type Memory<K> = Readonly<{ index: number; hasPrevious: boolean; previousKey?: K | undefined }>;
 export type AdjacentState<T, K> =
   | Readonly<{ phase: 'Unsubscribed' }>
   | (Readonly<{ phase: 'Active' }> & Memory<K>)
