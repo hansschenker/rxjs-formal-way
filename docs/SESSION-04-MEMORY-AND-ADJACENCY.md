@@ -128,3 +128,7 @@ Multiple tested options or overload profiles remain **one export name**, never e
 Independent tests compare callback outcomes, emitted values and exact event sequence, per-resource subscription acquisition and release times, equal-time order and early termination. Both model and native tests include negative scenarios. Finite bounded differential enumeration is evidence within declared scopes, **not** an exhaustive equivalence proof.
 
 See [Session 4 evidence](../evidence/SESSION-04.md) for the actual tested SHA, CI runs, correction history, selected scopes and remaining gaps. A status is not accepted merely because these paragraphs and generated files exist.
+
+## Committed-file verification branch
+
+This documentation-only change exists to trigger the unchanged pull-request validation path against all **168 committed generated projections** from the five Session 4 operator exports. The pull-request workflow skips regeneration and publication, runs the complete strict `npm run check` and verifies byte-for-byte drift without replacing source or generated views. Acceptance, exact tested checkout, retrieved CI outcome and session closure are recorded later in `evidence/SESSION-04.md`; no unexecuted success is claimed by this note.
