@@ -275,12 +275,12 @@ If no temporal property adds information beyond the local rules and invariants, 
 
 See [LTL Temporal Contracts](LTL-TEMPORAL-CONTRACTS.md).
 
-## 25. Test obligations
+## 22. Test obligations
 
 | Rule | State-reaching prefix | Event | Expected notifications | Expected lifecycle | Test ID |
 |---|---|---|---|---|---|
 
-## 22. Runtime evidence
+## 23. Runtime evidence
 
 Record:
 
@@ -291,7 +291,7 @@ Record:
 - reentrancy/timing limits
 - source revision
 
-## 23. Implementation intuition
+## 24. Implementation intuition
 
 Explain the minimum state + policy in practical RxJS terms.
 
@@ -304,7 +304,7 @@ When a new value arrives ...
 The operator uses ... because ...
 ```
 
-## 24. Operator Behavior in Plain Language
+## 25. Operator Behavior in Plain Language
 
 This is the final user-facing description.
 
