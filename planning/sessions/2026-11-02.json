@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-02",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-02T06:24:40+01:00",
+  "startingCommit": "d8a7f07de80408714fe8a91df67b5f39bc5e6e57",
+  "selectedNames": ["skip", "takeWhile", "skipWhile", "takeUntil", "skipUntil"],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [],
+  "commits": [],
+  "checks": {},
+  "notes": [
+    "Explicit user request starts Session 5. Live plan, queue, roadmap and sessions directory checked; no session or manual quota recorded for this local date.",
+    "Session 4 is closed with no carryovers; the selected names are the next five pending exports. No sixth name may be worked on.",
+    "Direct git cloning failed because github.com does not resolve in the container; connector Git data and actual GitHub Actions validation will be used if necessary. No unexecuted checks are claimed."
+  ],
+  "blockers": [],
+  "nextQueue": ["reduce", "count", "toArray", "min", "max"]
+}
