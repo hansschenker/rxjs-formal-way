@@ -231,7 +231,51 @@ Otherwise: not applicable.
 
 List operator-specific and protocol invariants.
 
-## 21. Test obligations
+## 21. LTL temporal contract
+
+State only global properties that add precision beyond the transition rows.
+
+Use the restricted RxJS-LTL profile:
+
+```text
+G P          always P
+F P          eventually P
+P U Q        P until Q
+```
+
+Classify properties where useful:
+
+- Safety
+- Preservation
+- Ordering
+- Concurrency
+- Cancellation
+- Termination
+- Liveness
+- Assumptions
+
+Example:
+
+```text
+SAFETY
+G(outputFrom(i) -> active(i))
+
+LATEST
+G(outputFrom(i) -> latestInner(i))
+
+COMPLETION
+G(sourceCompleted && noPendingWork -> F(outputCompleted))
+```
+
+State environmental assumptions explicitly. Do not claim eventual progress when it depends on an inner source, scheduler, or producer that may never progress.
+
+For terminated executions, interpret the final closed/quiescent state as stuttering forever. Avoid `X` unless immediate-next-state semantics are intentionally part of the model.
+
+If no temporal property adds information beyond the local rules and invariants, say so.
+
+See [LTL Temporal Contracts](LTL-TEMPORAL-CONTRACTS.md).
+
+## 25. Test obligations
 
 | Rule | State-reaching prefix | Event | Expected notifications | Expected lifecycle | Test ID |
 |---|---|---|---|---|---|
