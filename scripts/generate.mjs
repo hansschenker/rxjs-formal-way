@@ -19,6 +19,11 @@ import {
   pairwiseExample, startWithExample,
 } from '../dist/index.js';
 
+import {
+  createSkipModel, createTakeWhileModel, createSkipWhileModel, createTakeUntilModel, createSkipUntilModel,
+  skipExample, takeWhileExample, skipWhileExample, takeUntilExample, skipUntilExample,
+} from '../dist/index.js';
+
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
@@ -42,6 +47,11 @@ const examples = [
   ['distinct', createDistinctModel({ withFlushes: true }), distinctExample, 'distinct-session4-example'],
   ['pairwise', createPairwiseModel(), pairwiseExample, 'pairwise-session4-example'],
   ['startWith', createStartWithModel(['before-a', 'before-b']), startWithExample, 'startWith-session4-example'],
+  ['skip', createSkipModel(2), skipExample, 'skip-session5-example'],
+  ['takeWhile', createTakeWhileModel(true), takeWhileExample, 'takeWhile-session5-example'],
+  ['skipWhile', createSkipWhileModel(), skipWhileExample, 'skipWhile-session5-example'],
+  ['takeUntil', createTakeUntilModel(), takeUntilExample, 'takeUntil-session5-example'],
+  ['skipUntil', createSkipUntilModel(), skipUntilExample, 'skipUntil-session5-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();

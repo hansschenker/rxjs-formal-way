@@ -6,16 +6,25 @@
   "startedAt": "2026-11-02T06:24:40+01:00",
   "startingCommit": "d8a7f07de80408714fe8a91df67b5f39bc5e6e57",
   "selectedNames": ["skip", "takeWhile", "skipWhile", "takeUntil", "skipUntil"],
-  "workedNames": [],
+  "workedNames": ["skip", "takeWhile", "skipWhile", "takeUntil", "skipUntil"],
   "completedNames": [],
   "carryovers": [],
-  "commits": [],
-  "checks": {},
+  "commits": ["f561d4dd703c69813f50bf7cf18b84922b4e4a04"],
+  "checks": {
+    "localSyntax": "new files passed syntax checks",
+    "localTypes": "strict subset compilation and 18 new negative assertions passed",
+    "localModel": "35 new pure-model tests passed",
+    "localGeneration": "40 isolated projections generated for inspection, not full-registry drift acceptance",
+    "runtime": "pending actual RxJS execution in CI",
+    "ci": "pending full validation and read-only committed-file check"
+  },
   "notes": [
     "Explicit user request starts Session 5. Live plan, queue, roadmap and sessions directory checked; no session or manual quota recorded for this local date.",
     "Session 4 is closed with no carryovers; the selected names are the next five pending exports. No sixth name may be worked on.",
-    "Direct git cloning failed because github.com does not resolve in the container; connector Git data and actual GitHub Actions validation will be used if necessary. No unexecuted checks are claimed."
+    "Direct git cloning and package download failed in the container; connector Git data and actual GitHub Actions validation are used instead. No unexecuted checks are claimed.",
+    "The existing schema, runner, renderer, earlier models, tests, dependency versions and workflow are retained. New tests include notifier-first setup and skipUntil closed-source attempt after synchronous notifier error."
   ],
   "blockers": [],
+  "evidence": "evidence/SESSION-05.md",
   "nextQueue": ["reduce", "count", "toArray", "min", "max"]
 }

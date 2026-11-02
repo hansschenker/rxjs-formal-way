@@ -28,3 +28,8 @@ export { createPairwiseModel, pairwiseExample } from './models/pairwise.js';
 export type { PairwiseParameters, PairwiseState, PairwiseEvent, PairwiseModel } from './models/pairwise.js';
 export { createStartWithModel, startWithExample } from './models/startWith.js';
 export type { StartWithParameters, StartWithState, StartWithEvent, StartWithModel } from './models/startWith.js';
+
+export { createSkipModel, createTakeWhileModel, createSkipWhileModel, skipExample, takeWhileExample, skipWhileExample } from './models/gating.js';
+export type { GateSourceEvent, GateCloseReason, SkipParameters, SkipState, SkipEvent, SkipModel, WhileOperator, WhileParameters, WhileState, WhileEvent, WhileModel } from './models/gating.js';
+export { createTakeUntilModel, createSkipUntilModel, takeUntilExample, skipUntilExample } from './models/until.js';
+export type { UntilOperator, UntilParameters, UntilCloseReason, UntilState, UntilEvent, UntilModel } from './models/until.js';
