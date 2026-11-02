@@ -5,6 +5,7 @@ This is the current implementation tracker. The migration map preserves the orig
 | Checkpoint | Scope | Status |
 |---|---|---|
 | M00 | Formal method and reviewed composition/ownership guidance | Retained |
+| M00-LTL | LTL temporal-contract layer: safety/liveness, assumptions/guarantees, terminal stutter semantics | Adopted as documentation/specification layer; generated projection deferred |
 | M01 | Canonical contract, pure runner and take end-to-end profile | Accepted within scope; [65-test evidence](../evidence/M01.md) |
 | M02-A | Indexed map/filter, explicit callback outcomes, 16 additional projections | Accepted within scope; [119-test evidence](../evidence/M02.md) |
 | M02-B | Seeded and unseeded scan, accumulator/index, seed aliasing and throw behavior | Accepted within scope; [171-test evidence](../evidence/M02-B.md) |
@@ -21,6 +22,23 @@ This is the current implementation tracker. The migration map preserves the orig
 | M05+ | Remaining catalogue | 88 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
+
+## LTL integration checkpoint
+
+The reusable material from `hansschenker/rxjs-ltl` is now part of the formal method through [LTL Temporal Contracts](LTL-TEMPORAL-CONTRACTS.md).
+
+The adopted pieces are:
+
+- global temporal contracts on top of local Mealy transitions;
+- explicit safety versus liveness;
+- assumption/guarantee separation for progress claims;
+- terminal-state stutter extension for finite RxJS executions;
+- cautious use of `X` because of stuttering sensitivity;
+- temporal-property-to-test-obligation traceability;
+- explicit boundary between ordinary LTL ordering and scheduler-owned metric time;
+- a future mapping path into TLA+ invariants, temporal formulas and justified fairness assumptions.
+
+No generated `.ltl.md` artifact has been added yet. That extension remains deferred until temporal propositions and assumptions are represented canonically in the model and can participate in drift checking.
 
 ## Retained checkpoints
 
