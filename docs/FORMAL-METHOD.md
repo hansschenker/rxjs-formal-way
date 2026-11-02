@@ -305,7 +305,7 @@ Treat `X` (next) as non-primary because it is sensitive to stuttering. Time-sens
 
 The temporal contract is a specification view, not runtime evidence and not yet a mechanically proved theorem about RxJS.
 
-## 18. Derive test obligations
+## 11. Derive test obligations
 
 Rule:
 
@@ -322,7 +322,7 @@ A concrete test should:
 
 One row can require multiple tests when its guard contains important partitions or execution-sensitive behavior.
 
-## 11. Separate model tests and RxJS tests
+## 12. Separate model tests and RxJS tests
 
 ### Model tests
 
@@ -351,7 +351,7 @@ Use:
 
 Do not generate both implementation and expected oracle from the same logic and call that independent evidence.
 
-## 12. RxJS lifecycle invariants
+## 13. RxJS lifecycle invariants
 
 At minimum consider:
 
@@ -387,7 +387,7 @@ For `share`, `shareReplay`, `connect`, etc., name:
 - reset policy
 - replay policy
 
-## 13. Time and scheduling
+## 14. Time and scheduling
 
 Time-sensitive behavior must declare:
 
@@ -400,7 +400,7 @@ A scheduler is treated as a clock plus a mechanism for scheduling work against t
 
 Time orders events across time points; scheduling determines the execution order of work that is ready at the same or comparable time point.
 
-## 14. Reentrancy boundary
+## 15. Reentrancy boundary
 
 A simple atomic transition model assumes an event is processed to quiescence before the next event.
 
@@ -413,7 +413,7 @@ Where reentrancy matters, either:
 
 Marble diagrams alone do not establish call-stack nesting.
 
-## 15. Static cardinality companion
+## 16. Static cardinality companion
 
 Cω cardinality notation gives a compact static lens:
 
@@ -428,7 +428,7 @@ This can be placed at the top of an operator page.
 
 The cardinality signature is descriptive, not a replacement for temporal/lifecycle semantics.
 
-## 16. Documentation is a projection, not an independent source
+## 17. Documentation is a projection, not an independent source
 
 The final operator description should be generated or reviewed against:
 
@@ -441,7 +441,7 @@ The final operator description should be generated or reviewed against:
 
 The plain-language section should answer what the operator does without requiring knowledge of Mealy machines.
 
-## 17. Acceptance principle
+## 18. Acceptance principle
 
 An operator analysis is strong when:
 
