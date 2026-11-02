@@ -259,7 +259,53 @@ Use it especially for:
 - delayed/repeated/retried work
 - connection/refCount/reset behavior
 
-## 10. Derive test obligations
+## 10. Add the LTL temporal contract
+
+After the local transition model and invariants are understood, state the global properties that every permitted behavior must satisfy.
+
+Use the restricted profile documented in [LTL Temporal Contracts](LTL-TEMPORAL-CONTRACTS.md):
+
+```text
+G P          always P
+F P          eventually P
+P U Q        P until Q
+```
+
+plus ordinary boolean composition.
+
+Typical categories:
+
+- safety
+- preservation
+- ordering
+- concurrency
+- cancellation
+- termination
+- liveness
+- assumptions
+
+Examples:
+
+```text
+switchMap:
+G(outputFrom(i) -> latestInner(i))
+
+take(n):
+G(outputCount <= n)
+
+completion progress:
+G(sourceCompleted && noPendingWork -> F(outputCompleted))
+```
+
+Keep **environment assumptions** separate from operator guarantees. A queued `concatMap` value, for example, cannot be guaranteed to run if the current inner never terminates.
+
+Standard LTL uses infinite behaviors. A terminated RxJS execution is interpreted by stutter-extending its final quiescent state forever. Cancellation remains distinct from downstream completion.
+
+Treat `X` (next) as non-primary because it is sensitive to stuttering. Time-sensitive operators continue to obtain clock/deadline/timer events from the scheduler model; ordinary LTL does not itself mean “300 ms”.
+
+The temporal contract is a specification view, not runtime evidence and not yet a mechanically proved theorem about RxJS.
+
+## 18. Derive test obligations
 
 Rule:
 
