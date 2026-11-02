@@ -55,7 +55,8 @@ Each configured example has eight generated projections: the five linked above, 
 | [M02-E shared execution](docs/M02-E-SHARE.md) | Addressed subscribers, connection ownership and boolean reset policies |
 | [Roadmap](docs/ROADMAP.md) | Implemented and remaining checkpoints |
 | [Daily plan](docs/DAILY-GENERATION-PLAN.md) | One local-date session, at most five distinct pending names |
-| [Formal method](docs/FORMAL-METHOD.md) | Six-tuple analysis, guarded transitions, lifecycle and evidence |
+| [Formal method](docs/FORMAL-METHOD.md) | Six-tuple analysis, guarded transitions, lifecycle, temporal contracts and evidence |
+| [LTL temporal contracts](docs/LTL-TEMPORAL-CONTRACTS.md) | Global safety/liveness properties, assumptions/guarantees and stutter semantics |
 | [Composition and ownership](docs/COMPOSITION-AND-OWNERSHIP.md) | Connected machines, feedback, shared state and execution contracts |
 | [Dependent types](docs/DEPENDENT-TYPES.md) | State-indexed legal behavior, not merely a type for state |
 | [Imported-document review](docs/reviews/2026-10-28-gemini-mealy.md) | Adopted ideas, corrected claims, provenance and pinned sources |
@@ -74,11 +75,15 @@ Pinned RxJS source + exact configuration + execution scope
                 Guarded transition rules
            ┌───────────────┼─────────────────┐
            ↓               ↓                 ↓
-       BDD / prose      STT / diagram       Test obligations
+       BDD / prose      STT / diagram       Invariants
                            ↓                 ↓
-                    Concrete traces     RxJS runtime checks
+                    Concrete traces     LTL temporal contract
                            ↓                 ↓
-                    Four-lane view       Evidence
+                    Four-lane view       Test obligations
+                                             ↓
+                                      RxJS runtime checks
+                                             ↓
+                                          Evidence
 ```
 
 A state-transition diagram and state-transition table are views of the same rules. Traces instantiate paths through them. Tests compare predictions with actual RxJS behavior; these artifacts need not form a strictly serial conversion chain.
@@ -129,7 +134,7 @@ A silence deadline and a scheduled wake-up are different state fields. RxJS 7.8.
 
 Clock readings and timer firings come from the environment. The clock-aware trace wrapper verifies envelope/event agreement. Equal timestamps retain an explicit execution order. The scoped deferred scheduler is not a universal policy for inline zero-delay schedulers. [M02-C](docs/M02-C-DEBOUNCE-TIME.md) documents these boundaries and the independent scheduler tests.
 
-## Six complementary methods
+## Seven complementary methods
 
 | Method | Role |
 |---|---|
@@ -137,6 +142,7 @@ Clock readings and timer firings come from the environment. The clock-aware trac
 | Dependent types | Which whole transitions are legal in the model |
 | Mealy analysis | State, events, next state and ordered actions |
 | BDD | User-readable projection of behavioral rules |
+| LTL temporal contract | Global safety, liveness, ordering, cancellation and progress properties across behaviors |
 | Four-lane diagram | Time, inputs, control state and outputs in one trace |
 | Test cases | Independent conformance evidence against RxJS |
 
