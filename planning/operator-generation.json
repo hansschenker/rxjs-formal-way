@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "skip",
-    "takeWhile",
-    "skipWhile",
-    "takeUntil",
-    "skipUntil",
     "reduce",
     "count",
     "toArray",
@@ -588,9 +583,16 @@
       "profiles": []
     },
     "skip": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-02",
+      "profiles": [
+        "nonnegative-safe-integer-count"
+      ],
+      "evidence": "evidence/SESSION-05.md",
+      "testedCommit": "e0dd8aa2f04c766827fb1dabbb22d9ed1dcefaac",
+      "verificationRun": 41396580432,
+      "implementationRun": 41396195583,
+      "readOnlyHeadCommit": "6ee5b66163e46c0dbeee6679b161c9654cbe7fe8"
     },
     "skipLast": {
       "status": "pending",
@@ -598,14 +600,30 @@
       "profiles": []
     },
     "skipUntil": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-02",
+      "profiles": [
+        "Observable-notifier",
+        "notifier-first-setup",
+        "closed-source-attempt-after-synchronous-notifier-error"
+      ],
+      "evidence": "evidence/SESSION-05.md",
+      "testedCommit": "e0dd8aa2f04c766827fb1dabbb22d9ed1dcefaac",
+      "verificationRun": 41396580432,
+      "implementationRun": 41396195583,
+      "readOnlyHeadCommit": "6ee5b66163e46c0dbeee6679b161c9654cbe7fe8"
     },
     "skipWhile": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-02",
+      "profiles": [
+        "one-way-predicate-gate"
+      ],
+      "evidence": "evidence/SESSION-05.md",
+      "testedCommit": "e0dd8aa2f04c766827fb1dabbb22d9ed1dcefaac",
+      "verificationRun": 41396580432,
+      "implementationRun": 41396195583,
+      "readOnlyHeadCommit": "6ee5b66163e46c0dbeee6679b161c9654cbe7fe8"
     },
     "startWith": {
       "status": "accepted",
@@ -664,14 +682,31 @@
       "profiles": []
     },
     "takeUntil": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-02",
+      "profiles": [
+        "Observable-notifier",
+        "notifier-first-setup"
+      ],
+      "evidence": "evidence/SESSION-05.md",
+      "testedCommit": "e0dd8aa2f04c766827fb1dabbb22d9ed1dcefaac",
+      "verificationRun": 41396580432,
+      "implementationRun": 41396195583,
+      "readOnlyHeadCommit": "6ee5b66163e46c0dbeee6679b161c9654cbe7fe8"
     },
     "takeWhile": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-02",
+      "profiles": [
+        "exclusive",
+        "inclusive",
+        "synchronous-predicate-outcomes"
+      ],
+      "evidence": "evidence/SESSION-05.md",
+      "testedCommit": "e0dd8aa2f04c766827fb1dabbb22d9ed1dcefaac",
+      "verificationRun": 41396580432,
+      "implementationRun": 41396195583,
+      "readOnlyHeadCommit": "6ee5b66163e46c0dbeee6679b161c9654cbe7fe8"
     },
     "tap": {
       "status": "pending",

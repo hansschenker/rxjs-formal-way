@@ -16,7 +16,9 @@ This is the current implementation tracker. The migration map preserves the orig
 | M03-B | shareReplay, buffer/time/refCount behavior | Accepted within scope; [guide](SESSION-03-FLATTEN-AND-REPLAY.md) |
 | M04-A | distinctUntilChanged, distinctUntilKeyChanged and distinct, equality and Set/flush memory | Accepted within scope; [Session 4 evidence](../evidence/SESSION-04.md) |
 | M04-B | pairwise consecutive pairs and unscheduled startWith prefix | Accepted within scope; [Session 4 guide](SESSION-04-MEMORY-AND-ADJACENCY.md) |
-| M04+ | Remaining catalogue | 93 exports pending; not a universal interpreter |
+| M05-A | skip count and takeWhile/skipWhile predicate gates | Accepted within scope; [Session 5 guide](SESSION-05-GATING.md) |
+| M05-B | takeUntil/skipUntil notifier lifecycle and synchronous initialization | Accepted within scope; [Session 5 evidence](../evidence/SESSION-05.md) |
+| M05+ | Remaining catalogue | 88 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -56,12 +58,22 @@ test counts, corrections and scope limits are recorded in the
 
 Exactly five pending exports—**distinctUntilChanged, distinctUntilKeyChanged, distinct, pairwise, startWith**—were modeled, independently tested and accepted in one Europe/Zurich session. The existing infrastructure produced 40 new projections, taking the inventory to **168 deterministic views across 20 accepted exports**. Strict types and syntax, 561 named tests, and read-only GitHub Actions drift verification passed. Full tested checkouts, 2,004 new bounded model/native comparisons and corrected preliminary test-harness failures are recorded in [evidence](../evidence/SESSION-04.md). No carryovers and no extra work beyond five names.
 
-**20 of 113 exports accepted; 93 pending.**
+**20 of 113 exports were accepted at the end of Session 4.**
+
+## Session 5 closed: 2 November 2026
+
+Exactly five pending exports—**skip, takeWhile, skipWhile, takeUntil, skipUntil**—were accepted within their documented scopes. Count and predicate gates reuse the synchronous invocation/outcome boundary; notifier gates explicitly represent notifier-first setup and distinguish next, complete and error. A native test captures skipUntil's already-closed source subscription attempt after a synchronous notifier error.
+
+The unchanged validation pipeline passed **631 named tests**: 561 retained, 35 new model/view tests and 35 new actual RxJS cases. The new bounded test performed **6,778** comparisons, including callback indices, equal-time order and resource lifetimes. Eighteen additional negative TypeScript assertions bring that count to 100. Forty new views bring the total to **208 across 26 examples and 25 distinct operator names**.
+
+[Push run 41396195583](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41396195583) tested implementation `e0dd8aa2f04c766827fb1dabbb22d9ed1dcefaac`. [Read-only PR run 41396580432](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41396580432) passed on committed files with generation/publication skipped. Exact implementation, generated and PR-head revisions, retrieved run/job results, scope limits and the explicit synthetic-checkout provenance limitation are retained in [the evidence ledger](../evidence/SESSION-05.md). No carryovers or sixth export.
+
+**25 of 113 exports accepted; 88 pending.**
 
 ## Next pending batch
 
-Not before **2 November 2026 Europe/Zurich**:
-**skip, takeWhile, skipWhile, takeUntil, skipUntil**. Maintain the five-name maximum,
+Not before **3 November 2026 Europe/Zurich**:
+**reduce, count, toArray, min, max**. Maintain the five-name maximum,
 carryovers-first selection, actual RxJS comparisons, time,
 cancellation, sharing, and retrieved CI evidence. Finite
 coverage is not universal proof.

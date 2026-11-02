@@ -24,12 +24,18 @@ Each configured profile has one canonical TypeScript rule set and eight generate
 | distinct | [distinct.ts](../src/models/distinct.ts) | [Behavior](distinct.md) | [Session 4](../evidence/SESSION-04.md) |
 | pairwise | [pairwise.ts](../src/models/pairwise.ts) | [Behavior](pairwise.md) | [Session 4](../evidence/SESSION-04.md) |
 | startWith | [startWith.ts](../src/models/startWith.ts) | [Behavior](startWith.md) | [Session 4](../evidence/SESSION-04.md) |
+| skip (generated count 2) | [gating.ts](../src/models/gating.ts) | [Behavior](skip.md) | [Session 5](../evidence/SESSION-05.md) |
+| takeWhile (generated inclusive profile) | [gating.ts](../src/models/gating.ts) | [Behavior](takeWhile.md) | [Session 5](../evidence/SESSION-05.md) |
+| skipWhile | [gating.ts](../src/models/gating.ts) | [Behavior](skipWhile.md) | [Session 5](../evidence/SESSION-05.md) |
+| takeUntil | [until.ts](../src/models/until.ts) | [Behavior](takeUntil.md) | [Session 5](../evidence/SESSION-05.md) |
+| skipUntil | [until.ts](../src/models/until.ts) | [Behavior](skipUntil.md) | [Session 5](../evidence/SESSION-05.md) |
 
 Map/filter share their lifecycle specification in [value.ts](../src/models/value.ts), not their business functions. Callback functions are external to the pure models. [M02-A](../docs/M02-VALUE-SELECTION.md) explains the invocation/outcome boundary. [M02-B](../docs/M02-B-SCAN.md) reuses it with a typed accumulator/value product and two initialization policies. [M02-C](../docs/M02-C-DEBOUNCE-TIME.md) adds explicit clock readings, timer invocations and deadline checks without introducing a clock inside the model.
 
 [Session 2](../docs/SESSION-02-HIGHER-ORDER.md) adds separate outer/inner identities, projection outcomes and four admission policies. [M02-E](../docs/M02-E-SHARE.md) changes ownership to one shared coordinator with addressed outputs and connection resets.
 
-[Session 3](../docs/SESSION-03-FLATTEN-AND-REPLAY.md) adds four
-identity-source flattening models and one clock-aware replay profile.
+[Session 3](../docs/SESSION-03-FLATTEN-AND-REPLAY.md) adds four identity-source flattening models and one clock-aware replay profile. [Session 4](../docs/SESSION-04-MEMORY-AND-ADJACENCY.md) adds adjacent-key selection, Set-backed history/flush, overlapping pairs, and prefix-before-source subscription.
 
-Twenty-one configured examples produce 168 views across twenty accepted export names. [Session 4](../docs/SESSION-04-MEMORY-AND-ADJACENCY.md) adds adjacent-key selection, Set-backed history/flush, overlapping pairs, and prefix-before-source subscription. These are scoped profiles, not a complete operator catalogue. Acceptance and executed checks live in the evidence records; the [roadmap](../docs/ROADMAP.md) and daily JSON tracker govern further work.
+[Session 5](../docs/SESSION-05-GATING.md) adds count, predicate and notifier gates. Inclusive/exclusive takeWhile are tested profiles of one export. Notifier-first setup, next versus complete, one-way opening, source acquisition and cancellation are explicit.
+
+**Twenty-six configured examples produce 208 views across twenty-five accepted export names.** These are scoped profiles, not a complete operator catalogue. Acceptance and executed checks live in the evidence records; the [roadmap](../docs/ROADMAP.md) and daily JSON tracker govern further work.
