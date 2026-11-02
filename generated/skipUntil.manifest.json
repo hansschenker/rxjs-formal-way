@@ -1,0 +1,402 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "skipUntil-Observable-notifier",
+    "operator": "skipUntil",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Drop source values until the first notifier value permanently opens the gate.",
+    "cardinality": {
+      "signature": "skipUntil : U* -> T* -> T*",
+      "conditions": [
+        "Forward a suffix beginning after the notifier signal; skipped source values are not buffered.",
+        "Notifier values never become output values. Every next is a signal, including undefined, false and null. Completion without next is not a signal.",
+        "The shape counts values, not notifications, subscriptions or setup continuation steps."
+      ]
+    },
+    "scope": {
+      "parameters": "A valid Observable notifier; one source and one notifier occurrence per result subscription",
+      "callbacks": "No user predicate. setup.ready is an environment continuation marking return from notifier subscription, not a user callback or scheduler turn.",
+      "time": "Source and notifier supply time and ordering. No timer is introduced. Setup and synchronous notifier delivery occur at the subscription timestamp; equal-time inputs retain sequence order.",
+      "reentrancy": "Non-reentrant post-setup notifications plus explicitly modeled synchronous notifier initialization. Arbitrary nested delivery and cancellation within setup remain excluded.",
+      "exclusions": [
+        "Non-Observable ObservableInput conversion, throwing observers/finalizers, arbitrary reentry and producer-abort guarantees.",
+        "Source synchronous delivery/finalizer-registration order is characterized separately from exact post-setup action traces.",
+        "subscribe/unsubscribe actions describe subscription lifecycle; an already-closed source attempt is not a live source connection."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Subscribe to notifier first, then source. A synchronous notifier next opens the gate; a synchronous error still leads to an already-closed source subscription attempt in RxJS 7.8.2."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing introduced. Each result subscription owns its gate and source/notifier subscriptions; either producer may independently be hot or shared.",
+      "reset": "A new execution creates fresh gate state. Late producer attempts are suppressed by closed RxJS Subscribers and are not legal model notifications.",
+      "resources": [
+        {
+          "id": "notifier",
+          "kind": "subscription",
+          "owner": "current execution; acquired first"
+        },
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current execution; attempted after notifier setup"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Notifier setup is explicit. Resolve synchronous notifier events, then setup.ready. After setup, terminal notification precedes cleanup in notifier-then-source registration order. skipUntil opening releases notifier without notifying downstream.",
+      "cancellationCheckpoints": [
+        "Active between resolved notifications: release live notifier and source, without completing downstream.",
+        "Cancellation inside notifier setup or observer callbacks is outside the exact-trace profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a fresh result subscription connects"
+      },
+      {
+        "type": "setup.ready",
+        "origin": "environment",
+        "category": "lifecycle",
+        "description": "notifier subscription returns and synchronous initialization continues"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "the connected source delivers a value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "the connected source completes"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "the connected source errors"
+      },
+      {
+        "type": "notifier.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "the live notifier delivers a value"
+      },
+      {
+        "type": "notifier.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "the notifier completes without another value"
+      },
+      {
+        "type": "notifier.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "the notifier errors"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream cancels after setup"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "notify",
+      "unsubscribe"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no subscriptions acquired",
+        "terminal": false
+      },
+      {
+        "id": "Starting",
+        "description": "notifier setup in progress; source not attempted yet",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source acquired; gate and notifier liveness remembered",
+        "terminal": false
+      },
+      {
+        "id": "StoppedBeforeSource",
+        "description": "downstream errored; one closed-subscriber source attempt still follows",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "downstream terminated or cancelled; no pending setup work",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/skipUntil.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned notifier-first setup, closed-subscriber source attempts and teardown order"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned notifier-first setup, closed-subscriber source attempts and teardown order"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned notifier-first setup, closed-subscriber source attempts and teardown order"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Observable.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned notifier-first setup, closed-subscriber source attempts and teardown order"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned notifier-first setup, closed-subscriber source attempts and teardown order"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session05-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session05-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-05.md"
+    }
+  },
+  "parameters": {
+    "operator": "skipUntil"
+  },
+  "rules": [
+    {
+      "id": "SKIPUNTIL-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "fresh execution",
+      "to": "Starting",
+      "actions": [
+        "subscribe to the notifier, before the source"
+      ],
+      "nextState": "starting with a closed source gate",
+      "obligations": [
+        "S5-SKIPUNTIL-SETUP"
+      ],
+      "explanation": "skipUntil subscribes to the notifier before attempting the source subscription. Construction alone acquires neither subscription."
+    },
+    {
+      "id": "SKIPUNTIL-SOURCE-CONNECT",
+      "from": "Starting",
+      "event": "setup.ready",
+      "guard": "notifier setup returned without terminating downstream",
+      "to": "Active",
+      "actions": [
+        "subscribe to the source"
+      ],
+      "nextState": "active with the existing gate and notifier-liveness state",
+      "obligations": [
+        "S5-SKIPUNTIL-SETUP"
+      ],
+      "explanation": "After notifier setup returns, an unterminated result connects to the source using the gate state established by any synchronous notifier notifications."
+    },
+    {
+      "id": "SKIPUNTIL-SETUP-NOTIFIER-NEXT",
+      "from": "Starting",
+      "event": "notifier.next",
+      "guard": "matching live notifier subscription",
+      "to": "Starting",
+      "actions": [
+        "release notifier without emitting any value"
+      ],
+      "nextState": "gate permanently open with notifier disconnected",
+      "obligations": [
+        "S5-SKIPUNTIL-SETUP"
+      ],
+      "explanation": "The first notifier value releases the notifier and permanently opens the gate. It emits no source value and does not replay previously skipped values."
+    },
+    {
+      "id": "SKIPUNTIL-SETUP-NOTIFIER-COMPLETE",
+      "from": "Starting",
+      "event": "notifier.complete",
+      "guard": "matching live notifier subscription",
+      "to": "Starting",
+      "actions": [
+        "release notifier without completing downstream or changing the gate"
+      ],
+      "nextState": "same gate with notifier disconnected",
+      "obligations": [
+        "S5-SKIPUNTIL-SETUP"
+      ],
+      "explanation": "Notifier completion without a value does not open skipUntil. Source values continue to be skipped until the source itself terminates or downstream cancels."
+    },
+    {
+      "id": "SKIPUNTIL-SETUP-NOTIFIER-ERROR",
+      "from": "Starting",
+      "event": "notifier.error",
+      "guard": "matching live notifier subscription",
+      "to": "StoppedBeforeSource",
+      "actions": [
+        "forward the notifier error unchanged",
+        "release notifier"
+      ],
+      "nextState": "downstream stopped but closed-subscriber source attempt still pending",
+      "obligations": [
+        "S5-SKIPUNTIL-ERROR"
+      ],
+      "explanation": "A synchronous notifier error stops downstream. RxJS 7.8.2 skipUntil nevertheless continues to source.subscribe with an already-closed subscriber after notifier setup returns."
+    },
+    {
+      "id": "SKIPUNTIL-LIVE-NOTIFIER-NEXT",
+      "from": "Active",
+      "event": "notifier.next",
+      "guard": "matching live notifier subscription",
+      "to": "Active",
+      "actions": [
+        "release notifier without emitting any value"
+      ],
+      "nextState": "gate permanently open with notifier disconnected",
+      "obligations": [
+        "S5-SKIPUNTIL-SIGNAL"
+      ],
+      "explanation": "The first notifier value releases the notifier and permanently opens the gate. It emits no source value and does not replay previously skipped values."
+    },
+    {
+      "id": "SKIPUNTIL-LIVE-NOTIFIER-COMPLETE",
+      "from": "Active",
+      "event": "notifier.complete",
+      "guard": "matching live notifier subscription",
+      "to": "Active",
+      "actions": [
+        "release notifier without completing downstream or changing the gate"
+      ],
+      "nextState": "same gate with notifier disconnected",
+      "obligations": [
+        "S5-SKIPUNTIL-EMPTY"
+      ],
+      "explanation": "Notifier completion without a value does not open skipUntil. Source values continue to be skipped until the source itself terminates or downstream cancels."
+    },
+    {
+      "id": "SKIPUNTIL-LIVE-NOTIFIER-ERROR",
+      "from": "Active",
+      "event": "notifier.error",
+      "guard": "matching live notifier subscription",
+      "to": "Closed",
+      "actions": [
+        "forward the notifier error unchanged",
+        "release notifier",
+        "release source"
+      ],
+      "nextState": "closed because notifier errored",
+      "obligations": [
+        "S5-SKIPUNTIL-ERROR"
+      ],
+      "explanation": "A notifier error is forwarded unchanged and releases the owned subscriptions."
+    },
+    {
+      "id": "SKIPUNTIL-CLOSED-SOURCE-ATTEMPT",
+      "from": "StoppedBeforeSource",
+      "event": "setup.ready",
+      "guard": "notifier setup returned after synchronous error",
+      "to": "Closed",
+      "actions": [
+        "attempt source subscription with an already-closed subscriber",
+        "dispose the returned source teardown immediately"
+      ],
+      "nextState": "fully closed with no live subscriptions",
+      "obligations": [
+        "S5-SKIPUNTIL-ERROR"
+      ],
+      "explanation": "Because skipUntil has no closed check before source.subscribe, a source initializer can still run with subscriber.closed already true. Any returned teardown is immediately disposed and no downstream value or second terminal notification is allowed."
+    },
+    {
+      "id": "SKIPUNTIL-DROP",
+      "from": "Active",
+      "event": "source.next",
+      "guard": "gate is closed",
+      "to": "Active",
+      "actions": [],
+      "nextState": "same gate and notifier-liveness state",
+      "obligations": [
+        "S5-SKIPUNTIL-VALUES"
+      ],
+      "explanation": "With the gate closed, source values are dropped without buffering. A later notifier signal does not recover them."
+    },
+    {
+      "id": "SKIPUNTIL-PASS",
+      "from": "Active",
+      "event": "source.next",
+      "guard": "gate is open",
+      "to": "Active",
+      "actions": [
+        "forward the source value unchanged"
+      ],
+      "nextState": "same gate and notifier-liveness state",
+      "obligations": [
+        "S5-SKIPUNTIL-VALUES"
+      ],
+      "explanation": "With the gate open, source values are forwarded unchanged."
+    },
+    {
+      "id": "SKIPUNTIL-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "guard": "source connected, regardless of gate state",
+      "to": "Closed",
+      "actions": [
+        "complete downstream",
+        "release notifier if still live, then release source"
+      ],
+      "nextState": "closed because of source.complete",
+      "obligations": [
+        "S5-SKIPUNTIL-TERMINAL"
+      ],
+      "explanation": "Source completion completes downstream even while the skipUntil gate is closed. It releases the notifier if still live, then the source."
+    },
+    {
+      "id": "SKIPUNTIL-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "guard": "source connected, regardless of gate state",
+      "to": "Closed",
+      "actions": [
+        "forward the source error unchanged",
+        "release notifier if still live, then release source"
+      ],
+      "nextState": "closed because of source.error",
+      "obligations": [
+        "S5-SKIPUNTIL-TERMINAL"
+      ],
+      "explanation": "A source error is forwarded even while the skipUntil gate is closed, then releases both owned subscriptions."
+    },
+    {
+      "id": "SKIPUNTIL-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "guard": "source connected, regardless of gate state",
+      "to": "Closed",
+      "actions": [
+        "release notifier if still live, then release source"
+      ],
+      "nextState": "closed because of cancel",
+      "obligations": [
+        "S5-SKIPUNTIL-TERMINAL"
+      ],
+      "explanation": "Cancellation releases the live notifier, if any, and the source, without sending completion."
+    }
+  ]
+}

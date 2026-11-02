@@ -1,0 +1,350 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "skipWhile-predicate",
+    "operator": "skipWhile",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Drop source values while the predicate is truthy, then permanently open on its first falsy result.",
+    "cardinality": {
+      "signature": "skipWhile : (T! x Index! -> Boolean!) -> T* -> T*",
+      "conditions": [
+        "The first predicate-failing value and all later source values are forwarded. There is no buffer of skipped values.",
+        "Cω-style markers count values only; errors, cancellation and source lifetime remain separate parts of the contract."
+      ]
+    },
+    "scope": {
+      "parameters": "Named predicate; safe-integer indices until the gate opens",
+      "callbacks": "One named synchronous predicate invocation per tested input; correlated return/throw is an input. No user function executes in a guard, reaction or generator.",
+      "time": "No clock, timer or scheduler is created. Sources supply time; equal timestamps retain explicit delivery order. A predicate call/outcome is one synchronous logical reaction.",
+      "reentrancy": "Non-reentrant reactions, with cancellation between resolved value reactions. Exact source teardown traces use post-setup delivery; synchronous native checks are separate.",
+      "exclusions": [
+        "Arbitrary source/observer/predicate reentry, cancellation during a predicate call, and throwing observers/finalizers.",
+        "Index overflow beyond nonnegative safe integers; invalid public callback arguments and compile-time narrowing proofs.",
+        "A production predicate interpreter and guarantees that user functions are pure."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "One source connection on subscription, even for skip(0); no value is emitted by initialization."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing is introduced. Each subscription owns its count or predicate gate even when the producer is hot.",
+      "reset": "A fresh subscription starts with fresh bookkeeping. Closed executions accept no more model events.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current execution"
+        },
+        {
+          "id": "predicate",
+          "kind": "callback",
+          "owner": "external binding; invocation generation is execution-local"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Compute the next state and ordered actions once. Predicate outcome must resolve before any subsequent external event; actions are descriptions, not executed effects.",
+      "cancellationCheckpoints": [
+        "Between resolved inputs: release the source without a downstream complete notification."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a fresh result subscription connects"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source delivers a value"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "the pending predicate returns its result"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "the pending predicate throws"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source completes"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source errors"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream cancels the subscription"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "invoke-callback",
+      "notify",
+      "unsubscribe"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no source connection",
+        "terminal": false
+      },
+      {
+        "id": "Testing",
+        "description": "source connected; the next value must be tested",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "one synchronous predicate invocation is unresolved",
+        "terminal": false
+      },
+      {
+        "id": "Open",
+        "description": "permanently forwarding; no further predicate calls",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "complete, errored or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/skipWhile.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "SKIPWHILE pinned value, callback and termination semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "SKIPWHILE pinned value, callback and termination semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "SKIPWHILE pinned value, callback and termination semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session05-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session05-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-05.md"
+    }
+  },
+  "parameters": {
+    "operator": "skipWhile",
+    "inclusive": false,
+    "callbackId": "predicate"
+  },
+  "rules": [
+    {
+      "id": "SKIPWHILE-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "fresh execution",
+      "to": "Testing",
+      "actions": [
+        "subscribe to the source"
+      ],
+      "nextState": "testing with index zero",
+      "obligations": [
+        "S5-SKIPWHILE-01"
+      ],
+      "explanation": "A result subscription connects to the source and starts its own predicate index at zero. No predicate runs until a source value arrives."
+    },
+    {
+      "id": "SKIPWHILE-CALL",
+      "from": "Testing",
+      "event": "source.next",
+      "guard": "index < MAX_SAFE_INTEGER",
+      "to": "Calling",
+      "actions": [
+        "invoke the predicate once with the input and its zero-based index"
+      ],
+      "nextState": "calling with retained input, invocation identity and advanced index",
+      "obligations": [
+        "S5-SKIPWHILE-02"
+      ],
+      "explanation": "While testing, each source value requests one predicate call with the original value and its zero-based index. The predicate belongs to the user; the operator controls when it is called."
+    },
+    {
+      "id": "SKIPWHILE-TRUE",
+      "from": "Calling",
+      "event": "callback.return",
+      "guard": "matching invocation and truthy result",
+      "to": "Testing",
+      "actions": [],
+      "nextState": "testing with the already advanced index",
+      "obligations": [
+        "S5-SKIPWHILE-03"
+      ],
+      "explanation": "A truthy predicate result drops the value and keeps the gate closed."
+    },
+    {
+      "id": "SKIPWHILE-FALSE",
+      "from": "Calling",
+      "event": "callback.return",
+      "guard": "matching invocation and falsy result",
+      "to": "Open",
+      "actions": [
+        "forward the first predicate-failing value"
+      ],
+      "nextState": "permanently open; predicate no longer called",
+      "obligations": [
+        "S5-SKIPWHILE-03"
+      ],
+      "explanation": "The first falsy predicate result opens the gate and forwards that same value. Later values no longer invoke the predicate."
+    },
+    {
+      "id": "SKIPWHILE-OPEN-PASS",
+      "from": "Open",
+      "event": "source.next",
+      "guard": "gate has opened",
+      "to": "Open",
+      "actions": [
+        "forward the incoming value without invoking the predicate"
+      ],
+      "nextState": "still permanently open",
+      "obligations": [
+        "S5-SKIPWHILE-04"
+      ],
+      "explanation": "Once open, skipWhile forwards all subsequent values unchanged. The predicate is not called again, even for a later value that would have satisfied it."
+    },
+    {
+      "id": "SKIPWHILE-THROW",
+      "from": "Calling",
+      "event": "callback.throw",
+      "guard": "matching pending invocation",
+      "to": "Closed",
+      "actions": [
+        "forward the thrown value unchanged as an error",
+        "release the source"
+      ],
+      "nextState": "closed because the predicate threw",
+      "obligations": [
+        "S5-SKIPWHILE-05"
+      ],
+      "explanation": "A predicate throw errors downstream and releases the source. The failing input is never emitted, including with inclusive takeWhile."
+    },
+    {
+      "id": "SKIPWHILE-TESTING-COMPLETE",
+      "from": "Testing",
+      "event": "source.complete",
+      "guard": "no unresolved predicate invocation",
+      "to": "Closed",
+      "actions": [
+        "complete downstream",
+        "release the source"
+      ],
+      "nextState": "closed because of complete",
+      "obligations": [
+        "S5-SKIPWHILE-06"
+      ],
+      "explanation": "Source completion from Testing completes downstream and releases the source without another predicate call or value."
+    },
+    {
+      "id": "SKIPWHILE-TESTING-ERROR",
+      "from": "Testing",
+      "event": "source.error",
+      "guard": "no unresolved predicate invocation",
+      "to": "Closed",
+      "actions": [
+        "forward the source error unchanged",
+        "release the source"
+      ],
+      "nextState": "closed because of source-error",
+      "obligations": [
+        "S5-SKIPWHILE-06"
+      ],
+      "explanation": "A source error from Testing is forwarded without calling the predicate, then releases the source."
+    },
+    {
+      "id": "SKIPWHILE-TESTING-CANCEL",
+      "from": "Testing",
+      "event": "cancel",
+      "guard": "no unresolved predicate invocation",
+      "to": "Closed",
+      "actions": [
+        "release the source without notifying downstream"
+      ],
+      "nextState": "closed because of cancel",
+      "obligations": [
+        "S5-SKIPWHILE-06"
+      ],
+      "explanation": "Cancellation from Testing releases the source and does not complete downstream."
+    },
+    {
+      "id": "SKIPWHILE-OPEN-COMPLETE",
+      "from": "Open",
+      "event": "source.complete",
+      "guard": "no unresolved predicate invocation",
+      "to": "Closed",
+      "actions": [
+        "complete downstream",
+        "release the source"
+      ],
+      "nextState": "closed because of complete",
+      "obligations": [
+        "S5-SKIPWHILE-06"
+      ],
+      "explanation": "Source completion from Open completes downstream and releases the source without another predicate call or value."
+    },
+    {
+      "id": "SKIPWHILE-OPEN-ERROR",
+      "from": "Open",
+      "event": "source.error",
+      "guard": "no unresolved predicate invocation",
+      "to": "Closed",
+      "actions": [
+        "forward the source error unchanged",
+        "release the source"
+      ],
+      "nextState": "closed because of source-error",
+      "obligations": [
+        "S5-SKIPWHILE-06"
+      ],
+      "explanation": "A source error from Open is forwarded without calling the predicate, then releases the source."
+    },
+    {
+      "id": "SKIPWHILE-OPEN-CANCEL",
+      "from": "Open",
+      "event": "cancel",
+      "guard": "no unresolved predicate invocation",
+      "to": "Closed",
+      "actions": [
+        "release the source without notifying downstream"
+      ],
+      "nextState": "closed because of cancel",
+      "obligations": [
+        "S5-SKIPWHILE-06"
+      ],
+      "explanation": "Cancellation from Open releases the source and does not complete downstream."
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "skipWhile-predicate",
+      "executionId": "skipWhile-session5-example",
+      "ruleId": "SKIPWHILE-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Testing",
+        "index": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "skipWhile-predicate",
+      "executionId": "skipWhile-session5-example",
+      "ruleId": "SKIPWHILE-CALL",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Testing",
+        "index": 0
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 1,
+        "callId": 0,
+        "input": 1
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate",
+            "generation": 0
+          },
+          "value": 1,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "skipWhile-predicate",
+      "executionId": "skipWhile-session5-example",
+      "ruleId": "SKIPWHILE-TRUE",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "predicate",
+          "generation": 0
+        },
+        "value": true
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 1,
+        "callId": 0,
+        "input": 1
+      },
+      "after": {
+        "phase": "Testing",
+        "index": 1
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "skipWhile-predicate",
+      "executionId": "skipWhile-session5-example",
+      "ruleId": "SKIPWHILE-CALL",
+      "event": {
+        "type": "source.next",
+        "value": 3
+      },
+      "before": {
+        "phase": "Testing",
+        "index": 1
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 2,
+        "callId": 1,
+        "input": 3
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate",
+            "generation": 1
+          },
+          "value": 3,
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "skipWhile-predicate",
+      "executionId": "skipWhile-session5-example",
+      "ruleId": "SKIPWHILE-FALSE",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "predicate",
+          "generation": 1
+        },
+        "value": false
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 2,
+        "callId": 1,
+        "input": 3
+      },
+      "after": {
+        "phase": "Open"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 3
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "skipWhile-predicate",
+      "executionId": "skipWhile-session5-example",
+      "ruleId": "SKIPWHILE-OPEN-PASS",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Open"
+      },
+      "after": {
+        "phase": "Open"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 4,
+      "modelId": "skipWhile-predicate",
+      "executionId": "skipWhile-session5-example",
+      "ruleId": "SKIPWHILE-OPEN-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Open"
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

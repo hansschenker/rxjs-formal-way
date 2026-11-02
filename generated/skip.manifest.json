@@ -1,0 +1,232 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "skip-2",
+    "operator": "skip",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Drop the first count source values, then forward later values unchanged.",
+    "cardinality": {
+      "signature": "skip : Count! -> T* -> T*",
+      "conditions": [
+        "For m values and normal completion, exactly max(0,m-count) values are forwarded.",
+        "Cω-style markers count values only; errors, cancellation and source lifetime remain separate parts of the contract."
+      ]
+    },
+    "scope": {
+      "parameters": "Nonnegative safe-integer count and source indices",
+      "callbacks": "No user callback. The pinned internal filter comparison is modeled directly as count <= index.",
+      "time": "No clock, timer or scheduler is created. Sources supply time; equal timestamps retain explicit delivery order. A predicate call/outcome is one synchronous logical reaction.",
+      "reentrancy": "Non-reentrant reactions, with cancellation between resolved value reactions. Exact source teardown traces use post-setup delivery; synchronous native checks are separate.",
+      "exclusions": [
+        "Arbitrary source/observer/predicate reentry, cancellation during a predicate call, and throwing observers/finalizers.",
+        "Index overflow beyond nonnegative safe integers; invalid public callback arguments and compile-time narrowing proofs.",
+        "Negative, fractional, NaN and infinite counts are outside this numeric profile."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "One source connection on subscription, even for skip(0); no value is emitted by initialization."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing is introduced. Each subscription owns its count or predicate gate even when the producer is hot.",
+      "reset": "A fresh subscription starts with fresh bookkeeping. Closed executions accept no more model events.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current execution"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Compute the next state and ordered actions once. Predicate outcome must resolve before any subsequent external event; actions are descriptions, not executed effects.",
+      "cancellationCheckpoints": [
+        "Between resolved inputs: release the source without a downstream complete notification."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a fresh result subscription connects"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source delivers a value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source completes"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source errors"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream cancels the subscription"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "notify",
+      "unsubscribe"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no source connection",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source connected with its zero-based value index",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "complete, errored or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/skip.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "SKIP pinned value, callback and termination semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/filter.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "SKIP pinned value, callback and termination semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "SKIP pinned value, callback and termination semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "SKIP pinned value, callback and termination semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session05-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session05-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-05.md"
+    }
+  },
+  "parameters": {
+    "count": 2
+  },
+  "rules": [
+    {
+      "id": "SKIP-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "fresh execution",
+      "to": "Active",
+      "actions": [
+        "subscribe to the source"
+      ],
+      "nextState": "active at index zero",
+      "obligations": [
+        "S5-SKIP-01"
+      ],
+      "explanation": "Subscription acquires the source and starts an index at zero. A zero count forwards all source values; it does not avoid subscribing."
+    },
+    {
+      "id": "SKIP-DROP",
+      "from": "Active",
+      "event": "source.next",
+      "guard": "index < count and index < MAX_SAFE_INTEGER",
+      "to": "Active",
+      "actions": [],
+      "nextState": "active with the source index increased by one",
+      "obligations": [
+        "S5-SKIP-02"
+      ],
+      "explanation": "The first count values are dropped without buffering, while their indices still advance."
+    },
+    {
+      "id": "SKIP-PASS",
+      "from": "Active",
+      "event": "source.next",
+      "guard": "count <= index < MAX_SAFE_INTEGER",
+      "to": "Active",
+      "actions": [
+        "forward the incoming value unchanged"
+      ],
+      "nextState": "active with the source index increased by one",
+      "obligations": [
+        "S5-SKIP-02"
+      ],
+      "explanation": "Once count values have been skipped, every later source value is forwarded unchanged."
+    },
+    {
+      "id": "SKIP-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "guard": "active source connection",
+      "to": "Closed",
+      "actions": [
+        "complete downstream",
+        "release the source"
+      ],
+      "nextState": "closed because of complete",
+      "obligations": [
+        "S5-SKIP-03"
+      ],
+      "explanation": "Source completion is forwarded even when fewer than count values arrived; no extra value or error is invented."
+    },
+    {
+      "id": "SKIP-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "guard": "active source connection",
+      "to": "Closed",
+      "actions": [
+        "forward the original error",
+        "release the source"
+      ],
+      "nextState": "closed because of source-error",
+      "obligations": [
+        "S5-SKIP-03"
+      ],
+      "explanation": "Source errors are forwarded even before count values have arrived. The source is released."
+    },
+    {
+      "id": "SKIP-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "guard": "active source connection",
+      "to": "Closed",
+      "actions": [
+        "release the source without notifying downstream"
+      ],
+      "nextState": "closed because of cancel",
+      "obligations": [
+        "S5-SKIP-03"
+      ],
+      "explanation": "Cancellation releases the source without a completion notification."
+    }
+  ]
+}

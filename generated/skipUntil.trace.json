@@ -1,0 +1,188 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "skipUntil-Observable-notifier",
+      "executionId": "skipUntil-session5-example",
+      "ruleId": "SKIPUNTIL-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Starting",
+        "open": false,
+        "notifierLive": true
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "notifier",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 0,
+      "modelId": "skipUntil-Observable-notifier",
+      "executionId": "skipUntil-session5-example",
+      "ruleId": "SKIPUNTIL-SOURCE-CONNECT",
+      "event": {
+        "type": "setup.ready"
+      },
+      "before": {
+        "phase": "Starting",
+        "open": false,
+        "notifierLive": true
+      },
+      "after": {
+        "phase": "Active",
+        "open": false,
+        "notifierLive": true
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "skipUntil-Observable-notifier",
+      "executionId": "skipUntil-session5-example",
+      "ruleId": "SKIPUNTIL-DROP",
+      "event": {
+        "type": "source.next",
+        "value": "a"
+      },
+      "before": {
+        "phase": "Active",
+        "open": false,
+        "notifierLive": true
+      },
+      "after": {
+        "phase": "Active",
+        "open": false,
+        "notifierLive": true
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "skipUntil-Observable-notifier",
+      "executionId": "skipUntil-session5-example",
+      "ruleId": "SKIPUNTIL-LIVE-NOTIFIER-NEXT",
+      "event": {
+        "type": "notifier.next",
+        "resource": {
+          "id": "notifier",
+          "generation": 0
+        },
+        "value": false
+      },
+      "before": {
+        "phase": "Active",
+        "open": false,
+        "notifierLive": true
+      },
+      "after": {
+        "phase": "Active",
+        "open": true,
+        "notifierLive": false
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "notifier",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 3,
+      "modelId": "skipUntil-Observable-notifier",
+      "executionId": "skipUntil-session5-example",
+      "ruleId": "SKIPUNTIL-PASS",
+      "event": {
+        "type": "source.next",
+        "value": "b"
+      },
+      "before": {
+        "phase": "Active",
+        "open": true,
+        "notifierLive": false
+      },
+      "after": {
+        "phase": "Active",
+        "open": true,
+        "notifierLive": false
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 4,
+      "modelId": "skipUntil-Observable-notifier",
+      "executionId": "skipUntil-session5-example",
+      "ruleId": "SKIPUNTIL-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "open": true,
+        "notifierLive": false
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

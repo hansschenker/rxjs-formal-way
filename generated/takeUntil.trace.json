@@ -1,0 +1,175 @@
+{
+  "status": "finished-input",
+  "consumed": 5,
+  "state": {
+    "phase": "Closed",
+    "reason": "notifier-next"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "takeUntil-Observable-notifier",
+      "executionId": "takeUntil-session5-example",
+      "ruleId": "TAKEUNTIL-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Starting",
+        "open": true,
+        "notifierLive": true
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "notifier",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 0,
+      "modelId": "takeUntil-Observable-notifier",
+      "executionId": "takeUntil-session5-example",
+      "ruleId": "TAKEUNTIL-SOURCE-CONNECT",
+      "event": {
+        "type": "setup.ready"
+      },
+      "before": {
+        "phase": "Starting",
+        "open": true,
+        "notifierLive": true
+      },
+      "after": {
+        "phase": "Active",
+        "open": true,
+        "notifierLive": true
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "takeUntil-Observable-notifier",
+      "executionId": "takeUntil-session5-example",
+      "ruleId": "TAKEUNTIL-PASS",
+      "event": {
+        "type": "source.next",
+        "value": "a"
+      },
+      "before": {
+        "phase": "Active",
+        "open": true,
+        "notifierLive": true
+      },
+      "after": {
+        "phase": "Active",
+        "open": true,
+        "notifierLive": true
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "takeUntil-Observable-notifier",
+      "executionId": "takeUntil-session5-example",
+      "ruleId": "TAKEUNTIL-PASS",
+      "event": {
+        "type": "source.next",
+        "value": "b"
+      },
+      "before": {
+        "phase": "Active",
+        "open": true,
+        "notifierLive": true
+      },
+      "after": {
+        "phase": "Active",
+        "open": true,
+        "notifierLive": true
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 3,
+      "modelId": "takeUntil-Observable-notifier",
+      "executionId": "takeUntil-session5-example",
+      "ruleId": "TAKEUNTIL-LIVE-NOTIFIER-NEXT",
+      "event": {
+        "type": "notifier.next",
+        "resource": {
+          "id": "notifier",
+          "generation": 0
+        },
+        "value": false
+      },
+      "before": {
+        "phase": "Active",
+        "open": true,
+        "notifierLive": true
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "notifier-next"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "notifier",
+            "generation": 0
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}
