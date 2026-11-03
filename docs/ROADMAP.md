@@ -20,7 +20,9 @@ This is the current implementation tracker. The migration map preserves the orig
 | M05-A | skip count and takeWhile/skipWhile predicate gates | Accepted within scope; [Session 5 guide](SESSION-05-GATING.md) |
 | M05-B | takeUntil/skipUntil notifier lifecycle and synchronous initialization | Accepted within scope; [Session 5 evidence](../evidence/SESSION-05.md) |
 | M03-P | **Compositional Pipeline Semantics**: product state, action routing, synchronous closure, bounded model checking | Implemented first executable kernel; [guide](M03-COMPOSITIONAL-PIPELINES.md) |
-| M05+ | Remaining catalogue | 88 exports pending; not a universal interpreter |
+| M06-A | reduce (seeded/unseeded), count (plain/predicate), toArray terminal aggregation | Accepted within scope; [Session 6 guide](SESSION-06-AGGREGATION.md) |
+| M06-B | min/max default numeric and custom comparer policies | Accepted within scope; [Session 6 evidence](../evidence/SESSION-06.md) |
+| M06+ | Remaining catalogue | 83 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -89,10 +91,18 @@ The unchanged validation pipeline passed **631 named tests**: 561 retained, 35 n
 
 **25 of 113 exports accepted; 88 pending.**
 
+## Session 6 closed: 3 November 2026
+
+Five pending exports—**reduce, count, toArray, min, max**—were modeled, independently compared with RxJS 7.8.2 and accepted within their declared scopes. Seeded/unseeded reduce and predicate/plain count are profiles, not extra operator names. Guarded Mealy models retain callback indices, seed presence, accumulation memory, terminal output-only policy, exception identity and silent cancellation.
+
+[Push CI run 41597414740](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41597414740) tested implementation `70bc96e51f46c616e44fcb2a93ddb6172962d050`; generated artifacts were committed at `df53eb7816a4f68e7ac0ad6e0f95f9713aadf05e`. Independent [read-only PR run 41597635014](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41597635014) passed with generation/publication skipped, checking **264 committed views**. The full suite passed **670 named tests**, including **23 new pure-model/view and 13 new native RxJS tests**; **1,422 new bounded model/native comparisons** passed. The first attempt's test-harness adapter error was fixed without weakening validation. Seven configured examples add 56 views; exact provenance and scope are in [Session 6 evidence](../evidence/SESSION-06.md).
+
+**30 of 113 exports accepted; 83 pending.** Zero carryovers and no second batch.
+
 ## Next pending batch
 
-Not before **3 November 2026 Europe/Zurich**:
-**reduce, count, toArray, min, max**. Maintain the five-name maximum,
+Not before **4 November 2026 Europe/Zurich**:
+**audit, auditTime, buffer, bufferCount, bufferTime**. Maintain the five-name maximum,
 carryovers-first selection, actual RxJS comparisons, time,
 cancellation, sharing, and retrieved CI evidence. Finite
 coverage is not universal proof.

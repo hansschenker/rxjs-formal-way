@@ -1,4 +1,4 @@
-# Session 6 — terminal aggregation, pending read-only committed-file verification
+# Session 6 — accepted scoped terminal aggregation with independent committed-file verification
 
 **3 November 2026 · Europe/Zurich.** The one daily session selected exactly five RxJS 7.8.2 export names: `reduce`, `count`, `toArray`, `min`, `max`. There were no carryovers from Session 5. This evidence record tracks seven generated configurations under **five** distinct operator names.
 
@@ -35,9 +35,13 @@ Of the 670 named tests, **36 new named tests** belong to Session 6 (**23** model
 
 The 264 deterministic projections comprise **208 retained** and **56 new**. The successful push tested implementation `70bc96e`; the final generated-artifact commit `df53eb7` was created *after* the test step. These identities must not be conflated.
 
-## Read-only verification
+## Read-only committed-file verification
 
-The separate pull-request path must be run against **already committed** generated projections with generation and publication skipped. This is a documentation-only PR; it changes this evidence page, not source, tests or projection files. **At PR creation, read-only CI was pending.** Exact PR head/base, run/job, checkout provenance (if independently retrievable), and result should be entered before declaring final acceptance.
+[Documentation-only PR #6](https://github.com/hansschenker/rxjs-formal-way/pull/6), [run 41597635014](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41597635014), job **125788609255**, completed successfully. The retrieved job steps show **generation skipped** and **publication skipped**; it ran the complete `npm run check` directly on committed files. The retrieved log reports **670 named tests passed, zero failures, 1,422 Session 6 bounded comparisons and 264 deterministic views verified**.
+
+The PR head is `503789711db9a7fdf2421b82af52675a8e01ea57`, based on generated commit `df53eb7816a4f68e7ac0ad6e0f95f9713aadf05e`. The **actual synthetic PR checkout** was read from the job log: `693325757bea224f27a3b945cb193d9b07fb402e`. Independent Git-object reads confirmed both the synthetic checkout and PR head share **tree SHA `64741bd0279ce7599f6e4c8be8c206c5d3706715`**. This check did not regenerate views.
+
+Final closure changes evidence, roadmap, operator index and session/progress planning only; its commit SHA is not misidentified as the tested implementation or read-only checkout.
 
 ## Scope and limitations
 
@@ -45,4 +49,4 @@ The tests cover seed presence, empty sources, predicate indices and truthiness, 
 
 **Excluded:** arbitrary reentrant user functions or observers, cancellation during callbacks, throwing finalizers, general coercion/getter side effects and unsafe numeric overflows. Default extrema comparisons are characterized for numeric input; custom comparers are tested independently. Model-predicted traces are not labeled as native recordings. The finite comparisons do not prove universal RxJS equivalence.
 
-**Acceptance remains pending until retrieved independent read-only CI.** With that check passing, five exports can be marked accepted (30/113 total, 83 pending) and the next eligible queue begins `audit`, `auditTime`, `buffer`, `bufferCount`, `bufferTime` not before 4 November 2026.
+**All five exports are accepted within their declared scopes; no carryovers.** Inventory: **30 of 113 accepted, 83 pending**. The next eligible five-name queue is `audit`, `auditTime`, `buffer`, `bufferCount`, `bufferTime` not before **4 November 2026 Europe/Zurich**. Finite evidence is not universal proof.

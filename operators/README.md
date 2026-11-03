@@ -29,6 +29,13 @@ Each configured profile has one canonical TypeScript rule set and eight generate
 | skipWhile | [gating.ts](../src/models/gating.ts) | [Behavior](skipWhile.md) | [Session 5](../evidence/SESSION-05.md) |
 | takeUntil | [until.ts](../src/models/until.ts) | [Behavior](takeUntil.md) | [Session 5](../evidence/SESSION-05.md) |
 | skipUntil | [until.ts](../src/models/until.ts) | [Behavior](skipUntil.md) | [Session 5](../evidence/SESSION-05.md) |
+| reduce (seeded) | [aggregate.ts](../src/models/aggregate.ts) | [Behavior](reduce.md) | [Session 6](../evidence/SESSION-06.md) |
+| reduce (unseeded) | [aggregate.ts](../src/models/aggregate.ts) | [Behavior](reduce-unseeded.md) | [Session 6](../evidence/SESSION-06.md) |
+| count | [aggregate.ts](../src/models/aggregate.ts) | [Behavior](count.md) | [Session 6](../evidence/SESSION-06.md) |
+| count (predicate) | [aggregate.ts](../src/models/aggregate.ts) | [Behavior](count-predicate.md) | [Session 6](../evidence/SESSION-06.md) |
+| toArray | [aggregate.ts](../src/models/aggregate.ts) | [Behavior](toArray.md) | [Session 6](../evidence/SESSION-06.md) |
+| min | [aggregate.ts](../src/models/aggregate.ts) | [Behavior](min.md) | [Session 6](../evidence/SESSION-06.md) |
+| max | [aggregate.ts](../src/models/aggregate.ts) | [Behavior](max.md) | [Session 6](../evidence/SESSION-06.md) |
 
 Map/filter share their lifecycle specification in [value.ts](../src/models/value.ts), not their business functions. Callback functions are external to the pure models. [M02-A](../docs/M02-VALUE-SELECTION.md) explains the invocation/outcome boundary. [M02-B](../docs/M02-B-SCAN.md) reuses it with a typed accumulator/value product and two initialization policies. [M02-C](../docs/M02-C-DEBOUNCE-TIME.md) adds explicit clock readings, timer invocations and deadline checks without introducing a clock inside the model.
 
@@ -38,4 +45,6 @@ Map/filter share their lifecycle specification in [value.ts](../src/models/value
 
 [Session 5](../docs/SESSION-05-GATING.md) adds count, predicate and notifier gates. Inclusive/exclusive takeWhile are tested profiles of one export. Notifier-first setup, next versus complete, one-way opening, source acquisition and cancellation are explicit.
 
-**Twenty-six configured examples produce 208 views across twenty-five accepted export names.** These are scoped profiles, not a complete operator catalogue. Acceptance and executed checks live in the evidence records; the [roadmap](../docs/ROADMAP.md) and daily JSON tracker govern further work.
+[Session 6](../docs/SESSION-06-AGGREGATION.md) adds completion-only aggregation and extrema, with per-subscription memory and separate callback outcomes.
+
+**Thirty-three configured examples produce 264 views across thirty accepted export names.** These are scoped profiles, not a complete operator catalogue. Acceptance and executed checks live in the evidence records; the [roadmap](../docs/ROADMAP.md) and daily JSON tracker govern further work.

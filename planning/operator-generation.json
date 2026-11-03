@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "reduce",
-    "count",
-    "toArray",
-    "min",
-    "max",
     "audit",
     "auditTime",
     "buffer",
@@ -204,9 +199,18 @@
       "profiles": []
     },
     "count": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-03",
+      "profiles": [
+        "plain",
+        "indexed-predicate"
+      ],
+      "evidence": "evidence/SESSION-06.md",
+      "testedCommit": "70bc96e51f46c616e44fcb2a93ddb6172962d050",
+      "verificationRun": 41597635014,
+      "implementationRun": 41597414740,
+      "readOnlyHeadCommit": "503789711db9a7fdf2421b82af52675a8e01ea57",
+      "readOnlyCheckout": "693325757bea224f27a3b945cb193d9b07fb402e"
     },
     "debounce": {
       "status": "pending",
@@ -378,9 +382,18 @@
       "profiles": []
     },
     "max": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-03",
+      "profiles": [
+        "default-numeric",
+        "custom-comparer"
+      ],
+      "evidence": "evidence/SESSION-06.md",
+      "testedCommit": "70bc96e51f46c616e44fcb2a93ddb6172962d050",
+      "verificationRun": 41597635014,
+      "implementationRun": 41597414740,
+      "readOnlyHeadCommit": "503789711db9a7fdf2421b82af52675a8e01ea57",
+      "readOnlyCheckout": "693325757bea224f27a3b945cb193d9b07fb402e"
     },
     "merge": {
       "status": "pending",
@@ -432,9 +445,18 @@
       "profiles": []
     },
     "min": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-03",
+      "profiles": [
+        "default-numeric",
+        "custom-comparer"
+      ],
+      "evidence": "evidence/SESSION-06.md",
+      "testedCommit": "70bc96e51f46c616e44fcb2a93ddb6172962d050",
+      "verificationRun": 41597635014,
+      "implementationRun": 41597414740,
+      "readOnlyHeadCommit": "503789711db9a7fdf2421b82af52675a8e01ea57",
+      "readOnlyCheckout": "693325757bea224f27a3b945cb193d9b07fb402e"
     },
     "multicast": {
       "status": "pending",
@@ -502,9 +524,18 @@
       "profiles": []
     },
     "reduce": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-03",
+      "profiles": [
+        "seeded",
+        "unseeded"
+      ],
+      "evidence": "evidence/SESSION-06.md",
+      "testedCommit": "70bc96e51f46c616e44fcb2a93ddb6172962d050",
+      "verificationRun": 41597635014,
+      "implementationRun": 41597414740,
+      "readOnlyHeadCommit": "503789711db9a7fdf2421b82af52675a8e01ea57",
+      "readOnlyCheckout": "693325757bea224f27a3b945cb193d9b07fb402e"
     },
     "repeat": {
       "status": "pending",
@@ -749,9 +780,17 @@
       "profiles": []
     },
     "toArray": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-03",
+      "profiles": [
+        "per-subscription-array"
+      ],
+      "evidence": "evidence/SESSION-06.md",
+      "testedCommit": "70bc96e51f46c616e44fcb2a93ddb6172962d050",
+      "verificationRun": 41597635014,
+      "implementationRun": 41597414740,
+      "readOnlyHeadCommit": "503789711db9a7fdf2421b82af52675a8e01ea57",
+      "readOnlyCheckout": "693325757bea224f27a3b945cb193d9b07fb402e"
     },
     "window": {
       "status": "pending",
