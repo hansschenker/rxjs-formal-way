@@ -1,0 +1,240 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "reduce-seeded",
+      "executionId": "reduce-seeded-session6-example",
+      "ruleId": "AGG-REDUCE-SEEDED-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Collecting",
+        "index": 0,
+        "memory": {
+          "present": true,
+          "value": 0
+        }
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "reduce-seeded",
+      "executionId": "reduce-seeded-session6-example",
+      "ruleId": "AGG-REDUCE-SEEDED-CALL",
+      "event": {
+        "type": "source.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Collecting",
+        "index": 0,
+        "memory": {
+          "present": true,
+          "value": 0
+        }
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 1,
+        "callId": 0,
+        "memory": {
+          "present": true,
+          "value": 0
+        },
+        "input": 2
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "aggregate-callback",
+            "generation": 0
+          },
+          "index": 0,
+          "value": {
+            "previous": 0,
+            "incoming": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "reduce-seeded",
+      "executionId": "reduce-seeded-session6-example",
+      "ruleId": "AGG-REDUCE-SEEDED-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "aggregate-callback",
+          "generation": 0
+        },
+        "value": 2
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 1,
+        "callId": 0,
+        "memory": {
+          "present": true,
+          "value": 0
+        },
+        "input": 2
+      },
+      "after": {
+        "phase": "Collecting",
+        "index": 1,
+        "memory": {
+          "present": true,
+          "value": 2
+        }
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "reduce-seeded",
+      "executionId": "reduce-seeded-session6-example",
+      "ruleId": "AGG-REDUCE-SEEDED-CALL",
+      "event": {
+        "type": "source.next",
+        "value": 3
+      },
+      "before": {
+        "phase": "Collecting",
+        "index": 1,
+        "memory": {
+          "present": true,
+          "value": 2
+        }
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 2,
+        "callId": 1,
+        "memory": {
+          "present": true,
+          "value": 2
+        },
+        "input": 3
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "aggregate-callback",
+            "generation": 1
+          },
+          "index": 1,
+          "value": {
+            "previous": 2,
+            "incoming": 3
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "reduce-seeded",
+      "executionId": "reduce-seeded-session6-example",
+      "ruleId": "AGG-REDUCE-SEEDED-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "aggregate-callback",
+          "generation": 1
+        },
+        "value": 5
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 2,
+        "callId": 1,
+        "memory": {
+          "present": true,
+          "value": 2
+        },
+        "input": 3
+      },
+      "after": {
+        "phase": "Collecting",
+        "index": 2,
+        "memory": {
+          "present": true,
+          "value": 5
+        }
+      },
+      "actions": []
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "reduce-seeded",
+      "executionId": "reduce-seeded-session6-example",
+      "ruleId": "AGG-REDUCE-SEEDED-COMPLETE-SOME",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Collecting",
+        "index": 2,
+        "memory": {
+          "present": true,
+          "value": 5
+        }
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 5
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

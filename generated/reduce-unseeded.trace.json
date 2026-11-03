@@ -1,0 +1,189 @@
+{
+  "status": "finished-input",
+  "consumed": 5,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "reduce-unseeded",
+      "executionId": "reduce-unseeded-session6-example",
+      "ruleId": "AGG-REDUCE-UNSEEDED-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Collecting",
+        "index": 0,
+        "memory": {
+          "present": false
+        }
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "reduce-unseeded",
+      "executionId": "reduce-unseeded-session6-example",
+      "ruleId": "AGG-REDUCE-UNSEEDED-FIRST",
+      "event": {
+        "type": "source.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Collecting",
+        "index": 0,
+        "memory": {
+          "present": false
+        }
+      },
+      "after": {
+        "phase": "Collecting",
+        "index": 1,
+        "memory": {
+          "present": true,
+          "value": 2
+        }
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "reduce-unseeded",
+      "executionId": "reduce-unseeded-session6-example",
+      "ruleId": "AGG-REDUCE-UNSEEDED-CALL",
+      "event": {
+        "type": "source.next",
+        "value": 3
+      },
+      "before": {
+        "phase": "Collecting",
+        "index": 1,
+        "memory": {
+          "present": true,
+          "value": 2
+        }
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 2,
+        "callId": 1,
+        "memory": {
+          "present": true,
+          "value": 2
+        },
+        "input": 3
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "aggregate-callback",
+            "generation": 1
+          },
+          "index": 1,
+          "value": {
+            "previous": 2,
+            "incoming": 3
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "reduce-unseeded",
+      "executionId": "reduce-unseeded-session6-example",
+      "ruleId": "AGG-REDUCE-UNSEEDED-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "aggregate-callback",
+          "generation": 1
+        },
+        "value": 5
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 2,
+        "callId": 1,
+        "memory": {
+          "present": true,
+          "value": 2
+        },
+        "input": 3
+      },
+      "after": {
+        "phase": "Collecting",
+        "index": 2,
+        "memory": {
+          "present": true,
+          "value": 5
+        }
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 3,
+      "modelId": "reduce-unseeded",
+      "executionId": "reduce-unseeded-session6-example",
+      "ruleId": "AGG-REDUCE-UNSEEDED-COMPLETE-SOME",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Collecting",
+        "index": 2,
+        "memory": {
+          "present": true,
+          "value": 5
+        }
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 5
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,240 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "count-predicate",
+      "executionId": "count-predicate-session6-example",
+      "ruleId": "AGG-COUNT-PREDICATE-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Collecting",
+        "index": 0,
+        "memory": {
+          "present": true,
+          "value": 0
+        }
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "count-predicate",
+      "executionId": "count-predicate-session6-example",
+      "ruleId": "AGG-COUNT-PREDICATE-CALL",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Collecting",
+        "index": 0,
+        "memory": {
+          "present": true,
+          "value": 0
+        }
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 1,
+        "callId": 0,
+        "memory": {
+          "present": true,
+          "value": 0
+        },
+        "input": 1
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "aggregate-callback",
+            "generation": 0
+          },
+          "index": 0,
+          "value": {
+            "previous": 0,
+            "incoming": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "count-predicate",
+      "executionId": "count-predicate-session6-example",
+      "ruleId": "AGG-COUNT-PREDICATE-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "aggregate-callback",
+          "generation": 0
+        },
+        "value": true
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 1,
+        "callId": 0,
+        "memory": {
+          "present": true,
+          "value": 0
+        },
+        "input": 1
+      },
+      "after": {
+        "phase": "Collecting",
+        "index": 1,
+        "memory": {
+          "present": true,
+          "value": 1
+        }
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "count-predicate",
+      "executionId": "count-predicate-session6-example",
+      "ruleId": "AGG-COUNT-PREDICATE-CALL",
+      "event": {
+        "type": "source.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Collecting",
+        "index": 1,
+        "memory": {
+          "present": true,
+          "value": 1
+        }
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 2,
+        "callId": 1,
+        "memory": {
+          "present": true,
+          "value": 1
+        },
+        "input": 2
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "aggregate-callback",
+            "generation": 1
+          },
+          "index": 1,
+          "value": {
+            "previous": 1,
+            "incoming": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "count-predicate",
+      "executionId": "count-predicate-session6-example",
+      "ruleId": "AGG-COUNT-PREDICATE-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "aggregate-callback",
+          "generation": 1
+        },
+        "value": false
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 2,
+        "callId": 1,
+        "memory": {
+          "present": true,
+          "value": 1
+        },
+        "input": 2
+      },
+      "after": {
+        "phase": "Collecting",
+        "index": 2,
+        "memory": {
+          "present": true,
+          "value": 1
+        }
+      },
+      "actions": []
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "count-predicate",
+      "executionId": "count-predicate-session6-example",
+      "ruleId": "AGG-COUNT-PREDICATE-COMPLETE-SOME",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Collecting",
+        "index": 2,
+        "memory": {
+          "present": true,
+          "value": 1
+        }
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

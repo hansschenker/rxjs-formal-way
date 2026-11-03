@@ -1,0 +1,347 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "reduce-unseeded",
+    "operator": "reduce",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Accumulate every source value, but emit the final accumulation only on successful source completion.",
+    "cardinality": {
+      "signature": "reduce : ((A + S)! x T! x Index! -> A!) x S? -> T* -> A?",
+      "conditions": [
+        "Cω-inspired successful value-shape notation; terminal and subscription behavior are specified independently.",
+        "Only a normally completing source causes an output: one value for seeded reduce, count and toArray; at most one for unseeded reduce, min and max.",
+        "No value is emitted during accumulation. Errors and cancellation discard pending results.",
+        "An absent seed differs from a supplied undefined seed; the first unseeded value bypasses the reducer."
+      ]
+    },
+    "scope": {
+      "parameters": "reduce in unseeded profile; safe-integer source indices",
+      "callbacks": "The model requests a correlated callback with {previous, incoming} and source index. An external adapter invokes the reducer, predicate or comparison once; return/throw arrives as an explicit input.",
+      "time": "No clock, timer or scheduler allocated. Input times and equal-time order are supplied by the source/test environment.",
+      "reentrancy": "Non-reentrant source and callback/observer reactions; only correlated callback outcomes are legal while Calling.",
+      "exclusions": [
+        "Reentrant synchronous source delivery or cancellation within reducer/predicate/comparer or destination.next.",
+        "Throwing finalizers or downstream observers, arbitrary ObservableInput coercion, invalid count/index overflows.",
+        "Array mutation by consumers before emission, object property getter side effects, custom comparator reentrancy.",
+        "Finite bounded tests are not universal equivalence proofs or a production interpreter."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Connect lazily. Create fresh count/array memory at each subscription; never emit an initial result."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "Each result subscription owns its own accumulation and index; no replay or sharing is introduced. Payload references are opaque.",
+      "reset": "Fresh bookkeeping and a fresh toArray buffer per subscription; any caller-supplied reduce seed is held by identity, not deep-cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "one result subscriber"
+        },
+        {
+          "id": "aggregate-callback",
+          "kind": "callback",
+          "owner": "external synchronous callback invocation"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Only a matching callback.return or callback.throw can exit Calling; transition outputs are descriptive commands, not executed effects.",
+      "cancellationCheckpoints": [
+        "Between resolved source values: release source without flushing.",
+        "Calling/observer-delivery cancellation is outside the accepted profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a new result subscriber starts execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source delivers one original value"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "the matching reducer/predicate/comparison returns"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "the matching reducer/predicate/comparison throws"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source completes successfully"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "the source fails"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "the result subscriber unsubscribes"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "invoke-callback",
+      "notify",
+      "unsubscribe"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "before connection",
+        "terminal": false
+      },
+      {
+        "id": "Collecting",
+        "description": "remembering a candidate/count/array; no downstream values yet",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "waiting for a named synchronous callback outcome",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, errored or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/reduce.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned 7.8.2 aggregation and callback/termination policy"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/scanInternals.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned 7.8.2 aggregation and callback/termination policy"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned 7.8.2 aggregation and callback/termination policy"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session06-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session06-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-06.md"
+    }
+  },
+  "parameters": {
+    "operator": "reduce",
+    "mode": "unseeded",
+    "seed": {
+      "present": false
+    },
+    "callbackId": "aggregate-callback"
+  },
+  "rules": [
+    {
+      "id": "AGG-REDUCE-UNSEEDED-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "fresh subscription",
+      "to": "Collecting",
+      "actions": [
+        "connect source",
+        "initialize private accumulation"
+      ],
+      "nextState": "Subscription allocates a fresh local aggregate; no seed or count value is emitted yet.",
+      "explanation": "Subscription allocates a fresh local aggregate; no seed or count value is emitted yet.",
+      "obligations": [
+        "S6-REDUCE-01",
+        "S6-REDUCE-02"
+      ]
+    },
+    {
+      "id": "AGG-REDUCE-UNSEEDED-FIRST",
+      "from": "Collecting",
+      "event": "source.next",
+      "guard": "no memory and a safe source index",
+      "to": "Collecting",
+      "actions": [
+        "remember original value, no output"
+      ],
+      "nextState": "Without seed, the first source value becomes memory. It does not invoke a reducer or comparer.",
+      "explanation": "Without seed, the first source value becomes memory. It does not invoke a reducer or comparer.",
+      "obligations": [
+        "S6-REDUCE-03",
+        "S6-REDUCE-04"
+      ]
+    },
+    {
+      "id": "AGG-REDUCE-UNSEEDED-PLAIN-COUNT",
+      "from": "Collecting",
+      "event": "source.next",
+      "guard": "count without predicate; safe source index",
+      "to": "Collecting",
+      "actions": [
+        "increment private count; no output"
+      ],
+      "nextState": "Count every source next; retain only the new count and source index. No value is emitted until completion.",
+      "explanation": "Count every source next; retain only the new count and source index. No value is emitted until completion.",
+      "obligations": [
+        "S6-REDUCE-05"
+      ]
+    },
+    {
+      "id": "AGG-REDUCE-UNSEEDED-APPEND",
+      "from": "Collecting",
+      "event": "source.next",
+      "guard": "array profile; safe source index",
+      "to": "Collecting",
+      "actions": [
+        "remember one original reference in the ordered array; no output"
+      ],
+      "nextState": "Keep a new immutable model snapshot of the values seen so far. Native toArray owns a mutable array, but emits only after completion.",
+      "explanation": "Keep a new immutable model snapshot of the values seen so far. Native toArray owns a mutable array, but emits only after completion.",
+      "obligations": [
+        "S6-REDUCE-05"
+      ]
+    },
+    {
+      "id": "AGG-REDUCE-UNSEEDED-CALL",
+      "from": "Collecting",
+      "event": "source.next",
+      "guard": "memory exists and callback is required; safe index",
+      "to": "Calling",
+      "actions": [
+        "invoke named callback with retained arguments"
+      ],
+      "nextState": "Request exactly one callback, with the remembered value, incoming input and zero-based source index. No callback is run by the pure model.",
+      "explanation": "Request exactly one callback, with the remembered value, incoming input and zero-based source index. No callback is run by the pure model.",
+      "obligations": [
+        "S6-REDUCE-06",
+        "S6-REDUCE-07"
+      ]
+    },
+    {
+      "id": "AGG-REDUCE-UNSEEDED-RETURN",
+      "from": "Calling",
+      "event": "callback.return",
+      "guard": "matches pending callback identity",
+      "to": "Collecting",
+      "actions": [
+        "update aggregate from correlated callback outcome; no output"
+      ],
+      "nextState": "Store the reducer result, add the predicate truthiness to count, or select the extremum based on comparison sign; still emit nothing.",
+      "explanation": "Store the reducer result, add the predicate truthiness to count, or select the extremum based on comparison sign; still emit nothing.",
+      "obligations": [
+        "S6-REDUCE-06",
+        "S6-REDUCE-07",
+        "S6-REDUCE-08"
+      ]
+    },
+    {
+      "id": "AGG-REDUCE-UNSEEDED-THROW",
+      "from": "Calling",
+      "event": "callback.throw",
+      "guard": "matches pending callback identity",
+      "to": "Closed",
+      "actions": [
+        "notify error unchanged",
+        "unsubscribe source"
+      ],
+      "nextState": "Callback failure forwards the exact thrown value, cancels upstream and discards the pending aggregate.",
+      "explanation": "Callback failure forwards the exact thrown value, cancels upstream and discards the pending aggregate.",
+      "obligations": [
+        "S6-REDUCE-09"
+      ]
+    },
+    {
+      "id": "AGG-REDUCE-UNSEEDED-COMPLETE-SOME",
+      "from": "Collecting",
+      "event": "source.complete",
+      "guard": "aggregate memory is present",
+      "to": "Closed",
+      "actions": [
+        "notify final next",
+        "notify complete",
+        "unsubscribe source"
+      ],
+      "nextState": "Only source completion emits the final aggregate once followed by completion, then releases the source.",
+      "explanation": "Only source completion emits the final aggregate once followed by completion, then releases the source.",
+      "obligations": [
+        "S6-REDUCE-02",
+        "S6-REDUCE-10"
+      ]
+    },
+    {
+      "id": "AGG-REDUCE-UNSEEDED-COMPLETE-EMPTY",
+      "from": "Collecting",
+      "event": "source.complete",
+      "guard": "no seed and no source values",
+      "to": "Closed",
+      "actions": [
+        "notify complete",
+        "unsubscribe source"
+      ],
+      "nextState": "Empty unseeded reduce and empty min/max complete without emitting a value.",
+      "explanation": "Empty unseeded reduce and empty min/max complete without emitting a value.",
+      "obligations": [
+        "S6-REDUCE-02",
+        "S6-REDUCE-10"
+      ]
+    },
+    {
+      "id": "AGG-REDUCE-UNSEEDED-ERROR",
+      "from": "Collecting",
+      "event": "source.error",
+      "guard": "no unresolved callback",
+      "to": "Closed",
+      "actions": [
+        "notify source error unchanged",
+        "unsubscribe source"
+      ],
+      "nextState": "Source errors discard the aggregate and preserve the original error identity; no completion follows.",
+      "explanation": "Source errors discard the aggregate and preserve the original error identity; no completion follows.",
+      "obligations": [
+        "S6-REDUCE-11"
+      ]
+    },
+    {
+      "id": "AGG-REDUCE-UNSEEDED-CANCEL",
+      "from": "Collecting",
+      "event": "cancel",
+      "guard": "between resolved notifications",
+      "to": "Closed",
+      "actions": [
+        "unsubscribe source without any terminal notification"
+      ],
+      "nextState": "Unsubscription releases the upstream resource silently, without flushing the aggregate.",
+      "explanation": "Unsubscription releases the upstream resource silently, without flushing the aggregate.",
+      "obligations": [
+        "S6-REDUCE-12"
+      ]
+    }
+  ]
+}

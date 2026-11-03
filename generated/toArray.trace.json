@@ -1,0 +1,155 @@
+{
+  "status": "finished-input",
+  "consumed": 4,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "toArray-plain",
+      "executionId": "toArray-session6-example",
+      "ruleId": "AGG-TOARRAY-PLAIN-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Collecting",
+        "index": 0,
+        "memory": {
+          "present": true,
+          "value": []
+        }
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "toArray-plain",
+      "executionId": "toArray-session6-example",
+      "ruleId": "AGG-TOARRAY-PLAIN-APPEND",
+      "event": {
+        "type": "source.next",
+        "value": "a"
+      },
+      "before": {
+        "phase": "Collecting",
+        "index": 0,
+        "memory": {
+          "present": true,
+          "value": []
+        }
+      },
+      "after": {
+        "phase": "Collecting",
+        "index": 1,
+        "memory": {
+          "present": true,
+          "value": [
+            "a"
+          ]
+        }
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "toArray-plain",
+      "executionId": "toArray-session6-example",
+      "ruleId": "AGG-TOARRAY-PLAIN-APPEND",
+      "event": {
+        "type": "source.next",
+        "value": "b"
+      },
+      "before": {
+        "phase": "Collecting",
+        "index": 1,
+        "memory": {
+          "present": true,
+          "value": [
+            "a"
+          ]
+        }
+      },
+      "after": {
+        "phase": "Collecting",
+        "index": 2,
+        "memory": {
+          "present": true,
+          "value": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "toArray-plain",
+      "executionId": "toArray-session6-example",
+      "ruleId": "AGG-TOARRAY-PLAIN-COMPLETE-SOME",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Collecting",
+        "index": 2,
+        "memory": {
+          "present": true,
+          "value": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}
