@@ -36,3 +36,13 @@ export type { UntilOperator, UntilParameters, UntilCloseReason, UntilState, Unti
 
 export { createPipelineModel, initialPipelineState, liftOperator, stepPipeline, explorePipeline } from './pipeline.js';
 export type { PipelineEffect, PipelineMicroStep, PipelineNode, PipelineModel, PipelineState, PipelineInput, PipelineStep, PipelineInvariant, PipelineCounterexample, PipelineExploration, PipelineAdapter } from './pipeline.js';
+
+export {
+  createSeededReduceModel,createUnseededReduceModel,createCountModel,
+  createToArrayModel,createMinModel,createMaxModel,
+  reduceSeededExample,reduceUnseededExample,countExample,countPredicateExample,toArrayExample,minExample,maxExample
+} from './models/aggregate.js';
+export type {
+  AggregateOperator,AggregateMode,AggregateMemory,AggregateParameters,AggregateArguments,
+  AggregateCloseReason,AggregateState,AggregateEvent,AggregateModel
+} from './models/aggregate.js';

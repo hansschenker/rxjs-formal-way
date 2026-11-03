@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-03",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "in-progress",
   "startedAt": "2026-11-03T08:23:15+01:00",
   "startingCommit": "e1b9bada5f20fb936c239b639ab2e4b4714acea1",
   "selectedNames": [
@@ -12,7 +12,13 @@
     "min",
     "max"
   ],
-  "workedNames": [],
+  "workedNames": [
+    "reduce",
+    "count",
+    "toArray",
+    "min",
+    "max"
+  ],
   "completedNames": [],
   "carryovers": [
     "reduce",
@@ -21,7 +27,9 @@
     "min",
     "max"
   ],
-  "commits": [],
+  "commits": [
+    "2a953a91bd3af942b1b6ce1d514ecc40a24a008d"
+  ],
   "checks": {
     "syntax": "not run",
     "types": "not run",
@@ -33,7 +41,9 @@
   "notes": [
     "No pre-existing 2026-11-03 Europe/Zurich session log found in live main; 2026-11-02 Session 5 closed with no carryovers.",
     "Live main e1b9bada includes unrelated M03 compositional pipeline work, preserved.",
-    "Only the next five pending operator names selected, as required by queue."
+    "Only the next five pending operator names selected, as required by queue.",
+    "Inspected RxJS 7.8.2 reduce/count/toArray/min/max and scanInternals at pinned source revision; prepared one shared scoped aggregate model, independent native driver/tests, negative type fixtures and deterministic generator examples.",
+    "All five names currently provisional; acceptance awaits retrieved CI and committed generated files. No sixth name selected."
   ],
   "blockers": [],
   "evidence": "evidence/SESSION-06.md",

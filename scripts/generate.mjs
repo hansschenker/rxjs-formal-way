@@ -24,6 +24,11 @@ import {
   skipExample, takeWhileExample, skipWhileExample, takeUntilExample, skipUntilExample,
 } from '../dist/index.js';
 
+import {
+  createSeededReduceModel,createUnseededReduceModel,createCountModel,createToArrayModel,createMinModel,createMaxModel,
+  reduceSeededExample,reduceUnseededExample,countExample,countPredicateExample,toArrayExample,minExample,maxExample
+} from '../dist/index.js';
+
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
@@ -52,6 +57,13 @@ const examples = [
   ['skipWhile', createSkipWhileModel(), skipWhileExample, 'skipWhile-session5-example'],
   ['takeUntil', createTakeUntilModel(), takeUntilExample, 'takeUntil-session5-example'],
   ['skipUntil', createSkipUntilModel(), skipUntilExample, 'skipUntil-session5-example'],
+  ['reduce', createSeededReduceModel(0), reduceSeededExample, 'reduce-seeded-session6-example'],
+  ['reduce-unseeded', createUnseededReduceModel(), reduceUnseededExample, 'reduce-unseeded-session6-example'],
+  ['count', createCountModel(), countExample, 'count-session6-example'],
+  ['count-predicate', createCountModel(true), countPredicateExample, 'count-predicate-session6-example'],
+  ['toArray', createToArrayModel(), toArrayExample, 'toArray-session6-example'],
+  ['min', createMinModel(), minExample, 'min-session6-example'],
+  ['max', createMaxModel(), maxExample, 'max-session6-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
