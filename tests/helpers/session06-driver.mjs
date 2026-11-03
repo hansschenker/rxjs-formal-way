@@ -30,7 +30,7 @@ const actionRow = (action,time) => {
 
 /** Model-predicted driver; the chosen user function executes only outside the canonical transition model. */
 export function observeAggregateModel(model, inputs,opts={}) {
-  const logs=[],rules=new Set(),fn=callbackFor(model,opts);
+  const logs=[],rules=new Set(),fn=model.parameters.operator==='toArray'?null:callbackFor(model,opts);
   let state=model.initialState();
   const dispatch=(event,time)=>{
     const {state:after,actions,ruleId}=stepModel(model,state,event);
