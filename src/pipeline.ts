@@ -223,7 +223,7 @@ export function explorePipeline(
     const item = queue.shift()!;
     if (item.depth >= maxDepth) continue;
     for (const input of options.events(item.state)) {
-      const result = stepPipeline(model, item.state, input, { maxMicroSteps: options.maxMicroSteps });
+      const result = stepPipeline(model, item.state, input, options.maxMicroSteps === undefined ? {} : { maxMicroSteps: options.maxMicroSteps });
       transitionsExplored++;
       const next: Item = { state: result.state, depth: item.depth + 1, path: [...item.path, input] };
       check(next);
