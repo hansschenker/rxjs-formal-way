@@ -19,6 +19,7 @@ export type PipelineNode = Readonly<{
   id: string;
   initialState: () => unknown;
   control: (state: unknown) => string;
+  isTerminal: (state: unknown) => boolean;
   step: (state: unknown, event: Event) => Reaction<unknown, Action<unknown, unknown>> & Readonly<{ ruleId: string }>;
   upstreamResourceIds: readonly string[];
   subscribeEvent: (time: number) => Event;
@@ -90,6 +91,10 @@ export function liftOperator<P, S, E extends Event>(
     id,
     initialState: () => model.initialState(),
     control: state => model.control(state as S),
+    isTerminal: state => {
+      const control = model.control(state as S);
+      return model.metadata.controls.some(candidate => candidate.id === control && candidate.terminal);
+    },
     step: (state, event) => stepModel(model, state as S, event as E),
     upstreamResourceIds: [...adapter.upstreamResourceIds],
     subscribeEvent: adapter.subscribeEvent,
@@ -165,6 +170,7 @@ export function stepPipeline(
       if ((action.type === 'subscribe' || action.type === 'unsubscribe') &&
           node.upstreamResourceIds.includes(action.resource.id) && index > 0) {
         const upstream = model.nodes[index - 1]!;
+        if (action.type === 'unsubscribe' && upstream.isTerminal(nodeStates[index - 1])) continue;
         deliver(index - 1, action.type === 'subscribe' ? upstream.subscribeEvent(input.time) : upstream.cancelEvent(input.time));
         continue;
       }
