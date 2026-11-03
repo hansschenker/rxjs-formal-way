@@ -19,6 +19,7 @@ This is the current implementation tracker. The migration map preserves the orig
 | M04-B | pairwise consecutive pairs and unscheduled startWith prefix | Accepted within scope; [Session 4 guide](SESSION-04-MEMORY-AND-ADJACENCY.md) |
 | M05-A | skip count and takeWhile/skipWhile predicate gates | Accepted within scope; [Session 5 guide](SESSION-05-GATING.md) |
 | M05-B | takeUntil/skipUntil notifier lifecycle and synchronous initialization | Accepted within scope; [Session 5 evidence](../evidence/SESSION-05.md) |
+| M03-P | **Compositional Pipeline Semantics**: product state, action routing, synchronous closure, bounded model checking | Implemented first executable kernel; [guide](M03-COMPOSITIONAL-PIPELINES.md) |
 | M05+ | Remaining catalogue | 88 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
@@ -95,3 +96,7 @@ Not before **3 November 2026 Europe/Zurich**:
 carryovers-first selection, actual RxJS comparisons, time,
 cancellation, sharing, and retrieved CI evidence. Finite
 coverage is not universal proof.
+
+## Final project goal
+
+The project now has an explicit final goal: **scale upward from precise local operator semantics into formal verification of composed RxJS pipelines**. M03-P is the bridge: local canonical Mealy models are lifted into product pipeline states, ordered actions are interpreted as connection semantics, synchronous propagation is collapsed to stable macro-steps, and a bounded explicit-state explorer checks invariants with counterexample paths. The next scaling witness is `debounceTime → switchMap → distinctUntilChanged`, followed by a generated TLA+/TLC projection rather than a separately maintained specification.

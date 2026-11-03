@@ -33,3 +33,6 @@ export { createSkipModel, createTakeWhileModel, createSkipWhileModel, skipExampl
 export type { GateSourceEvent, GateCloseReason, SkipParameters, SkipState, SkipEvent, SkipModel, WhileOperator, WhileParameters, WhileState, WhileEvent, WhileModel } from './models/gating.js';
 export { createTakeUntilModel, createSkipUntilModel, takeUntilExample, skipUntilExample } from './models/until.js';
 export type { UntilOperator, UntilParameters, UntilCloseReason, UntilState, UntilEvent, UntilModel } from './models/until.js';
+
+export { createPipelineModel, initialPipelineState, liftOperator, stepPipeline, explorePipeline } from './pipeline.js';
+export type { PipelineEffect, PipelineMicroStep, PipelineNode, PipelineModel, PipelineState, PipelineInput, PipelineStep, PipelineInvariant, PipelineCounterexample, PipelineExploration, PipelineAdapter } from './pipeline.js';

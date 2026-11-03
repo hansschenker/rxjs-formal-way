@@ -48,6 +48,7 @@ Each configured example has eight generated projections: the five linked above, 
 | [M02 value selection](docs/M02-VALUE-SELECTION.md) | Callback-separated map/filter profiles and schema 1.1 |
 | [M02-B accumulation](docs/M02-B-SCAN.md) | Seeded/unseeded scan, typed reducer inputs and reference ownership |
 | [M02-C temporal behavior](docs/M02-C-DEBOUNCE-TIME.md) | Deadline versus wake-up, timer identities, zero delay and same-time order |
+| [M03 compositional pipeline semantics](docs/M03-COMPOSITIONAL-PIPELINES.md) | Product state, forward notification routing, reverse cancellation, synchronous closure and bounded model checking |
 | [Session 4 — memory and adjacency](docs/SESSION-04-MEMORY-AND-ADJACENCY.md) | Equality, Set flushes, pairwise memory, synchronous prefixes, and scoped evidence |
 | [Session 4 verification](evidence/SESSION-04.md) | Exactly tested SHA, read-only CI logs, bounded comparisons and limitations |
 | [Session 3 — All family and replay](docs/SESSION-03-FLATTEN-AND-REPLAY.md) | Inner-source policies, shared replay memory, external time and verification |
@@ -234,3 +235,7 @@ tests. Historical contributor credits remain intact.
 Hans Schenker directs the research and teaching goals. The initial consolidation credits **GPT-5.6 Sol (OpenAI)** in project history. **GPT-6 Astra Pro** is the main contributor to the source review, composition/ownership guidance, regression harness and M01/M02/Session-2 implementations. The supplied Gemini discussion is credited as inspiration, not authoritative implementation evidence.
 
 See [CONTRIBUTORS.md](CONTRIBUTORS.md). This is an independent project, not an official RxJS or OpenAI specification.
+
+## Final goal: formal verification of composed pipelines
+
+The repository now explicitly aims to **scale upward from local operator semantics into formal verification of composed RxJS pipelines**. M03 adds an executable composition kernel: canonical operator models are lifted without duplicating their rules, their states form a product state, ordered actions become forward notification and reverse lifecycle transitions, and one external event is reduced to a stable macro-step by synchronous closure. A bounded explicit-state explorer can then enumerate reachable stable states, check invariants and return counterexample input paths. See [M03 — Compositional Pipeline Semantics](docs/M03-COMPOSITIONAL-PIPELINES.md).
