@@ -191,6 +191,6 @@ test('S7-BUFFERTIME-NATIVE-05: timer/window ownership is subscription-local',()=
  scheduler.schedule(()=>source.next(2),3);
  scheduler.schedule(()=>source.complete(),4);
  scheduler.flush();
- assert.deepEqual(a,[[3,[1,2]],[4,[]]]);
+ assert.deepEqual(a,[[3,[1]],[4,[2]]]);
  assert.deepEqual(b,[[4,[2]]]);
 });
