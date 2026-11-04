@@ -29,6 +29,12 @@ import {
   reduceSeededExample,reduceUnseededExample,countExample,countPredicateExample,toArrayExample,minExample,maxExample
 } from '../dist/index.js';
 
+import {
+  createAuditModel, createAuditTimeModel, auditExample, auditTimeExample, runAuditTrace,
+  createBufferModel, createBufferCountModel, bufferExample, bufferCountExample,
+  createBufferTimeModel, bufferTimeExample, bufferTimeOverlapExample, runBufferTimeTrace
+} from '../dist/index.js';
+
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
@@ -64,6 +70,12 @@ const examples = [
   ['toArray', createToArrayModel(), toArrayExample, 'toArray-session6-example'],
   ['min', createMinModel(), minExample, 'min-session6-example'],
   ['max', createMaxModel(), maxExample, 'max-session6-example'],
+  ['audit', createAuditModel(), auditExample, 'audit-session7-example', runAuditTrace],
+  ['auditTime', createAuditTimeModel(3), auditTimeExample, 'auditTime-session7-example', runAuditTrace],
+  ['buffer', createBufferModel(), bufferExample, 'buffer-session7-example'],
+  ['bufferCount', createBufferCountModel(3, 2), bufferCountExample, 'bufferCount-session7-example'],
+  ['bufferTime', createBufferTimeModel(3), bufferTimeExample, 'bufferTime-session7-example', runBufferTimeTrace],
+  ['bufferTime-overlap', createBufferTimeModel(4, 2), bufferTimeOverlapExample, 'bufferTime-overlap-session7-example', runBufferTimeTrace],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
