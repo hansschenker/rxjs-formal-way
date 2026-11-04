@@ -46,3 +46,10 @@ export type {
   AggregateOperator,AggregateMode,AggregateMemory,AggregateParameters,AggregateArguments,
   AggregateCloseReason,AggregateState,AggregateEvent,AggregateModel
 } from './models/aggregate.js';
+
+export { createAuditModel, createAuditTimeModel, auditExample, auditTimeExample, runAuditTrace } from './models/audit.js';
+export type { AuditOperator, AuditParameters, AuditState, AuditEvent, AuditModel } from './models/audit.js';
+export { createBufferModel, createBufferCountModel, bufferExample, bufferCountExample } from './models/buffering.js';
+export type { BufferOperator, BufferParameters, BufferState, BufferEvent, BufferRecord, BufferModel } from './models/buffering.js';
+export { createBufferTimeModel, bufferTimeExample, bufferTimeOverlapExample, runBufferTimeTrace } from './models/bufferTime.js';
+export type { BufferTimeParameters, TimedBuffer, BufferTimeState, BufferTimeEvent, BufferTimeModel } from './models/bufferTime.js';
