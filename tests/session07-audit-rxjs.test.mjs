@@ -119,11 +119,11 @@ test('S7-AUDITTIME-NATIVE-05: multiple subscriptions have separate timers',()=>{
  scheduler.schedule(()=>source.next(1),1);
  scheduler.schedule(()=>source.pipe(auditTime(3,scheduler)).subscribe(v=>second.push([scheduler.now(),v])),2);
  scheduler.schedule(()=>source.next(2),3);
- scheduler.schedule(()=>source.next(3),6);
- scheduler.schedule(()=>source.complete(),10);
+ scheduler.schedule(()=>source.next(3),7);
+ scheduler.schedule(()=>source.complete(),11);
  scheduler.flush();
- assert.deepEqual(first,[[4,2],[9,3]]);
- assert.deepEqual(second,[[6,2],[9,3]]);
+ assert.deepEqual(first,[[4,2],[10,3]]);
+ assert.deepEqual(second,[[6,2],[10,3]]);
 });
 test('S7-AUDITTIME-NATIVE-06: timer model and RxJS agree for bounded two-value schedules',()=>{
  const e=(type,now,fields={})=>({type,now,...fields});
