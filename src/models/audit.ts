@@ -263,7 +263,7 @@ function createModel<T>(p: AuditParameters): AuditModel<T> {
         react: (s,e) => {
           if (e.type !== kind) throw new Error('invalid audit terminal');
           return { state:endState(e.now,kind==='cancel'?'cancel':'source-error'),
-            actions:[...(kind==='source.error'?[error<T>(e.error)]:[]),
+            actions:[ ...(kind==='source.error'?[error<T>('error' in e ? e.error : (()=>{throw new Error('invalid source error event');})())]:[]),
               ...(phase==='Waiting'?[]:[release]), ...cancelDuration(s)] };
         },
       });
