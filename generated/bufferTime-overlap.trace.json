@@ -1,0 +1,484 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "now": 7,
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "bufferTime-4-every-2",
+      "executionId": "bufferTime-overlap-session7-example",
+      "ruleId": "BUFFERTIME-INIT",
+      "event": {
+        "type": "subscribe",
+        "now": 0
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "now": 0,
+        "nextWindowId": 1,
+        "nextCreationId": 1,
+        "windows": [
+          {
+            "id": 0,
+            "startedAt": 0,
+            "closesAt": 4,
+            "values": []
+          }
+        ],
+        "creationAt": 2,
+        "creation": {
+          "id": "buffer-creation",
+          "generation": 0
+        }
+      },
+      "actions": [
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "buffer-window",
+            "generation": 0
+          },
+          "delay": 4
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "buffer-creation",
+            "generation": 0
+          },
+          "delay": 2
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "bufferTime-4-every-2",
+      "executionId": "bufferTime-overlap-session7-example",
+      "ruleId": "BUFFERTIME-NEXT",
+      "event": {
+        "type": "source.next",
+        "now": 1,
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "now": 0,
+        "nextWindowId": 1,
+        "nextCreationId": 1,
+        "windows": [
+          {
+            "id": 0,
+            "startedAt": 0,
+            "closesAt": 4,
+            "values": []
+          }
+        ],
+        "creationAt": 2,
+        "creation": {
+          "id": "buffer-creation",
+          "generation": 0
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "now": 1,
+        "nextWindowId": 1,
+        "nextCreationId": 1,
+        "windows": [
+          {
+            "id": 0,
+            "startedAt": 0,
+            "closesAt": 4,
+            "values": [
+              1
+            ]
+          }
+        ],
+        "creationAt": 2,
+        "creation": {
+          "id": "buffer-creation",
+          "generation": 0
+        }
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "bufferTime-4-every-2",
+      "executionId": "bufferTime-overlap-session7-example",
+      "ruleId": "BUFFERTIME-CREATION-FIRE",
+      "event": {
+        "type": "creation.fire",
+        "now": 2,
+        "resource": {
+          "id": "buffer-creation",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "now": 1,
+        "nextWindowId": 1,
+        "nextCreationId": 1,
+        "windows": [
+          {
+            "id": 0,
+            "startedAt": 0,
+            "closesAt": 4,
+            "values": [
+              1
+            ]
+          }
+        ],
+        "creationAt": 2,
+        "creation": {
+          "id": "buffer-creation",
+          "generation": 0
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "now": 2,
+        "nextWindowId": 2,
+        "nextCreationId": 2,
+        "windows": [
+          {
+            "id": 0,
+            "startedAt": 0,
+            "closesAt": 4,
+            "values": [
+              1
+            ]
+          },
+          {
+            "id": 1,
+            "startedAt": 2,
+            "closesAt": 6,
+            "values": []
+          }
+        ],
+        "creationAt": 4,
+        "creation": {
+          "id": "buffer-creation",
+          "generation": 1
+        }
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "buffer-creation",
+            "generation": 0
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "buffer-window",
+            "generation": 1
+          },
+          "delay": 4
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "buffer-creation",
+            "generation": 1
+          },
+          "delay": 2
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "bufferTime-4-every-2",
+      "executionId": "bufferTime-overlap-session7-example",
+      "ruleId": "BUFFERTIME-NEXT",
+      "event": {
+        "type": "source.next",
+        "now": 3,
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "now": 2,
+        "nextWindowId": 2,
+        "nextCreationId": 2,
+        "windows": [
+          {
+            "id": 0,
+            "startedAt": 0,
+            "closesAt": 4,
+            "values": [
+              1
+            ]
+          },
+          {
+            "id": 1,
+            "startedAt": 2,
+            "closesAt": 6,
+            "values": []
+          }
+        ],
+        "creationAt": 4,
+        "creation": {
+          "id": "buffer-creation",
+          "generation": 1
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "now": 3,
+        "nextWindowId": 2,
+        "nextCreationId": 2,
+        "windows": [
+          {
+            "id": 0,
+            "startedAt": 0,
+            "closesAt": 4,
+            "values": [
+              1,
+              2
+            ]
+          },
+          {
+            "id": 1,
+            "startedAt": 2,
+            "closesAt": 6,
+            "values": [
+              2
+            ]
+          }
+        ],
+        "creationAt": 4,
+        "creation": {
+          "id": "buffer-creation",
+          "generation": 1
+        }
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "bufferTime-4-every-2",
+      "executionId": "bufferTime-overlap-session7-example",
+      "ruleId": "BUFFERTIME-WINDOW-FIRE",
+      "event": {
+        "type": "window.fire",
+        "now": 4,
+        "resource": {
+          "id": "buffer-window",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "now": 3,
+        "nextWindowId": 2,
+        "nextCreationId": 2,
+        "windows": [
+          {
+            "id": 0,
+            "startedAt": 0,
+            "closesAt": 4,
+            "values": [
+              1,
+              2
+            ]
+          },
+          {
+            "id": 1,
+            "startedAt": 2,
+            "closesAt": 6,
+            "values": [
+              2
+            ]
+          }
+        ],
+        "creationAt": 4,
+        "creation": {
+          "id": "buffer-creation",
+          "generation": 1
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "now": 4,
+        "nextWindowId": 2,
+        "nextCreationId": 2,
+        "windows": [
+          {
+            "id": 1,
+            "startedAt": 2,
+            "closesAt": 6,
+            "values": [
+              2
+            ]
+          }
+        ],
+        "creationAt": 4,
+        "creation": {
+          "id": "buffer-creation",
+          "generation": 1
+        }
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "buffer-window",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              1,
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 6,
+      "modelId": "bufferTime-4-every-2",
+      "executionId": "bufferTime-overlap-session7-example",
+      "ruleId": "BUFFERTIME-WINDOW-FIRE",
+      "event": {
+        "type": "window.fire",
+        "now": 6,
+        "resource": {
+          "id": "buffer-window",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "now": 4,
+        "nextWindowId": 2,
+        "nextCreationId": 2,
+        "windows": [
+          {
+            "id": 1,
+            "startedAt": 2,
+            "closesAt": 6,
+            "values": [
+              2
+            ]
+          }
+        ],
+        "creationAt": 4,
+        "creation": {
+          "id": "buffer-creation",
+          "generation": 1
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "now": 6,
+        "nextWindowId": 2,
+        "nextCreationId": 2,
+        "windows": [],
+        "creationAt": 4,
+        "creation": {
+          "id": "buffer-creation",
+          "generation": 1
+        }
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "buffer-window",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 7,
+      "modelId": "bufferTime-4-every-2",
+      "executionId": "bufferTime-overlap-session7-example",
+      "ruleId": "BUFFERTIME-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete",
+        "now": 7
+      },
+      "before": {
+        "phase": "Active",
+        "now": 6,
+        "nextWindowId": 2,
+        "nextCreationId": 2,
+        "windows": [],
+        "creationAt": 4,
+        "creation": {
+          "id": "buffer-creation",
+          "generation": 1
+        }
+      },
+      "after": {
+        "phase": "Closed",
+        "now": 7,
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "buffer-creation",
+            "generation": 1
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

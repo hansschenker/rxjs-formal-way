@@ -1,0 +1,385 @@
+{
+  "status": "finished-input",
+  "consumed": 9,
+  "state": {
+    "phase": "Closed",
+    "now": 7,
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "audit-Observable-duration",
+      "executionId": "audit-session7-example",
+      "ruleId": "AUDIT-INIT",
+      "event": {
+        "type": "subscribe",
+        "now": 0
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Idle",
+        "now": 0,
+        "nextId": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "audit-Observable-duration",
+      "executionId": "audit-session7-example",
+      "ruleId": "AUDIT-START",
+      "event": {
+        "type": "source.next",
+        "now": 1,
+        "value": "a"
+      },
+      "before": {
+        "phase": "Idle",
+        "now": 0,
+        "nextId": 0
+      },
+      "after": {
+        "phase": "Calling",
+        "now": 1,
+        "nextId": 1,
+        "value": "a",
+        "callback": {
+          "id": "duration-selector",
+          "generation": 0
+        }
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "duration-selector",
+            "generation": 0
+          },
+          "value": "a",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "audit-Observable-duration",
+      "executionId": "audit-session7-example",
+      "ruleId": "AUDIT-CALL-RETURN",
+      "event": {
+        "type": "callback.return",
+        "now": 1,
+        "resource": {
+          "id": "duration-selector",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Calling",
+        "now": 1,
+        "nextId": 1,
+        "value": "a",
+        "callback": {
+          "id": "duration-selector",
+          "generation": 0
+        }
+      },
+      "after": {
+        "phase": "Pending",
+        "now": 1,
+        "nextId": 1,
+        "value": "a",
+        "duration": {
+          "id": "duration",
+          "generation": 0
+        },
+        "scheduledFor": 1
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "audit-Observable-duration",
+      "executionId": "audit-session7-example",
+      "ruleId": "AUDIT-REPLACE",
+      "event": {
+        "type": "source.next",
+        "now": 2,
+        "value": "b"
+      },
+      "before": {
+        "phase": "Pending",
+        "now": 1,
+        "nextId": 1,
+        "value": "a",
+        "duration": {
+          "id": "duration",
+          "generation": 0
+        },
+        "scheduledFor": 1
+      },
+      "after": {
+        "phase": "Pending",
+        "now": 2,
+        "nextId": 1,
+        "value": "b",
+        "duration": {
+          "id": "duration",
+          "generation": 0
+        },
+        "scheduledFor": 1
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 3,
+      "modelId": "audit-Observable-duration",
+      "executionId": "audit-session7-example",
+      "ruleId": "AUDIT-DURATION-NEXT",
+      "event": {
+        "type": "duration.next",
+        "now": 3,
+        "resource": {
+          "id": "duration",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Pending",
+        "now": 2,
+        "nextId": 1,
+        "value": "b",
+        "duration": {
+          "id": "duration",
+          "generation": 0
+        },
+        "scheduledFor": 1
+      },
+      "after": {
+        "phase": "Idle",
+        "now": 3,
+        "nextId": 1
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 4,
+      "modelId": "audit-Observable-duration",
+      "executionId": "audit-session7-example",
+      "ruleId": "AUDIT-START",
+      "event": {
+        "type": "source.next",
+        "now": 4,
+        "value": "c"
+      },
+      "before": {
+        "phase": "Idle",
+        "now": 3,
+        "nextId": 1
+      },
+      "after": {
+        "phase": "Calling",
+        "now": 4,
+        "nextId": 2,
+        "value": "c",
+        "callback": {
+          "id": "duration-selector",
+          "generation": 1
+        }
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "duration-selector",
+            "generation": 1
+          },
+          "value": "c",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 4,
+      "modelId": "audit-Observable-duration",
+      "executionId": "audit-session7-example",
+      "ruleId": "AUDIT-CALL-RETURN",
+      "event": {
+        "type": "callback.return",
+        "now": 4,
+        "resource": {
+          "id": "duration-selector",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Calling",
+        "now": 4,
+        "nextId": 2,
+        "value": "c",
+        "callback": {
+          "id": "duration-selector",
+          "generation": 1
+        }
+      },
+      "after": {
+        "phase": "Pending",
+        "now": 4,
+        "nextId": 2,
+        "value": "c",
+        "duration": {
+          "id": "duration",
+          "generation": 1
+        },
+        "scheduledFor": 4
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 5,
+      "modelId": "audit-Observable-duration",
+      "executionId": "audit-session7-example",
+      "ruleId": "AUDIT-COMPLETE-PENDING",
+      "event": {
+        "type": "source.complete",
+        "now": 5
+      },
+      "before": {
+        "phase": "Pending",
+        "now": 4,
+        "nextId": 2,
+        "value": "c",
+        "duration": {
+          "id": "duration",
+          "generation": 1
+        },
+        "scheduledFor": 4
+      },
+      "after": {
+        "phase": "Waiting",
+        "now": 5,
+        "nextId": 2,
+        "value": "c",
+        "duration": {
+          "id": "duration",
+          "generation": 1
+        },
+        "scheduledFor": 4
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 7,
+      "modelId": "audit-Observable-duration",
+      "executionId": "audit-session7-example",
+      "ruleId": "AUDIT-WAITING-DURATION-NEXT",
+      "event": {
+        "type": "duration.next",
+        "now": 7,
+        "resource": {
+          "id": "duration",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Waiting",
+        "now": 5,
+        "nextId": 2,
+        "value": "c",
+        "duration": {
+          "id": "duration",
+          "generation": 1
+        },
+        "scheduledFor": 4
+      },
+      "after": {
+        "phase": "Closed",
+        "now": 7,
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "c"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

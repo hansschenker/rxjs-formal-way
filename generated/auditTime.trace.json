@@ -1,0 +1,295 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "now": 8,
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "auditTime-3",
+      "executionId": "auditTime-session7-example",
+      "ruleId": "AUDITTIME-INIT",
+      "event": {
+        "type": "subscribe",
+        "now": 0
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Idle",
+        "now": 0,
+        "nextId": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "auditTime-3",
+      "executionId": "auditTime-session7-example",
+      "ruleId": "AUDITTIME-START",
+      "event": {
+        "type": "source.next",
+        "now": 1,
+        "value": "a"
+      },
+      "before": {
+        "phase": "Idle",
+        "now": 0,
+        "nextId": 0
+      },
+      "after": {
+        "phase": "Pending",
+        "now": 1,
+        "nextId": 1,
+        "value": "a",
+        "duration": {
+          "id": "audit-timer",
+          "generation": 0
+        },
+        "scheduledFor": 4
+      },
+      "actions": [
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "audit-timer",
+            "generation": 0
+          },
+          "delay": 3
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "auditTime-3",
+      "executionId": "auditTime-session7-example",
+      "ruleId": "AUDITTIME-REPLACE",
+      "event": {
+        "type": "source.next",
+        "now": 2,
+        "value": "b"
+      },
+      "before": {
+        "phase": "Pending",
+        "now": 1,
+        "nextId": 1,
+        "value": "a",
+        "duration": {
+          "id": "audit-timer",
+          "generation": 0
+        },
+        "scheduledFor": 4
+      },
+      "after": {
+        "phase": "Pending",
+        "now": 2,
+        "nextId": 1,
+        "value": "b",
+        "duration": {
+          "id": "audit-timer",
+          "generation": 0
+        },
+        "scheduledFor": 4
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 4,
+      "modelId": "auditTime-3",
+      "executionId": "auditTime-session7-example",
+      "ruleId": "AUDITTIME-DURATION-NEXT",
+      "event": {
+        "type": "timer.fire",
+        "now": 4,
+        "resource": {
+          "id": "audit-timer",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Pending",
+        "now": 2,
+        "nextId": 1,
+        "value": "b",
+        "duration": {
+          "id": "audit-timer",
+          "generation": 0
+        },
+        "scheduledFor": 4
+      },
+      "after": {
+        "phase": "Idle",
+        "now": 4,
+        "nextId": 1
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "audit-timer",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 5,
+      "modelId": "auditTime-3",
+      "executionId": "auditTime-session7-example",
+      "ruleId": "AUDITTIME-START",
+      "event": {
+        "type": "source.next",
+        "now": 5,
+        "value": "c"
+      },
+      "before": {
+        "phase": "Idle",
+        "now": 4,
+        "nextId": 1
+      },
+      "after": {
+        "phase": "Pending",
+        "now": 5,
+        "nextId": 2,
+        "value": "c",
+        "duration": {
+          "id": "audit-timer",
+          "generation": 1
+        },
+        "scheduledFor": 8
+      },
+      "actions": [
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "audit-timer",
+            "generation": 1
+          },
+          "delay": 3
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 6,
+      "modelId": "auditTime-3",
+      "executionId": "auditTime-session7-example",
+      "ruleId": "AUDITTIME-COMPLETE-PENDING",
+      "event": {
+        "type": "source.complete",
+        "now": 6
+      },
+      "before": {
+        "phase": "Pending",
+        "now": 5,
+        "nextId": 2,
+        "value": "c",
+        "duration": {
+          "id": "audit-timer",
+          "generation": 1
+        },
+        "scheduledFor": 8
+      },
+      "after": {
+        "phase": "Waiting",
+        "now": 6,
+        "nextId": 2,
+        "value": "c",
+        "duration": {
+          "id": "audit-timer",
+          "generation": 1
+        },
+        "scheduledFor": 8
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 8,
+      "modelId": "auditTime-3",
+      "executionId": "auditTime-session7-example",
+      "ruleId": "AUDITTIME-WAITING-DURATION-NEXT",
+      "event": {
+        "type": "timer.fire",
+        "now": 8,
+        "resource": {
+          "id": "audit-timer",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Waiting",
+        "now": 6,
+        "nextId": 2,
+        "value": "c",
+        "duration": {
+          "id": "audit-timer",
+          "generation": 1
+        },
+        "scheduledFor": 8
+      },
+      "after": {
+        "phase": "Closed",
+        "now": 8,
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "audit-timer",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "c"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

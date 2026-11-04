@@ -1,0 +1,311 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "buffer-Observable-closing-notifier",
+      "executionId": "buffer-session7-example",
+      "ruleId": "BUFFER-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 0,
+        "notifierLive": true,
+        "records": [
+          {
+            "start": 0,
+            "values": []
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "closing-notifier",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "buffer-Observable-closing-notifier",
+      "executionId": "buffer-session7-example",
+      "ruleId": "BUFFER-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 0,
+        "notifierLive": true,
+        "records": [
+          {
+            "start": 0,
+            "values": []
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 1,
+        "notifierLive": true,
+        "records": [
+          {
+            "start": 0,
+            "values": [
+              1
+            ]
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "buffer-Observable-closing-notifier",
+      "executionId": "buffer-session7-example",
+      "ruleId": "BUFFER-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 1,
+        "notifierLive": true,
+        "records": [
+          {
+            "start": 0,
+            "values": [
+              1
+            ]
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 2,
+        "notifierLive": true,
+        "records": [
+          {
+            "start": 0,
+            "values": [
+              1,
+              2
+            ]
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "buffer-Observable-closing-notifier",
+      "executionId": "buffer-session7-example",
+      "ruleId": "BUFFER-NOTIFIER-NEXT",
+      "event": {
+        "type": "notifier.next"
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 2,
+        "notifierLive": true,
+        "records": [
+          {
+            "start": 0,
+            "values": [
+              1,
+              2
+            ]
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 2,
+        "notifierLive": true,
+        "records": [
+          {
+            "start": 2,
+            "values": []
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              1,
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "buffer-Observable-closing-notifier",
+      "executionId": "buffer-session7-example",
+      "ruleId": "BUFFER-NOTIFIER-NEXT",
+      "event": {
+        "type": "notifier.next"
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 2,
+        "notifierLive": true,
+        "records": [
+          {
+            "start": 2,
+            "values": []
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 2,
+        "notifierLive": true,
+        "records": [
+          {
+            "start": 2,
+            "values": []
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": []
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "buffer-Observable-closing-notifier",
+      "executionId": "buffer-session7-example",
+      "ruleId": "BUFFER-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 3
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 2,
+        "notifierLive": true,
+        "records": [
+          {
+            "start": 2,
+            "values": []
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 3,
+        "notifierLive": true,
+        "records": [
+          {
+            "start": 2,
+            "values": [
+              3
+            ]
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "buffer-Observable-closing-notifier",
+      "executionId": "buffer-session7-example",
+      "ruleId": "BUFFER-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 3,
+        "notifierLive": true,
+        "records": [
+          {
+            "start": 2,
+            "values": [
+              3
+            ]
+          }
+        ]
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              3
+            ]
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "closing-notifier",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

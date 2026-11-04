@@ -1,0 +1,288 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "bufferTime-4-every-2",
+    "operator": "bufferTime",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Accumulate source values in time-bounded windows, possibly overlapping, and emit each window on its timer or size threshold.",
+    "cardinality": {
+      "signature": "bufferTime(span,creation?,max?) : T* -> (T*)*",
+      "conditions": [
+        "Each window yields one array; empty windows also emit on timer expiry.",
+        "A creation interval opens overlapping windows; omitted interval restarts one window on every close.",
+        "A maximum size can close a window early, before its timer; completion flushes all open windows and errors/cancellation discard.",
+        "When a value fills a window, a replacement window opened by this value does not receive that same value."
+      ]
+    },
+    "scope": {
+      "parameters": "Positive safe-integer span, optional positive safe-integer creation interval, optional positive safe-integer max size; bounded virtual clock/timer generations",
+      "callbacks": "No user callback. Emitted arrays contain retained source references in arrival order.",
+      "time": "External monotone safe-integer clock. Timer fires are explicit events, never inferred from a deadline; due firings are allowed late but not early. Equal-time order is explicit.",
+      "reentrancy": "Deferred, non-reentrant scheduler and nonthrowing observers. Source notifications and timer firings are atomic, ordered by event sequence.",
+      "exclusions": [
+        "Negative/NaN/fractional/unsafe spans, zero span or zero creation interval, custom inline schedulers, arbitrary scheduler jitter guarantees.",
+        "Reentrant observer/source events during a timer callback or buffer emission, throwing finalizers and cancellation inside delivery.",
+        "Exact JS SchedulerAction identities, operator internals of Date.now and universal state-space equivalence."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Start one empty window and its closing timer before acquiring the source; if creation interval is supplied schedule repeated window openings."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing. Each result subscription owns independent scheduled windows and accumulation arrays.",
+      "reset": "Fresh window identities and timer schedules on each subscription; terminal state drops all buffers.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current execution"
+        },
+        {
+          "id": "buffer-window",
+          "kind": "timer",
+          "owner": "each window generation"
+        },
+        {
+          "id": "buffer-creation",
+          "kind": "timer",
+          "owner": "repeating creation schedule"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "scheduled",
+      "actionSemantics": "A source next is copied into the windows open before that next. Full windows are removed then emitted; a no-interval replacement opens only after the value is processed. Expired window fires remove, emit, and optionally reopen.",
+      "cancellationCheckpoints": [
+        "Between external source, window and creation events; no silent final flush.",
+        "All logical timers are cancelled on error or cancellation; the exact host Action object is intentionally abstracted."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start windows and source"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "append value to currently open windows"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "emit all active windows and complete"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "error without flush"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "drop windows silently"
+      },
+      {
+        "type": "window.fire",
+        "origin": "timer",
+        "category": "time",
+        "description": "matching window reaches closing time"
+      },
+      {
+        "type": "creation.fire",
+        "origin": "timer",
+        "category": "time",
+        "description": "repeating interval opens an additional window"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "schedule",
+      "cancel-timer",
+      "notify",
+      "unsubscribe"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "windows and schedules active",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/bufferTime.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned time-window scheduling, max-size early flush, overlap and terminal behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/util/executeSchedule.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned time-window scheduling, max-size early flush, overlap and terminal behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned time-window scheduling, max-size early flush, overlap and terminal behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned time-window scheduling, max-size early flush, overlap and terminal behavior"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session07-buffer-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session07-buffer-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-07.md"
+    }
+  },
+  "parameters": {
+    "span": 4,
+    "creationInterval": 2,
+    "maxBufferSize": null
+  },
+  "rules": [
+    {
+      "id": "BUFFERTIME-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "fresh clock and representable initial deadlines",
+      "to": "Active",
+      "actions": [
+        "schedule initial closing timer",
+        "schedule creation interval if configured",
+        "subscribe source"
+      ],
+      "nextState": "active with one empty window and optional creation timer",
+      "explanation": "On subscription a first empty window opens; no source value is needed to start time accumulation.",
+      "obligations": [
+        "S7-BUFFERTIME-INIT"
+      ]
+    },
+    {
+      "id": "BUFFERTIME-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "guard": "valid clock, window counter and capacity",
+      "to": "Active",
+      "actions": [
+        "append to windows open before this notification",
+        "close full windows; emit arrays in opening order",
+        "restart if no creation interval"
+      ],
+      "nextState": "active with unfilled buffers and new timer identities",
+      "explanation": "A source next updates every already-open window. At a size threshold, windows close early and can cause a new non-overlap window to begin.",
+      "obligations": [
+        "S7-BUFFERTIME-NEXT"
+      ]
+    },
+    {
+      "id": "BUFFERTIME-WINDOW-FIRE",
+      "from": "Active",
+      "event": "window.fire",
+      "guard": "matching live window and due deadline",
+      "to": "Active",
+      "actions": [
+        "cancel matching timer",
+        "emit this window, including empty",
+        "restart if no creation interval"
+      ],
+      "nextState": "active with remaining windows and optional new window",
+      "explanation": "A timer firing at or after the deadline closes its own window. A late timer does not backdate output.",
+      "obligations": [
+        "S7-BUFFERTIME-WINDOW-FIRE"
+      ]
+    },
+    {
+      "id": "BUFFERTIME-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "guard": "valid clock",
+      "to": "Closed",
+      "actions": [
+        "emit all remaining buffers in opening order",
+        "complete downstream",
+        "cancel timers and release source"
+      ],
+      "nextState": "closed with no active windows",
+      "explanation": "Source completion flushes every currently open window (including an empty one) and does not open another.",
+      "obligations": [
+        "S7-BUFFERTIME-SOURCE-COMPLETE"
+      ]
+    },
+    {
+      "id": "BUFFERTIME-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "guard": "valid clock",
+      "to": "Closed",
+      "actions": [
+        "forward source error unchanged",
+        "cancel timers and discard all buffered values",
+        "release source"
+      ],
+      "nextState": "closed because of error",
+      "explanation": "An error does not emit any currently accumulated window.",
+      "obligations": [
+        "S7-BUFFERTIME-SOURCE-ERROR"
+      ]
+    },
+    {
+      "id": "BUFFERTIME-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "guard": "valid clock between reactions",
+      "to": "Closed",
+      "actions": [
+        "cancel all timers",
+        "release source without downstream notification"
+      ],
+      "nextState": "closed with all buffers discarded",
+      "explanation": "Downstream cancellation releases resources and never flushes.",
+      "obligations": [
+        "S7-BUFFERTIME-CANCEL"
+      ]
+    },
+    {
+      "id": "BUFFERTIME-CREATION-FIRE",
+      "from": "Active",
+      "event": "creation.fire",
+      "guard": "matching interval generation and due scheduled creation",
+      "to": "Active",
+      "actions": [
+        "open another empty buffer with closing timer",
+        "schedule next creation interval"
+      ],
+      "nextState": "active with one additional open window",
+      "explanation": "The creation interval opens new time windows independent of current window lifetimes.",
+      "obligations": [
+        "S7-BUFFERTIME-CREATION-FIRE"
+      ]
+    }
+  ]
+}

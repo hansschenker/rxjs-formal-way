@@ -1,0 +1,293 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "buffer-Observable-closing-notifier",
+    "operator": "buffer",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Collect source values, emitting and resetting the array on each closing-notifier value and flushing once on source completion.",
+    "cardinality": {
+      "signature": "buffer : U* -> T* -> (T*)*",
+      "conditions": [
+        "Notifier next emits one array even if no source value has arrived.",
+        "Notifier completion alone has no effect on the buffered values or source lifetime.",
+        "Source completion emits exactly one final array, including an empty array; error/cancellation do not flush."
+      ]
+    },
+    "scope": {
+      "parameters": "One valid Observable closing notifier; source and notifier remain non-reentrant",
+      "callbacks": "No user callback. Source values retain reference identity inside emitted arrays; emitted arrays are fresh snapshots.",
+      "time": "No timer or scheduler introduced. Source/notifier order is supplied by input sequence, including equal timestamps.",
+      "reentrancy": "Post-setup, atomic non-reentrant notifications; setup-time synchronous delivery, observer throw and cancellation during delivery are excluded.",
+      "exclusions": [
+        "Invalid/zero/negative/fractional bufferCount arguments, count overflow and arbitrary producer reentrancy.",
+        "Synchronous notifier/source delivery during subscription setup, throwing observers/finalizers and cancellation during output delivery.",
+        "ObservableInput conversion outside Observable notifiers, universal symbolic equivalence and arbitrary mutation of output arrays by observers."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Subscribe source first, then closing notifier; the initial current buffer is empty."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing or replay introduced. Every result subscription has its own buffers and counters.",
+      "reset": "Fresh arrays/counters per execution; Closed has no legal inputs.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current execution"
+        },
+        {
+          "id": "closing-notifier",
+          "kind": "subscription",
+          "owner": "current execution"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Notifier next swaps to a fresh active buffer before emitting the old buffer; notifier complete only releases notifier.",
+      "cancellationCheckpoints": [
+        "Between resolved notifications; unsubscribe without a final buffer or synthetic complete.",
+        "No callback/scheduler work is introduced; exact finalizer microorder is excluded."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "connect the operator to its inputs"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "append the source value to active buffers"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "flush open buffers and complete"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "discard buffers and propagate error"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "cancel without flushing"
+      },
+      {
+        "type": "notifier.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "emit and reset current buffer"
+      },
+      {
+        "type": "notifier.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "stop notifier; source keeps running"
+      },
+      {
+        "type": "notifier.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "error downstream and release source"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "notify",
+      "unsubscribe"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not subscribed",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source connected, buffers and input count remembered",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, errored, or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/buffer.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned buffer opening, flush, notifier and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned buffer opening, flush, notifier and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned buffer opening, flush, notifier and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned buffer opening, flush, notifier and teardown semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session07-buffer-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session07-buffer-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-07.md"
+    }
+  },
+  "parameters": {
+    "operator": "buffer",
+    "bufferSize": 0,
+    "startBufferEvery": 0
+  },
+  "rules": [
+    {
+      "id": "BUFFER-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "fresh execution",
+      "to": "Active",
+      "actions": [
+        "subscribe source, then notifier"
+      ],
+      "nextState": "no input seen and no open buffers",
+      "obligations": [
+        "S7-BUFFER-INIT"
+      ],
+      "explanation": "Construction is lazy. Each subscription initializes new state and acquires source inputs."
+    },
+    {
+      "id": "BUFFER-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "guard": "connected with valid counter",
+      "to": "Active",
+      "actions": [
+        "append to the current buffer"
+      ],
+      "nextState": "advance the input counter and retain incomplete buffers",
+      "obligations": [
+        "S7-BUFFER-NEXT"
+      ],
+      "explanation": "Every source value is collected in the current array; no output is produced until a notifier signal or source completion."
+    },
+    {
+      "id": "BUFFER-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "guard": "connected",
+      "to": "Closed",
+      "actions": [
+        "emit all remaining buffers",
+        "complete downstream",
+        "release owned subscriptions"
+      ],
+      "nextState": "closed and buffers discarded",
+      "obligations": [
+        "S7-BUFFER-SOURCE-COMPLETE"
+      ],
+      "explanation": "Completion emits the current array, including an empty array, then completes downstream."
+    },
+    {
+      "id": "BUFFER-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "guard": "connected",
+      "to": "Closed",
+      "actions": [
+        "forward original source error",
+        "release subscriptions without flush"
+      ],
+      "nextState": "closed with buffered values discarded",
+      "obligations": [
+        "S7-BUFFER-SOURCE-ERROR"
+      ],
+      "explanation": "Source error propagates unchanged; stored values are not emitted."
+    },
+    {
+      "id": "BUFFER-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "guard": "connected between reactions",
+      "to": "Closed",
+      "actions": [
+        "release subscriptions with no notification"
+      ],
+      "nextState": "closed with buffered values discarded",
+      "obligations": [
+        "S7-BUFFER-CANCEL"
+      ],
+      "explanation": "Cancellation silently stops the operator and releases its owned subscriptions."
+    },
+    {
+      "id": "BUFFER-NOTIFIER-NEXT",
+      "from": "Active",
+      "event": "notifier.next",
+      "guard": "closing notifier still active",
+      "to": "Active",
+      "actions": [
+        "emit the current buffer, including empty; start a fresh empty buffer"
+      ],
+      "nextState": "active with a new empty buffer",
+      "obligations": [
+        "S7-BUFFER-NOTIFIER-NEXT"
+      ],
+      "explanation": "Each notifier value causes one output array and starts fresh collection; the notifier payload is ignored."
+    },
+    {
+      "id": "BUFFER-NOTIFIER-COMPLETE",
+      "from": "Active",
+      "event": "notifier.complete",
+      "guard": "closing notifier still active",
+      "to": "Active",
+      "actions": [
+        "release completed notifier but keep collecting source values"
+      ],
+      "nextState": "active with the same accumulated buffer",
+      "obligations": [
+        "S7-BUFFER-NOTIFIER-COMPLETE"
+      ],
+      "explanation": "Notifier completion without next neither flushes nor terminates the source."
+    },
+    {
+      "id": "BUFFER-NOTIFIER-ERROR",
+      "from": "Active",
+      "event": "notifier.error",
+      "guard": "closing notifier still active",
+      "to": "Closed",
+      "actions": [
+        "forward original notifier error",
+        "release subscriptions without flush"
+      ],
+      "nextState": "closed and values discarded",
+      "obligations": [
+        "S7-BUFFER-NOTIFIER-ERROR"
+      ],
+      "explanation": "Notifier error propagates unchanged and cancels the source; no buffered values are emitted."
+    }
+  ]
+}

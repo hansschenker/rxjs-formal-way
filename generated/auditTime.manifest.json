@@ -1,0 +1,363 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "auditTime-3",
+    "operator": "auditTime",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Start a fixed-duration silence window on the first value and emit its latest value when the scheduled duration ends.",
+    "cardinality": {
+      "signature": "auditTime(d) : T* -> T*",
+      "conditions": [
+        "Emitted values are an ordered subsequence of source values; at most one per duration.",
+        "Values arriving during an active duration replace the pending latest value and do not restart it.",
+        "Source completion waits for the active timer; unlike debounceTime it does not flush early.",
+        "Source error and downstream cancellation discard pending values and release resources."
+      ]
+    },
+    "scope": {
+      "parameters": "Positive safe-integer duration and deferred scheduler, one scheduled task per active window",
+      "callbacks": "No user callback. Timer output is modeled as timer.fire.",
+      "time": "Externally supplied monotone safe-integer clock; duration signals or scheduler firings determine output time. No deadline alone emits a value.",
+      "reentrancy": "Atomic non-reentrant source, callback, observer and duration notifications after initialization. Equal timestamps are ordered by trace sequence.",
+      "exclusions": [
+        "Inline/synchronous custom schedulers, negative/NaN/unsafe durations, non-deferred zero delay, scheduler drift guarantees.",
+        "Nested source/duration emissions, cancellation inside callbacks/output delivery and throwing observers/finalizers.",
+        "Universal behavioral equivalence, callback purity, and arbitrary external mutation of retained object references."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Connect to source only; first value starts a duration."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing or replay introduced. Each result subscription owns its latest value and duration identity.",
+      "reset": "Fresh counter and no pending value per execution; Closed rejects later signals.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result execution"
+        },
+        {
+          "id": "audit-timer",
+          "kind": "timer",
+          "owner": "current execution; generation labels window"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "scheduled",
+      "actionSemantics": "Schedule once when idle; subsequent values replace memory without rescheduling. timer.fire models a due scheduled emission.",
+      "cancellationCheckpoints": [
+        "Between resolved notifications; no pending-value flush on cancellation.",
+        "Source completion may leave a duration active; it does not force emission or cancel that duration."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "acquire a source subscription"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "start or update a latest-value window"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "complete when no duration remains, else wait"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "error without flushing"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "stop silently and release resources"
+      },
+      {
+        "type": "timer.fire",
+        "origin": "timer",
+        "category": "time",
+        "description": "the active scheduled window expires"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "schedule",
+      "cancel-timer",
+      "notify",
+      "unsubscribe"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no subscription",
+        "terminal": false
+      },
+      {
+        "id": "Idle",
+        "description": "source connected; no duration running",
+        "terminal": false
+      },
+      {
+        "id": "Pending",
+        "description": "latest source value and active duration remembered",
+        "terminal": false
+      },
+      {
+        "id": "Waiting",
+        "description": "source completed; awaiting the active duration outcome",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/audit.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned duration creation, terminal waiting, completion/drop and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/auditTime.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned duration creation, terminal waiting, completion/drop and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/timer.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned duration creation, terminal waiting, completion/drop and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/util/executeSchedule.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned duration creation, terminal waiting, completion/drop and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned duration creation, terminal waiting, completion/drop and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned duration creation, terminal waiting, completion/drop and teardown semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session07-audit-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session07-audit-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-07.md"
+    }
+  },
+  "parameters": {
+    "operator": "auditTime",
+    "duration": 3
+  },
+  "rules": [
+    {
+      "id": "AUDITTIME-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "fresh valid clock",
+      "to": "Idle",
+      "actions": [
+        "subscribe to the source"
+      ],
+      "nextState": "idle without a duration",
+      "explanation": "Construction does not connect. Subscription acquires a source; first next starts a duration.",
+      "obligations": [
+        "S7-AUDITTIME-INIT"
+      ]
+    },
+    {
+      "id": "AUDITTIME-START",
+      "from": "Idle",
+      "event": "source.next",
+      "guard": "valid clock, fresh generation and duration deadline",
+      "to": "Pending",
+      "actions": [
+        "schedule one timer; retain the input"
+      ],
+      "nextState": "pending with one scheduled duration and latest value",
+      "explanation": "The first value starts a timer once; it is not emitted immediately.",
+      "obligations": [
+        "S7-AUDITTIME-START"
+      ]
+    },
+    {
+      "id": "AUDITTIME-REPLACE",
+      "from": "Pending",
+      "event": "source.next",
+      "guard": "duration remains active",
+      "to": "Pending",
+      "actions": [],
+      "nextState": "same duration with latest input replaced",
+      "explanation": "Values arriving during an active duration replace the pending value; neither the selector nor timer restarts.",
+      "obligations": [
+        "S7-AUDITTIME-REPLACE"
+      ]
+    },
+    {
+      "id": "AUDITTIME-COMPLETE-IDLE",
+      "from": "Idle",
+      "event": "source.complete",
+      "guard": "no active duration",
+      "to": "Closed",
+      "actions": [
+        "complete downstream",
+        "release source"
+      ],
+      "nextState": "closed by completion",
+      "explanation": "Without an active duration, completion passes downstream immediately.",
+      "obligations": [
+        "S7-AUDITTIME-COMPLETE-IDLE"
+      ]
+    },
+    {
+      "id": "AUDITTIME-COMPLETE-PENDING",
+      "from": "Pending",
+      "event": "source.complete",
+      "guard": "duration active",
+      "to": "Waiting",
+      "actions": [
+        "release completed source; retain duration"
+      ],
+      "nextState": "waiting for duration outcome, no new source values",
+      "explanation": "A source completion with an active duration waits: it does not flush the pending value or cancel its duration.",
+      "obligations": [
+        "S7-AUDITTIME-COMPLETE-PENDING"
+      ]
+    },
+    {
+      "id": "AUDITTIME-DURATION-NEXT",
+      "from": "Pending",
+      "event": "timer.fire",
+      "guard": "matching timer identity at or after deadline",
+      "to": "Idle",
+      "actions": [
+        "release active duration",
+        "emit latest pending source value"
+      ],
+      "nextState": "idle and ready for the next source value",
+      "explanation": "A duration next ends the window and emits the latest retained source value.",
+      "obligations": [
+        "S7-AUDITTIME-DURATION-NEXT"
+      ]
+    },
+    {
+      "id": "AUDITTIME-WAITING-DURATION-NEXT",
+      "from": "Waiting",
+      "event": "timer.fire",
+      "guard": "matching timer identity at or after deadline",
+      "to": "Closed",
+      "actions": [
+        "release active duration",
+        "emit latest pending source value",
+        "complete downstream"
+      ],
+      "nextState": "closed by delayed completion",
+      "explanation": "After source completion, duration next emits the latest value, then completes.",
+      "obligations": [
+        "S7-AUDITTIME-WAITING-DURATION-NEXT"
+      ]
+    },
+    {
+      "id": "AUDITTIME-SOURCE-ERROR-IDLE",
+      "from": "Idle",
+      "event": "source.error",
+      "guard": "valid clock and live execution",
+      "to": "Closed",
+      "actions": [
+        "forward error unchanged",
+        "release owned subscriptions/timer without flush"
+      ],
+      "nextState": "closed with pending value discarded",
+      "explanation": "A source error terminates and discards any pending value.",
+      "obligations": [
+        "S7-AUDITTIME-SOURCE-ERROR-IDLE"
+      ]
+    },
+    {
+      "id": "AUDITTIME-CANCEL-IDLE",
+      "from": "Idle",
+      "event": "cancel",
+      "guard": "valid clock and live execution",
+      "to": "Closed",
+      "actions": [
+        "release owned subscriptions/timer without flush"
+      ],
+      "nextState": "closed with pending value discarded",
+      "explanation": "Cancellation does not emit completion or a pending value.",
+      "obligations": [
+        "S7-AUDITTIME-CANCEL-IDLE"
+      ]
+    },
+    {
+      "id": "AUDITTIME-SOURCE-ERROR-PENDING",
+      "from": "Pending",
+      "event": "source.error",
+      "guard": "valid clock and live execution",
+      "to": "Closed",
+      "actions": [
+        "forward error unchanged",
+        "release owned subscriptions/timer without flush"
+      ],
+      "nextState": "closed with pending value discarded",
+      "explanation": "A source error terminates and discards any pending value.",
+      "obligations": [
+        "S7-AUDITTIME-SOURCE-ERROR-PENDING"
+      ]
+    },
+    {
+      "id": "AUDITTIME-CANCEL-PENDING",
+      "from": "Pending",
+      "event": "cancel",
+      "guard": "valid clock and live execution",
+      "to": "Closed",
+      "actions": [
+        "release owned subscriptions/timer without flush"
+      ],
+      "nextState": "closed with pending value discarded",
+      "explanation": "Cancellation does not emit completion or a pending value.",
+      "obligations": [
+        "S7-AUDITTIME-CANCEL-PENDING"
+      ]
+    },
+    {
+      "id": "AUDITTIME-CANCEL-WAITING",
+      "from": "Waiting",
+      "event": "cancel",
+      "guard": "valid clock and live execution",
+      "to": "Closed",
+      "actions": [
+        "release owned subscriptions/timer without flush"
+      ],
+      "nextState": "closed with pending value discarded",
+      "explanation": "Cancellation does not emit completion or a pending value.",
+      "obligations": [
+        "S7-AUDITTIME-CANCEL-WAITING"
+      ]
+    }
+  ]
+}

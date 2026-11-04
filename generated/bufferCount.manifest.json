@@ -1,0 +1,224 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "bufferCount-3-every-2",
+    "operator": "bufferCount",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Open a buffer every configured number of source values, emit full buffers, and flush residual open buffers on completion.",
+    "cardinality": {
+      "signature": "bufferCount(n,k) : T* -> (T*)*",
+      "conditions": [
+        "Each full buffer has size n, with possible shorter residual buffers flushed at completion.",
+        "k can be less than n (overlap), equal to n (contiguous), or greater than n (gaps).",
+        "An empty source completes without a bufferCount value; error and cancellation never flush."
+      ]
+    },
+    "scope": {
+      "parameters": "Positive safe-integer size and stride; source count remains within safe-integer range",
+      "callbacks": "No user callback. Source values retain reference identity inside emitted arrays; emitted arrays are fresh snapshots.",
+      "time": "No timer or scheduler introduced. Source/notifier order is supplied by input sequence, including equal timestamps.",
+      "reentrancy": "Post-setup, atomic non-reentrant notifications; setup-time synchronous delivery, observer throw and cancellation during delivery are excluded.",
+      "exclusions": [
+        "Invalid/zero/negative/fractional bufferCount arguments, count overflow and arbitrary producer reentrancy.",
+        "Synchronous notifier/source delivery during subscription setup, throwing observers/finalizers and cancellation during output delivery.",
+        "ObservableInput conversion outside Observable notifiers, universal symbolic equivalence and arbitrary mutation of output arrays by observers."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire the source with no open buffers until the first source next."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing or replay introduced. Every result subscription has its own buffers and counters.",
+      "reset": "Fresh arrays/counters per execution; Closed has no legal inputs.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current execution"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Each source notification opens a buffer on stride boundaries, appends to every active buffer, then emits and removes every full buffer in open order.",
+      "cancellationCheckpoints": [
+        "Between resolved notifications; unsubscribe without a final buffer or synthetic complete.",
+        "No callback/scheduler work is introduced; exact finalizer microorder is excluded."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "connect the operator to its inputs"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "append the source value to active buffers"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "flush open buffers and complete"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "discard buffers and propagate error"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "cancel without flushing"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "notify",
+      "unsubscribe"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not subscribed",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source connected, buffers and input count remembered",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, errored, or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/bufferCount.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned buffer opening, flush, notifier and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned buffer opening, flush, notifier and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned buffer opening, flush, notifier and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned buffer opening, flush, notifier and teardown semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session07-buffer-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session07-buffer-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-07.md"
+    }
+  },
+  "parameters": {
+    "operator": "bufferCount",
+    "bufferSize": 3,
+    "startBufferEvery": 2
+  },
+  "rules": [
+    {
+      "id": "BUFFERCOUNT-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "guard": "fresh execution",
+      "to": "Active",
+      "actions": [
+        "subscribe to source"
+      ],
+      "nextState": "no input seen and no open buffers",
+      "obligations": [
+        "S7-BUFFERCOUNT-INIT"
+      ],
+      "explanation": "Construction is lazy. Each subscription initializes new state and acquires source inputs."
+    },
+    {
+      "id": "BUFFERCOUNT-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "guard": "connected with valid counter",
+      "to": "Active",
+      "actions": [
+        "open on stride boundary, append to all open buffers, emit and remove full buffers"
+      ],
+      "nextState": "advance the input counter and retain incomplete buffers",
+      "obligations": [
+        "S7-BUFFERCOUNT-NEXT"
+      ],
+      "explanation": "A buffer opens on source indices 0,k,2k,...; full buffers are emitted in order after the current value has been appended."
+    },
+    {
+      "id": "BUFFERCOUNT-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "guard": "connected",
+      "to": "Closed",
+      "actions": [
+        "emit all remaining buffers",
+        "complete downstream",
+        "release owned subscriptions"
+      ],
+      "nextState": "closed and buffers discarded",
+      "obligations": [
+        "S7-BUFFERCOUNT-SOURCE-COMPLETE"
+      ],
+      "explanation": "Completion flushes only open residual buffers; it never emits a new empty buffer if no source values created one."
+    },
+    {
+      "id": "BUFFERCOUNT-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "guard": "connected",
+      "to": "Closed",
+      "actions": [
+        "forward original source error",
+        "release subscriptions without flush"
+      ],
+      "nextState": "closed with buffered values discarded",
+      "obligations": [
+        "S7-BUFFERCOUNT-SOURCE-ERROR"
+      ],
+      "explanation": "Source error propagates unchanged; stored values are not emitted."
+    },
+    {
+      "id": "BUFFERCOUNT-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "guard": "connected between reactions",
+      "to": "Closed",
+      "actions": [
+        "release subscriptions with no notification"
+      ],
+      "nextState": "closed with buffered values discarded",
+      "obligations": [
+        "S7-BUFFERCOUNT-CANCEL"
+      ],
+      "explanation": "Cancellation silently stops the operator and releases its owned subscriptions."
+    }
+  ]
+}

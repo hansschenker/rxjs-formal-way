@@ -1,0 +1,254 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "bufferCount-3-every-2",
+      "executionId": "bufferCount-session7-example",
+      "ruleId": "BUFFERCOUNT-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 0,
+        "notifierLive": false,
+        "records": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "bufferCount-3-every-2",
+      "executionId": "bufferCount-session7-example",
+      "ruleId": "BUFFERCOUNT-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 0,
+        "notifierLive": false,
+        "records": []
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 1,
+        "notifierLive": false,
+        "records": [
+          {
+            "start": 0,
+            "values": [
+              1
+            ]
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "bufferCount-3-every-2",
+      "executionId": "bufferCount-session7-example",
+      "ruleId": "BUFFERCOUNT-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 1,
+        "notifierLive": false,
+        "records": [
+          {
+            "start": 0,
+            "values": [
+              1
+            ]
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 2,
+        "notifierLive": false,
+        "records": [
+          {
+            "start": 0,
+            "values": [
+              1,
+              2
+            ]
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "bufferCount-3-every-2",
+      "executionId": "bufferCount-session7-example",
+      "ruleId": "BUFFERCOUNT-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 3
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 2,
+        "notifierLive": false,
+        "records": [
+          {
+            "start": 0,
+            "values": [
+              1,
+              2
+            ]
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 3,
+        "notifierLive": false,
+        "records": [
+          {
+            "start": 2,
+            "values": [
+              3
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              1,
+              2,
+              3
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "bufferCount-3-every-2",
+      "executionId": "bufferCount-session7-example",
+      "ruleId": "BUFFERCOUNT-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 4
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 3,
+        "notifierLive": false,
+        "records": [
+          {
+            "start": 2,
+            "values": [
+              3
+            ]
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 4,
+        "notifierLive": false,
+        "records": [
+          {
+            "start": 2,
+            "values": [
+              3,
+              4
+            ]
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "bufferCount-3-every-2",
+      "executionId": "bufferCount-session7-example",
+      "ruleId": "BUFFERCOUNT-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 4,
+        "notifierLive": false,
+        "records": [
+          {
+            "start": 2,
+            "values": [
+              3,
+              4
+            ]
+          }
+        ]
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              3,
+              4
+            ]
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}
