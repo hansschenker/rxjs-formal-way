@@ -264,6 +264,6 @@ export const bufferTimeOverlapExample:readonly TimedEvent<BufferTimeEvent<number
   {time:2,event:{type:'creation.fire',now:2,resource:cref(0)}},
   {time:3,event:{type:'source.next',now:3,value:2}},
   {time:4,event:{type:'window.fire',now:4,resource:wref(0)}},
-  {time:5,event:{type:'window.fire',now:5,resource:wref(1)}},
-  {time:6,event:{type:'source.complete',now:6}},
+  {time:6,event:{type:'window.fire',now:6,resource:wref(1)}},
+  {time:7,event:{type:'source.complete',now:7}},
 ];
