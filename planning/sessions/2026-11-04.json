@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-04",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-04T08:09:46+01:00",
   "startingCommit": "c4736db6e3ae424f402c3f1c4f0b79c272acfa43",
   "selectedNames": [
@@ -12,28 +12,81 @@
     "bufferCount",
     "bufferTime"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
+  "workedNames": [
     "audit",
     "auditTime",
     "buffer",
     "bufferCount",
     "bufferTime"
   ],
-  "commits": [],
+  "completedNames": [
+    "audit",
+    "auditTime",
+    "buffer",
+    "bufferCount",
+    "bufferTime"
+  ],
+  "carryovers": [],
+  "commits": [
+    "608a02953f66bb2b59fae9a68f1b554d75d32b83",
+    "72a97eb86aedd703f394f79fa3fbf4967cbd12aa",
+    "b005bbafd15e1c47fa6dc8056d19ee4ed11fb662",
+    "f2eb6931fcf1ddd4eebf4af42ab39cbb20890804"
+  ],
   "checks": {
-    "syntax": "not run",
-    "types": "not run",
-    "model": "not run",
-    "runtime": "not run",
-    "generated": "not run",
-    "ci": "not retrieved"
+    "syntax": "passed in implementation push and read-only PR CI",
+    "types": "strict checks passed; 17 new negative TS assertions, 129 cumulative",
+    "model": "Session 7 canonical model named tests passed in 715-test suite",
+    "runtime": "actual RxJS independent tests passed; 2223 new bounded comparisons",
+    "generated": "312 committed views verified read-only, 48 new across six configurations",
+    "ci": "push run 41792399467 and PR run 41792585389 both succeeded; read-only run skipped generation and publication"
   },
   "notes": [
-    "No existing Europe/Zurich 2026-11-04 session file on live main. Selected first five pending names in authoritative JSON queue; no carryovers from 2026-11-03."
+    "No existing Europe/Zurich 2026-11-04 session file on live main. Selected first five pending names in authoritative JSON queue; no carryovers from 2026-11-03.",
+    "Source-pinned RxJS 7.8.2 implementation revision e5351d02e225e275ac0e497c7b66eaa5f0c88791 inspected for audit, auditTime, buffer, bufferCount and bufferTime.",
+    "One branch session07-2026-11-04 handled exactly five operator export names, with two bufferTime generator profiles counted once.",
+    "Preliminary PR 41791985429 failed TS narrowing, corrected without weakening types. PR 41792067414 and 41792147332 had passing tests but failed expected drift check because views were not committed; those are not acceptance evidence.",
+    "Push CI 41792399467 generated and validated 312 views, ran all 715 named tests, and committed 48 new views at b005bbafd.",
+    "Independent read-only PR #8 41792585389 succeeded on synthetic checkout 3b96d3ed with Git tree equal to its PR head and skipped generation/publication.",
+    "No sixth operator or second session started. Model-predicted traces are not native executions. 2223 bounded comparisons are not a universal proof."
   ],
   "blockers": [],
-  "evidence": null,
-  "nextSessionNotBefore": "2026-11-05"
+  "evidence": "evidence/SESSION-07.md",
+  "nextSessionNotBefore": "2026-11-05",
+  "nextQueue": [
+    "bufferToggle",
+    "bufferWhen",
+    "catchError",
+    "combineAll",
+    "combineLatestAll"
+  ],
+  "closedAt": "2026-11-04T08:30:18+01:00",
+  "provenanceLimitations": [
+    "Read-only PR checked a synthetic merge commit; independent Git-tree equality with its head is established.",
+    "Final closure edits docs/planning only and are not misidentified as implementation-test SHA."
+  ],
+  "verification": {
+    "testedCommit": "72a97eb86aedd703f394f79fa3fbf4967cbd12aa",
+    "implementationCommit": "72a97eb86aedd703f394f79fa3fbf4967cbd12aa",
+    "generatedCommit": "b005bbafd15e1c47fa6dc8056d19ee4ed11fb662",
+    "pushRun": 41792399467,
+    "pushJob": 126448562927,
+    "readOnlyRun": 41792585389,
+    "readOnlyJob": 126449171258,
+    "prNumber": 8,
+    "readOnlyHeadCommit": "f2eb6931fcf1ddd4eebf4af42ab39cbb20890804",
+    "readOnlyBaseCommit": "b005bbafd15e1c47fa6dc8056d19ee4ed11fb662",
+    "readOnlyCheckout": "3b96d3edab70f0510cf676dc06ba31484c7625e2",
+    "readOnlyCheckoutTree": "80879f99f29f00a73a8236e9746b508470263d8a",
+    "readOnlyHeadTree": "80879f99f29f00a73a8236e9746b508470263d8a",
+    "namedTestsPassed": 715,
+    "newNamedTests": 45,
+    "negativeTypeAssertions": 129,
+    "newNegativeTypeAssertions": 17,
+    "generatedViews": 312,
+    "newGeneratedViews": 48,
+    "newBoundedModelRxjsScenarios": 2223,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  }
 }

@@ -22,7 +22,9 @@ This is the current implementation tracker. The migration map preserves the orig
 | M03-P | **Compositional Pipeline Semantics**: product state, action routing, synchronous closure, bounded model checking | Implemented first executable kernel; [guide](M03-COMPOSITIONAL-PIPELINES.md) |
 | M06-A | reduce (seeded/unseeded), count (plain/predicate), toArray terminal aggregation | Accepted within scope; [Session 6 guide](SESSION-06-AGGREGATION.md) |
 | M06-B | min/max default numeric and custom comparer policies | Accepted within scope; [Session 6 evidence](../evidence/SESSION-06.md) |
-| M06+ | Remaining catalogue | 83 exports pending; not a universal interpreter |
+| M07-A | audit/auditTime duration policies, latest value and deferred completion | Accepted within scope; [Session 7 guide](SESSION-07-TIME-AND-BUFFERS.md) |
+| M07-B | buffer/bufferCount/bufferTime notification, count and scheduled-window policies | Accepted within scope; [Session 7 evidence](../evidence/SESSION-07.md) |
+| M07+ | Remaining catalogue | 78 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -99,13 +101,23 @@ Five pending exports—**reduce, count, toArray, min, max**—were modeled, inde
 
 **30 of 113 exports accepted; 83 pending.** Zero carryovers and no second batch.
 
+## Session 7 closed: 4 November 2026
+
+Exactly five distinct pending exports—**audit, auditTime, buffer, bufferCount, bufferTime**—were modeled and accepted within explicitly scoped profiles in one Europe/Zurich session. The first two use duration-driven latest-value admission and completion-waiting policies; the latter three use notifier, count and scheduler-driven accumulation/flush policies. Six generated configurations represent those five export names. See the [technical guide](SESSION-07-TIME-AND-BUFFERS.md) for pinned-source analysis, Cω shapes, states, action policies and exclusions.
+
+[Successful implementation push run 41792399467](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41792399467), job **126448562927**, tested commit `72a97eb86aedd703f394f79fa3fbf4967cbd12aa` and committed generated views at `b005bbafd15e1c47fa6dc8056d19ee4ed11fb662`. It ran syntax/strict TypeScript checks, **715 named tests with zero failures**, and generation-drift checking against **312 deterministic projections**, including **48 new views**. Of those, **45 named tests** and **17 negative type assertions** were introduced for this session. Tests contained **2,223 new bounded model/native word or virtual-time comparisons**.
+
+[Independent read-only PR run 41792585389](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41792585389), job **126449171258**, also passed **715 tests and 312 view checks**, explicitly skipping generation and publication. Its tested synthetic checkout `3b96d3edab70f0510cf676dc06ba31484c7625e2` has the same Git tree `80879f99f29f00a73a8236e9746b508470263d8a` as PR head `f2eb6931fcf1ddd4eebf4af42ab39cbb20890804`. Full details and preliminary failures are recorded in [Session 7 evidence](../evidence/SESSION-07.md).
+
+**35 of 113 exports accepted; 78 pending.** Zero carryovers; no second batch.
+
 ## Next pending batch
 
-Not before **4 November 2026 Europe/Zurich**:
-**audit, auditTime, buffer, bufferCount, bufferTime**. Maintain the five-name maximum,
-carryovers-first selection, actual RxJS comparisons, time,
-cancellation, sharing, and retrieved CI evidence. Finite
-coverage is not universal proof.
+Not before **5 November 2026 Europe/Zurich**:
+**bufferToggle, bufferWhen, catchError, combineAll, combineLatestAll**.
+Maintain the five-name maximum, carryovers-first selection,
+independent actual RxJS comparisons and retrieved CI evidence.
+Finite checks do not constitute a universal equivalence proof.
 
 ## Final project goal
 

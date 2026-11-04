@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "audit",
-    "auditTime",
-    "buffer",
-    "bufferCount",
-    "bufferTime",
     "bufferToggle",
     "bufferWhen",
     "catchError",
@@ -99,29 +94,79 @@
   ],
   "operators": {
     "audit": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-04",
+      "profiles": [
+        "Observable-duration-next",
+        "duration-complete-without-next",
+        "completion-waits-for-duration"
+      ],
+      "evidence": "evidence/SESSION-07.md",
+      "testedCommit": "72a97eb86aedd703f394f79fa3fbf4967cbd12aa",
+      "implementationRun": 41792399467,
+      "verificationRun": 41792585389,
+      "readOnlyHeadCommit": "f2eb6931fcf1ddd4eebf4af42ab39cbb20890804",
+      "readOnlyCheckout": "3b96d3edab70f0510cf676dc06ba31484c7625e2"
     },
     "auditTime": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-04",
+      "profiles": [
+        "deferred-positive-safe-integer-duration",
+        "completion-waits-for-timer"
+      ],
+      "evidence": "evidence/SESSION-07.md",
+      "testedCommit": "72a97eb86aedd703f394f79fa3fbf4967cbd12aa",
+      "implementationRun": 41792399467,
+      "verificationRun": 41792585389,
+      "readOnlyHeadCommit": "f2eb6931fcf1ddd4eebf4af42ab39cbb20890804",
+      "readOnlyCheckout": "3b96d3edab70f0510cf676dc06ba31484c7625e2"
     },
     "buffer": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-04",
+      "profiles": [
+        "Observable-closing-notifier",
+        "empty-and-nonempty-flush",
+        "notifier-complete-does-not-flush"
+      ],
+      "evidence": "evidence/SESSION-07.md",
+      "testedCommit": "72a97eb86aedd703f394f79fa3fbf4967cbd12aa",
+      "implementationRun": 41792399467,
+      "verificationRun": 41792585389,
+      "readOnlyHeadCommit": "f2eb6931fcf1ddd4eebf4af42ab39cbb20890804",
+      "readOnlyCheckout": "3b96d3edab70f0510cf676dc06ba31484c7625e2"
     },
     "bufferCount": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-04",
+      "profiles": [
+        "contiguous",
+        "overlapping-stride",
+        "gapped-stride",
+        "residual-completion-flush"
+      ],
+      "evidence": "evidence/SESSION-07.md",
+      "testedCommit": "72a97eb86aedd703f394f79fa3fbf4967cbd12aa",
+      "implementationRun": 41792399467,
+      "verificationRun": 41792585389,
+      "readOnlyHeadCommit": "f2eb6931fcf1ddd4eebf4af42ab39cbb20890804",
+      "readOnlyCheckout": "3b96d3edab70f0510cf676dc06ba31484c7625e2"
     },
     "bufferTime": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-04",
+      "profiles": [
+        "single-timed-window",
+        "overlapping-creation-interval",
+        "max-size-early-close"
+      ],
+      "evidence": "evidence/SESSION-07.md",
+      "testedCommit": "72a97eb86aedd703f394f79fa3fbf4967cbd12aa",
+      "implementationRun": 41792399467,
+      "verificationRun": 41792585389,
+      "readOnlyHeadCommit": "f2eb6931fcf1ddd4eebf4af42ab39cbb20890804",
+      "readOnlyCheckout": "3b96d3edab70f0510cf676dc06ba31484c7625e2"
     },
     "bufferToggle": {
       "status": "pending",
