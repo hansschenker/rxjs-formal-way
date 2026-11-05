@@ -1,0 +1,360 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "combineAll-deferred-latest-array",
+    "operator": "combineAll",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Collect inner sources until the outer completes; then subscribe and emit fresh arrays whenever an inner updates after all first values arrive.",
+    "cardinality": {
+      "signature": "combineAll : (T*)* -> (T[])*",
+      "conditions": [
+        "The outer emits inner Observable identities; no inner is subscribed until outer completion.",
+        "After outer completion, with n nonempty sources, no output is permitted until every inner has emitted at least once.",
+        "Thereafter each inner next emits a fresh n-element latest-value array in outer-source order; completion waits for every inner to complete.",
+        "An empty outer completes with no next. Any inner errors terminate immediately."
+      ]
+    },
+    "scope": {
+      "parameters": "Deprecated exact alias to combineLatestAll; no projector.",
+      "callbacks": "No user callback for this profile; projector overload must be specified/tested separately and is not claimed here.",
+      "time": "No internal timer. Collection barrier is outer completion; subsequent ordering is determined by inner notifications, including equal-time arrival order.",
+      "reentrancy": "Inner notifications delivered after all initial inner subscriptions have been installed; arbitrary synchronous emissions during that setup excluded.",
+      "exclusions": [
+        "Optional project function, arbitrary ObservableInput/Promise conversion and synchronous/reentrant emission during inner subscription setup.",
+        "Observer/finalizer throw, cancellation inside output delivery, outer observable reference mutation and universal symbolic equivalence.",
+        "No early completion when an inner completes without a value: pinned RxJS combineLatestInit waits for every inner completion."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Connect outer only, retain inner-source tokens, subscribe to all collected inners only after outer completion."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing. One execution holds source collection and one subscription per collected inner.",
+      "reset": "Each subscription starts without latest values. Ready flags distinguish not-yet-emitted from a real undefined value.",
+      "resources": [
+        {
+          "id": "outer",
+          "kind": "subscription",
+          "owner": "current execution"
+        },
+        {
+          "id": "inner",
+          "kind": "subscription",
+          "owner": "each collected inner source"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Collect while outer is live, then connect inners in order; each latest notification replaces one slot and emits only when every slot is ready.",
+      "cancellationCheckpoints": [
+        "Explicit cancellation disposes live sources without completion or pending value output.",
+        "Source completion and inner completion are separate; no scheduler or sharing is implied."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start outer subscription"
+      },
+      {
+        "type": "outer.next",
+        "origin": "outer",
+        "category": "notification",
+        "description": "store inner source token"
+      },
+      {
+        "type": "outer.complete",
+        "origin": "outer",
+        "category": "notification",
+        "description": "start all inner sources or complete for empty outer"
+      },
+      {
+        "type": "outer.error",
+        "origin": "outer",
+        "category": "notification",
+        "description": "terminate without subscribing any inner"
+      },
+      {
+        "type": "inner.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "update latest slot and maybe emit tuple"
+      },
+      {
+        "type": "inner.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "mark inner finished, terminate when all finished"
+      },
+      {
+        "type": "inner.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "error and dispose every active inner"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "silent cancellation"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not connected",
+        "terminal": false
+      },
+      {
+        "id": "Collecting",
+        "description": "collecting inner source identities, no inner connected",
+        "terminal": false
+      },
+      {
+        "id": "Joining",
+        "description": "inner values and ready/liveness flags",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, errored or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/combineAll.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Exact deprecated function alias to combineLatestAll"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/combineLatestAll.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Delegation to joinAllInternals"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/joinAllInternals.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "toArray then mergeMap join after outer completes"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/combineLatest.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Ready flag, emitted latest array and active completion policy"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session08-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session08-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-08.md"
+    }
+  },
+  "parameters": {
+    "operator": "combineAll",
+    "projector": "none"
+  },
+  "rules": [
+    {
+      "id": "COMBINEALL-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Collecting",
+      "guard": "fresh subscription",
+      "actions": [
+        "connect outer"
+      ],
+      "nextState": "preserve ordered source and latest bindings",
+      "obligations": [
+        "S8-COMBINEALL-INIT"
+      ],
+      "explanation": "Inner streams are not connected during collection."
+    },
+    {
+      "id": "COMBINEALL-OUTER-NEXT",
+      "from": "Collecting",
+      "event": "outer.next",
+      "to": "Collecting",
+      "guard": "outer still open; bounded count",
+      "actions": [
+        "retain source identity in arrival order"
+      ],
+      "nextState": "preserve ordered source and latest bindings",
+      "obligations": [
+        "S8-COMBINEALL-OUTER-NEXT"
+      ],
+      "explanation": "No inner subscribes when its token arrives."
+    },
+    {
+      "id": "COMBINEALL-OUTER-EMPTY",
+      "from": "Collecting",
+      "event": "outer.complete",
+      "to": "Closed",
+      "guard": "no collected inner sources",
+      "actions": [
+        "complete without value",
+        "release outer"
+      ],
+      "nextState": "terminal",
+      "obligations": [
+        "S8-COMBINEALL-OUTER-EMPTY"
+      ],
+      "explanation": "Combining zero input sources completes without emitting an empty array."
+    },
+    {
+      "id": "COMBINEALL-OUTER-JOIN",
+      "from": "Collecting",
+      "event": "outer.complete",
+      "to": "Joining",
+      "guard": "at least one collected inner source",
+      "actions": [
+        "release outer",
+        "subscribe all collected inner sources in arrival order"
+      ],
+      "nextState": "preserve ordered source and latest bindings",
+      "obligations": [
+        "S8-COMBINEALL-OUTER-JOIN"
+      ],
+      "explanation": "A join begins only after outer completes."
+    },
+    {
+      "id": "COMBINEALL-OUTER-ERROR",
+      "from": "Collecting",
+      "event": "outer.error",
+      "to": "Closed",
+      "guard": "outer still active",
+      "actions": [
+        "error without joining any inners",
+        "release outer"
+      ],
+      "nextState": "terminal",
+      "obligations": [
+        "S8-COMBINEALL-OUTER-ERROR"
+      ],
+      "explanation": "Outer errors terminate without subscribing the retained inner tokens."
+    },
+    {
+      "id": "COMBINEALL-INNER-WAIT",
+      "from": "Joining",
+      "event": "inner.next",
+      "to": "Joining",
+      "guard": "live inner and at least one slot remains unready",
+      "actions": [
+        "record latest and first-value status; no output"
+      ],
+      "nextState": "preserve ordered source and latest bindings",
+      "obligations": [
+        "S8-COMBINEALL-INNER-WAIT"
+      ],
+      "explanation": "Each inner must deliver its first value before the result can emit."
+    },
+    {
+      "id": "COMBINEALL-INNER-EMIT",
+      "from": "Joining",
+      "event": "inner.next",
+      "to": "Joining",
+      "guard": "live inner and every other slot ready",
+      "actions": [
+        "update one latest value",
+        "emit fresh ordered tuple"
+      ],
+      "nextState": "preserve ordered source and latest bindings",
+      "obligations": [
+        "S8-COMBINEALL-INNER-EMIT"
+      ],
+      "explanation": "Once all first values exist, each subsequent inner next emits one full latest snapshot."
+    },
+    {
+      "id": "COMBINEALL-INNER-COMPLETE-WAIT",
+      "from": "Joining",
+      "event": "inner.complete",
+      "to": "Joining",
+      "guard": "live inner and another still live",
+      "actions": [
+        "release completed inner, retain its last value"
+      ],
+      "nextState": "preserve ordered source and latest bindings",
+      "obligations": [
+        "S8-COMBINEALL-INNER-COMPLETE-WAIT"
+      ],
+      "explanation": "An inner completing without a first value prevents further output but does not complete result until all inners end."
+    },
+    {
+      "id": "COMBINEALL-INNER-COMPLETE-LAST",
+      "from": "Joining",
+      "event": "inner.complete",
+      "to": "Closed",
+      "guard": "final live inner",
+      "actions": [
+        "complete",
+        "release final inner"
+      ],
+      "nextState": "terminal",
+      "obligations": [
+        "S8-COMBINEALL-INNER-COMPLETE-LAST"
+      ],
+      "explanation": "The joined stream completes only after its last active inner completes."
+    },
+    {
+      "id": "COMBINEALL-INNER-ERROR",
+      "from": "Joining",
+      "event": "inner.error",
+      "to": "Closed",
+      "guard": "matching live inner",
+      "actions": [
+        "error immediately",
+        "release all live inner subscriptions"
+      ],
+      "nextState": "terminal",
+      "obligations": [
+        "S8-COMBINEALL-INNER-ERROR"
+      ],
+      "explanation": "Inner errors propagate unchanged, without retaining a partial tuple."
+    },
+    {
+      "id": "COMBINEALL-CANCEL-COLLECT",
+      "from": "Collecting",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "outer live",
+      "actions": [
+        "release outer silently"
+      ],
+      "nextState": "terminal",
+      "obligations": [
+        "S8-COMBINEALL-CANCEL-COLLECT"
+      ],
+      "explanation": "Discard collected tokens without subscribing to them."
+    },
+    {
+      "id": "COMBINEALL-CANCEL-JOIN",
+      "from": "Joining",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "join live",
+      "actions": [
+        "release live inners silently"
+      ],
+      "nextState": "terminal",
+      "obligations": [
+        "S8-COMBINEALL-CANCEL-JOIN"
+      ],
+      "explanation": "Cancel all active inner sources, without completing downstream."
+    }
+  ]
+}

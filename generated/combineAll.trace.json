@@ -1,0 +1,416 @@
+{
+  "status": "finished-input",
+  "consumed": 9,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "combineAll-deferred-latest-array",
+      "executionId": "combineAll-session8-example",
+      "ruleId": "COMBINEALL-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Collecting",
+        "sources": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "combineAll-deferred-latest-array",
+      "executionId": "combineAll-session8-example",
+      "ruleId": "COMBINEALL-OUTER-NEXT",
+      "event": {
+        "type": "outer.next",
+        "value": "left"
+      },
+      "before": {
+        "phase": "Collecting",
+        "sources": []
+      },
+      "after": {
+        "phase": "Collecting",
+        "sources": [
+          "left"
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "combineAll-deferred-latest-array",
+      "executionId": "combineAll-session8-example",
+      "ruleId": "COMBINEALL-OUTER-NEXT",
+      "event": {
+        "type": "outer.next",
+        "value": "right"
+      },
+      "before": {
+        "phase": "Collecting",
+        "sources": [
+          "left"
+        ]
+      },
+      "after": {
+        "phase": "Collecting",
+        "sources": [
+          "left",
+          "right"
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "combineAll-deferred-latest-array",
+      "executionId": "combineAll-session8-example",
+      "ruleId": "COMBINEALL-OUTER-JOIN",
+      "event": {
+        "type": "outer.complete"
+      },
+      "before": {
+        "phase": "Collecting",
+        "sources": [
+          "left",
+          "right"
+        ]
+      },
+      "after": {
+        "phase": "Joining",
+        "slots": [
+          {
+            "source": "left",
+            "ready": false,
+            "live": true
+          },
+          {
+            "source": "right",
+            "ready": false,
+            "live": true
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "combineAll-deferred-latest-array",
+      "executionId": "combineAll-session8-example",
+      "ruleId": "COMBINEALL-INNER-WAIT",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 0
+        },
+        "value": 1
+      },
+      "before": {
+        "phase": "Joining",
+        "slots": [
+          {
+            "source": "left",
+            "ready": false,
+            "live": true
+          },
+          {
+            "source": "right",
+            "ready": false,
+            "live": true
+          }
+        ]
+      },
+      "after": {
+        "phase": "Joining",
+        "slots": [
+          {
+            "source": "left",
+            "ready": true,
+            "live": true,
+            "value": 1
+          },
+          {
+            "source": "right",
+            "ready": false,
+            "live": true
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "combineAll-deferred-latest-array",
+      "executionId": "combineAll-session8-example",
+      "ruleId": "COMBINEALL-INNER-EMIT",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 1
+        },
+        "value": 10
+      },
+      "before": {
+        "phase": "Joining",
+        "slots": [
+          {
+            "source": "left",
+            "ready": true,
+            "live": true,
+            "value": 1
+          },
+          {
+            "source": "right",
+            "ready": false,
+            "live": true
+          }
+        ]
+      },
+      "after": {
+        "phase": "Joining",
+        "slots": [
+          {
+            "source": "left",
+            "ready": true,
+            "live": true,
+            "value": 1
+          },
+          {
+            "source": "right",
+            "ready": true,
+            "live": true,
+            "value": 10
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              1,
+              10
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "combineAll-deferred-latest-array",
+      "executionId": "combineAll-session8-example",
+      "ruleId": "COMBINEALL-INNER-EMIT",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 0
+        },
+        "value": 2
+      },
+      "before": {
+        "phase": "Joining",
+        "slots": [
+          {
+            "source": "left",
+            "ready": true,
+            "live": true,
+            "value": 1
+          },
+          {
+            "source": "right",
+            "ready": true,
+            "live": true,
+            "value": 10
+          }
+        ]
+      },
+      "after": {
+        "phase": "Joining",
+        "slots": [
+          {
+            "source": "left",
+            "ready": true,
+            "live": true,
+            "value": 2
+          },
+          {
+            "source": "right",
+            "ready": true,
+            "live": true,
+            "value": 10
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              2,
+              10
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 7,
+      "modelId": "combineAll-deferred-latest-array",
+      "executionId": "combineAll-session8-example",
+      "ruleId": "COMBINEALL-INNER-COMPLETE-WAIT",
+      "event": {
+        "type": "inner.complete",
+        "resource": {
+          "id": "inner",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Joining",
+        "slots": [
+          {
+            "source": "left",
+            "ready": true,
+            "live": true,
+            "value": 2
+          },
+          {
+            "source": "right",
+            "ready": true,
+            "live": true,
+            "value": 10
+          }
+        ]
+      },
+      "after": {
+        "phase": "Joining",
+        "slots": [
+          {
+            "source": "left",
+            "ready": true,
+            "live": false,
+            "value": 2
+          },
+          {
+            "source": "right",
+            "ready": true,
+            "live": true,
+            "value": 10
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 8,
+      "modelId": "combineAll-deferred-latest-array",
+      "executionId": "combineAll-session8-example",
+      "ruleId": "COMBINEALL-INNER-COMPLETE-LAST",
+      "event": {
+        "type": "inner.complete",
+        "resource": {
+          "id": "inner",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Joining",
+        "slots": [
+          {
+            "source": "left",
+            "ready": true,
+            "live": false,
+            "value": 2
+          },
+          {
+            "source": "right",
+            "ready": true,
+            "live": true,
+            "value": 10
+          }
+        ]
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        }
+      ]
+    }
+  ]
+}

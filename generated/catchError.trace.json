@@ -1,0 +1,189 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "catchError-one-Observable-replacement",
+      "executionId": "catchError-session8-example",
+      "ruleId": "CATCHERROR-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Source"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "catchError-one-Observable-replacement",
+      "executionId": "catchError-session8-example",
+      "ruleId": "CATCHERROR-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Source"
+      },
+      "after": {
+        "phase": "Source"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "catchError-one-Observable-replacement",
+      "executionId": "catchError-session8-example",
+      "ruleId": "CATCHERROR-SOURCE-ERROR",
+      "event": {
+        "type": "source.error",
+        "error": "fail"
+      },
+      "before": {
+        "phase": "Source"
+      },
+      "after": {
+        "phase": "Calling",
+        "originalError": "fail"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "selector",
+            "generation": 0
+          },
+          "index": 0,
+          "value": "fail"
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "catchError-one-Observable-replacement",
+      "executionId": "catchError-session8-example",
+      "ruleId": "CATCHERROR-SELECTOR-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "selector",
+          "generation": 0
+        },
+        "replacement": "recovery"
+      },
+      "before": {
+        "phase": "Calling",
+        "originalError": "fail"
+      },
+      "after": {
+        "phase": "Replacement"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "replacement",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 3,
+      "modelId": "catchError-one-Observable-replacement",
+      "executionId": "catchError-session8-example",
+      "ruleId": "CATCHERROR-REPLACEMENT-NEXT",
+      "event": {
+        "type": "replacement.next",
+        "value": "fallback"
+      },
+      "before": {
+        "phase": "Replacement"
+      },
+      "after": {
+        "phase": "Replacement"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "fallback"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 4,
+      "modelId": "catchError-one-Observable-replacement",
+      "executionId": "catchError-session8-example",
+      "ruleId": "CATCHERROR-REPLACEMENT-COMPLETE",
+      "event": {
+        "type": "replacement.complete"
+      },
+      "before": {
+        "phase": "Replacement"
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "replacement",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

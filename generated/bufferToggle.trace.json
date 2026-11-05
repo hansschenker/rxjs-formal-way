@@ -1,0 +1,542 @@
+{
+  "status": "finished-input",
+  "consumed": 10,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "bufferToggle-Observable-selector",
+      "executionId": "bufferToggle-session8-example",
+      "ruleId": "BUFFERTOGGLE-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 0,
+        "records": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "openings",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "bufferToggle-Observable-selector",
+      "executionId": "bufferToggle-session8-example",
+      "ruleId": "BUFFERTOGGLE-OPENINGS-NEXT",
+      "event": {
+        "type": "openings.next",
+        "value": "a"
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 0,
+        "records": []
+      },
+      "after": {
+        "phase": "Calling",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 1,
+        "records": [
+          {
+            "id": 0,
+            "values": [],
+            "closingLive": false
+          }
+        ],
+        "pending": 0
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "selector",
+            "generation": 0
+          },
+          "index": 0,
+          "value": "a"
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "bufferToggle-Observable-selector",
+      "executionId": "bufferToggle-session8-example",
+      "ruleId": "BUFFERTOGGLE-CALLBACK-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "selector",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Calling",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 1,
+        "records": [
+          {
+            "id": 0,
+            "values": [],
+            "closingLive": false
+          }
+        ],
+        "pending": 0
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 1,
+        "records": [
+          {
+            "id": 0,
+            "values": [],
+            "closingLive": true
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "closing",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "bufferToggle-Observable-selector",
+      "executionId": "bufferToggle-session8-example",
+      "ruleId": "BUFFERTOGGLE-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 1,
+        "records": [
+          {
+            "id": 0,
+            "values": [],
+            "closingLive": true
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 1,
+        "records": [
+          {
+            "id": 0,
+            "values": [
+              1
+            ],
+            "closingLive": true
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 3,
+      "modelId": "bufferToggle-Observable-selector",
+      "executionId": "bufferToggle-session8-example",
+      "ruleId": "BUFFERTOGGLE-OPENINGS-NEXT",
+      "event": {
+        "type": "openings.next",
+        "value": "b"
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 1,
+        "records": [
+          {
+            "id": 0,
+            "values": [
+              1
+            ],
+            "closingLive": true
+          }
+        ]
+      },
+      "after": {
+        "phase": "Calling",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 2,
+        "records": [
+          {
+            "id": 0,
+            "values": [
+              1
+            ],
+            "closingLive": true
+          },
+          {
+            "id": 1,
+            "values": [],
+            "closingLive": false
+          }
+        ],
+        "pending": 1
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "selector",
+            "generation": 1
+          },
+          "index": 1,
+          "value": "b"
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "bufferToggle-Observable-selector",
+      "executionId": "bufferToggle-session8-example",
+      "ruleId": "BUFFERTOGGLE-CALLBACK-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "selector",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Calling",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 2,
+        "records": [
+          {
+            "id": 0,
+            "values": [
+              1
+            ],
+            "closingLive": true
+          },
+          {
+            "id": 1,
+            "values": [],
+            "closingLive": false
+          }
+        ],
+        "pending": 1
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 2,
+        "records": [
+          {
+            "id": 0,
+            "values": [
+              1
+            ],
+            "closingLive": true
+          },
+          {
+            "id": 1,
+            "values": [],
+            "closingLive": true
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "closing",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 4,
+      "modelId": "bufferToggle-Observable-selector",
+      "executionId": "bufferToggle-session8-example",
+      "ruleId": "BUFFERTOGGLE-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 2,
+        "records": [
+          {
+            "id": 0,
+            "values": [
+              1
+            ],
+            "closingLive": true
+          },
+          {
+            "id": 1,
+            "values": [],
+            "closingLive": true
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 2,
+        "records": [
+          {
+            "id": 0,
+            "values": [
+              1,
+              2
+            ],
+            "closingLive": true
+          },
+          {
+            "id": 1,
+            "values": [
+              2
+            ],
+            "closingLive": true
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 7,
+      "time": 5,
+      "modelId": "bufferToggle-Observable-selector",
+      "executionId": "bufferToggle-session8-example",
+      "ruleId": "BUFFERTOGGLE-CLOSING-NEXT",
+      "event": {
+        "type": "closing.next",
+        "resource": {
+          "id": "closing",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 2,
+        "records": [
+          {
+            "id": 0,
+            "values": [
+              1,
+              2
+            ],
+            "closingLive": true
+          },
+          {
+            "id": 1,
+            "values": [
+              2
+            ],
+            "closingLive": true
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 2,
+        "records": [
+          {
+            "id": 1,
+            "values": [
+              2
+            ],
+            "closingLive": true
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              1,
+              2
+            ]
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "closing",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 6,
+      "modelId": "bufferToggle-Observable-selector",
+      "executionId": "bufferToggle-session8-example",
+      "ruleId": "BUFFERTOGGLE-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 3
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 2,
+        "records": [
+          {
+            "id": 1,
+            "values": [
+              2
+            ],
+            "closingLive": true
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 2,
+        "records": [
+          {
+            "id": 1,
+            "values": [
+              2,
+              3
+            ],
+            "closingLive": true
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 9,
+      "time": 7,
+      "modelId": "bufferToggle-Observable-selector",
+      "executionId": "bufferToggle-session8-example",
+      "ruleId": "BUFFERTOGGLE-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "openingsLive": true,
+        "nextId": 2,
+        "records": [
+          {
+            "id": 1,
+            "values": [
+              2,
+              3
+            ],
+            "closingLive": true
+          }
+        ]
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              2,
+              3
+            ]
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "openings",
+            "generation": 0
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "closing",
+            "generation": 1
+          }
+        }
+      ]
+    }
+  ]
+}

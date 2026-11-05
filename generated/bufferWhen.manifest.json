@@ -1,0 +1,355 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "bufferWhen-Observable-selector",
+    "operator": "bufferWhen",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Open one buffer immediately; each selected closing notifier next flushes it and starts a fresh buffer.",
+    "cardinality": {
+      "signature": "bufferWhen : T* -> (T*)*",
+      "conditions": [
+        "An initial buffer is opened before source subscription; each closing next emits it, even empty.",
+        "A fresh closing selector is called for each newly opened buffer.",
+        "A closing notifier completing without next never closes its buffer; source completion flushes that buffer."
+      ]
+    },
+    "scope": {
+      "parameters": "Observable closing streams; selector called once per buffer",
+      "callbacks": "Selector invocation and return/throw modeled as correlated synchronous microsteps. The pure transition model never executes callbacks.",
+      "time": "Time and equal-time order come from externally ordered source/openings/closing notifications. No clock or scheduler is introduced.",
+      "reentrancy": "Atomic post-setup notifications; no reentrant notifications or cancellation inside selector, observers or teardown.",
+      "exclusions": [
+        "Non-Observable ObservableInput conversion (Promises, etc.), arbitrary synchronous/reentrant closing notification during subscription, throwing downstream observers/finalizers.",
+        "Cancellation inside selector or between output notification and resource release, callback side effects and arbitrary mutation of previously emitted array references.",
+        "Universal symbolic equivalence beyond the finite scoped protocol."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Open initial empty buffer, invoke closing selector and subscribe its result before subscribing to source."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing or replay; each result subscription owns all buffers and closing subscriptions.",
+      "reset": "Fresh buffer identity and selector generation per execution.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result subscriber"
+        },
+        {
+          "id": "closing",
+          "kind": "subscription",
+          "owner": "each open buffer"
+        },
+        {
+          "id": "selector",
+          "kind": "callback",
+          "owner": "each opening"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Closing next releases old closing subscription, swaps to an empty buffer, emits prior array then requests the next selector.",
+      "cancellationCheckpoints": [
+        "Between complete callback/notification reactions; cancel is silent and releases all owned resources.",
+        "Selection return/throw are correlated to the pending buffer generation."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start a new operator execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "append to open buffers"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "flush active buffers then complete"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "error without flushing"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "silent disposal"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "selected Observable is available"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "selector threw"
+      },
+      {
+        "type": "closing.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "close selected buffer"
+      },
+      {
+        "type": "closing.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "closing without next does not flush"
+      },
+      {
+        "type": "closing.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "closing error propagates"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "lazy not yet subscribed",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source and notifier resources managed",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "selector awaiting correlated outcome",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, errored or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/bufferWhen.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned selector/opening/closing source order and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Notification and teardown semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session08-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session08-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-08.md"
+    }
+  },
+  "parameters": {
+    "operator": "bufferWhen"
+  },
+  "rules": [
+    {
+      "id": "BUFFERWHEN-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Calling",
+      "guard": "fresh subscription",
+      "actions": [
+        "open empty buffer",
+        "invoke initial closing selector"
+      ],
+      "nextState": "await selector",
+      "obligations": [
+        "S8-BUFFERWHEN-INIT"
+      ],
+      "explanation": "No work begins before subscription; bufferToggle subscribes openings first, bufferWhen asks for closing before source."
+    },
+    {
+      "id": "BUFFERWHEN-CALLBACK-RETURN",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Active",
+      "guard": "matching selector generation",
+      "actions": [
+        "connect selected closing Observable",
+        "connect source if first buffer"
+      ],
+      "nextState": "retain exact buffer and resource bindings",
+      "obligations": [
+        "S8-BUFFERWHEN-CALLBACK-RETURN"
+      ],
+      "explanation": "The returned closing Observable is subscribed; on bufferWhen setup this happens before source connection."
+    },
+    {
+      "id": "BUFFERWHEN-CALLBACK-THROW",
+      "from": "Calling",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "matching selector generation",
+      "actions": [
+        "forward exact thrown error",
+        "release all owned subscriptions without flush"
+      ],
+      "nextState": "terminal",
+      "obligations": [
+        "S8-BUFFERWHEN-CALLBACK-THROW"
+      ],
+      "explanation": "Selector exceptions error the output and dispose resources; they do not close/flush pending buffers."
+    },
+    {
+      "id": "BUFFERWHEN-SOURCE-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source connected",
+      "actions": [
+        "append source value to every open buffer"
+      ],
+      "nextState": "retain exact buffer and resource bindings",
+      "obligations": [
+        "S8-BUFFERWHEN-SOURCE-NEXT"
+      ],
+      "explanation": "Values are opaque; source values belong to all currently open buffers."
+    },
+    {
+      "id": "BUFFERWHEN-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source connected",
+      "actions": [
+        "flush all open buffers in opening order",
+        "complete",
+        "release resources"
+      ],
+      "nextState": "terminal",
+      "obligations": [
+        "S8-BUFFERWHEN-SOURCE-COMPLETE"
+      ],
+      "explanation": "Completion flushes open buffers, including the one current buffer for bufferWhen."
+    },
+    {
+      "id": "BUFFERWHEN-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source connected",
+      "actions": [
+        "forward error",
+        "dispose without flush"
+      ],
+      "nextState": "terminal",
+      "obligations": [
+        "S8-BUFFERWHEN-SOURCE-ERROR"
+      ],
+      "explanation": "An error does not emit pending arrays."
+    },
+    {
+      "id": "BUFFERWHEN-CANCEL-ACTIVE",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "active execution",
+      "actions": [
+        "release resources; do not notify downstream"
+      ],
+      "nextState": "terminal",
+      "obligations": [
+        "S8-BUFFERWHEN-CANCEL-ACTIVE"
+      ],
+      "explanation": "Cancellation is silent."
+    },
+    {
+      "id": "BUFFERWHEN-CANCEL-CALLING",
+      "from": "Calling",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "pending selector call, between microsteps",
+      "actions": [
+        "release owned subscriptions; do not notify"
+      ],
+      "nextState": "terminal",
+      "obligations": [
+        "S8-BUFFERWHEN-CANCEL-CALLING"
+      ],
+      "explanation": "Model cancellation is at an explicit checkpoint, not inside executing user selector."
+    },
+    {
+      "id": "BUFFERWHEN-CLOSING-NEXT",
+      "from": "Active",
+      "event": "closing.next",
+      "to": "Calling",
+      "guard": "matching live closing generation",
+      "actions": [
+        "close previous selector subscription",
+        "replace with empty buffer",
+        "emit old array",
+        "invoke next selector"
+      ],
+      "nextState": "await selector",
+      "obligations": [
+        "S8-BUFFERWHEN-CLOSING-NEXT"
+      ],
+      "explanation": "One closing emission flushes the old array and starts selection for the next buffer."
+    },
+    {
+      "id": "BUFFERWHEN-CLOSING-COMPLETE",
+      "from": "Active",
+      "event": "closing.complete",
+      "to": "Active",
+      "guard": "matching live closing generation",
+      "actions": [
+        "release completed closing subscription; do not flush"
+      ],
+      "nextState": "retain exact buffer and resource bindings",
+      "obligations": [
+        "S8-BUFFERWHEN-CLOSING-COMPLETE"
+      ],
+      "explanation": "Completion without next leaves its buffer for source completion."
+    },
+    {
+      "id": "BUFFERWHEN-CLOSING-ERROR",
+      "from": "Active",
+      "event": "closing.error",
+      "to": "Closed",
+      "guard": "matching live closing generation",
+      "actions": [
+        "forward closing error",
+        "release all resources"
+      ],
+      "nextState": "terminal",
+      "obligations": [
+        "S8-BUFFERWHEN-CLOSING-ERROR"
+      ],
+      "explanation": "Any active closing Observable error terminates the entire result."
+    }
+  ]
+}

@@ -1,0 +1,371 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "catchError-one-Observable-replacement",
+    "operator": "catchError",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Forward source values; on the first source error, invoke a selector and subscribe to its replacement stream.",
+    "cardinality": {
+      "signature": "catchError : T* × (E -> R*) -> (T|R)*",
+      "conditions": [
+        "Source next values flow unchanged until source error or completion.",
+        "One source error is intercepted, not delivered downstream, and replaced by zero or more values from the selected Observable.",
+        "Replacement completion completes output; replacement error propagates without another selector call in this scoped single-replacement execution."
+      ]
+    },
+    "scope": {
+      "parameters": "One source and one Observable replacement, without recursive caught resubscription.",
+      "callbacks": "The selector receives the exact error and a caught Observable. The model requests a correlated callback invocation and receives a resolved return/throw event; it does not execute user code.",
+      "time": "No new timing policy. The replacement Observable determines emission times; synchronous source errors require original-source teardown before replacement connection.",
+      "reentrancy": "Model resolution of synchronous selector call is atomic; no arbitrary recursion/reentrant downstream/finalizer behavior.",
+      "exclusions": [
+        "Selectors returning Promise or arbitrary ObservableInput conversion; returning caught recursively; synchronous reentrant producer or observer behavior.",
+        "Selector cancellation in the middle of execution and observer/finalizer throws.",
+        "A universal retry/resubscription model, which must be specified separately."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Connect original source; no replacement subscription until first source error is handled."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing; each output subscription owns its original and possible replacement source subscriptions.",
+      "reset": "Error handling is local to one execution; replacement does not reset upstream history unless the selected Observable explicitly does.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current execution"
+        },
+        {
+          "id": "replacement",
+          "kind": "subscription",
+          "owner": "current execution"
+        },
+        {
+          "id": "selector",
+          "kind": "callback",
+          "owner": "current execution"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Forward source.next until source.error; invoke selector; on return release original source before subscribing replacement; replacement notifications flow unchanged.",
+      "cancellationCheckpoints": [
+        "Cancel silently before failure, during pending selector outcome, or during replacement.",
+        "No implicit retry, timer, or sharing."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start source subscription"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "forward original value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "complete without selector"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "invoke recovery selector"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "replacement Observable returned"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "recovery selector threw"
+      },
+      {
+        "type": "replacement.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "forward replacement value"
+      },
+      {
+        "type": "replacement.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "complete replacement"
+      },
+      {
+        "type": "replacement.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "propagate replacement error without catching again"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "silent teardown"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not started",
+        "terminal": false
+      },
+      {
+        "id": "Source",
+        "description": "original source running",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "selector outcome pending",
+        "terminal": false
+      },
+      {
+        "id": "Replacement",
+        "description": "recovery Observable running",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, errored or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/catchError.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Original error interception, sync teardown and selector ordering"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Notifications and resource ownership"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session08-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session08-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-08.md"
+    }
+  },
+  "parameters": {
+    "operator": "catchError",
+    "replacement": "one-Observable"
+  },
+  "rules": [
+    {
+      "id": "CATCHERROR-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Source",
+      "guard": "fresh execution",
+      "actions": [
+        "subscribe original source"
+      ],
+      "nextState": "await or execute selected source",
+      "obligations": [
+        "S8-CATCHERROR-INIT"
+      ],
+      "explanation": "Only a subscriber starts source work."
+    },
+    {
+      "id": "CATCHERROR-SOURCE-NEXT",
+      "from": "Source",
+      "event": "source.next",
+      "to": "Source",
+      "guard": "original connected",
+      "actions": [
+        "forward exact value"
+      ],
+      "nextState": "await or execute selected source",
+      "obligations": [
+        "S8-CATCHERROR-SOURCE-NEXT"
+      ],
+      "explanation": "The source value is forwarded without transformation."
+    },
+    {
+      "id": "CATCHERROR-SOURCE-ERROR",
+      "from": "Source",
+      "event": "source.error",
+      "to": "Calling",
+      "guard": "source connected",
+      "actions": [
+        "request recovery selector with error and caught source"
+      ],
+      "nextState": "await or execute selected source",
+      "obligations": [
+        "S8-CATCHERROR-SOURCE-ERROR"
+      ],
+      "explanation": "The original error is not sent downstream; it is handed to selector."
+    },
+    {
+      "id": "CATCHERROR-SELECTOR-RETURN",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Replacement",
+      "guard": "matching callback resource",
+      "actions": [
+        "release original source",
+        "subscribe replacement Observable"
+      ],
+      "nextState": "await or execute selected source",
+      "obligations": [
+        "S8-CATCHERROR-SELECTOR-RETURN"
+      ],
+      "explanation": "The original producer is finalized before recovery subscribes, even after a synchronous error."
+    },
+    {
+      "id": "CATCHERROR-SELECTOR-THROW",
+      "from": "Calling",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "matching selector (or synchronous throw without resource)",
+      "actions": [
+        "error with thrown value",
+        "release source"
+      ],
+      "nextState": "closed",
+      "obligations": [
+        "S8-CATCHERROR-SELECTOR-THROW"
+      ],
+      "explanation": "Selector failure terminates without subscribing replacement."
+    },
+    {
+      "id": "CATCHERROR-SOURCE-COMPLETE",
+      "from": "Source",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "original connected",
+      "actions": [
+        "complete",
+        "release original source"
+      ],
+      "nextState": "closed",
+      "obligations": [
+        "S8-CATCHERROR-SOURCE-COMPLETE"
+      ],
+      "explanation": "Successful completion never invokes recovery selector."
+    },
+    {
+      "id": "CATCHERROR-REPLACEMENT-NEXT",
+      "from": "Replacement",
+      "event": "replacement.next",
+      "to": "Replacement",
+      "guard": "replacement connected",
+      "actions": [
+        "forward replacement value"
+      ],
+      "nextState": "await or execute selected source",
+      "obligations": [
+        "S8-CATCHERROR-REPLACEMENT-NEXT"
+      ],
+      "explanation": "Every replacement value is forwarded unchanged."
+    },
+    {
+      "id": "CATCHERROR-REPLACEMENT-COMPLETE",
+      "from": "Replacement",
+      "event": "replacement.complete",
+      "to": "Closed",
+      "guard": "replacement connected",
+      "actions": [
+        "complete",
+        "release replacement"
+      ],
+      "nextState": "closed",
+      "obligations": [
+        "S8-CATCHERROR-REPLACEMENT-COMPLETE"
+      ],
+      "explanation": "Output completes when recovery finishes."
+    },
+    {
+      "id": "CATCHERROR-REPLACEMENT-ERROR",
+      "from": "Replacement",
+      "event": "replacement.error",
+      "to": "Closed",
+      "guard": "replacement connected",
+      "actions": [
+        "propagate replacement error",
+        "release replacement"
+      ],
+      "nextState": "closed",
+      "obligations": [
+        "S8-CATCHERROR-REPLACEMENT-ERROR"
+      ],
+      "explanation": "Errors from the replacement are not intercepted by the same selector."
+    },
+    {
+      "id": "CATCHERROR-CANCEL-SOURCE",
+      "from": "Source",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "active subscription",
+      "actions": [
+        "unsubscribe current resource without output"
+      ],
+      "nextState": "closed",
+      "obligations": [
+        "S8-CATCHERROR-CANCEL-SOURCE"
+      ],
+      "explanation": "Explicit cancellation never synthesizes a complete or error notification."
+    },
+    {
+      "id": "CATCHERROR-CANCEL-CALLING",
+      "from": "Calling",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "active subscription",
+      "actions": [
+        "unsubscribe current resource without output"
+      ],
+      "nextState": "closed",
+      "obligations": [
+        "S8-CATCHERROR-CANCEL-CALLING"
+      ],
+      "explanation": "Explicit cancellation never synthesizes a complete or error notification."
+    },
+    {
+      "id": "CATCHERROR-CANCEL-REPLACEMENT",
+      "from": "Replacement",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "active subscription",
+      "actions": [
+        "unsubscribe current resource without output"
+      ],
+      "nextState": "closed",
+      "obligations": [
+        "S8-CATCHERROR-CANCEL-REPLACEMENT"
+      ],
+      "explanation": "Explicit cancellation never synthesizes a complete or error notification."
+    }
+  ]
+}
