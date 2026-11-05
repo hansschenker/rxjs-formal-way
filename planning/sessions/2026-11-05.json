@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-05",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-05T08:11:41+01:00",
   "startingCommit": "6e63ab2fdbc2e6b03311308be02b53161caceb19",
   "selectedNames": [
@@ -12,22 +12,91 @@
     "combineAll",
     "combineLatestAll"
   ],
-  "workedNames": [],
-  "completedNames": [],
+  "workedNames": [
+    "bufferToggle",
+    "bufferWhen",
+    "catchError",
+    "combineAll",
+    "combineLatestAll"
+  ],
+  "completedNames": [
+    "bufferToggle",
+    "bufferWhen",
+    "catchError",
+    "combineAll",
+    "combineLatestAll"
+  ],
   "carryovers": [],
-  "commits": [],
+  "commits": [
+    "f37fdffd65ece20f544b59f16be3c4c0af17868e",
+    "2e13254996d7a738902b67863cf728fb624963d5",
+    "868b6b53f836c2b1306d6d6c49cec1e0ba4a3582",
+    "8d936bcdfee63db4376b9dc4d6fce122d4b00346",
+    "4c78f20699fb0b9c2153ae4ae5082f6d9c50752a",
+    "67830b3db286665ebe85ad860d384dac967cc1a8",
+    "4cc6ae38702becdef3821f9fbc86b687fac2ac2e",
+    "9a417251e9804450d6e7c86a37e23aec8dbf6747",
+    "df3749b93c038854887c8966d0883b1060909562",
+    "fac63d038048639c81d1c8b4c377488eb484f35c",
+    "9bae95640ed1987b64bada6d5f6a6c70bf5f5114",
+    "326d9cc97eb1524698aa9766b4f052ee1886e965"
+  ],
   "checks": {
-    "syntax": "not run",
-    "types": "not run",
-    "model": "not run",
-    "runtime": "not run",
-    "generated": "not run",
-    "ci": "not run"
+    "syntax": "passed in implementation push and independent read-only CI",
+    "types": "strict TypeScript passed; 18 new negative assertions, 147 cumulative",
+    "model": "all new guarded model tests passed in 758 named-test suite",
+    "runtime": "independent actual RxJS tests passed, including 161 bounded model/native comparisons",
+    "generated": "352 deterministic views verified read-only, 40 new across five configurations",
+    "ci": "push run 41986983309 and read-only PR run 41987175479 both succeeded; read-only generation and publication skipped"
   },
   "notes": [
     "Selected the first five pending distinct exports from the live tracker; previous session closed with no carryovers.",
-    "No 2026-11-05 session log or active same-day session branch existed when checked."
+    "No 2026-11-05 session log or active same-day session branch existed when checked.",
+    "Pinned RxJS 7.8.2 source revision e5351d02e225e275ac0e497c7b66eaa5f0c88791 inspected for all five named exports, joinAllInternals and combineLatestInit.",
+    "Scope: nonreentrant postsetup Observable input, one catchError replacement and no combineLatestAll projector. combineAll is an exact deprecated alias, independently represented as an export.",
+    "Three TypeScript modules with guarded named rules and five configured projection examples reuse the established schema and generator.",
+    "Preliminary PR CI strict TypeScript errors were corrected without reducing type safety. Later PR CI verified all tests but failed expected drift because generated views were not yet committed.",
+    "Implementation push CI 41986983309 generated 352 views, passed 758 tests and committed 40 new files at 4cc6ae3.",
+    "Independent read-only PR #10 run 41987175479 checked synthetic merge 2de72f3 whose Git tree matches its PR head; generation and publication skipped. All 758 tests and 352 view checks passed.",
+    "All five selected distinct operator names accepted in declared scopes, no sixth name and no second session; 161 bounded cases do not establish universal equivalence."
   ],
   "blockers": [],
-  "nextSessionNotBefore": "2026-11-06"
+  "nextSessionNotBefore": "2026-11-06",
+  "evidence": "evidence/SESSION-08.md",
+  "nextQueue": [
+    "combineLatest",
+    "combineLatestWith",
+    "concat",
+    "concatMapTo",
+    "concatWith"
+  ],
+  "closedAt": "2026-11-05T08:28:08+01:00",
+  "provenanceLimitations": [
+    "Independent read-only PR checkout was a synthetic merge commit, not the PR branch head; matching Git trees independently verified.",
+    "Final closure edits only documentation and planning files; implementation CI is attributed to exact tested implementation commit."
+  ],
+  "verification": {
+    "testedCommit": "67830b3db286665ebe85ad860d384dac967cc1a8",
+    "implementationCommit": "67830b3db286665ebe85ad860d384dac967cc1a8",
+    "generatedCommit": "4cc6ae38702becdef3821f9fbc86b687fac2ac2e",
+    "pushRun": 41986983309,
+    "pushJob": 127109927508,
+    "readOnlyRun": 41987175479,
+    "readOnlyJob": 127110549673,
+    "prNumber": 10,
+    "readOnlyHeadCommit": "9a417251e9804450d6e7c86a37e23aec8dbf6747",
+    "readOnlyBaseCommit": "4cc6ae38702becdef3821f9fbc86b687fac2ac2e",
+    "readOnlyCheckout": "2de72f3953ccffa639359a9f933f43a4d0911eff",
+    "readOnlyCheckoutTree": "0652373f37fc9bc255a5ab503ccb0e1ea49cc36a",
+    "readOnlyHeadTree": "0652373f37fc9bc255a5ab503ccb0e1ea49cc36a",
+    "namedTestsPassed": 758,
+    "newNamedTests": 43,
+    "negativeTypeAssertions": 147,
+    "newNegativeTypeAssertions": 18,
+    "generatedViews": 352,
+    "newGeneratedViews": 40,
+    "newBoundedModelRxjsScenarios": 161,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  }
 }
