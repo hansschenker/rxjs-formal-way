@@ -42,10 +42,14 @@ Preliminary PR runs [41986599814](https://github.com/hansschenker/rxjs-formal-wa
 
 ## Independent committed-file verification
 
-A read-only pull-request run is still being prepared. This section must be updated with the **actual retrieved PR run/job outcome and exact tested Git tree** before session closure; passing implementation CI alone is not the claimed independent read-only verification.
+[Documentation-only PR #10](https://github.com/hansschenker/rxjs-formal-way/pull/10) produced an **independent successful read-only validation**: [run 41987175479](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41987175479), job `127110549673`. Retrieved job steps explicitly report **generation skipped** and **publication skipped**. Its decoded log records `# tests 758`, `# pass 758`, `# fail 0`, and `Verified 352 deterministic projections.`
+
+The read-only PR head was `9a417251e9804450d6e7c86a37e23aec8dbf6747`, based solely on generated commit `4cc6ae38702becdef3821f9fbc86b687fac2ac2e` plus this evidence document. GitHub Actions checked out synthetic merge commit `2de72f3953ccffa639359a9f933f43a4d0911eff`; independent Git object reads establish its tree `0652373f37fc9bc255a5ab503ccb0e1ea49cc36a` is exactly the same as the PR head tree. The synthetic checkout is not misreported as a branch-head SHA. PR #10 was merged as `df3749b93c038854887c8966d0883b1060909562`.
+
+**Acceptance evidence therefore includes two different successful executions:** a main-branch push run that generated/tests/committed the views and an independent PR run that only tested the already-committed views.
 
 ## Scope limitations
 
 The finite model focuses on Observable inputs after atomic setup, bounded nonreentrant execution and at most one catchError replacement. It deliberately excludes Promise conversion, synchronous/reentrant close during subscription setup, arbitrary downstream/finalizer throws, cancellation in a callback, recursive `caught` resubscription and the optional `combineLatestAll(project)` projector overload. In particular, an empty inner need not complete the combined result while other inners remain active. No universal equivalence proof or full pipeline model checking is claimed.
 
-**Session closure pending independent read-only committed-file evidence**, with all five models generated and main push CI passing. Final accepted counts and carryovers are set by the dated session log after evidence is retrieved.
+**All five export names accepted within the declared profiles.** Inventory: **40 of 113 accepted; 73 pending**. There are no unfinished carryovers and no unresolved acceptance blockers inside the declared scopes. The separate dated session log is the authoritative final closure record.
