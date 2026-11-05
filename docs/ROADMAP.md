@@ -24,7 +24,10 @@ This is the current implementation tracker. The migration map preserves the orig
 | M06-B | min/max default numeric and custom comparer policies | Accepted within scope; [Session 6 evidence](../evidence/SESSION-06.md) |
 | M07-A | audit/auditTime duration policies, latest value and deferred completion | Accepted within scope; [Session 7 guide](SESSION-07-TIME-AND-BUFFERS.md) |
 | M07-B | buffer/bufferCount/bufferTime notification, count and scheduled-window policies | Accepted within scope; [Session 7 evidence](../evidence/SESSION-07.md) |
-| M07+ | Remaining catalogue | 78 exports pending; not a universal interpreter |
+| M08-A | bufferToggle/bufferWhen opening, closing, overlapping and successive-buffer policies | Accepted within scope; [Session 8 guide](SESSION-08-SELECTOR-BUFFERS-RECOVERY-JOINS.md) |
+| M08-B | catchError selector-based replacement and teardown ordering | Accepted within scope; [Session 8 evidence](../evidence/SESSION-08.md) |
+| M08-C | combineLatestAll and deprecated exact alias combineAll, deferred latest join | Accepted within scope; [Session 8 evidence](../evidence/SESSION-08.md) |
+| M07+ | Remaining catalogue | 73 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -122,3 +125,11 @@ Finite checks do not constitute a universal equivalence proof.
 ## Final project goal
 
 The project now has an explicit final goal: **scale upward from precise local operator semantics into formal verification of composed RxJS pipelines**. M03-P is the bridge: local canonical Mealy models are lifted into product pipeline states, ordered actions are interpreted as connection semantics, synchronous propagation is collapsed to stable macro-steps, and a bounded explicit-state explorer checks invariants with counterexample paths. The next scaling witness is `debounceTime → switchMap → distinctUntilChanged`, followed by a generated TLA+/TLC projection rather than a separately maintained specification.
+
+## Session 8 closed: 5 November 2026
+
+The five pending exports **bufferToggle, bufferWhen, catchError, combineAll and combineLatestAll** were modeled from pinned RxJS 7.8.2 source and accepted within explicitly scoped, nonreentrant Observable profiles. No extra operator was generated for an overload; the deprecated `combineAll` export is an exact alias of `combineLatestAll`, with separate provenance and shared transition algebra.
+
+The established schema, runner, views and validation pipeline were reused without weakening checks. Five configurations added **40 deterministic projections**, bringing the total to **352**. [Push CI 41986983309](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41986983309) passed **758 named tests** with zero failures, after generating and drift-verifying all 352 views. [Independent read-only PR CI 41987175479](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41987175479) also passed 758 tests and 352 drift checks, explicitly skipping generation and publication. The exact implementation, generated and read-only checkout commits, matching Git trees, 43 new tests, 18 new negative type assertions, 161 bounded comparisons and exclusions are recorded in [Session 8 evidence](../evidence/SESSION-08.md).
+
+**40 of 113 exports accepted; 73 pending. No carryovers or second batch.** The next five in the authoritative queue are `combineLatest`, `combineLatestWith`, `concat`, `concatMapTo`, and `concatWith`, not before 6 November 2026 Europe/Zurich.
