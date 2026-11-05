@@ -132,7 +132,7 @@ function build<T,O>(name:SelectorBufferOperator):SelectorBufferModel<T,O>{
       react:(s)=>{
         if(s.phase!=='Calling'||s.pending===undefined)throw new Error('selector result without pending call');
         const pending=s.pending;
-        return {state:{...s,phase:'Active',sourceLive:true,pending:undefined,
+        return {state:{phase:'Active',sourceLive:true,openingsLive:s.openingsLive,nextId:s.nextId,
           records:s.records.map(x=>x.id===pending?{...x,closingLive:true}:x)},
           actions:[acquire(ref('closing',pending)),...(s.sourceLive?[]:[acquire(source)])]};
       }},
