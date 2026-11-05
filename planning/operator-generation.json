@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "bufferToggle",
-    "bufferWhen",
-    "catchError",
-    "combineAll",
-    "combineLatestAll",
     "combineLatest",
     "combineLatestWith",
     "concat",
@@ -169,29 +164,78 @@
       "readOnlyCheckout": "3b96d3edab70f0510cf676dc06ba31484c7625e2"
     },
     "bufferToggle": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-05",
+      "profiles": [
+        "overlapping opening streams",
+        "closing next versus empty completion",
+        "opening completion and resource ownership"
+      ],
+      "evidence": "evidence/SESSION-08.md",
+      "testedCommit": "67830b3db286665ebe85ad860d384dac967cc1a8",
+      "implementationRun": 41986983309,
+      "verificationRun": 41987175479,
+      "readOnlyHeadCommit": "9a417251e9804450d6e7c86a37e23aec8dbf6747",
+      "readOnlyCheckout": "2de72f3953ccffa639359a9f933f43a4d0911eff"
     },
     "bufferWhen": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-05",
+      "profiles": [
+        "pre-source closing selection",
+        "successive fresh closing subscriptions",
+        "empty and residual source-completion flush"
+      ],
+      "evidence": "evidence/SESSION-08.md",
+      "testedCommit": "67830b3db286665ebe85ad860d384dac967cc1a8",
+      "implementationRun": 41986983309,
+      "verificationRun": 41987175479,
+      "readOnlyHeadCommit": "9a417251e9804450d6e7c86a37e23aec8dbf6747",
+      "readOnlyCheckout": "2de72f3953ccffa639359a9f933f43a4d0911eff"
     },
     "catchError": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-05",
+      "profiles": [
+        "one Observable replacement",
+        "selector throw and synchronous original teardown",
+        "replacement termination and silent cancellation"
+      ],
+      "evidence": "evidence/SESSION-08.md",
+      "testedCommit": "67830b3db286665ebe85ad860d384dac967cc1a8",
+      "implementationRun": 41986983309,
+      "verificationRun": 41987175479,
+      "readOnlyHeadCommit": "9a417251e9804450d6e7c86a37e23aec8dbf6747",
+      "readOnlyCheckout": "2de72f3953ccffa639359a9f933f43a4d0911eff"
     },
     "combineAll": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-05",
+      "profiles": [
+        "deprecated exact alias of combineLatestAll",
+        "deferred latest-array join without projector"
+      ],
+      "evidence": "evidence/SESSION-08.md",
+      "testedCommit": "67830b3db286665ebe85ad860d384dac967cc1a8",
+      "implementationRun": 41986983309,
+      "verificationRun": 41987175479,
+      "readOnlyHeadCommit": "9a417251e9804450d6e7c86a37e23aec8dbf6747",
+      "readOnlyCheckout": "2de72f3953ccffa639359a9f933f43a4d0911eff"
     },
     "combineLatestAll": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-05",
+      "profiles": [
+        "collect inner sources until outer completion",
+        "first-value readiness and latest snapshots",
+        "empty-inner completion and error/cancellation"
+      ],
+      "evidence": "evidence/SESSION-08.md",
+      "testedCommit": "67830b3db286665ebe85ad860d384dac967cc1a8",
+      "implementationRun": 41986983309,
+      "verificationRun": 41987175479,
+      "readOnlyHeadCommit": "9a417251e9804450d6e7c86a37e23aec8dbf6747",
+      "readOnlyCheckout": "2de72f3953ccffa639359a9f933f43a4d0911eff"
     },
     "combineLatest": {
       "status": "pending",
