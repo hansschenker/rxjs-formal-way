@@ -22,8 +22,8 @@ export type SelectorBufferModel<T, O = unknown> = OperatorModel<SelectorBufferPa
 const rev = 'e5351d02e225e275ac0e497c7b66eaa5f0c88791';
 const ref = (id: string, generation: number): ResourceRef => ({ id, generation });
 const source = ref('source',0), openings = ref('openings',0);
-const acquire = (resource: ResourceRef): Action<unknown> => ({ type: 'subscribe', resource });
-const release = (resource: ResourceRef): Action<unknown> => ({ type: 'unsubscribe', resource });
+const acquire = (resource: ResourceRef) => ({ type: 'subscribe' as const, resource });
+const release = (resource: ResourceRef) => ({ type: 'unsubscribe' as const, resource });
 const next = <T>(values: readonly T[]): Action<T[],unknown> => ({ type: 'notify', target:'downstream', notification:{ kind:'N', value:[...values] } });
 const done: Action<never,unknown> = { type:'notify', target:'downstream', notification:{kind:'C'} };
 const fail = <T>(error:unknown): Action<T[],unknown> => ({type:'notify',target:'downstream',notification:{kind:'E',error}});
