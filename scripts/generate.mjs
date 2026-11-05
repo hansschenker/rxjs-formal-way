@@ -35,6 +35,12 @@ import {
   createBufferTimeModel, bufferTimeExample, bufferTimeOverlapExample, runBufferTimeTrace
 } from '../dist/index.js';
 
+import {
+  createBufferToggleModel,createBufferWhenModel,bufferToggleExample,bufferWhenExample,
+  createCatchErrorModel,catchErrorExample,
+  createCombineAllModel,createCombineLatestAllModel,combineAllExample,combineLatestAllExample
+} from '../dist/index.js';
+
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
@@ -76,6 +82,11 @@ const examples = [
   ['bufferCount', createBufferCountModel(3, 2), bufferCountExample, 'bufferCount-session7-example'],
   ['bufferTime', createBufferTimeModel(3), bufferTimeExample, 'bufferTime-session7-example', runBufferTimeTrace],
   ['bufferTime-overlap', createBufferTimeModel(4, 2), bufferTimeOverlapExample, 'bufferTime-overlap-session7-example', runBufferTimeTrace],
+  ['bufferToggle', createBufferToggleModel(), bufferToggleExample, 'bufferToggle-session8-example'],
+  ['bufferWhen', createBufferWhenModel(), bufferWhenExample, 'bufferWhen-session8-example'],
+  ['catchError', createCatchErrorModel(), catchErrorExample, 'catchError-session8-example'],
+  ['combineAll', createCombineAllModel(), combineAllExample, 'combineAll-session8-example'],
+  ['combineLatestAll', createCombineLatestAllModel(), combineLatestAllExample, 'combineLatestAll-session8-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
