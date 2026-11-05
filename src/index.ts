@@ -53,3 +53,9 @@ export { createBufferModel, createBufferCountModel, bufferExample, bufferCountEx
 export type { BufferOperator, BufferParameters, BufferState, BufferEvent, BufferRecord, BufferModel } from './models/buffering.js';
 export { createBufferTimeModel, bufferTimeExample, bufferTimeOverlapExample, runBufferTimeTrace } from './models/bufferTime.js';
 export type { BufferTimeParameters, TimedBuffer, BufferTimeState, BufferTimeEvent, BufferTimeModel } from './models/bufferTime.js';
+export { createBufferToggleModel, createBufferWhenModel, bufferToggleExample, bufferWhenExample } from './models/bufferSelectors.js';
+export type { SelectorBufferOperator, SelectorBufferParameters, SelectorBufferRecord, SelectorBufferState, SelectorBufferEvent, SelectorBufferModel } from './models/bufferSelectors.js';
+export { createCatchErrorModel, catchErrorExample } from './models/catchError.js';
+export type { CatchErrorParameters, CatchErrorState, CatchErrorEvent, CatchErrorModel } from './models/catchError.js';
+export { createCombineLatestAllModel, createCombineAllModel, combineLatestAllExample, combineAllExample } from './models/combineLatestAll.js';
+export type { LatestAllOperator, LatestAllParameters, LatestSlot, LatestAllState, LatestAllEvent, LatestAllModel } from './models/combineLatestAll.js';
