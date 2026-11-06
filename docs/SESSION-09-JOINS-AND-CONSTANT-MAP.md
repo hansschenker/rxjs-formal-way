@@ -2,63 +2,92 @@
 
 **6 November 2026 · Europe/Zurich · RxJS 7.8.2**, pinned source revision `e5351d02e225e275ac0e497c7b66eaa5f0c88791`.
 
-One batch of five distinct exports: `combineLatest`, `combineLatestWith`, `concat`, `concatMapTo`, `concatWith`. Four of them are two pairs of implementation-level aliases in RxJS 7.8.2, but each is an independently tracked export. This work does **not** re-accept `concatMap` or `combineLatestAll`.
+One batch of five distinct exports: `combineLatest`, `combineLatestWith`, `concat`, `concatMapTo`, `concatWith`. The names `combineLatest` and `concat` here mean the **deprecated pipeable exports**, not the creation functions. The corresponding With operators delegate to their older counterparts within the declared no-projector/unscheduled profiles. Each is independently tracked as an export. Reusing `concatMap` mechanics does not re-accept or count `concatMap` as new work.
 
 ## Intuition → specification → verification
 
-An Observable is a deferred description of a flow of values and lifecycle notifications. These five operators make different connection policies explicit. None creates sharing or its own clock.
+An Observable describes a flow of values and lifecycle notifications. Subscription starts the operator execution. These five operators specify connection policies; none introduces sharing or its own clock.
 
 | Operator | What flows over time | What new values cause | Why this policy exists |
 |---|---|---|---|
-| `combineLatest` | Piped source first plus supplied sources | Replace that source's remembered latest; after all first values, emit one copied tuple | Materialize a current multi-source snapshot |
-| `combineLatestWith` | Exactly the same stream protocol as pipeable `combineLatest` in the no-projector profile | Same | Preferred nondeprecated name |
-| `concat` | Source first, then supplied sources in argument order | Forward values of the sole subscribed source | Defer connection to later sources |
-| `concatMapTo` | Each outer value licenses a *new subscription* to the same configured inner Observable | If busy, queue the occurrence; otherwise subscribe; forward inner values | Sequential repetition, without mapping outer payloads |
-| `concatWith` | Exactly the same stream protocol as pipeable `concat` in the unscheduled profile | Same | Preferred nondeprecated name |
+| `combineLatest` | Piped source first plus supplied sources | Remember that source's latest value; once every source has supplied a value, emit a fresh tuple | Expose a current multi-source snapshot |
+| `combineLatestWith` | Same stream protocol as pipeable `combineLatest` within this profile | Same | Nondeprecated pipeable name |
+| `concat` | Piped source, then supplied sources in argument order | Forward values from the one currently subscribed source | Defer later subscriptions until earlier completion |
+| `concatMapTo` | A new subscription occurrence to one configured inner Observable for each outer value | Queue while busy; subscribe when admitted; forward inner values | Sequential repetition without using outer payloads in a projection |
+| `concatWith` | Same stream protocol as pipeable `concat` within this profile | Same | Nondeprecated pipeable name |
 
-## Mealy machines and Cω shapes
+## Six-tuple convention
 
-The canonical machine shape remains `(S, S₀, Z, A, T, G)`. The state determines both transition `T` and ordered action policy `G`. Generated STTs and BDDs are projections of guarded named rules, not a second implementation of the semantics.
+Every canonical model uses **M = (S, S₀, Z, A, T, G)**. **Z is the input-event alphabet**, not a list of control states. The finite control labels are a projection of **S**, which also includes remembered values, counters and resource identities.
+
+`T : S × Z → S` determines the next state. `G : S × Z → A*` determines the ordered action word from the same pre-event state and input. A combined reaction computes both once. BDD, STT and diagrams are views of named guarded rules, not separately maintained implementations.
+
+Cω-inspired `T*` below counts zero or more **values**, not terminal/control events. Cardinalities are conditional on the execution remaining active and user functions, where applicable, returning successfully.
 
 ### Latest combinations — `combineLatest`, `combineLatestWith`
 
-- **Cω-inspired shape:** `T₀* × T₁* × ... × Tₙ* → (T₀ × T₁ × ... × Tₙ)*`, where `*` permits zero or more notifications and omits terminal events.
-- **S:** `Unsubscribed | Active { slots: [{ready, live, value?}], current } | Closed {reason}`. `ready` distinguishes no first value from a genuine `undefined` value.
-- **S₀:** `Unsubscribed`. **Z:** `Unsubscribed, Active, Closed`.
-- **E:** `subscribe`, `input.next(resource,value)`, `input.complete(resource)`, `input.error(resource,error)`, `cancel`.
-- **A:** source-indexed `subscribe`/`unsubscribe`, downstream `N(tuple)`, `C`, `E(original)`.
-- **T/G:** Subscribe to all sources in source-first argument order, with source index 0 the piped source. Each live input next updates its slot. Emit a *fresh* snapshot iff all slots have a first value; neither an incomplete set of first values nor a completed unready source can produce a tuple. Completing an input marks it non-live without discarding its last value. Only the final live completion completes output. Error propagates unchanged and cancels all live sources; cancellation silently releases active subscriptions.
-- **State legality:** Every resource generation is a valid source index; events from completed or unconnected resources are illegal; closed states reject all inputs. There is at most one tuple per next event. A completed source with no first value does not induce early completion.
-- **Scope:** no pipeable `combineLatest` result selector. Only valid Observable sources; no synchronous/reentrant acquisition effects, custom finalizer throws, or observer cancellation within delivery.
+- **Shape:** `T₀* × T₁* × ... × Tₙ* → (T₀ × T₁ × ... × Tₙ)*`.
+- **S:** `Unsubscribed | Active { slots: [{ready, live, value?}], current } | Closed {reason}`. Readiness distinguishes no first value from a genuine `undefined` payload. Controls: Unsubscribed, Active, Closed.
+- **S₀:** Unsubscribed.
+- **Z:** subscribe; input.next(resource,value); input.complete(resource); input.error(resource,error); cancel.
+- **A:** source-indexed subscribe/unsubscribe actions and downstream N(tuple), C, E(original).
+- **T/G:** Acquire sources in source-first argument order. A live input updates its slot; emit a fresh array only after all slots are ready. Completion marks its input non-live but retains a supplied last value. Complete downstream only after every live input finishes. An empty completed input prevents readiness without itself forcing early completion of still-live peers. Errors preserve identity and release live inputs; cancellation releases silently.
+- **Legality:** Resource generations identify valid source positions. Notifications from completed or unconnected resources are outside the model domain; Closed accepts no further input. Each eligible input.next produces one tuple.
+- **Scope:** Valid Observable inputs, no result-selector overload, atomic non-reentrant acquisition, no observer/finalizer throws or cancellation during delivery.
 
 ### Sequential concatenations — `concat`, `concatWith`
 
-- **Cω-inspired shape:** `T₀* × ... × Tₙ* → (T₀ | ... | Tₙ)*`. Values preserve payload identity.
-- **S:** `Unsubscribed | Active { current, slots } | Closed {reason}`; the only live slot in Active is `current`. **S₀:** `Unsubscribed`. **Z:** the same three controls.
-- **E/A:** the same source-indexed notification and connection alphabets as the latest models.
-- **T/G:** Subscribe only to index 0. Each value emits unchanged. Completion releases that source and subscribes to index `current+1`, if present; the last completion emits `C`. Errors stop the sequence and prevent any later subscriptions. Cancellation releases the current source with no downstream terminal notification.
-- **State legality:** no future source is live or ready while an earlier source is active. Exactly one live input exists while Active; input notifications from later sources are illegal.
-- **Scope:** pipeable deprecated `concat` without scheduler, and `concatWith` without scheduler. No synchronous setup-time reentrancy, arbitrary ObservableInput conversion or observer throws.
+- **Shape:** `T₀* × ... × Tₙ* → (T₀ + ... + Tₙ)*`; values preserve payload identity.
+- **S:** Unsubscribed, Active {current, slots}, or Closed {reason}. While Active, current identifies the sole live input.
+- **S₀:** Unsubscribed.
+- **Z:** The same source-indexed input notifications and subscribe/cancel lifecycle events as above.
+- **A:** Subscribe/unsubscribe an indexed source; notify downstream with its original value, completion or original error.
+- **T/G:** Acquire input 0 only. Forward its values. On completion, release it and acquire the next input, if any. Final completion releases the last input and completes downstream. Error and cancellation prevent all future source acquisitions; cancellation sends no terminal notification.
+- **Legality:** Future inputs cannot deliver before acquisition. Exactly one input is live in Active. No input is legal after Closed.
+- **Scope:** Unscheduled pipeable concat/concatWith, Observable inputs, atomic non-reentrant acquisition; no general ObservableInput conversion, nested setup delivery or throwing observers/finalizers.
 
 ### Constant-inner sequential mapper — `concatMapTo`
 
-- **Cω-inspired shape:** `T* × U* → U*`, where each accepted outer value represents one subscription occurrence of the configured `U*` source.
-- **S/S₀/Z/A/T/G:** reuse the previously verified `concatMap` machine with concurrency 1: `Unsubscribed, Active, Calling, Draining, Closed`. Distinct occurrence generations share *one constant inner source token*. `outer.next` either reserves a slot or queues the outer value. The `Calling`/correlated `callback.return` pair is an **instantaneous model-binding microstep**, not a user-supplied callback or actual scheduler tick; only the predetermined source token is legal. The active occurrence can emit multiple values. Its completion releases the current inner subscription and, if queued, activates the next occurrence and binds that same source token again. Outer completion waits for every admitted occurrence to complete. Inner error propagates unchanged and discards queued work; cancellation is silent.
-- **State legality:** one active inner occurrence maximum; the queue is FIFO; a queued occurrence is not subscribed until its predecessor completes; only the exact constant binding can resolve `callback.return`; `callback.throw` is not an available transition in this profile.
-- **Scope:** no deprecated result-selector overload; no invalid ObservableInput, arbitrary synchronous/reentrant notification during subscription, or cancellation inside callbacks. The implementation of RxJS `concatMapTo` delegates to `concatMap(() => innerObservable)`; a single Observable object may still be externally hot/shared, but the operator introduces no sharing.
+- **Shape:** A configured inner source `U*` and outer `T*` yield `U*`, with a distinct inner subscription occurrence per admitted outer value. The output count depends on inner emissions, not simply outer count.
+- **S:** The previously reviewed concatMap state and FIFO queue, with controls Unsubscribed, Active, Calling, Draining and Closed. Distinct inner occurrence identities bind to one constant source token.
+- **S₀:** Unsubscribed.
+- **Z:** Outer and identified inner notifications, downstream subscribe/cancel, and the correlated constant-binding return microstep used by the reused model.
+- **A:** Outer/inner acquisition and release, constant-binding request, downstream next/error/complete.
+- **T/G:** Admit one occurrence at a time; queue later outer values. Resolve the constant binding to the same configured source token, acquire a fresh inner subscription, and forward its values. Inner completion releases the occurrence and admits the next queued occurrence. Outer completion waits for active and queued work. Errors discard queued work; cancellation silently releases owned subscriptions.
+- **Legality:** At most one active inner; FIFO admission; only the exact constant token can resolve the binding. No callback.throw transition exists for that constant binding.
+- **Scope:** No deprecated result selector or arbitrary reentrancy. Calling/return is a synchronous **model-binding microstep**, not a user projection, timer or asynchronous pause. A configured Observable can itself be hot/shared, but concatMapTo introduces no sharing.
 
-## Actual source provenance and verification boundary
+## Time, cancellation and sharing
 
-Sources inspected at the pinned revision:
+Time and equal-time order are supplied by sources and scenarios; none of these operators schedules work. Concat policies change **when subscriptions are acquired**, not by installing clocks. Cancellation is a control event, distinct from completion, and releases the resources owned by that execution. Each result subscription has its own latest-value memory or queue unless sharing is explicitly introduced elsewhere.
 
-- `src/internal/operators/combineLatest.ts` and `combineLatestWith.ts` (the latter delegates to the former); `src/internal/observable/combineLatest.ts` (initial subscription sequence, first-value barrier, completion after *all* inputs).
-- `src/internal/operators/concat.ts` and `concatWith.ts` (the latter delegates to `concat`); `concatAll.ts` / `mergeAll.ts` (serial concurrency).
-- `src/internal/operators/concatMapTo.ts` and `concatMap.ts`, plus existing `src/models/flatten.ts`.
+## Source provenance
 
-Canonical models: `src/models/session09-joins.ts`, `src/models/concatMapTo.ts`. The unchanged schema, runner and renderers generate **eight deterministic projections per configuration**: manifest, BDD, STT, state diagram, test obligations, JSON trace, four-lane Markdown trace, and user-facing operator page. Traces are model predictions, not native execution recordings.
+The following paths were inspected at the pinned revision in [ReactiveX/rxjs](https://github.com/ReactiveX/rxjs/tree/e5351d02e225e275ac0e497c7b66eaa5f0c88791):
 
-Independent native tests are in `tests/session09-rxjs.test.mjs`, separate from model/view tests in `tests/session09-model.test.mjs`. Type-level invalid states/events are recorded in `tests/types/session09.ts`. The session evidence record holds exact commits, GitHub Actions results and limitations once checks have actually executed.
+- `src/internal/operators/combineLatest.ts`, `combineLatestWith.ts`, and `src/internal/observable/combineLatest.ts`.
+- `src/internal/operators/concat.ts`, `concatWith.ts`, and the reused serial-flattening machinery.
+- `src/internal/operators/concatMapTo.ts`, `concatMap.ts`, and the existing reviewed `src/models/flatten.ts` in this project.
 
-### Formal verification direction
+Canonical models: `src/models/session09-joins.ts`, `src/models/concatMapTo.ts`. Five configurations supply eight deterministic views each: manifest, BDD, STT, state diagram, obligations, JSON trace, four-lane trace and operator page. Traces are **model predictions**, not recordings of actual RxJS.
 
-The same source-indexed `subscribe` and `unsubscribe` actions provide a compositional interface for M03. Policy-specific state legality supplies candidate pipeline invariants; user-visible safety (`no next after completion/error`, `at most one current concat subscription`) can be checked on bounded traces. Liveness claims require explicit environmental assumptions (e.g. that the current source eventually completes); no operator can guarantee that a never-ending input completes.
+## Independent runtime witnesses
+
+`tests/session09-model.test.mjs` checks the pure models and views; `tests/session09-rxjs.test.mjs` independently observes RxJS. `tests/types/session09.ts` adds invalid type examples. Rule-obligation identifiers are semantic labels; native test titles use the `S9-NATIVE` prefix. Their mapping is behavioral:
+
+| Rule family / obligation | Native witnesses for the corresponding export |
+|---|---|
+| Latest initialization | Lazy construction and source-first acquisition |
+| Latest wait/emit | First-value barrier, fresh snapshots, retained completed values |
+| Latest completion | Empty input and all-input completion cases |
+| Latest error/cancel | Error identity, peer teardown, silent cancellation |
+| Serial init/next/advance/final | Sequential delayed acquisition and output-order cases |
+| Serial error/cancel | No future acquisition after error or cancellation |
+| Constant-inner bind/admit/drain | Repeated subscriptions to the same token and queued outer occurrences |
+| Constant-inner terminal/cancel | Completion waiting, error propagation and queue disposal |
+
+The successful full suite and exact revisions are recorded in [Session 9 evidence](../evidence/SESSION-09.md). Native synchronous cases also characterize RxJS outside the pure model's atomic-setup event representation; those cases are not a claim that arbitrary reentrancy is modeled. This session adds fixed targeted comparisons, not a new enumerated bounded-search count.
+
+## Formal verification direction
+
+Source-indexed resource actions form a compositional interface for M03. State legality suggests pipeline invariants such as at most one live concat input and no notification after termination. Progress claims require environment assumptions: concatenation cannot advance while its current source never completes. No universal proof or full pipeline model-checking acceptance is claimed by these finite operator tests.
