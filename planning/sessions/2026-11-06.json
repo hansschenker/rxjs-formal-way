@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-06",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-06T08:18:54+01:00",
+  "startingCommit": "a9b97eee9f18ba647b87abb7e16849078c32e698",
+  "selectedNames": [
+    "combineLatest",
+    "combineLatestWith",
+    "concat",
+    "concatMapTo",
+    "concatWith"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "combineLatest",
+    "combineLatestWith",
+    "concat",
+    "concatMapTo",
+    "concatWith"
+  ],
+  "commits": [],
+  "checks": {
+    "syntax": "not run",
+    "types": "not run",
+    "model": "not run",
+    "runtime": "not run",
+    "generated": "not run",
+    "ci": "not run"
+  },
+  "notes": [
+    "Session 9 reserved after checking live main, operator tracker, roadmap and absent same-date log; zero same-date branches found.",
+    "Pinned 7.8.2 source for selected exports inspected; do not exceed five distinct names."
+  ],
+  "blockers": [],
+  "nextSessionNotBefore": "2026-11-07",
+  "evidence": "evidence/SESSION-09.md"
+}
