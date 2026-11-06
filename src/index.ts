@@ -59,3 +59,9 @@ export { createCatchErrorModel, catchErrorExample } from './models/catchError.js
 export type { CatchErrorParameters, CatchErrorState, CatchErrorEvent, CatchErrorModel } from './models/catchError.js';
 export { createCombineLatestAllModel, createCombineAllModel, combineLatestAllExample, combineAllExample } from './models/combineLatestAll.js';
 export type { LatestAllOperator, LatestAllParameters, LatestSlot, LatestAllState, LatestAllEvent, LatestAllModel } from './models/combineLatestAll.js';
+
+export { createCombineLatestModel, createCombineLatestWithModel, createConcatModel, createConcatWithModel,
+  combineLatestExample, combineLatestWithExample, concatExample, concatWithExample } from './models/session09-joins.js';
+export type { JoinOperator, JoinPolicy, JoinParameters, JoinSlot, JoinState, JoinEvent, JoinModel } from './models/session09-joins.js';
+export { createConcatMapToModel, concatMapToExample } from './models/concatMapTo.js';
+export type { ConcatMapToState, ConcatMapToEvent, ConcatMapToModel } from './models/concatMapTo.js';
