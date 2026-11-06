@@ -1,0 +1,242 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "concat-2-observable-inputs",
+    "operator": "concat",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Forward the source and then each supplied Observable in strict subscription order.",
+    "cardinality": {
+      "signature": "concat : T0* × ... × Tn* → (T0 | ... | Tn)*",
+      "conditions": [
+        "Exactly one input subscription is live at a time; source index 0 always starts first.",
+        "The next supplied source is subscribed only after the previous source completes.",
+        "Each incoming value is emitted unchanged; completion requires all inputs to complete."
+      ]
+    },
+    "scope": {
+      "parameters": "One piped source and 2 supplied Observable inputs; 0–32 others. Deprecated operator export. No projector or scheduler overload.",
+      "callbacks": "No user callbacks; no result selector projection. Observable values preserve reference identity.",
+      "time": "Inputs supply all notification ordering; no clock, scheduler or delay is created by this profile.",
+      "reentrancy": "All input subscriptions established atomically before external notifications. Synchronous producer emissions during setup are excluded.",
+      "exclusions": [
+        "Promise/iterable ObservableInput conversion, synchronous or reentrant notifications during subscription acquisition.",
+        "Deprecated result selector for combineLatest and deprecated scheduler overload for concat.",
+        "Callbacks throwing during observer delivery, synchronous finalizer reentrancy, cancellation during next handling.",
+        "Finite scenarios are evidence, not universal equivalence. Input count beyond 32 is not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Subscribe only the piped source; remaining sources wait for completion."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No multicasting, sharing or replay. Each result subscription owns independent latest slots or serial position.",
+      "reset": "Fresh first-value flags and subscriptions for every execution; closed states accept no notifications.",
+      "resources": [
+        {
+          "id": "input",
+          "kind": "subscription",
+          "owner": "each result subscription, generation is source index"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Forward each input next unchanged; release an input at completion before acquiring the next.",
+      "cancellationCheckpoints": [
+        "Between resolved notifications; cancel active subscriptions without a terminal notification.",
+        "Termination releases only live resources and never creates a late shared subscription."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "connect the output subscription"
+      },
+      {
+        "type": "input.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "one live source delivers a value"
+      },
+      {
+        "type": "input.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "one live source completes"
+      },
+      {
+        "type": "input.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "one live source errors"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "unsubscribe from result"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no subscriptions yet",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "latest slots or serial active input",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "complete, error or silent cancellation",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/concat.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned 7.8.2 joining, subscription and teardown behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/concatAll.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned 7.8.2 joining, subscription and teardown behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/mergeAll.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned 7.8.2 joining, subscription and teardown behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned 7.8.2 joining, subscription and teardown behavior"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session09-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session09-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-09.md"
+    }
+  },
+  "parameters": {
+    "operator": "concat",
+    "otherSources": 2,
+    "policy": "serial",
+    "projector": "none",
+    "scheduler": "none"
+  },
+  "rules": [
+    {
+      "id": "CONCAT-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first downstream connection",
+      "actions": [
+        "acquire source index zero"
+      ],
+      "nextState": "valid ordered input bindings",
+      "obligations": [
+        "S9-CONCAT-INIT"
+      ],
+      "explanation": "Construction is lazy. Source index zero is the piped source."
+    },
+    {
+      "id": "CONCAT-NEXT",
+      "from": "Active",
+      "event": "input.next",
+      "to": "Active",
+      "guard": "only active input",
+      "actions": [
+        "forward value unchanged"
+      ],
+      "nextState": "valid ordered input bindings",
+      "obligations": [
+        "S9-CONCAT-NEXT"
+      ],
+      "explanation": "Concatenation preserves the identity and order of every value."
+    },
+    {
+      "id": "CONCAT-COMPLETE-ADVANCE",
+      "from": "Active",
+      "event": "input.complete",
+      "to": "Active",
+      "guard": "next input exists",
+      "actions": [
+        "release current input",
+        "connect next source"
+      ],
+      "nextState": "valid ordered input bindings",
+      "obligations": [
+        "S9-CONCAT-COMPLETE-ADVANCE"
+      ],
+      "explanation": "Only completion permits advancing the serial source."
+    },
+    {
+      "id": "CONCAT-COMPLETE-LAST",
+      "from": "Active",
+      "event": "input.complete",
+      "to": "Closed",
+      "guard": "last input has completed",
+      "actions": [
+        "complete downstream",
+        "release final input"
+      ],
+      "nextState": "terminal; resources discarded",
+      "obligations": [
+        "S9-CONCAT-COMPLETE-LAST"
+      ],
+      "explanation": "There is no next subscription after the last input."
+    },
+    {
+      "id": "CONCAT-ERROR",
+      "from": "Active",
+      "event": "input.error",
+      "to": "Closed",
+      "guard": "currently subscribed input",
+      "actions": [
+        "propagate original error",
+        "cancel all active inputs"
+      ],
+      "nextState": "terminal; resources discarded",
+      "obligations": [
+        "S9-CONCAT-ERROR"
+      ],
+      "explanation": "Failure aborts the join, without subscribing to more sources."
+    },
+    {
+      "id": "CONCAT-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancels",
+      "actions": [
+        "unsubscribe active inputs, no terminal output"
+      ],
+      "nextState": "terminal; resources discarded",
+      "obligations": [
+        "S9-CONCAT-CANCEL"
+      ],
+      "explanation": "Cancellation is silent and does not create late subscriptions."
+    }
+  ]
+}

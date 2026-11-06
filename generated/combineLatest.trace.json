@@ -1,0 +1,382 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "combineLatest-1-observable-inputs",
+      "executionId": "combineLatest-session9-example",
+      "ruleId": "COMBINELATEST-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": false,
+            "live": true
+          },
+          {
+            "ready": false,
+            "live": true
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "combineLatest-1-observable-inputs",
+      "executionId": "combineLatest-session9-example",
+      "ruleId": "COMBINELATEST-WAIT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 0
+        },
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": false,
+            "live": true
+          },
+          {
+            "ready": false,
+            "live": true
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": true,
+            "live": true,
+            "value": 1
+          },
+          {
+            "ready": false,
+            "live": true
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "combineLatest-1-observable-inputs",
+      "executionId": "combineLatest-session9-example",
+      "ruleId": "COMBINELATEST-EMIT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        },
+        "value": 10
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": true,
+            "live": true,
+            "value": 1
+          },
+          {
+            "ready": false,
+            "live": true
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": true,
+            "live": true,
+            "value": 1
+          },
+          {
+            "ready": true,
+            "live": true,
+            "value": 10
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              1,
+              10
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "combineLatest-1-observable-inputs",
+      "executionId": "combineLatest-session9-example",
+      "ruleId": "COMBINELATEST-EMIT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 0
+        },
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": true,
+            "live": true,
+            "value": 1
+          },
+          {
+            "ready": true,
+            "live": true,
+            "value": 10
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": true,
+            "live": true,
+            "value": 2
+          },
+          {
+            "ready": true,
+            "live": true,
+            "value": 10
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              2,
+              10
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "combineLatest-1-observable-inputs",
+      "executionId": "combineLatest-session9-example",
+      "ruleId": "COMBINELATEST-COMPLETE-WAIT",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": true,
+            "live": true,
+            "value": 2
+          },
+          {
+            "ready": true,
+            "live": true,
+            "value": 10
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": true,
+            "live": false,
+            "value": 2
+          },
+          {
+            "ready": true,
+            "live": true,
+            "value": 10
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "combineLatest-1-observable-inputs",
+      "executionId": "combineLatest-session9-example",
+      "ruleId": "COMBINELATEST-EMIT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        },
+        "value": 11
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": true,
+            "live": false,
+            "value": 2
+          },
+          {
+            "ready": true,
+            "live": true,
+            "value": 10
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": true,
+            "live": false,
+            "value": 2
+          },
+          {
+            "ready": true,
+            "live": true,
+            "value": 11
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              2,
+              11
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "combineLatest-1-observable-inputs",
+      "executionId": "combineLatest-session9-example",
+      "ruleId": "COMBINELATEST-COMPLETE-LAST",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": true,
+            "live": false,
+            "value": 2
+          },
+          {
+            "ready": true,
+            "live": true,
+            "value": 11
+          }
+        ]
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 1
+          }
+        }
+      ]
+    }
+  ]
+}

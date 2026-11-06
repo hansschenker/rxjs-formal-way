@@ -1,0 +1,258 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "combineLatest-1-observable-inputs",
+    "operator": "combineLatest",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Combine source-first latest snapshots after every input has emitted a first value.",
+    "cardinality": {
+      "signature": "combineLatest : T0* × ... × Tn* → (T0 × ... × Tn)*",
+      "conditions": [
+        "Source index 0 comes first. All input subscriptions begin at connection, without a timer.",
+        "Every source must emit at least one value before the first full latest snapshot.",
+        "Each subsequent next from a live source emits a newly allocated source-ordered array.",
+        "An input may complete before its first value; the output is then silent until the remaining inputs also complete."
+      ]
+    },
+    "scope": {
+      "parameters": "One piped source and 1 supplied Observable inputs; 0–32 others. Deprecated operator export. No projector or scheduler overload.",
+      "callbacks": "No user callbacks; no result selector projection. Observable values preserve reference identity.",
+      "time": "Inputs supply all notification ordering; no clock, scheduler or delay is created by this profile.",
+      "reentrancy": "All input subscriptions established atomically before external notifications. Synchronous producer emissions during setup are excluded.",
+      "exclusions": [
+        "Promise/iterable ObservableInput conversion, synchronous or reentrant notifications during subscription acquisition.",
+        "Deprecated result selector for combineLatest and deprecated scheduler overload for concat.",
+        "Callbacks throwing during observer delivery, synchronous finalizer reentrancy, cancellation during next handling.",
+        "Finite scenarios are evidence, not universal equivalence. Input count beyond 32 is not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire input 0, then other inputs in argument order."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No multicasting, sharing or replay. Each result subscription owns independent latest slots or serial position.",
+      "reset": "Fresh first-value flags and subscriptions for every execution; closed states accept no notifications.",
+      "resources": [
+        {
+          "id": "input",
+          "kind": "subscription",
+          "owner": "each result subscription, generation is source index"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Store each latest value; emit a fresh full tuple only when all slots are ready. Input completion preserves any last value.",
+      "cancellationCheckpoints": [
+        "Between resolved notifications; cancel active subscriptions without a terminal notification.",
+        "Termination releases only live resources and never creates a late shared subscription."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "connect the output subscription"
+      },
+      {
+        "type": "input.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "one live source delivers a value"
+      },
+      {
+        "type": "input.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "one live source completes"
+      },
+      {
+        "type": "input.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "one live source errors"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "unsubscribe from result"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no subscriptions yet",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "latest slots or serial active input",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "complete, error or silent cancellation",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/combineLatest.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned 7.8.2 joining, subscription and teardown behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/combineLatest.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned 7.8.2 joining, subscription and teardown behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned 7.8.2 joining, subscription and teardown behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned 7.8.2 joining, subscription and teardown behavior"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session09-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session09-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-09.md"
+    }
+  },
+  "parameters": {
+    "operator": "combineLatest",
+    "otherSources": 1,
+    "policy": "latest",
+    "projector": "none",
+    "scheduler": "none"
+  },
+  "rules": [
+    {
+      "id": "COMBINELATEST-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first downstream connection",
+      "actions": [
+        "acquire every input in argument order"
+      ],
+      "nextState": "valid ordered input bindings",
+      "obligations": [
+        "S9-COMBINELATEST-INIT"
+      ],
+      "explanation": "Construction is lazy. Source index zero is the piped source."
+    },
+    {
+      "id": "COMBINELATEST-WAIT",
+      "from": "Active",
+      "event": "input.next",
+      "to": "Active",
+      "guard": "live source; some other source unready",
+      "actions": [
+        "replace latest value; no output"
+      ],
+      "nextState": "valid ordered input bindings",
+      "obligations": [
+        "S9-COMBINELATEST-WAIT"
+      ],
+      "explanation": "The first-value barrier applies to every source."
+    },
+    {
+      "id": "COMBINELATEST-EMIT",
+      "from": "Active",
+      "event": "input.next",
+      "to": "Active",
+      "guard": "live source; every other source ready",
+      "actions": [
+        "update one latest value",
+        "emit copied source-ordered array"
+      ],
+      "nextState": "valid ordered input bindings",
+      "obligations": [
+        "S9-COMBINELATEST-EMIT"
+      ],
+      "explanation": "One emission produces one fresh latest tuple."
+    },
+    {
+      "id": "COMBINELATEST-COMPLETE-WAIT",
+      "from": "Active",
+      "event": "input.complete",
+      "to": "Active",
+      "guard": "live source; another source remains live",
+      "actions": [
+        "release completing input; retain latest value"
+      ],
+      "nextState": "valid ordered input bindings",
+      "obligations": [
+        "S9-COMBINELATEST-COMPLETE-WAIT"
+      ],
+      "explanation": "No early completion even if this source never emitted."
+    },
+    {
+      "id": "COMBINELATEST-COMPLETE-LAST",
+      "from": "Active",
+      "event": "input.complete",
+      "to": "Closed",
+      "guard": "final live input",
+      "actions": [
+        "complete downstream",
+        "release final input"
+      ],
+      "nextState": "terminal; resources discarded",
+      "obligations": [
+        "S9-COMBINELATEST-COMPLETE-LAST"
+      ],
+      "explanation": "Completion waits for all inputs, independent of readiness."
+    },
+    {
+      "id": "COMBINELATEST-ERROR",
+      "from": "Active",
+      "event": "input.error",
+      "to": "Closed",
+      "guard": "currently subscribed input",
+      "actions": [
+        "propagate original error",
+        "cancel all active inputs"
+      ],
+      "nextState": "terminal; resources discarded",
+      "obligations": [
+        "S9-COMBINELATEST-ERROR"
+      ],
+      "explanation": "Failure aborts the join, without subscribing to more sources."
+    },
+    {
+      "id": "COMBINELATEST-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancels",
+      "actions": [
+        "unsubscribe active inputs, no terminal output"
+      ],
+      "nextState": "terminal; resources discarded",
+      "obligations": [
+        "S9-COMBINELATEST-CANCEL"
+      ],
+      "explanation": "Cancellation is silent and does not create late subscriptions."
+    }
+  ]
+}

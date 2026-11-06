@@ -1,0 +1,417 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "concatWith-2-observable-inputs",
+      "executionId": "concatWith-session9-example",
+      "ruleId": "CONCATWITH-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": false,
+            "live": true
+          },
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": false
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "concatWith-2-observable-inputs",
+      "executionId": "concatWith-session9-example",
+      "ruleId": "CONCATWITH-NEXT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 0
+        },
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": false,
+            "live": true
+          },
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": false
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": false,
+            "live": true
+          },
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": false
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "concatWith-2-observable-inputs",
+      "executionId": "concatWith-session9-example",
+      "ruleId": "CONCATWITH-COMPLETE-ADVANCE",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "slots": [
+          {
+            "ready": false,
+            "live": true
+          },
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": false
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 1,
+        "slots": [
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": true
+          },
+          {
+            "ready": false,
+            "live": false
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "concatWith-2-observable-inputs",
+      "executionId": "concatWith-session9-example",
+      "ruleId": "CONCATWITH-NEXT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        },
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "current": 1,
+        "slots": [
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": true
+          },
+          {
+            "ready": false,
+            "live": false
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 1,
+        "slots": [
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": true
+          },
+          {
+            "ready": false,
+            "live": false
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "concatWith-2-observable-inputs",
+      "executionId": "concatWith-session9-example",
+      "ruleId": "CONCATWITH-COMPLETE-ADVANCE",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "current": 1,
+        "slots": [
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": true
+          },
+          {
+            "ready": false,
+            "live": false
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 2,
+        "slots": [
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": true
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 1
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "concatWith-2-observable-inputs",
+      "executionId": "concatWith-session9-example",
+      "ruleId": "CONCATWITH-NEXT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 2
+        },
+        "value": 3
+      },
+      "before": {
+        "phase": "Active",
+        "current": 2,
+        "slots": [
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": true
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 2,
+        "slots": [
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": true
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 3
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "concatWith-2-observable-inputs",
+      "executionId": "concatWith-session9-example",
+      "ruleId": "CONCATWITH-COMPLETE-LAST",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 2
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "current": 2,
+        "slots": [
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": false
+          },
+          {
+            "ready": false,
+            "live": true
+          }
+        ]
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 2
+          }
+        }
+      ]
+    }
+  ]
+}
