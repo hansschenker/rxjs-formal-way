@@ -270,13 +270,13 @@ function create<T>(operator: JoinOperator, otherSources: number): JoinModel<T> {
       const errors = [...validateActionWord(reaction.actions)];
       if (reaction.actions.some(a => a.type === 'notify' && a.target !== 'downstream'))
         errors.push('invalid notification target');
-      const values = reaction.actions.filter(a => a.type === 'notify' && a.notification.kind === 'N');
+      const values = reaction.actions.flatMap(a =>
+        a.type === 'notify' && a.notification.kind === 'N' ? [a.notification.value] : []);
       if (event.type === 'input.next' && policy === 'serial' &&
-        (values.length !== 1 || !Object.is(values[0]?.notification.kind === 'N' && values[0].notification.value, event.value)))
+        (values.length !== 1 || !Object.is(values[0], event.value)))
         errors.push('serial input not forwarded once by identity');
-      if (event.type === 'input.next' && policy === 'latest' && values.some(a =>
-        a.notification.kind === 'N' && (!Array.isArray(a.notification.value) ||
-        (before.phase === 'Active' && a.notification.value.length !== before.slots.length))))
+      if (event.type === 'input.next' && policy === 'latest' && values.some(value =>
+        !Array.isArray(value) || (before.phase === 'Active' && value.length !== before.slots.length)))
         errors.push('latest output is not a complete source-ordered array');
       if ((event.type === 'cancel' || event.type === 'input.error') && values.length)
         errors.push('invalid value output on cancellation or error');
