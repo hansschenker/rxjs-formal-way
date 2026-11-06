@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "combineLatest",
-    "combineLatestWith",
-    "concat",
-    "concatMapTo",
-    "concatWith",
     "connect",
     "debounce",
     "defaultIfEmpty",
@@ -238,19 +233,46 @@
       "readOnlyCheckout": "2de72f3953ccffa639359a9f933f43a4d0911eff"
     },
     "combineLatest": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-06",
+      "profiles": [
+        "pipeable-Observable-latest-array",
+        "source-first-atomic-setup",
+        "no-projector-or-scheduler"
+      ],
+      "evidence": "evidence/SESSION-09.md",
+      "testedCommit": "597ba676568af18dfae69ef7a49d9fbfb14cd44a",
+      "implementationRun": 42181663215,
+      "verificationRun": 42259742601,
+      "readOnlyHeadCommit": "ee35ba02c5dc05ac4193d9ad1e20333f4b7fae3d",
+      "readOnlyCheckout": "5a917c99e604e74bb5defe8f2cb89afec21dbb6a"
     },
     "combineLatestWith": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-06",
+      "profiles": [
+        "Observable-latest-array",
+        "source-first-atomic-setup"
+      ],
+      "evidence": "evidence/SESSION-09.md",
+      "testedCommit": "597ba676568af18dfae69ef7a49d9fbfb14cd44a",
+      "implementationRun": 42181663215,
+      "verificationRun": 42259742601,
+      "readOnlyHeadCommit": "ee35ba02c5dc05ac4193d9ad1e20333f4b7fae3d",
+      "readOnlyCheckout": "5a917c99e604e74bb5defe8f2cb89afec21dbb6a"
     },
     "concat": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-06",
+      "profiles": [
+        "pipeable-unscheduled-Observable-sequence"
+      ],
+      "evidence": "evidence/SESSION-09.md",
+      "testedCommit": "597ba676568af18dfae69ef7a49d9fbfb14cd44a",
+      "implementationRun": 42181663215,
+      "verificationRun": 42259742601,
+      "readOnlyHeadCommit": "ee35ba02c5dc05ac4193d9ad1e20333f4b7fae3d",
+      "readOnlyCheckout": "5a917c99e604e74bb5defe8f2cb89afec21dbb6a"
     },
     "concatAll": {
       "status": "accepted",
@@ -273,14 +295,32 @@
       "verificationRun": 40853083582
     },
     "concatMapTo": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-06",
+      "profiles": [
+        "constant-Observable-token",
+        "sequential-FIFO-subscription-occurrences",
+        "no-result-selector"
+      ],
+      "evidence": "evidence/SESSION-09.md",
+      "testedCommit": "597ba676568af18dfae69ef7a49d9fbfb14cd44a",
+      "implementationRun": 42181663215,
+      "verificationRun": 42259742601,
+      "readOnlyHeadCommit": "ee35ba02c5dc05ac4193d9ad1e20333f4b7fae3d",
+      "readOnlyCheckout": "5a917c99e604e74bb5defe8f2cb89afec21dbb6a"
     },
     "concatWith": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-06",
+      "profiles": [
+        "unscheduled-Observable-sequence"
+      ],
+      "evidence": "evidence/SESSION-09.md",
+      "testedCommit": "597ba676568af18dfae69ef7a49d9fbfb14cd44a",
+      "implementationRun": 42181663215,
+      "verificationRun": 42259742601,
+      "readOnlyHeadCommit": "ee35ba02c5dc05ac4193d9ad1e20333f4b7fae3d",
+      "readOnlyCheckout": "5a917c99e604e74bb5defe8f2cb89afec21dbb6a"
     },
     "connect": {
       "status": "pending",

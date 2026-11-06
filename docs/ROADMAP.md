@@ -27,7 +27,10 @@ This is the current implementation tracker. The migration map preserves the orig
 | M08-A | bufferToggle/bufferWhen opening, closing, overlapping and successive-buffer policies | Accepted within scope; [Session 8 guide](SESSION-08-SELECTOR-BUFFERS-RECOVERY-JOINS.md) |
 | M08-B | catchError selector-based replacement and teardown ordering | Accepted within scope; [Session 8 evidence](../evidence/SESSION-08.md) |
 | M08-C | combineLatestAll and deprecated exact alias combineAll, deferred latest join | Accepted within scope; [Session 8 evidence](../evidence/SESSION-08.md) |
-| M07+ | Remaining catalogue | 73 exports pending; not a universal interpreter |
+| M09-A | pipeable combineLatest/combineLatestWith, source-first latest snapshots | Accepted within scope; [Session 9 guide](SESSION-09-JOINS-AND-CONSTANT-MAP.md) |
+| M09-B | pipeable concat/concatWith, sequential source acquisition | Accepted within scope; [Session 9 evidence](../evidence/SESSION-09.md) |
+| M09-C | concatMapTo, constant-inner FIFO subscription occurrences | Accepted within scope; [Session 9 evidence](../evidence/SESSION-09.md) |
+| M10+ | Remaining catalogue | 68 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -114,14 +117,6 @@ Exactly five distinct pending exports—**audit, auditTime, buffer, bufferCount,
 
 **35 of 113 exports accepted; 78 pending.** Zero carryovers; no second batch.
 
-## Next pending batch
-
-Not before **5 November 2026 Europe/Zurich**:
-**bufferToggle, bufferWhen, catchError, combineAll, combineLatestAll**.
-Maintain the five-name maximum, carryovers-first selection,
-independent actual RxJS comparisons and retrieved CI evidence.
-Finite checks do not constitute a universal equivalence proof.
-
 ## Final project goal
 
 The project now has an explicit final goal: **scale upward from precise local operator semantics into formal verification of composed RxJS pipelines**. M03-P is the bridge: local canonical Mealy models are lifted into product pipeline states, ordered actions are interpreted as connection semantics, synchronous propagation is collapsed to stable macro-steps, and a bounded explicit-state explorer checks invariants with counterexample paths. The next scaling witness is `debounceTime → switchMap → distinctUntilChanged`, followed by a generated TLA+/TLC projection rather than a separately maintained specification.
@@ -132,4 +127,22 @@ The five pending exports **bufferToggle, bufferWhen, catchError, combineAll and 
 
 The established schema, runner, views and validation pipeline were reused without weakening checks. Five configurations added **40 deterministic projections**, bringing the total to **352**. [Push CI 41986983309](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41986983309) passed **758 named tests** with zero failures, after generating and drift-verifying all 352 views. [Independent read-only PR CI 41987175479](https://github.com/hansschenker/rxjs-formal-way/actions/runs/41987175479) also passed 758 tests and 352 drift checks, explicitly skipping generation and publication. The exact implementation, generated and read-only checkout commits, matching Git trees, 43 new tests, 18 new negative type assertions, 161 bounded comparisons and exclusions are recorded in [Session 8 evidence](../evidence/SESSION-08.md).
 
-**40 of 113 exports accepted; 73 pending. No carryovers or second batch.** The next five in the authoritative queue are `combineLatest`, `combineLatestWith`, `concat`, `concatMapTo`, and `concatWith`, not before 6 November 2026 Europe/Zurich.
+**40 of 113 exports accepted; 73 pending. No carryovers or second batch.** Following Session 8, the next five were `combineLatest`, `combineLatestWith`, `concat`, `concatMapTo`, and `concatWith`, eligible from 6 November 2026 Europe/Zurich.
+
+## Session 9 closed: 6 November 2026
+
+The already-reserved session was resumed rather than duplicated. Its five names **combineLatest, combineLatestWith, concat, concatMapTo and concatWith** are accepted within declared Observable, non-reentrant profiles. The legacy combineLatest and concat names are pipeable exports, not creation APIs. Source-first latest snapshots, sequential source acquisition and constant-inner FIFO subscription occurrences reuse the existing schema, runner, renderers and reviewed flattening machinery.
+
+[Push CI 42181663215](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42181663215), job **127772452370**, tested actual main checkout `597ba676568af18dfae69ef7a49d9fbfb14cd44a`, passed **797 named tests** and drift-checked **392 projections** before creating generated commit `5c250ebae93971a67657e4189809aced26a1344e`. **39 new named tests** comprise 20 model/view and 19 actual RxJS tests; **14 new negative assertions** bring the cumulative total to **161**. Five examples add **40 views**. This session adds fixed targeted native cases, not a new bounded-enumeration count.
+
+Independent [read-only PR #12 run 42259742601](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42259742601), job **128036228031**, passed the same **797 tests and 392 drift checks**, with generation/publication skipped. Its actual synthetic checkout `5a917c99e604e74bb5defe8f2cb89afec21dbb6a` and PR head `ee35ba02c5dc05ac4193d9ad1e20333f4b7fae3d` have identical Git tree `4097af0cecb60977f795c78b4ec2d8e6221ac6ff`. The evidence PR merged as `e56fcff8ec5d5c8a44d0183c15d45eb840022e06`. The final closure only changes documentation/planning, not tested runtime code. See [the guide](SESSION-09-JOINS-AND-CONSTANT-MAP.md) and [evidence](../evidence/SESSION-09.md).
+
+**45 of 113 exports accepted; 68 pending. No carryovers, no sixth operator and no second batch.** Finite scoped evidence is not a universal proof.
+
+## Next pending batch — Session 10
+
+Not before **7 November 2026 Europe/Zurich**:
+**connect, debounce, defaultIfEmpty, delay, delayWhen**.
+Maintain the five-name maximum, carryovers-first selection,
+independent actual RxJS comparisons and retrieved CI evidence.
+The next batch has not been started.

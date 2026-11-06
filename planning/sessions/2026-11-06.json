@@ -2,39 +2,72 @@
   "schemaVersion": 1,
   "date": "2026-11-06",
   "timezone": "Europe/Zurich",
-  "status": "started",
-  "startedAt": "2026-11-06T08:18:54+01:00",
+  "status": "closed",
+  "startedAt": "2026-11-06T08:10:00+01:00",
   "startingCommit": "a9b97eee9f18ba647b87abb7e16849078c32e698",
-  "selectedNames": [
-    "combineLatest",
-    "combineLatestWith",
-    "concat",
-    "concatMapTo",
-    "concatWith"
+  "selectedNames": ["combineLatest", "combineLatestWith", "concat", "concatMapTo", "concatWith"],
+  "workedNames": ["combineLatest", "combineLatestWith", "concat", "concatMapTo", "concatWith"],
+  "completedNames": ["combineLatest", "combineLatestWith", "concat", "concatMapTo", "concatWith"],
+  "carryovers": [],
+  "commits": [
+    "8d2f06d70638f7c801d0e35e4549cc080b3895b9",
+    "597ba676568af18dfae69ef7a49d9fbfb14cd44a",
+    "5c250ebae93971a67657e4189809aced26a1344e",
+    "ee35ba02c5dc05ac4193d9ad1e20333f4b7fae3d",
+    "e56fcff8ec5d5c8a44d0183c15d45eb840022e06"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
-    "combineLatest",
-    "combineLatestWith",
-    "concat",
-    "concatMapTo",
-    "concatWith"
-  ],
-  "commits": [],
   "checks": {
-    "syntax": "not run",
-    "types": "not run",
-    "model": "not run",
-    "runtime": "not run",
-    "generated": "not run",
-    "ci": "not run"
+    "syntax": "passed in implementation push and independent read-only PR CI",
+    "types": "strict TypeScript passed; 14 new negative assertions, 161 cumulative",
+    "model": "20 new model/view tests passed; full suite 797",
+    "runtime": "19 new actual RxJS tests passed; no new enumerated bounded-scenario count",
+    "generated": "392 committed views verified read-only; 40 new, 352 retained",
+    "ci": "push 42181663215 and independent read-only PR 42259742601 succeeded; read-only generation and publication skipped"
   },
   "notes": [
-    "Session 9 reserved after checking live main, operator tracker, roadmap and absent same-date log; zero same-date branches found.",
-    "Pinned 7.8.2 source for selected exports inspected; do not exceed five distinct names."
+    "Reserved exactly five pending distinct export names from live queue; Session 8 closed with no carryovers.",
+    "Pinned source revision remains e5351d02e225e275ac0e497c7b66eaa5f0c88791. Existing accepted operators are not regenerated as new work.",
+    "Interactive continuation resumed this already-started session after implementation and generated files were on main; no second session or sixth name was opened.",
+    "Reviewed pinned implementations, canonical models, model/native/type tests and existing successful implementation CI before acceptance.",
+    "Corrected the guide's six-tuple notation: Z is the input-event alphabet; control labels are a projection of S.",
+    "combineLatest and concat refer to pipeable exports, not creation functions; no optional projector, scheduler or concatMapTo result selector is included.",
+    "Read-only PR #12 checked synthetic merge 5a917c99e604e74bb5defe8f2cb89afec21dbb6a, whose Git tree equals its PR head. All 797 tests and 392 drift checks passed.",
+    "Final closure updates documentation and planning only; it is not misreported as the implementation-test checkout. No accepted model, generated view, dependency or validation setting was weakened."
   ],
   "blockers": [],
+  "evidence": "evidence/SESSION-09.md",
   "nextSessionNotBefore": "2026-11-07",
-  "evidence": "evidence/SESSION-09.md"
+  "nextQueue": ["connect", "debounce", "defaultIfEmpty", "delay", "delayWhen"],
+  "closedAt": "2026-11-06T18:23:47+01:00",
+  "provenanceLimitations": [
+    "Read-only CI uses a synthetic merge checkout, not the branch-head SHA; matching Git trees were independently verified.",
+    "Finite tests and declared profiles are acceptance evidence, not universal equivalence proofs."
+  ],
+  "verification": {
+    "testedCommit": "597ba676568af18dfae69ef7a49d9fbfb14cd44a",
+    "implementationCommit": "597ba676568af18dfae69ef7a49d9fbfb14cd44a",
+    "implementationBranchHead": "8d2f06d70638f7c801d0e35e4549cc080b3895b9",
+    "generatedCommit": "5c250ebae93971a67657e4189809aced26a1344e",
+    "pushRun": 42181663215,
+    "pushJob": 127772452370,
+    "readOnlyRun": 42259742601,
+    "readOnlyJob": 128036228031,
+    "prNumber": 12,
+    "readOnlyHeadCommit": "ee35ba02c5dc05ac4193d9ad1e20333f4b7fae3d",
+    "readOnlyBaseCommit": "5c250ebae93971a67657e4189809aced26a1344e",
+    "readOnlyCheckout": "5a917c99e604e74bb5defe8f2cb89afec21dbb6a",
+    "readOnlyCheckoutTree": "4097af0cecb60977f795c78b4ec2d8e6221ac6ff",
+    "readOnlyHeadTree": "4097af0cecb60977f795c78b4ec2d8e6221ac6ff",
+    "namedTestsPassed": 797,
+    "newNamedTests": 39,
+    "newModelNamedTests": 20,
+    "newRuntimeNamedTests": 19,
+    "negativeTypeAssertions": 161,
+    "newNegativeTypeAssertions": 14,
+    "generatedViews": 392,
+    "newGeneratedViews": 40,
+    "newBoundedModelRxjsScenarios": 0,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  }
 }
