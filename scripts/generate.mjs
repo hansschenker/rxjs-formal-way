@@ -41,6 +41,13 @@ import {
   createCombineAllModel,createCombineLatestAllModel,combineAllExample,combineLatestAllExample
 } from '../dist/index.js';
 
+
+import {
+  createCombineLatestModel, createCombineLatestWithModel, createConcatModel, createConcatWithModel,
+  createConcatMapToModel,
+  combineLatestExample, combineLatestWithExample, concatExample, concatWithExample, concatMapToExample
+} from '../dist/index.js';
+
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
@@ -87,6 +94,12 @@ const examples = [
   ['catchError', createCatchErrorModel(), catchErrorExample, 'catchError-session8-example'],
   ['combineAll', createCombineAllModel(), combineAllExample, 'combineAll-session8-example'],
   ['combineLatestAll', createCombineLatestAllModel(), combineLatestAllExample, 'combineLatestAll-session8-example'],
+
+  ['combineLatest', createCombineLatestModel(), combineLatestExample, 'combineLatest-session9-example'],
+  ['combineLatestWith', createCombineLatestWithModel(), combineLatestWithExample, 'combineLatestWith-session9-example'],
+  ['concat', createConcatModel(), concatExample, 'concat-session9-example'],
+  ['concatMapTo', createConcatMapToModel('shared'), concatMapToExample, 'concatMapTo-session9-example'],
+  ['concatWith', createConcatWithModel(), concatWithExample, 'concatWith-session9-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
