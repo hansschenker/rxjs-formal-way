@@ -2,9 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   Subject, Observable, of, EMPTY, throwError, defer, take,
-  combineLatest, combineLatestWith, concat, concatWith, concatMapTo
+  combineLatestWith, concatWith, concatMapTo
 } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
+import { combineLatest as combineLatestPipe, concat as concatPipe } from 'rxjs/operators';
 import {
   createCombineLatestModel, createCombineLatestWithModel, createConcatModel,
   createConcatWithModel, createConcatMapToModel, stepModel
@@ -33,7 +34,7 @@ const model = (m, events) => {
     state };
 };
 for(const [name,op,make] of [
- ['combineLatest',other=>combineLatest([other]),()=>createCombineLatestModel()],
+ ['combineLatest',other=>combineLatestPipe([other]),()=>createCombineLatestModel()],
  ['combineLatestWith',other=>combineLatestWith(other),()=>createCombineLatestWithModel()],
 ]) {
  test('S9-NATIVE '+name+': source-first latest tuples and completion hold',()=>{
@@ -89,7 +90,7 @@ for(const [name,op,make] of [
  });
 }
 for(const [name,op,make] of [
- ['concat',(...sources)=>concat(...sources),()=>createConcatModel()],
+ ['concat',(...sources)=>concatPipe(...sources),()=>createConcatModel()],
  ['concatWith',(...sources)=>concatWith(...sources),()=>createConcatWithModel()],
 ]){
  test('S9-NATIVE '+name+': source and supplied Observables are subscribed strictly serially',()=>{
@@ -133,7 +134,7 @@ for(const [name,op,make] of [
  });
 }
 test('S9-NATIVE concat and concatWith: empty intermediate source is skipped',()=>{
- const a=capture(of(1).pipe(concat(EMPTY,of(3))));
+ const a=capture(of(1).pipe(concatPipe(EMPTY,of(3))));
  const b=capture(of(1).pipe(concatWith(EMPTY,of(3))));
  assert.deepEqual(a.notes,[{kind:'N',value:1},{kind:'N',value:3},{kind:'C'}]);
  assert.deepEqual(a.notes,b.notes);
