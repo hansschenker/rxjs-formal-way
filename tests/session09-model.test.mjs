@@ -132,7 +132,7 @@ test('S9-ALIASES: latest and serial pairs have exactly equal action words',()=>{
 });
 test('S9-MAPTO: queue requires sequential resubscription to exactly one source token',()=>{
  const model=createConcatMapToModel('shared');
- const partial=run(model,concatMapToExample.slice(0,6).map(x=>x.event));
+ const partial=run(model,concatMapToExample.slice(0,7).map(x=>x.event));
  assert.equal(partial.state.phase,'Calling');
  assert.throws(()=>stepModel(model,partial.state,{type:'callback.return',resource:constant(1),value:'other'}),/illegal/);
  const done=run(model,concatMapToExample.map(x=>x.event));
