@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-07",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-07T08:26:18+01:00",
+  "startingCommit": "3e9594a5d5b562a86bb5d5bfaf4e1c0ef072a1bd",
+  "selectedNames": [
+    "connect",
+    "debounce",
+    "defaultIfEmpty",
+    "delay",
+    "delayWhen"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "connect",
+    "debounce",
+    "defaultIfEmpty",
+    "delay",
+    "delayWhen"
+  ],
+  "commits": [],
+  "checks": {
+    "syntax": "not run",
+    "types": "not run",
+    "model": "not run",
+    "runtime": "not run",
+    "generated": "not run",
+    "ci": "not run"
+  },
+  "blockers": [],
+  "nextQueue": [
+    "dematerialize",
+    "elementAt",
+    "endWith",
+    "every",
+    "exhaust"
+  ],
+  "notes": [
+    "Exactly five distinct pending names reserved from live tracker; no 2026-11-07 session log existed before this reservation. Source pinned to RxJS 7.8.2 at e5351d02e225e275ac0e497c7b66eaa5f0c88791."
+  ]
+}
