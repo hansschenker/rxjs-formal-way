@@ -1,0 +1,278 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "debounce-Observable-duration",
+      "executionId": "debounce-session10-example",
+      "ruleId": "DEBOUNCE-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "nextId": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "debounce-Observable-duration",
+      "executionId": "debounce-session10-example",
+      "ruleId": "DEBOUNCE-NEW-VALUE",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "nextId": 0
+      },
+      "after": {
+        "phase": "Calling",
+        "nextId": 1,
+        "pending": {
+          "id": 0,
+          "value": 1,
+          "live": false
+        }
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "selector",
+            "generation": 0
+          },
+          "index": 0,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "debounce-Observable-duration",
+      "executionId": "debounce-session10-example",
+      "ruleId": "DEBOUNCE-DURATION-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "selector",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Calling",
+        "nextId": 1,
+        "pending": {
+          "id": 0,
+          "value": 1,
+          "live": false
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "nextId": 1,
+        "pending": {
+          "id": 0,
+          "value": 1,
+          "live": true
+        }
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "debounce-Observable-duration",
+      "executionId": "debounce-session10-example",
+      "ruleId": "DEBOUNCE-NEW-VALUE",
+      "event": {
+        "type": "source.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "nextId": 1,
+        "pending": {
+          "id": 0,
+          "value": 1,
+          "live": true
+        }
+      },
+      "after": {
+        "phase": "Calling",
+        "nextId": 2,
+        "pending": {
+          "id": 1,
+          "value": 2,
+          "live": false
+        }
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 0
+          }
+        },
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "selector",
+            "generation": 1
+          },
+          "index": 1,
+          "value": 2
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "debounce-Observable-duration",
+      "executionId": "debounce-session10-example",
+      "ruleId": "DEBOUNCE-DURATION-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "selector",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Calling",
+        "nextId": 2,
+        "pending": {
+          "id": 1,
+          "value": 2,
+          "live": false
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "nextId": 2,
+        "pending": {
+          "id": 1,
+          "value": 2,
+          "live": true
+        }
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "debounce-Observable-duration",
+      "executionId": "debounce-session10-example",
+      "ruleId": "DEBOUNCE-DURATION-NEXT",
+      "event": {
+        "type": "duration.next",
+        "resource": {
+          "id": "duration",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "nextId": 2,
+        "pending": {
+          "id": 1,
+          "value": 2,
+          "live": true
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "nextId": 2
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 4,
+      "modelId": "debounce-Observable-duration",
+      "executionId": "debounce-session10-example",
+      "ruleId": "DEBOUNCE-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "nextId": 2
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

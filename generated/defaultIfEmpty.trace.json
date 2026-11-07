@@ -1,0 +1,78 @@
+{
+  "status": "finished-input",
+  "consumed": 2,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "defaultIfEmpty-opaque-fallback",
+      "executionId": "defaultIfEmpty-session10-example",
+      "ruleId": "DEFAULTIFEMPTY-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "hasValue": false
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 3,
+      "modelId": "defaultIfEmpty-opaque-fallback",
+      "executionId": "defaultIfEmpty-session10-example",
+      "ruleId": "DEFAULTIFEMPTY-EMPTY",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "hasValue": false
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "fallback"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

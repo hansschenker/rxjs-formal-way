@@ -1,0 +1,439 @@
+{
+  "metadata": {
+    "id": "delay-fixed-timer-3",
+    "operator": "delay",
+    "purpose": "Delay each source value independently using a scheduled timer.",
+    "cardinality": {
+      "signature": "delay : T* -> T* (time-shifted subset for delayWhen)",
+      "conditions": [
+        "One inner per source value, independent concurrency and retained payload identity.",
+        "Only a timer firing/duration next emits a value; empty selected duration discards it.",
+        "Outer completion waits for admitted inner work; error/cancellation discard."
+      ]
+    },
+    "scope": {
+      "parameters": "Relative nonnegative safe-integer due duration; virtual scheduler events. No Date or custom scheduler.",
+      "callbacks": "No user selector; internal constant timer selection is lowered directly into schedule actions.",
+      "time": "Schedulers and duration sources own time; the model only uses supplied now and ordered events.",
+      "reentrancy": "Atomic non-reentrant notifications and selector resolution; no callback-driven source reentry.",
+      "exclusions": [
+        "Promise/iterable input conversion, Date absolute delay, custom schedulers, deprecated subscriptionDelay.",
+        "Reentrant producer/observer/finalizer, cancellation during callback delivery, universal metric-time guarantee."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire source at downstream subscription; each value independently admits its duration."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No implicit sharing or replay; multiple independent live timers/durations.",
+      "reset": "Fresh counter and pending list on every output subscription.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "output subscription"
+        },
+        {
+          "id": "timer",
+          "kind": "timer",
+          "owner": "each admitted source value"
+        },
+        {
+          "id": "duration",
+          "kind": "subscription",
+          "owner": "each selector return"
+        },
+        {
+          "id": "selector",
+          "kind": "callback",
+          "owner": "output subscription"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Each value enters a separately owned duration. A timer/first duration next releases that value. Completion waits; error aborts.",
+      "cancellationCheckpoints": [
+        "Between any source, timer or duration events.",
+        "Before late timer firing after cancellation."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "subscribe to output"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "admit one value and its duration"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "selected duration returned"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "duration selector threw"
+      },
+      {
+        "type": "timer.fire",
+        "origin": "timer",
+        "category": "time",
+        "description": "scheduled timer executes at supplied now"
+      },
+      {
+        "type": "duration.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "first duration next"
+      },
+      {
+        "type": "duration.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "duration completed without next"
+      },
+      {
+        "type": "duration.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "duration error"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source completion waits for inners"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source error"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "silent cancellation"
+      }
+    ],
+    "actionTypes": [
+      "notify",
+      "subscribe",
+      "unsubscribe",
+      "invoke-callback",
+      "schedule",
+      "cancel-timer"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source maybe live and independent pending duration registry",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "output terminated or unsubscribed",
+        "terminal": true
+      }
+    ],
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/delay.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 control, notification and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/delayWhen.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 control, notification and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/timer.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 control, notification and teardown semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session10-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session10-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-10.md"
+    }
+  },
+  "parameters": {
+    "operator": "delay",
+    "mode": "timer",
+    "due": 3
+  },
+  "rules": [
+    {
+      "id": "DELAY-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "fresh subscription",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DELAY-INIT"
+      ],
+      "explanation": "Each result subscription owns a new source and pending-duration registry."
+    },
+    {
+      "id": "DELAY-SOURCE-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source live; timer mode",
+      "actions": [
+        "remember input as independent pending timer",
+        "schedule due"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DELAY-SOURCE-NEXT"
+      ],
+      "explanation": "delay uses one timer per source value, not a single shared debounce timer."
+    },
+    {
+      "id": "DELAY-SOURCE-SELECT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source live; selector mode",
+      "actions": [
+        "retain source value",
+        "request indexed duration selector"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DELAY-SOURCE-SELECT"
+      ],
+      "explanation": "delayWhen allows multiple independently pending durations; no replacement policy."
+    },
+    {
+      "id": "DELAY-SELECTOR-RETURN",
+      "from": "Active",
+      "event": "callback.return",
+      "to": "Active",
+      "guard": "matching pending callback",
+      "actions": [
+        "subscribe returned duration"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DELAY-SELECTOR-RETURN"
+      ],
+      "explanation": "One successful selector return starts one independent duration subscription."
+    },
+    {
+      "id": "DELAY-SELECTOR-THROW",
+      "from": "Active",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "matching pending callback",
+      "actions": [
+        "error",
+        "release outer and all admitted durations"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DELAY-SELECTOR-THROW"
+      ],
+      "explanation": "A selector failure aborts all outstanding delayed values."
+    },
+    {
+      "id": "DELAY-TIMER-FIRE",
+      "from": "Active",
+      "event": "timer.fire",
+      "to": "Active",
+      "guard": "current timer at/after deadline; source remains live or peers pending",
+      "actions": [
+        "cancel timer",
+        "emit its source payload"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DELAY-TIMER-FIRE"
+      ],
+      "explanation": "Time is supplied by scheduler event; each timer releases only its own source value."
+    },
+    {
+      "id": "DELAY-TIMER-FINAL",
+      "from": "Active",
+      "event": "timer.fire",
+      "to": "Closed",
+      "guard": "last timer at/after deadline and source already complete",
+      "actions": [
+        "emit value",
+        "complete"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DELAY-TIMER-FINAL"
+      ],
+      "explanation": "Last pending timer completion finishes an already-completed source."
+    },
+    {
+      "id": "DELAY-DURATION-NEXT-Active",
+      "from": "Active",
+      "event": "duration.next",
+      "to": "Active",
+      "guard": "matching selected duration; closed only after outer finished and last item",
+      "actions": [
+        "emit pending value after first duration next"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DELAY-DURATION-NEXT-Active"
+      ],
+      "explanation": "Duration next releases its bound source payload, regardless of selector output."
+    },
+    {
+      "id": "DELAY-DURATION-NEXT-Closed",
+      "from": "Active",
+      "event": "duration.next",
+      "to": "Closed",
+      "guard": "matching selected duration; closed only after outer finished and last item",
+      "actions": [
+        "emit pending value after first duration next"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DELAY-DURATION-NEXT-Closed"
+      ],
+      "explanation": "Duration next releases its bound source payload, regardless of selector output."
+    },
+    {
+      "id": "DELAY-DURATION-EMPTY-Active",
+      "from": "Active",
+      "event": "duration.complete",
+      "to": "Active",
+      "guard": "matching selected duration; closed only after outer finished and last item",
+      "actions": [
+        "discard pending value after empty completion"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DELAY-DURATION-EMPTY-Active"
+      ],
+      "explanation": "An empty duration completes without releasing the source payload."
+    },
+    {
+      "id": "DELAY-DURATION-EMPTY-Closed",
+      "from": "Active",
+      "event": "duration.complete",
+      "to": "Closed",
+      "guard": "matching selected duration; closed only after outer finished and last item",
+      "actions": [
+        "discard pending value after empty completion"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DELAY-DURATION-EMPTY-Closed"
+      ],
+      "explanation": "An empty duration completes without releasing the source payload."
+    },
+    {
+      "id": "DELAY-DURATION-ERROR",
+      "from": "Active",
+      "event": "duration.error",
+      "to": "Closed",
+      "guard": "matching selected duration",
+      "actions": [
+        "error and release all subscriptions"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DELAY-DURATION-ERROR"
+      ],
+      "explanation": "Any duration error fails the output immediately and discards other pending values."
+    },
+    {
+      "id": "DELAY-SOURCE-COMPLETE-WAIT",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Active",
+      "guard": "some pending duration remains",
+      "actions": [
+        "release source, await durations"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DELAY-SOURCE-COMPLETE-WAIT"
+      ],
+      "explanation": "An outer completion cannot force early delivery: all admitted durations must settle."
+    },
+    {
+      "id": "DELAY-SOURCE-COMPLETE-EMPTY",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "no pending durations",
+      "actions": [
+        "complete and release source"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DELAY-SOURCE-COMPLETE-EMPTY"
+      ],
+      "explanation": "An outer completion cannot force early delivery: all admitted durations must settle."
+    },
+    {
+      "id": "DELAY-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source live",
+      "actions": [
+        "propagate error and cancel all pending durations"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DELAY-SOURCE-ERROR"
+      ],
+      "explanation": "A source error never waits for delayed values or flushes them."
+    },
+    {
+      "id": "DELAY-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream unsubscribed",
+      "actions": [
+        "cancel pending durations and live source; no terminal output"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DELAY-CANCEL"
+      ],
+      "explanation": "Cancellation is silent and never causes a duration to fire."
+    }
+  ]
+}

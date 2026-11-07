@@ -1,0 +1,225 @@
+{
+  "metadata": {
+    "id": "defaultIfEmpty-opaque-fallback",
+    "operator": "defaultIfEmpty",
+    "purpose": "Pass every value unchanged; on successful empty completion emit the specified fallback.",
+    "cardinality": {
+      "signature": "defaultIfEmpty(R) : T* -> (T | R)+ on successful completion",
+      "conditions": [
+        "One output per input next; append exactly one fallback iff zero source next events and normal completion.",
+        "An error or cancellation never produces a fallback."
+      ]
+    },
+    "scope": {
+      "parameters": "One explicitly supplied fallback value; may be undefined or an object.",
+      "callbacks": "None; fallback and source payload are not inspected or cloned.",
+      "time": "No clock/scheduler: fallback is emitted synchronously during source completion.",
+      "reentrancy": "Atomic notifications, no downstream cancellation reentry during next delivery.",
+      "exclusions": [
+        "Throwing observers or finalizers, reentrant source emissions, coercive fallback policy."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire one source per output subscription."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing or replay; independent presence flag per subscriber.",
+      "reset": "On a new subscription, hasValue=false; terminal runs cannot restart.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result subscription"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Maintain presence separately from payload; only successful completion decides fallback.",
+      "cancellationCheckpoints": [
+        "Between source notifications; no fallback after cancellation."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start one dataflow execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "receive opaque source value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "successful source completion"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source error"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "cancel output"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source live; presence flag maintained",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal or cancelled",
+        "terminal": true
+      }
+    ],
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/defaultIfEmpty.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 control, notification and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 control, notification and teardown semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session10-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session10-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-10.md"
+    }
+  },
+  "parameters": {
+    "fallback": "fallback"
+  },
+  "rules": [
+    {
+      "id": "DEFAULTIFEMPTY-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "new subscription",
+      "actions": [
+        "acquire source"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DEFAULTIFEMPTY-INIT"
+      ],
+      "explanation": "Subscription starts source execution, not construction of the dataflow."
+    },
+    {
+      "id": "DEFAULTIFEMPTY-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source live",
+      "actions": [
+        "remember that at least one value arrived",
+        "forward exact value"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DEFAULTIFEMPTY-NEXT"
+      ],
+      "explanation": "The remembered bit distinguishes no value from a literal undefined or null value."
+    },
+    {
+      "id": "DEFAULTIFEMPTY-EMPTY",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "no source value was seen",
+      "actions": [
+        "emit configured fallback once",
+        "complete",
+        "release source"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DEFAULTIFEMPTY-EMPTY"
+      ],
+      "explanation": "The fallback is emitted only after an empty source successfully completes."
+    },
+    {
+      "id": "DEFAULTIFEMPTY-NONEMPTY",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "some source next was seen",
+      "actions": [
+        "complete without fallback",
+        "release source"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DEFAULTIFEMPTY-NONEMPTY"
+      ],
+      "explanation": "A nonempty source completes with no extra value."
+    },
+    {
+      "id": "DEFAULTIFEMPTY-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errored",
+      "actions": [
+        "forward exact error",
+        "release source; no fallback"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DEFAULTIFEMPTY-ERROR"
+      ],
+      "explanation": "An error is not treated as an empty successful completion."
+    },
+    {
+      "id": "DEFAULTIFEMPTY-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream unsubscribed",
+      "actions": [
+        "release source silently"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DEFAULTIFEMPTY-CANCEL"
+      ],
+      "explanation": "Cancellation neither emits fallback nor completes."
+    }
+  ]
+}

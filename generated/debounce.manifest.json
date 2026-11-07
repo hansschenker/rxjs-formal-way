@@ -1,0 +1,366 @@
+{
+  "metadata": {
+    "id": "debounce-Observable-duration",
+    "operator": "debounce",
+    "purpose": "Keep only the latest source value and release it on the current duration next, or flush on source completion.",
+    "cardinality": {
+      "signature": "debounce : T* × (T -> Duration*) -> T*",
+      "conditions": [
+        "Every source.next replaces the pending value and its duration subscription.",
+        "Duration next emits latest once; duration complete without next does not emit.",
+        "Source complete flushes pending; error and cancellation never flush."
+      ]
+    },
+    "scope": {
+      "parameters": "Duration selectors returning an Observable; no Promise or other ObservableInput conversion.",
+      "callbacks": "One synchronous selector invocation per source next; callback outcome modeled as a separate correlated event.",
+      "time": "Duration Observable controls delivery; no clock or timer is created by debounce itself.",
+      "reentrancy": "Atomic non-reentrant selector outcomes; reentrant source and observer delivery excluded.",
+      "exclusions": [
+        "Promise/iterable duration, selector reentry, throwing observers/finalizers, cancellation during nested callback execution."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Subscribe original source before any selector."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing or replay; own latest value and one live duration per output subscriber.",
+      "reset": "Fresh pending state and indices on each new subscription.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "output subscriber"
+        },
+        {
+          "id": "duration",
+          "kind": "subscription",
+          "owner": "current selected duration"
+        },
+        {
+          "id": "selector",
+          "kind": "callback",
+          "owner": "output subscriber"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Cancel previous duration, update latest memory, invoke selector, subscribe returned duration. Next releases value. Empty completion does not.",
+      "cancellationCheckpoints": [
+        "On every replacement before opening a new duration.",
+        "Between source and duration events."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "connect source"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "replace pending source value"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "duration selector returns Observable"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "duration selector throws"
+      },
+      {
+        "type": "duration.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "current duration releases value"
+      },
+      {
+        "type": "duration.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "current duration finishes without emission"
+      },
+      {
+        "type": "duration.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "duration errors"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "complete and flush"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source error"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "silent cancellation"
+      }
+    ],
+    "actionTypes": [
+      "notify",
+      "subscribe",
+      "unsubscribe",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no source acquired",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source live; possible cached value and duration",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "waiting on synchronous selector outcome",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal or cancelled",
+        "terminal": true
+      }
+    ],
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/debounce.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 control, notification and teardown semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 control, notification and teardown semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session10-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session10-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-10.md"
+    }
+  },
+  "parameters": {
+    "durationSelector": "Observable-next"
+  },
+  "rules": [
+    {
+      "id": "DEBOUNCE-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "fresh subscription",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DEBOUNCE-INIT"
+      ],
+      "explanation": "No duration selector is called before the first source value."
+    },
+    {
+      "id": "DEBOUNCE-NEW-VALUE",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Calling",
+      "guard": "source live; pending duration may exist",
+      "actions": [
+        "cancel old duration if live",
+        "replace cached value",
+        "invoke duration selector"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DEBOUNCE-NEW-VALUE"
+      ],
+      "explanation": "A new source value suppresses the previous pending value; only a new duration may release it."
+    },
+    {
+      "id": "DEBOUNCE-DURATION-RETURN",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Active",
+      "guard": "matching pending selector invocation",
+      "actions": [
+        "subscribe selected duration Observable"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DEBOUNCE-DURATION-RETURN"
+      ],
+      "explanation": "The callback returns an Observable; no duration values have been delivered yet."
+    },
+    {
+      "id": "DEBOUNCE-DURATION-THROW",
+      "from": "Calling",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "matching selector invocation",
+      "actions": [
+        "propagate exact thrown error",
+        "release source"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DEBOUNCE-DURATION-THROW"
+      ],
+      "explanation": "A failing selector terminates the dataflow."
+    },
+    {
+      "id": "DEBOUNCE-DURATION-NEXT",
+      "from": "Active",
+      "event": "duration.next",
+      "to": "Active",
+      "guard": "matching live duration",
+      "actions": [
+        "unsubscribe duration",
+        "emit cached latest value once"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DEBOUNCE-DURATION-NEXT"
+      ],
+      "explanation": "Only a next from the currently selected duration releases the latest value."
+    },
+    {
+      "id": "DEBOUNCE-DURATION-EMPTY",
+      "from": "Active",
+      "event": "duration.complete",
+      "to": "Active",
+      "guard": "matching live duration completed without next",
+      "actions": [
+        "release duration; retain latest value"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-DEBOUNCE-DURATION-EMPTY"
+      ],
+      "explanation": "Duration completion alone never emits; source completion can still flush this value."
+    },
+    {
+      "id": "DEBOUNCE-DURATION-ERROR",
+      "from": "Active",
+      "event": "duration.error",
+      "to": "Closed",
+      "guard": "matching live duration",
+      "actions": [
+        "propagate exact error",
+        "release duration and source"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DEBOUNCE-DURATION-ERROR"
+      ],
+      "explanation": "Duration error discards the latest cached value."
+    },
+    {
+      "id": "DEBOUNCE-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes",
+      "actions": [
+        "cancel live duration",
+        "flush cached value if present",
+        "complete",
+        "release source"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DEBOUNCE-SOURCE-COMPLETE"
+      ],
+      "explanation": "Source completion flushes the most recent value even after a duration completed silently."
+    },
+    {
+      "id": "DEBOUNCE-SOURCE-ERROR-ACTIVE",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errors",
+      "actions": [
+        "forward error and release owned resources"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DEBOUNCE-SOURCE-ERROR-ACTIVE"
+      ],
+      "explanation": "An error never flushes pending debounced values."
+    },
+    {
+      "id": "DEBOUNCE-CANCEL-ACTIVE",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancels",
+      "actions": [
+        "release active duration and source silently"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DEBOUNCE-CANCEL-ACTIVE"
+      ],
+      "explanation": "Unsubscription is not completion."
+    },
+    {
+      "id": "DEBOUNCE-SOURCE-ERROR-CALLING",
+      "from": "Calling",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errors",
+      "actions": [
+        "forward error and release owned resources"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DEBOUNCE-SOURCE-ERROR-CALLING"
+      ],
+      "explanation": "An error never flushes pending debounced values."
+    },
+    {
+      "id": "DEBOUNCE-CANCEL-CALLING",
+      "from": "Calling",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancels",
+      "actions": [
+        "release active duration and source silently"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-DEBOUNCE-CANCEL-CALLING"
+      ],
+      "explanation": "Unsubscription is not completion."
+    }
+  ]
+}

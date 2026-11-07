@@ -1,0 +1,310 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "delay-fixed-timer-3",
+      "executionId": "delay-session10-example",
+      "ruleId": "DELAY-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 0,
+        "items": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "delay-fixed-timer-3",
+      "executionId": "delay-session10-example",
+      "ruleId": "DELAY-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "now": 1,
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 0,
+        "items": []
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 1,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending",
+            "deadline": 4
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "timer",
+            "generation": 0
+          },
+          "delay": 3
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "delay-fixed-timer-3",
+      "executionId": "delay-session10-example",
+      "ruleId": "DELAY-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "now": 2,
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 1,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending",
+            "deadline": 4
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending",
+            "deadline": 4
+          },
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "pending",
+            "deadline": 5
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "timer",
+            "generation": 1
+          },
+          "delay": 3
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "delay-fixed-timer-3",
+      "executionId": "delay-session10-example",
+      "ruleId": "DELAY-SOURCE-COMPLETE-WAIT",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending",
+            "deadline": 4
+          },
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "pending",
+            "deadline": 5
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending",
+            "deadline": 4
+          },
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "pending",
+            "deadline": 5
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "delay-fixed-timer-3",
+      "executionId": "delay-session10-example",
+      "ruleId": "DELAY-TIMER-FIRE",
+      "event": {
+        "type": "timer.fire",
+        "resource": {
+          "id": "timer",
+          "generation": 0
+        },
+        "now": 4
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending",
+            "deadline": 4
+          },
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "pending",
+            "deadline": 5
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "pending",
+            "deadline": 5
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "timer",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "delay-fixed-timer-3",
+      "executionId": "delay-session10-example",
+      "ruleId": "DELAY-TIMER-FINAL",
+      "event": {
+        "type": "timer.fire",
+        "resource": {
+          "id": "timer",
+          "generation": 1
+        },
+        "now": 5
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "pending",
+            "deadline": 5
+          }
+        ]
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "timer",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 2
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

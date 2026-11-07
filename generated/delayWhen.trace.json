@@ -1,0 +1,394 @@
+{
+  "status": "finished-input",
+  "consumed": 8,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "delayWhen-Observable-selectors",
+      "executionId": "delayWhen-session10-example",
+      "ruleId": "DELAYWHEN-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 0,
+        "items": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "delayWhen-Observable-selectors",
+      "executionId": "delayWhen-session10-example",
+      "ruleId": "DELAYWHEN-SOURCE-SELECT",
+      "event": {
+        "type": "source.next",
+        "now": 1,
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 0,
+        "items": []
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 1,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "calling"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "selector",
+            "generation": 0
+          },
+          "index": 0,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "delayWhen-Observable-selectors",
+      "executionId": "delayWhen-session10-example",
+      "ruleId": "DELAYWHEN-SELECTOR-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "selector",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 1,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "calling"
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 1,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "delayWhen-Observable-selectors",
+      "executionId": "delayWhen-session10-example",
+      "ruleId": "DELAYWHEN-SOURCE-SELECT",
+      "event": {
+        "type": "source.next",
+        "now": 2,
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 1,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending"
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending"
+          },
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "calling"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "selector",
+            "generation": 1
+          },
+          "index": 1,
+          "value": 2
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "delayWhen-Observable-selectors",
+      "executionId": "delayWhen-session10-example",
+      "ruleId": "DELAYWHEN-SELECTOR-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "selector",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending"
+          },
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "calling"
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending"
+          },
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "pending"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "delayWhen-Observable-selectors",
+      "executionId": "delayWhen-session10-example",
+      "ruleId": "DELAYWHEN-SOURCE-COMPLETE-WAIT",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending"
+          },
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "pending"
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending"
+          },
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "pending"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 4,
+      "modelId": "delayWhen-Observable-selectors",
+      "executionId": "delayWhen-session10-example",
+      "ruleId": "DELAYWHEN-DURATION-EMPTY-Active",
+      "event": {
+        "type": "duration.complete",
+        "resource": {
+          "id": "duration",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 0,
+            "value": 1,
+            "stage": "pending"
+          },
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "pending"
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "pending"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 5,
+      "modelId": "delayWhen-Observable-selectors",
+      "executionId": "delayWhen-session10-example",
+      "ruleId": "DELAYWHEN-DURATION-NEXT-Closed",
+      "event": {
+        "type": "duration.next",
+        "resource": {
+          "id": "duration",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 2,
+        "items": [
+          {
+            "id": 1,
+            "value": 2,
+            "stage": "pending"
+          }
+        ]
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 2
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}
