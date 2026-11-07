@@ -65,3 +65,12 @@ export { createCombineLatestModel, createCombineLatestWithModel, createConcatMod
 export type { JoinOperator, JoinPolicy, JoinParameters, JoinSlot, JoinState, JoinEvent, JoinModel } from './models/session09-joins.js';
 export { createConcatMapToModel, concatMapToExample } from './models/concatMapTo.js';
 export type { ConcatMapToState, ConcatMapToEvent, ConcatMapToModel } from './models/concatMapTo.js';
+
+export { createDefaultIfEmptyModel, defaultIfEmptyExample } from './models/defaultIfEmpty.js';
+export type { DefaultIfEmptyParameters, DefaultIfEmptyState, DefaultIfEmptyEvent, DefaultIfEmptyModel } from './models/defaultIfEmpty.js';
+export { createDebounceModel, debounceExample } from './models/debounce.js';
+export type { DebounceParameters, DebouncePending, DebounceState, DebounceEvent, DebounceModel } from './models/debounce.js';
+export { createDelayModel, createDelayWhenModel, delayExample, delayWhenExample } from './models/delayPolicy.js';
+export type { DelayOperator, DelayParameters, DelayItem, DelayState, DelayEvent, DelayModel } from './models/delayPolicy.js';
+export { createConnectModel, connectExample } from './models/connect.js';
+export type { ConnectParameters, ConnectState, ConnectEvent, ConnectModel } from './models/connect.js';
