@@ -101,8 +101,8 @@ function create<T>(operator:DelayOperator,due:number|null):DelayModel<T>{
         const item=get(s,e,'timer');if(!item)throw Error('unknown final timer');
         return after(s,item.id,[{type:'cancel-timer',resource:timer(item.id)},next(item.value)]);
       }},
-    ...(['duration.next','duration.complete'] as const).flatMap(kind=>(
-      ['Active','Closed'] as const).map(to=>({
+    ...(['duration.next','duration.complete'] as const).flatMap(kind =>
+      (['Active','Closed'] as const).map(to=>({
         description:d(kind==='duration.next'?'DURATION-NEXT-'+to:'DURATION-EMPTY-'+to,
           'Active',kind,to,'matching selected duration; closed only after outer finished and last item',
           kind==='duration.next'?['emit pending value after first duration next']:['discard pending value after empty completion'],
@@ -116,7 +116,7 @@ function create<T>(operator:DelayOperator,due:number|null):DelayModel<T>{
             ...(kind==='duration.next'?[next(item.value)]:[])]);
         },
       } as Rt))
-    )),
+    ),
     {description:d('DURATION-ERROR','Active','duration.error','Closed','matching selected duration',
       ['error and release all subscriptions'], 'Any duration error fails the output immediately and discards other pending values.'),
       enabled:(s,e,q)=>q.mode==='selector'&&get(s,e,'duration')?.stage==='pending',
