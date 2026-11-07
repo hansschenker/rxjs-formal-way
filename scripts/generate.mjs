@@ -48,6 +48,12 @@ import {
   combineLatestExample, combineLatestWithExample, concatExample, concatWithExample, concatMapToExample
 } from '../dist/index.js';
 
+import {
+  createConnectModel, connectExample, createDebounceModel, debounceExample,
+  createDefaultIfEmptyModel, defaultIfEmptyExample, createDelayModel, delayExample,
+  createDelayWhenModel, delayWhenExample
+} from '../dist/index.js';
+
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
@@ -100,6 +106,11 @@ const examples = [
   ['concat', createConcatModel(), concatExample, 'concat-session9-example'],
   ['concatMapTo', createConcatMapToModel('shared'), concatMapToExample, 'concatMapTo-session9-example'],
   ['concatWith', createConcatWithModel(), concatWithExample, 'concatWith-session9-example'],
+  ['connect', createConnectModel(), connectExample, 'connect-session10-example'],
+  ['debounce', createDebounceModel(), debounceExample, 'debounce-session10-example'],
+  ['defaultIfEmpty', createDefaultIfEmptyModel('fallback'), defaultIfEmptyExample, 'defaultIfEmpty-session10-example'],
+  ['delay', createDelayModel(3), delayExample, 'delay-session10-example'],
+  ['delayWhen', createDelayWhenModel(), delayWhenExample, 'delayWhen-session10-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
