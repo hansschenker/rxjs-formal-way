@@ -43,10 +43,10 @@ The pre-merge read-only draft PR checked syntax/types/models/native tests succes
 
 ## Independent committed-file check
 
-**Pending separate read-only PR run.** This staging document does not assert read-only success until job outcome, actual checkout SHA, matching Git tree and skipped generation/publication are independently retrieved. Acceptance and the dated closing record will be updated only after that verification.
+[Independent read-only PR #14](https://github.com/hansschenker/rxjs-formal-way/pull/14) completed successfully as [CI run 42352354713](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42352354713), job **128343006855**. Retrieved job steps prove both **generation and publication skipped**. The decoded execution log recorded **832 named tests passed, zero failures, 432 committed projections verified**. The checked synthetic merge commit was **f834a9487ca55ba1d75e3d8ca5f5796077aee495**, distinct from PR head **73dedfb4bff9ea905c62e66f3d3da3146f63e097**; their independently inspected Git trees are identical: **fe386e693087e460f601438c2e16e4b135ce7c3f**. The evidence PR was merged into main at **976b0cb96fbafb5a0ee7fe6e86233b74a401a4e9**.
 
 ## Scope, evidence and acceptance policy
 
 The JSON trace and four-lane trace are **model predictions**, not captured native RxJS recordings. Native tests compare independently executed RxJS 7.8.2 notifications, object identity, subscription setup, virtual time, teardown and cancellation. The finite suite does not constitute universal proof. The initial generation PR did not alter the framework's strict TS, model, runtime or drift checks.
 
-**Current status:** implementation CI succeeded, committed 432 views exist; independent read-only verification and formal progress closure pending. The next five untouched export names in the authoritative queue are dematerialize, elementAt, endWith, every, exhaust, not eligible as a second batch today.
+**Final acceptance:** all five distinct exports accepted within the declared scopes; independent committed-file verification passed. Zero carryovers or blockers within scope. The next batch, not before 8 November 2026 Europe/Zurich, is dematerialize, elementAt, endWith, every, exhaust. Inventory: **50 of 113 accepted; 63 pending**. The closure record is planning/sessions/2026-11-07.json.

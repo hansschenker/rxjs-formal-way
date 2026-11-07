@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "connect",
-    "debounce",
-    "defaultIfEmpty",
-    "delay",
-    "delayWhen",
     "dematerialize",
     "elementAt",
     "endWith",
@@ -323,9 +318,21 @@
       "readOnlyCheckout": "5a917c99e604e74bb5defe8f2cb89afec21dbb6a"
     },
     "connect": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-07",
+      "profiles": [
+        "default Subject connector",
+        "selected merge of two shared branches",
+        "synchronous original producer after selected setup",
+        "single shared producer per result subscription"
+      ],
+      "evidence": "evidence/SESSION-10.md",
+      "testedCommit": "fe5b2871545f2b9022f7427973d02533089ba06c",
+      "implementationRun": 42352229850,
+      "verificationRun": 42352354713,
+      "readOnlyHeadCommit": "73dedfb4bff9ea905c62e66f3d3da3146f63e097",
+      "readOnlyCheckout": "f834a9487ca55ba1d75e3d8ca5f5796077aee495",
+      "readOnlyTree": "fe386e693087e460f601438c2e16e4b135ce7c3f"
     },
     "count": {
       "status": "accepted",
@@ -342,9 +349,21 @@
       "readOnlyCheckout": "693325757bea224f27a3b945cb193d9b07fb402e"
     },
     "debounce": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-07",
+      "profiles": [
+        "Observable duration next releases latest",
+        "replace/cancel prior duration",
+        "empty duration completion retains latest",
+        "source completion flush"
+      ],
+      "evidence": "evidence/SESSION-10.md",
+      "testedCommit": "fe5b2871545f2b9022f7427973d02533089ba06c",
+      "implementationRun": 42352229850,
+      "verificationRun": 42352354713,
+      "readOnlyHeadCommit": "73dedfb4bff9ea905c62e66f3d3da3146f63e097",
+      "readOnlyCheckout": "f834a9487ca55ba1d75e3d8ca5f5796077aee495",
+      "readOnlyTree": "fe386e693087e460f601438c2e16e4b135ce7c3f"
     },
     "debounceTime": {
       "status": "accepted",
@@ -352,19 +371,55 @@
       "profiles": []
     },
     "defaultIfEmpty": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-07",
+      "profiles": [
+        "opaque explicit fallback",
+        "presence bit including undefined payloads",
+        "only successful empty completion emits default"
+      ],
+      "evidence": "evidence/SESSION-10.md",
+      "testedCommit": "fe5b2871545f2b9022f7427973d02533089ba06c",
+      "implementationRun": 42352229850,
+      "verificationRun": 42352354713,
+      "readOnlyHeadCommit": "73dedfb4bff9ea905c62e66f3d3da3146f63e097",
+      "readOnlyCheckout": "f834a9487ca55ba1d75e3d8ca5f5796077aee495",
+      "readOnlyTree": "fe386e693087e460f601438c2e16e4b135ce7c3f"
     },
     "delay": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-07",
+      "profiles": [
+        "relative safe-integer due time",
+        "independent scheduled timers",
+        "outer completion waits for pending timers",
+        "virtual time and silent cancellation"
+      ],
+      "evidence": "evidence/SESSION-10.md",
+      "testedCommit": "fe5b2871545f2b9022f7427973d02533089ba06c",
+      "implementationRun": 42352229850,
+      "verificationRun": 42352354713,
+      "readOnlyHeadCommit": "73dedfb4bff9ea905c62e66f3d3da3146f63e097",
+      "readOnlyCheckout": "f834a9487ca55ba1d75e3d8ca5f5796077aee495",
+      "readOnlyTree": "fe386e693087e460f601438c2e16e4b135ce7c3f"
     },
     "delayWhen": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-07",
+      "profiles": [
+        "Observable-valued indexed selector",
+        "independent overlapping durations",
+        "first inner next forwards source value",
+        "empty duration completion discards",
+        "outer completion waits"
+      ],
+      "evidence": "evidence/SESSION-10.md",
+      "testedCommit": "fe5b2871545f2b9022f7427973d02533089ba06c",
+      "implementationRun": 42352229850,
+      "verificationRun": 42352354713,
+      "readOnlyHeadCommit": "73dedfb4bff9ea905c62e66f3d3da3146f63e097",
+      "readOnlyCheckout": "f834a9487ca55ba1d75e3d8ca5f5796077aee495",
+      "readOnlyTree": "fe386e693087e460f601438c2e16e4b135ce7c3f"
     },
     "dematerialize": {
       "status": "pending",

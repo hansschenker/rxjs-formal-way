@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-07",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-07T08:26:18+01:00",
   "startingCommit": "3e9594a5d5b562a86bb5d5bfaf4e1c0ef072a1bd",
   "selectedNames": [
@@ -12,23 +12,35 @@
     "delay",
     "delayWhen"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
+  "workedNames": [
     "connect",
     "debounce",
     "defaultIfEmpty",
     "delay",
     "delayWhen"
   ],
-  "commits": [],
+  "completedNames": [
+    "connect",
+    "debounce",
+    "defaultIfEmpty",
+    "delay",
+    "delayWhen"
+  ],
+  "carryovers": [],
+  "commits": [
+    "592e2300d929a255412a5ae8415d901d20892afb",
+    "fe5b2871545f2b9022f7427973d02533089ba06c",
+    "951b4dacf71408c0de3aa5b4b58f0030f89a6a91",
+    "73dedfb4bff9ea905c62e66f3d3da3146f63e097",
+    "976b0cb96fbafb5a0ee7fe6e86233b74a401a4e9"
+  ],
   "checks": {
-    "syntax": "not run",
-    "types": "not run",
-    "model": "not run",
-    "runtime": "not run",
-    "generated": "not run",
-    "ci": "not run"
+    "syntax": "passed push CI and independent read-only CI",
+    "types": "passed strict TypeScript with 15 new negative assertions; 176 cumulative",
+    "model": "16 new named model/view tests passed; 832 full suite",
+    "runtime": "19 new actual RxJS 7.8.2 named tests passed; no new bounded enumeration count",
+    "generated": "432 committed deterministic projections verified read-only; 40 new",
+    "ci": "push 42352229850 and read-only PR 42352354713 successful; read-only job skipped generation and publication"
   },
   "blockers": [],
   "nextQueue": [
@@ -39,6 +51,46 @@
     "exhaust"
   ],
   "notes": [
-    "Exactly five distinct pending names reserved from live tracker; no 2026-11-07 session log existed before this reservation. Source pinned to RxJS 7.8.2 at e5351d02e225e275ac0e497c7b66eaa5f0c88791."
-  ]
+    "Exactly five distinct pending names selected from live queue, previous session closed with no carryovers.",
+    "Pinned revision e5351d02e225e275ac0e497c7b66eaa5f0c88791.",
+    "Canonical TypeScript models and named guarded rules cover declared profiles only.",
+    "Initial PR checks passed 832 tests but reported missing new generated files; unchanged main push generated and committed all 40.",
+    "The first branch syntax error in duration-rule mapping was corrected before successful full CI; validation was not weakened.",
+    "Read-only PR #14 checked synthetic merge f834a9487ca55ba1d75e3d8ca5f5796077aee495; its Git tree matched PR head exactly.",
+    "Generated traces are predictions, not runtime captures; finite checks are not universal equivalence proofs.",
+    "The closure commit itself is omitted from commits array because a self-referencing commit hash cannot be embedded into its own tree."
+  ],
+  "evidence": "evidence/SESSION-10.md",
+  "closedAt": "2026-11-07T08:44:02+01:00",
+  "nextSessionNotBefore": "2026-11-08",
+  "provenanceLimitations": [
+    "Read-only check tests a synthetic merge checkout, not the PR head SHA; same Git tree verified.",
+    "No Date/custom scheduler, arbitrary selector graph or reentrant callback behavior in accepted profiles.",
+    "Finite tests and generated traces do not prove universal behavioral equivalence."
+  ],
+  "verification": {
+    "testedCommit": "fe5b2871545f2b9022f7427973d02533089ba06c",
+    "generatedCommit": "951b4dacf71408c0de3aa5b4b58f0030f89a6a91",
+    "implementationRun": 42352229850,
+    "implementationJob": 128342625388,
+    "readOnlyRun": 42352354713,
+    "readOnlyJob": 128343006855,
+    "prNumber": 14,
+    "readOnlyHeadCommit": "73dedfb4bff9ea905c62e66f3d3da3146f63e097",
+    "readOnlyBaseCommit": "951b4dacf71408c0de3aa5b4b58f0030f89a6a91",
+    "readOnlyCheckout": "f834a9487ca55ba1d75e3d8ca5f5796077aee495",
+    "readOnlyHeadTree": "fe386e693087e460f601438c2e16e4b135ce7c3f",
+    "readOnlyCheckoutTree": "fe386e693087e460f601438c2e16e4b135ce7c3f",
+    "namedTestsPassed": 832,
+    "newNamedTests": 35,
+    "newModelNamedTests": 16,
+    "newRuntimeNamedTests": 19,
+    "negativeTypeAssertions": 176,
+    "newNegativeTypeAssertions": 15,
+    "generatedViews": 432,
+    "newGeneratedViews": 40,
+    "newBoundedModelRxjsScenarios": 0,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  }
 }

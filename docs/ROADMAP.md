@@ -30,7 +30,9 @@ This is the current implementation tracker. The migration map preserves the orig
 | M09-A | pipeable combineLatest/combineLatestWith, source-first latest snapshots | Accepted within scope; [Session 9 guide](SESSION-09-JOINS-AND-CONSTANT-MAP.md) |
 | M09-B | pipeable concat/concatWith, sequential source acquisition | Accepted within scope; [Session 9 evidence](../evidence/SESSION-09.md) |
 | M09-C | concatMapTo, constant-inner FIFO subscription occurrences | Accepted within scope; [Session 9 evidence](../evidence/SESSION-09.md) |
-| M10+ | Remaining catalogue | 68 exports pending; not a universal interpreter |
+| M10-A | connect, debounce, defaultIfEmpty: selected connection, duration replacement, empty-source fallback | Accepted within scope; [Session 10 guide](SESSION-10-CONNECTION-AND-DURATIONS.md) |
+| M10-B | delay and delayWhen: independent time/duration release and completion barrier | Accepted within scope; [Session 10 evidence](../evidence/SESSION-10.md) |
+| M11+ | Remaining catalogue | 63 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -146,3 +148,11 @@ Not before **7 November 2026 Europe/Zurich**:
 Maintain the five-name maximum, carryovers-first selection,
 independent actual RxJS comparisons and retrieved CI evidence.
 The next batch has not been started.
+
+## Session 10 closed: 7 November 2026
+
+Exactly five queued exports—**connect, debounce, defaultIfEmpty, delay, delayWhen**—were modeled and accepted within explicitly documented profiles. The original Mealy schema, runner, generator and checks were retained. Five configurations added 40 generated projections, bringing the total to **432**. The native cases check synchronous multicast setup, duration replacement, empty/default selection, virtual-timer delayed completion, overlapping durations and cancellation.
+
+[Push run 42352229850](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42352229850), job **128342625388**, tested implementation merge **fe5b2871545f2b9022f7427973d02533089ba06c**: **832 tests**, zero failures, and 432 generated-view checks passed. Generated files were committed at **951b4dacf71408c0de3aa5b4b58f0030f89a6a91**. [Independent read-only PR run 42352354713](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42352354713), job **128343006855**, also passed 832 tests and 432 drift checks, with generation and publication skipped. Synthetic checkout **f834a9487ca55ba1d75e3d8ca5f5796077aee495** shares Git tree **fe386e693087e460f601438c2e16e4b135ce7c3f** with the PR head. See [evidence](../evidence/SESSION-10.md) for exact provenance, scoped exclusions, 35 new named tests, 15 negative type assertions and preliminary corrections.
+
+**50 of 113 distinct exports accepted; 63 pending; zero carryovers.** Next eligible session is **8 November 2026 Europe/Zurich**: dematerialize, elementAt, endWith, every, exhaust. No second batch was opened today.
