@@ -54,6 +54,12 @@ import {
   createDelayWhenModel, delayWhenExample
 } from '../dist/index.js';
 
+import {
+  createDematerializeModel, dematerializeExample, createElementAtModel, elementAtExample,
+  createEndWithModel, endWithExample, createEveryModel, everyExample,
+  createExhaustModel, exhaustExample
+} from '../dist/index.js';
+
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
@@ -111,6 +117,11 @@ const examples = [
   ['defaultIfEmpty', createDefaultIfEmptyModel('fallback'), defaultIfEmptyExample, 'defaultIfEmpty-session10-example'],
   ['delay', createDelayModel(3), delayExample, 'delay-session10-example'],
   ['delayWhen', createDelayWhenModel(), delayWhenExample, 'delayWhen-session10-example'],
+  ['dematerialize', createDematerializeModel(), dematerializeExample, 'dematerialize-session11-example'],
+  ['elementAt', createElementAtModel(2, 'fallback'), elementAtExample, 'elementAt-session11-example'],
+  ['endWith', createEndWithModel(['suffix-one', 'suffix-two']), endWithExample, 'endWith-session11-example'],
+  ['every', createEveryModel(), everyExample, 'every-session11-example'],
+  ['exhaust', createExhaustModel(), exhaustExample, 'exhaust-session11-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
