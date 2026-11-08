@@ -1,0 +1,246 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "dematerialize-notification-values",
+    "operator": "dematerialize",
+    "purpose": "Turn source next(notification) into the represented downstream next, error or complete.",
+    "cardinality": {
+      "signature": "dematerialize : Notification<T>* -> T*",
+      "conditions": [
+        "N forwards exactly one payload; E/C terminate immediately, even if the upstream would send more values.",
+        "An upstream ordinary complete or error is forwarded when no embedded terminal has arrived.",
+        "Cω counts next values; terminal notifications, resource release and cancellation are separate obligations."
+      ]
+    },
+    "scope": {
+      "parameters": "No arguments. Source values are well-formed RxJS Notification objects with kind N, E or C.",
+      "callbacks": "None. Notification payloads and error objects remain opaque.",
+      "time": "No scheduler or timer; synchronous arrival order controls termination.",
+      "reentrancy": "Atomic non-reentrant source and callback outcome delivery; no observer/finalizer reentry inside the modeled reaction.",
+      "exclusions": [
+        "Malformed notification objects and observer exceptions.",
+        "Nested synchronous reentry and delivery after terminal are rejected by the model."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "One independently owned source connection is acquired at subscription, not construction."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "None; independent operator state per subscription even if the upstream happens to be shared.",
+      "reset": "Fresh subscription starts with new state; closed execution rejects all subsequent model inputs.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Inspect only the protocol tag of each Notification; no payload transformation or timestamp creation.",
+      "cancellationCheckpoints": [
+        "Between source notifications or completed synchronous logical microsteps; silent release only."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "begin a fresh execution, acquiring the source only now"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "source value is a Notification<T> record"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source completes successfully"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source fails with its original error object"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "release work silently without completion"
+      }
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "cold description not yet subscribed",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source connected with execution-local state",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, errored or cancelled; no further events accepted",
+        "terminal": true
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "notify",
+      "unsubscribe"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/dematerialize.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and lifecycle evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Notification.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and lifecycle evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and lifecycle evidence"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session11-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session11-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-11.md"
+    }
+  },
+  "parameters": {
+    "mode": "notification-unwrapping"
+  },
+  "rules": [
+    {
+      "id": "DEMATERIALIZE-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "fresh subscription",
+      "actions": [
+        "acquire source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-DEMATERIALIZE-INIT"
+      ],
+      "explanation": "Nothing executes until subscribed."
+    },
+    {
+      "id": "DEMATERIALIZE-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "notification.kind=N",
+      "actions": [
+        "forward embedded payload"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-DEMATERIALIZE-NEXT"
+      ],
+      "explanation": "A materialized next is a downstream next."
+    },
+    {
+      "id": "DEMATERIALIZE-EMBEDDED-COMPLETE",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Closed",
+      "guard": "notification.kind=C",
+      "actions": [
+        "complete downstream",
+        "release source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-DEMATERIALIZE-EMBEDDED-COMPLETE"
+      ],
+      "explanation": "An embedded complete terminates before the outer sequence needs to complete."
+    },
+    {
+      "id": "DEMATERIALIZE-EMBEDDED-ERROR",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Closed",
+      "guard": "notification.kind=E",
+      "actions": [
+        "error with embedded identity",
+        "release source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-DEMATERIALIZE-EMBEDDED-ERROR"
+      ],
+      "explanation": "An embedded error is the terminal error, with its original identity."
+    },
+    {
+      "id": "DEMATERIALIZE-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes without embedded terminal",
+      "actions": [
+        "complete",
+        "release source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-DEMATERIALIZE-SOURCE-COMPLETE"
+      ],
+      "explanation": "An ordinary outer completion is still forwarded."
+    },
+    {
+      "id": "DEMATERIALIZE-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "outer errors",
+      "actions": [
+        "forward source error",
+        "release source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-DEMATERIALIZE-SOURCE-ERROR"
+      ],
+      "explanation": "Malformed upstream failure does not count as a materialized value."
+    },
+    {
+      "id": "DEMATERIALIZE-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream closes",
+      "actions": [
+        "release source silently"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-DEMATERIALIZE-CANCEL"
+      ],
+      "explanation": "Cancellation never synthesizes completion."
+    }
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "elementAt-2-default",
+    "operator": "elementAt",
+    "purpose": "Select exactly the zero-based index, terminating as soon as it appears, or handle a missing index at source completion.",
+    "cardinality": {
+      "signature": "elementAt(i,D?) : T* -> (T|D)?",
+      "conditions": [
+        "At most one next value, followed by completion on hit; normal empty source with default emits exactly one default.",
+        "Missing index without default errors with ArgumentOutOfRangeError, with no emitted value.",
+        "Cω counts next values; terminal notifications, resource release and cancellation are separate obligations."
+      ]
+    },
+    "scope": {
+      "parameters": "Nonnegative safe-integer index 2; explicit default is present. Negative/fractional indices excluded.",
+      "callbacks": "No user projection; skip indexed inputs by position without inspecting values.",
+      "time": "No timer. The selected item is forwarded at its source arrival; source completion decides only missing-index outcomes.",
+      "reentrancy": "Atomic non-reentrant source and callback outcome delivery; no observer/finalizer reentry inside the modeled reaction.",
+      "exclusions": [
+        "Invalid, NaN, fractional and overflowing index values; construction-time negative-index error is not an execution transition.",
+        "The missing-error model uses a structurally named ArgumentOutOfRangeError; native RxJS error constructor is separately checked.",
+        "Observer reentry, throwing finalizers and callback-time cancellation."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "One independently owned source connection is acquired at subscription, not construction."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "None; independent operator state per subscription even if the upstream happens to be shared.",
+      "reset": "Fresh subscription starts with new state; closed execution rejects all subsequent model inputs.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Index gate counts all source next events; when count equals requested index, output and complete then release upstream.",
+      "cancellationCheckpoints": [
+        "Between source notifications or completed synchronous logical microsteps; silent release only."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "begin a fresh execution, acquiring the source only now"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "source delivers an opaque value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source completes successfully"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source fails with its original error object"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "release work silently without completion"
+      }
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "cold description not yet subscribed",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source connected with execution-local state",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, errored or cancelled; no further events accepted",
+        "terminal": true
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "notify",
+      "unsubscribe"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/elementAt.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and lifecycle evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/filter.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and lifecycle evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/take.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and lifecycle evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/throwIfEmpty.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and lifecycle evidence"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session11-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session11-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-11.md"
+    }
+  },
+  "parameters": {
+    "index": 2,
+    "hasDefault": true,
+    "defaultValue": "fallback"
+  },
+  "rules": [
+    {
+      "id": "ELEMENTAT-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "valid index",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ELEMENTAT-INIT"
+      ],
+      "explanation": "A fresh source index starts at zero."
+    },
+    {
+      "id": "ELEMENTAT-SKIP",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "current index differs from requested index",
+      "actions": [
+        "advance index without emission"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ELEMENTAT-SKIP"
+      ],
+      "explanation": "Discard values at other positions, retaining no payload."
+    },
+    {
+      "id": "ELEMENTAT-HIT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Closed",
+      "guard": "current index equals requested index",
+      "actions": [
+        "emit same source value",
+        "complete",
+        "release source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ELEMENTAT-HIT"
+      ],
+      "explanation": "The indexed value emits and terminates immediately without waiting for source completion."
+    },
+    {
+      "id": "ELEMENTAT-MISSING-DEFAULT",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "index not reached and default supplied",
+      "actions": [
+        "emit fallback",
+        "complete",
+        "release source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ELEMENTAT-MISSING-DEFAULT"
+      ],
+      "explanation": "A literal undefined default is still supplied when argument two exists."
+    },
+    {
+      "id": "ELEMENTAT-MISSING-ERROR",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "index not reached and no default",
+      "actions": [
+        "report ArgumentOutOfRangeError",
+        "release source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ELEMENTAT-MISSING-ERROR"
+      ],
+      "explanation": "An unfulfilled position is not an empty successful result."
+    },
+    {
+      "id": "ELEMENTAT-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source fails before indexed value",
+      "actions": [
+        "forward exact source error",
+        "release source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ELEMENTAT-SOURCE-ERROR"
+      ],
+      "explanation": "An upstream error retains its identity and suppresses default."
+    },
+    {
+      "id": "ELEMENTAT-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream closes early",
+      "actions": [
+        "release source silently"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ELEMENTAT-CANCEL"
+      ],
+      "explanation": "No value, default or synthesized completion on cancellation."
+    }
+  ]
+}

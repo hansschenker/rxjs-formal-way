@@ -1,0 +1,282 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "every-indexed-predicate",
+    "operator": "every",
+    "purpose": "Quantify that all source values satisfy an indexed predicate, short-circuiting on the first falsy result.",
+    "cardinality": {
+      "signature": "every(p) : T* -> Boolean!",
+      "conditions": [
+        "On successful finite completion emit true once, including the empty input (vacuous truth).",
+        "On first falsy result emit false once and complete early; source error, callback throw or cancellation never emits a boolean.",
+        "Cω counts next values; terminal notifications, resource release and cancellation are separate obligations."
+      ]
+    },
+    "scope": {
+      "parameters": "Required synchronous indexed predicate; without thisArg overload.",
+      "callbacks": "Synchronous predicate (value,index,source), represented as a correlated invocation/outcome pair; user code is not executed by model.",
+      "time": "No clock; predicate return is a synchronous logical microstep. Completion or first falsy result determines output time.",
+      "reentrancy": "Atomic non-reentrant source and callback outcome delivery; no observer/finalizer reentry inside the modeled reaction.",
+      "exclusions": [
+        "thisArg overload and user callback reentrancy.",
+        "Callback cancellation and Index > MAX_SAFE_INTEGER.",
+        "Thrown downstream observer/finalizer exceptions."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "One independently owned source connection is acquired at subscription, not construction."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "None; independent operator state per subscription even if the upstream happens to be shared.",
+      "reset": "Fresh subscription starts with new state; closed execution rejects all subsequent model inputs.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        },
+        {
+          "id": "predicate",
+          "kind": "callback",
+          "owner": "one correlated external callback per tested input"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Evaluate exactly one predicate for each reached source next; do not emit on success; false immediately ends the execution.",
+      "cancellationCheckpoints": [
+        "Between source notifications or completed synchronous logical microsteps; silent release only."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "begin a fresh execution, acquiring the source only now"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "source delivers an opaque value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source completes successfully"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source fails with its original error object"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "release work silently without completion"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "pending predicate returns a truthy/falsy result"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "pending predicate throws an arbitrary error"
+      }
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "cold description not yet subscribed",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source connected with execution-local state",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "one predicate invocation is pending a correlated outcome",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, errored or cancelled; no further events accepted",
+        "terminal": true
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "invoke-callback",
+      "notify",
+      "unsubscribe"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/every.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and lifecycle evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and lifecycle evidence"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session11-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session11-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-11.md"
+    }
+  },
+  "parameters": {
+    "predicateId": "predicate"
+  },
+  "rules": [
+    {
+      "id": "EVERY-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "fresh execution",
+      "actions": [
+        "subscribe source with index zero"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-EVERY-INIT"
+      ],
+      "explanation": "Every subscriber has independent predicate index."
+    },
+    {
+      "id": "EVERY-CALL",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Calling",
+      "guard": "source next at valid index",
+      "actions": [
+        "invoke predicate with original value and index"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-EVERY-CALL"
+      ],
+      "explanation": "The predicate is a user function; the canonical model requests its outcome but never executes it."
+    },
+    {
+      "id": "EVERY-TRUE",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Active",
+      "guard": "correlated truthy predicate outcome",
+      "actions": [
+        "advance index, no output"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-EVERY-TRUE"
+      ],
+      "explanation": "Every true predicate result is silent until source completion."
+    },
+    {
+      "id": "EVERY-FALSE",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Closed",
+      "guard": "correlated falsy predicate outcome",
+      "actions": [
+        "emit false once",
+        "complete",
+        "unsubscribe"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-EVERY-FALSE"
+      ],
+      "explanation": "First falsy predicate result terminates immediately; no later source values are evaluated."
+    },
+    {
+      "id": "EVERY-THROW",
+      "from": "Calling",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "correlated throwing predicate",
+      "actions": [
+        "forward exact thrown identity",
+        "release source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-EVERY-THROW"
+      ],
+      "explanation": "Thrown errors are not interpreted as false."
+    },
+    {
+      "id": "EVERY-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "no falsy predicate occurred",
+      "actions": [
+        "emit true once",
+        "complete",
+        "release source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-EVERY-SOURCE-COMPLETE"
+      ],
+      "explanation": "Vacuous truth applies to the empty sequence."
+    },
+    {
+      "id": "EVERY-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "upstream errors",
+      "actions": [
+        "forward error without boolean",
+        "release source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-EVERY-SOURCE-ERROR"
+      ],
+      "explanation": "Source error does not produce a final truth value."
+    },
+    {
+      "id": "EVERY-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "explicit cancellation",
+      "actions": [
+        "release source silently"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-EVERY-CANCEL"
+      ],
+      "explanation": "Cancellation before decision produces no boolean."
+    }
+  ]
+}

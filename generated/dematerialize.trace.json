@@ -1,0 +1,131 @@
+{
+  "status": "finished-input",
+  "consumed": 4,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "dematerialize-notification-values",
+      "executionId": "dematerialize-session11-example",
+      "ruleId": "DEMATERIALIZE-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "dematerialize-notification-values",
+      "executionId": "dematerialize-session11-example",
+      "ruleId": "DEMATERIALIZE-NEXT",
+      "event": {
+        "type": "source.next",
+        "notification": {
+          "kind": "N",
+          "value": "a"
+        }
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "dematerialize-notification-values",
+      "executionId": "dematerialize-session11-example",
+      "ruleId": "DEMATERIALIZE-NEXT",
+      "event": {
+        "type": "source.next",
+        "notification": {
+          "kind": "N",
+          "value": "b"
+        }
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "b"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "dematerialize-notification-values",
+      "executionId": "dematerialize-session11-example",
+      "ruleId": "DEMATERIALIZE-EMBEDDED-COMPLETE",
+      "event": {
+        "type": "source.next",
+        "notification": {
+          "kind": "C"
+        }
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

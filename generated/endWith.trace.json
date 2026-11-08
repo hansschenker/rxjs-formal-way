@@ -1,0 +1,171 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "endWith-unscheduled-2",
+      "executionId": "endWith-session11-example",
+      "ruleId": "ENDWITH-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "endWith-unscheduled-2",
+      "executionId": "endWith-session11-example",
+      "ruleId": "ENDWITH-PASS",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "endWith-unscheduled-2",
+      "executionId": "endWith-session11-example",
+      "ruleId": "ENDWITH-SUFFIX-BEGIN",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Suffix",
+        "index": 0
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "endWith-unscheduled-2",
+      "executionId": "endWith-session11-example",
+      "ruleId": "ENDWITH-SUFFIX-NEXT",
+      "event": {
+        "type": "suffix.next"
+      },
+      "before": {
+        "phase": "Suffix",
+        "index": 0
+      },
+      "after": {
+        "phase": "Suffix",
+        "index": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "suffix-one"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "endWith-unscheduled-2",
+      "executionId": "endWith-session11-example",
+      "ruleId": "ENDWITH-SUFFIX-NEXT",
+      "event": {
+        "type": "suffix.next"
+      },
+      "before": {
+        "phase": "Suffix",
+        "index": 1
+      },
+      "after": {
+        "phase": "Suffix",
+        "index": 2
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "suffix-two"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 2,
+      "modelId": "endWith-unscheduled-2",
+      "executionId": "endWith-session11-example",
+      "ruleId": "ENDWITH-SUFFIX-COMPLETE",
+      "event": {
+        "type": "suffix.complete"
+      },
+      "before": {
+        "phase": "Suffix",
+        "index": 2
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

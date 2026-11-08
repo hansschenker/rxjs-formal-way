@@ -1,0 +1,280 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "endWith-unscheduled-2",
+    "operator": "endWith",
+    "purpose": "After successful source completion, synchronously append a finite word of supplied values.",
+    "cardinality": {
+      "signature": "endWith(P*) : T* -> (T|P)*",
+      "conditions": [
+        "On success, emitted word is the source word concatenated with the finite suffix word.",
+        "An error or explicit cancellation does not append the suffix. No suffix value is emitted before source completion.",
+        "Cω counts next values; terminal notifications, resource release and cancellation are separate obligations."
+      ]
+    },
+    "scope": {
+      "parameters": "Finite fixed suffix of 2 values, no deprecated SchedulerLike overload.",
+      "callbacks": "None. Values are opaque, including undefined and object identity.",
+      "time": "Source timing preserved; suffix is delivered synchronously at normal completion, without scheduling.",
+      "reentrancy": "Atomic non-reentrant source and callback outcome delivery; no observer/finalizer reentry inside the modeled reaction.",
+      "exclusions": [
+        "Deprecated scheduler overload and implicit scheduled suffix semantics.",
+        "Observer reentry or throwing finalizers."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "One independently owned source connection is acquired at subscription, not construction."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "None; independent operator state per subscription even if the upstream happens to be shared.",
+      "reset": "Fresh subscription starts with new state; closed execution rejects all subsequent model inputs.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Source completes then is released; suffix microsteps emit in order and finally complete. No timer or sharing.",
+      "cancellationCheckpoints": [
+        "Between source notifications or completed synchronous logical microsteps; silent release only."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "begin a fresh execution, acquiring the source only now"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "source delivers an opaque value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source completes successfully"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source fails with its original error object"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "release work silently without completion"
+      },
+      {
+        "type": "suffix.next",
+        "origin": "environment",
+        "category": "lifecycle",
+        "description": "synchronous append of next configured suffix value"
+      },
+      {
+        "type": "suffix.complete",
+        "origin": "environment",
+        "category": "lifecycle",
+        "description": "finite suffix sequence finishes"
+      }
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "cold description not yet subscribed",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source connected with execution-local state",
+        "terminal": false
+      },
+      {
+        "id": "Suffix",
+        "description": "source complete; synchronous suffix microsteps remain",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, errored or cancelled; no further events accepted",
+        "terminal": true
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "notify",
+      "unsubscribe"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/endWith.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and lifecycle evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/concat.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and lifecycle evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/of.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and lifecycle evidence"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session11-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session11-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-11.md"
+    }
+  },
+  "parameters": {
+    "suffix": [
+      "suffix-one",
+      "suffix-two"
+    ],
+    "scheduler": "none"
+  },
+  "rules": [
+    {
+      "id": "ENDWITH-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "new subscription",
+      "actions": [
+        "connect source"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ENDWITH-INIT"
+      ],
+      "explanation": "Suffix values do not emit before source ends."
+    },
+    {
+      "id": "ENDWITH-PASS",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source live",
+      "actions": [
+        "forward exact source payload"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ENDWITH-PASS"
+      ],
+      "explanation": "All source values flow unchanged."
+    },
+    {
+      "id": "ENDWITH-SUFFIX-BEGIN",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Suffix",
+      "guard": "source successfully completed",
+      "actions": [
+        "release source",
+        "begin synchronous suffix"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ENDWITH-SUFFIX-BEGIN"
+      ],
+      "explanation": "Only successful source completion initiates the suffix."
+    },
+    {
+      "id": "ENDWITH-SUFFIX-NEXT",
+      "from": "Suffix",
+      "event": "suffix.next",
+      "to": "Suffix",
+      "guard": "suffix index < number of values",
+      "actions": [
+        "emit next suffix payload"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ENDWITH-SUFFIX-NEXT"
+      ],
+      "explanation": "Each supplied suffix value is synchronously delivered in argument order."
+    },
+    {
+      "id": "ENDWITH-SUFFIX-COMPLETE",
+      "from": "Suffix",
+      "event": "suffix.complete",
+      "to": "Closed",
+      "guard": "all suffix values emitted",
+      "actions": [
+        "complete downstream"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ENDWITH-SUFFIX-COMPLETE"
+      ],
+      "explanation": "The internal finite of(...values) finishes; it is not a new external source."
+    },
+    {
+      "id": "ENDWITH-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source fails",
+      "actions": [
+        "forward exact error",
+        "release source; suppress suffix"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ENDWITH-ERROR"
+      ],
+      "explanation": "An error never acts as normal source completion."
+    },
+    {
+      "id": "ENDWITH-CANCEL-ACTIVE",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "cancel during source",
+      "actions": [
+        "release source silently"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ENDWITH-CANCEL-ACTIVE"
+      ],
+      "explanation": "No suffix on cancellation."
+    },
+    {
+      "id": "ENDWITH-CANCEL-SUFFIX",
+      "from": "Suffix",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "cancel between suffix emissions",
+      "actions": [
+        "stop suffix without completion"
+      ],
+      "nextState": "control and memory updated atomically; resource lifetime follows ordered actions",
+      "obligations": [
+        "S11-ENDWITH-CANCEL-SUFFIX"
+      ],
+      "explanation": "The source is already released; remaining suffix values are suppressed."
+    }
+  ]
+}
