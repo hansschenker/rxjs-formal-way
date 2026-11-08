@@ -74,3 +74,12 @@ export { createDelayModel, createDelayWhenModel, delayExample, delayWhenExample 
 export type { DelayOperator, DelayParameters, DelayItem, DelayState, DelayEvent, DelayModel } from './models/delayPolicy.js';
 export { createConnectModel, connectExample } from './models/connect.js';
 export type { ConnectParameters, ConnectState, ConnectEvent, ConnectModel } from './models/connect.js';
+
+export { createDematerializeModel, dematerializeExample, createElementAtModel, elementAtExample,
+  createEndWithModel, endWithExample, createEveryModel, everyExample } from './models/session11-scalar.js';
+export type { DematerializeModel, DematerializeState, DematerializeEvent,
+  ElementAtParameters, ElementAtModel, ElementAtState, ElementAtEvent,
+  EndWithParameters, EndWithModel, EndWithState, EndWithEvent,
+  EveryParameters, EveryModel, EveryState, EveryEvent } from './models/session11-scalar.js';
+export { createExhaustModel, exhaustExample } from './models/exhaust.js';
+export type { ExhaustModel, ExhaustEvent } from './models/exhaust.js';
