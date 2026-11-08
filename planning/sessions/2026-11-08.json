@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-08",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-08T08:08:07+01:00",
+  "startingCommit": "aafc474ff12e739b43cb51ba073dbd81dab2c6c9",
+  "selectedNames": [
+    "dematerialize",
+    "elementAt",
+    "endWith",
+    "every",
+    "exhaust"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "dematerialize",
+    "elementAt",
+    "endWith",
+    "every",
+    "exhaust"
+  ],
+  "commits": [],
+  "checks": {
+    "syntax": "not executed",
+    "types": "not executed",
+    "model": "not executed",
+    "runtime": "not executed",
+    "generated": "not executed",
+    "ci": "not executed"
+  },
+  "notes": [
+    "Reserved exactly the next five distinct pending names after reading the live main branch, daily plan, JSON tracker and roadmap; Session 10 closed without carryovers.",
+    "Pinned RxJS 7.8.2 source revision e5351d02e225e275ac0e497c7b66eaa5f0c88791.",
+    "The accepted 50 baseline exports will not be regenerated as new work."
+  ],
+  "blockers": [],
+  "evidence": "evidence/SESSION-11.md"
+}
