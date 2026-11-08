@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-08",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-08T08:08:07+01:00",
   "startingCommit": "aafc474ff12e739b43cb51ba073dbd81dab2c6c9",
   "selectedNames": [
@@ -12,29 +12,86 @@
     "every",
     "exhaust"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
+  "workedNames": [
     "dematerialize",
     "elementAt",
     "endWith",
     "every",
     "exhaust"
   ],
-  "commits": [],
+  "completedNames": [
+    "dematerialize",
+    "elementAt",
+    "endWith",
+    "every",
+    "exhaust"
+  ],
+  "carryovers": [],
+  "commits": [
+    "91d03c84ca94dd9d64833a59fa3ee6a0d0325501",
+    "374a092915767242c92b332279e5713a63c118fa",
+    "9a95129960efef0157ac826a66bf66104add73c0",
+    "f5578df41466eda0fde5b7c7ed638a8bf83ab082",
+    "2daf6bf33964a6ae4812b432ea6d3aeeed8b863c",
+    "bd566b130cca38be1da445b34851273a1410fea2"
+  ],
   "checks": {
-    "syntax": "not executed",
-    "types": "not executed",
-    "model": "not executed",
-    "runtime": "not executed",
-    "generated": "not executed",
-    "ci": "not executed"
+    "syntax": "passed in implementation push CI 42458245679 and independent read-only PR CI 42458341622",
+    "types": "passed strict TypeScript with 14 new negative assertions; 190 cumulative",
+    "model": "20 new pure model/view tests; full suite 873 passed",
+    "runtime": "21 independent actual RxJS 7.8.2 named tests passed; no new bounded enumeration count",
+    "generated": "472 committed deterministic projections verified; 40 new from five examples",
+    "ci": "push 42458245679 succeeded; read-only PR 42458341622 succeeded with generation and publication skipped"
   },
   "notes": [
-    "Reserved exactly the next five distinct pending names after reading the live main branch, daily plan, JSON tracker and roadmap; Session 10 closed without carryovers.",
-    "Pinned RxJS 7.8.2 source revision e5351d02e225e275ac0e497c7b66eaa5f0c88791.",
-    "The accepted 50 baseline exports will not be regenerated as new work."
+    "Exactly five previously pending distinct exports selected after reading live main, plan, tracker, roadmap and local-date session guard.",
+    "Pinned RxJS 7.8.2 revision e5351d02e225e275ac0e497c7b66eaa5f0c88791; accepted baseline never regenerated as new work.",
+    "Canonical guarded TypeScript Mealy rules and eight deterministic views per export retain original schema/runner/generator.",
+    "Initial PR CI caught and fixed a generic typed callback-action mismatch; second PR CI passed 873 tests but correctly flagged 40 uncommitted projections.",
+    "Main push generated all 40 views and passed full syntax, strict types, 873 named tests and 472 view checks without relaxed validation.",
+    "Independent read-only PR #16 checked synthetic merge ff4d9dde60cdf04569c4e437218ef0a6396822ca; its Git tree b85f3036698fa47c9b8da0a446c9dcf70198f8e0 equals the PR head tree exactly.",
+    "Generated traces remain pure model predictions; native RxJS tests are independent executions. Finite tests do not prove universal equivalence.",
+    "Final acceptance edits are documentation/planning only and are not misreported as the tested implementation checkout."
   ],
   "blockers": [],
-  "evidence": "evidence/SESSION-11.md"
+  "evidence": "evidence/SESSION-11.md",
+  "nextQueue": [
+    "expand",
+    "finalize",
+    "find",
+    "findIndex",
+    "first"
+  ],
+  "nextSessionNotBefore": "2026-11-09",
+  "closedAt": "2026-11-08T08:22:17.711+01:00",
+  "provenanceLimitations": [
+    "Read-only PR checkout is synthetic merge commit, not the PR-head SHA; matching Git trees independently verified.",
+    "elementAt missing error is a named pure-model abstraction; actual RxJS error checked independently.",
+    "Arbitrary callback/source reentrancy, observer/finalizer errors, some deprecated overloads and unrestricted ObservableInput are outside declared profiles."
+  ],
+  "verification": {
+    "testedCommit": "9a95129960efef0157ac826a66bf66104add73c0",
+    "generatedCommit": "f5578df41466eda0fde5b7c7ed638a8bf83ab082",
+    "pushRun": 42458245679,
+    "pushJob": 128661758627,
+    "readOnlyRun": 42458341622,
+    "readOnlyJob": 128662049773,
+    "prNumber": 16,
+    "readOnlyHeadCommit": "2daf6bf33964a6ae4812b432ea6d3aeeed8b863c",
+    "readOnlyBaseCommit": "f5578df41466eda0fde5b7c7ed638a8bf83ab082",
+    "readOnlyCheckout": "ff4d9dde60cdf04569c4e437218ef0a6396822ca",
+    "readOnlyHeadTree": "b85f3036698fa47c9b8da0a446c9dcf70198f8e0",
+    "readOnlyCheckoutTree": "b85f3036698fa47c9b8da0a446c9dcf70198f8e0",
+    "namedTestsPassed": 873,
+    "newNamedTests": 41,
+    "newModelNamedTests": 20,
+    "newRuntimeNamedTests": 21,
+    "newNegativeTypeAssertions": 14,
+    "negativeTypeAssertions": 190,
+    "generatedViews": 472,
+    "newGeneratedViews": 40,
+    "newBoundedModelRxjsScenarios": 0,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  }
 }

@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "dematerialize",
-    "elementAt",
-    "endWith",
-    "every",
-    "exhaust",
     "expand",
     "finalize",
     "find",
@@ -422,9 +417,20 @@
       "readOnlyTree": "fe386e693087e460f601438c2e16e4b135ce7c3f"
     },
     "dematerialize": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-08",
+      "profiles": [
+        "Notification protocol N/E/C values",
+        "embedded terminal short-circuit",
+        "source terminal and silent cancellation"
+      ],
+      "evidence": "evidence/SESSION-11.md",
+      "testedCommit": "9a95129960efef0157ac826a66bf66104add73c0",
+      "implementationRun": 42458245679,
+      "verificationRun": 42458341622,
+      "readOnlyHeadCommit": "2daf6bf33964a6ae4812b432ea6d3aeeed8b863c",
+      "readOnlyCheckout": "ff4d9dde60cdf04569c4e437218ef0a6396822ca",
+      "readOnlyTree": "b85f3036698fa47c9b8da0a446c9dcf70198f8e0"
     },
     "distinct": {
       "status": "accepted",
@@ -461,24 +467,68 @@
       "verificationRun": 41286526038
     },
     "elementAt": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-08",
+      "profiles": [
+        "zero-based nonnegative safe-integer index",
+        "explicit fallback including undefined versus missing-error",
+        "early target completion and teardown"
+      ],
+      "evidence": "evidence/SESSION-11.md",
+      "testedCommit": "9a95129960efef0157ac826a66bf66104add73c0",
+      "implementationRun": 42458245679,
+      "verificationRun": 42458341622,
+      "readOnlyHeadCommit": "2daf6bf33964a6ae4812b432ea6d3aeeed8b863c",
+      "readOnlyCheckout": "ff4d9dde60cdf04569c4e437218ef0a6396822ca",
+      "readOnlyTree": "b85f3036698fa47c9b8da0a446c9dcf70198f8e0"
     },
     "endWith": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-08",
+      "profiles": [
+        "unscheduled finite synchronous suffix",
+        "source-completion-only append",
+        "error and cancellation suppress suffix"
+      ],
+      "evidence": "evidence/SESSION-11.md",
+      "testedCommit": "9a95129960efef0157ac826a66bf66104add73c0",
+      "implementationRun": 42458245679,
+      "verificationRun": 42458341622,
+      "readOnlyHeadCommit": "2daf6bf33964a6ae4812b432ea6d3aeeed8b863c",
+      "readOnlyCheckout": "ff4d9dde60cdf04569c4e437218ef0a6396822ca",
+      "readOnlyTree": "b85f3036698fa47c9b8da0a446c9dcf70198f8e0"
     },
     "every": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-08",
+      "profiles": [
+        "indexed synchronous predicate outcomes",
+        "vacuous truth and first-false short-circuit",
+        "callback throw identity and source ownership"
+      ],
+      "evidence": "evidence/SESSION-11.md",
+      "testedCommit": "9a95129960efef0157ac826a66bf66104add73c0",
+      "implementationRun": 42458245679,
+      "verificationRun": 42458341622,
+      "readOnlyHeadCommit": "2daf6bf33964a6ae4812b432ea6d3aeeed8b863c",
+      "readOnlyCheckout": "ff4d9dde60cdf04569c4e437218ef0a6396822ca",
+      "readOnlyTree": "b85f3036698fa47c9b8da0a446c9dcf70198f8e0"
     },
     "exhaust": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-08",
+      "profiles": [
+        "deprecated exact alias of exhaustAll",
+        "identity-source exhaust admission",
+        "busy ignore and inner completion ownership"
+      ],
+      "evidence": "evidence/SESSION-11.md",
+      "testedCommit": "9a95129960efef0157ac826a66bf66104add73c0",
+      "implementationRun": 42458245679,
+      "verificationRun": 42458341622,
+      "readOnlyHeadCommit": "2daf6bf33964a6ae4812b432ea6d3aeeed8b863c",
+      "readOnlyCheckout": "ff4d9dde60cdf04569c4e437218ef0a6396822ca",
+      "readOnlyTree": "b85f3036698fa47c9b8da0a446c9dcf70198f8e0"
     },
     "exhaustAll": {
       "status": "accepted",

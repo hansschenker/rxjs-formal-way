@@ -36,10 +36,12 @@ The first PR CI correctly caught a generic action-union TypeScript mismatch in t
 
 ## Independent committed-file acceptance
 
-**Pending independent read-only pull-request result.** This document revision creates a documentation-only verification candidate. GitHub Actions must check the committed files with generation and publication steps *skipped*. The PR's head revision and its synthetic merge checkout must be identified separately, including Git tree provenance; never infer that the synthetic checkout equals the head SHA.
+[Documentation-only PR #16](https://github.com/hansschenker/rxjs-formal-way/pull/16) passed independent [read-only CI run 42458341622](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42458341622), job **128662049773**, with generation and publication **explicitly skipped**. Its retrieved job log shows **873 tests passed, zero failures, and 472 committed projections independently verified**. The actual synthetic checkout from `git log -1 --format=%H` is `ff4d9dde60cdf04569c4e437218ef0a6396822ca`, distinct from PR head `2daf6bf33964a6ae4812b432ea6d3aeeed8b863c`. Both Git objects have independently verified identical tree `b85f3036698fa47c9b8da0a446c9dcf70198f8e0`. The evidence PR was merged as `bd566b130cca38be1da445b34851273a1410fea2`.
+
+The final closure updates evidence/roadmap/planning only. That documentation commit is not mislabeled as the implementation-tested revision. There were no changes to canonical models, generated views, dependencies or validation gates after the successful checks.
 
 ## Scope and proof boundary
 
 Native tests independently cover materialized terminal short-circuit, opaque error/payload identity, indexed early teardown and missing-default behavior, successful-only suffix order, empty-source vacuous truth, predicate callback index, exact exhaust alias identity, busy suppression, active-inner ownership, cancellation and error. The legal model profiles exclude malformed notifications, arbitrary reentrancy, throwing observers/finalizers, numeric index values outside nonnegative safe integers, scheduled endWith, every(thisArg), unrestricted ObservableInput conversion and callback-time cancellation. The modeled missing-index error is a named abstraction; native tests inspect actual RxJS ArgumentOutOfRangeError.
 
-The finite test suite and generated views do not constitute universal proof of equivalence. **Acceptance is withheld until the independently retrieved committed-file CI check succeeds.**
+The finite test suite and generated views do not constitute universal proof of equivalence. **All five exports are accepted within their declared profiles; zero carryovers or acceptance blockers.** The authoritative closure log is [planning/sessions/2026-11-08.json](../planning/sessions/2026-11-08.json). Inventory: **55 of 113 accepted, 58 pending**. Next eligible queue: expand, finalize, find, findIndex, first, not before 9 November 2026 Europe/Zurich.

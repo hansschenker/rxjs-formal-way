@@ -47,4 +47,16 @@ Map/filter share their lifecycle specification in [value.ts](../src/models/value
 
 [Session 6](../docs/SESSION-06-AGGREGATION.md) adds completion-only aggregation and extrema, with per-subscription memory and separate callback outcomes.
 
-**Thirty-three configured examples produce 264 views across thirty accepted export names.** These are scoped profiles, not a complete operator catalogue. Acceptance and executed checks live in the evidence records; the [roadmap](../docs/ROADMAP.md) and daily JSON tracker govern further work.
+**Fifty-nine configured examples produce 472 deterministic views across fifty-five accepted export names.** These are scoped profiles, not a complete operator catalogue. Acceptance and executed checks live in the evidence records; the [roadmap](../docs/ROADMAP.md) and daily JSON tracker govern further work.
+
+## Session 11 — new operator pages
+
+| Operator | Canonical model | Readable generated page | Evidence |
+|---|---|---|---|
+| dematerialize | [notification unwrapping](../src/models/session11-scalar.ts) | [Behavior](dematerialize.md) | [Session 11](../evidence/SESSION-11.md) |
+| elementAt | [indexed selection](../src/models/session11-scalar.ts) | [Behavior](elementAt.md) | [Session 11](../evidence/SESSION-11.md) |
+| endWith | [successful suffix](../src/models/session11-scalar.ts) | [Behavior](endWith.md) | [Session 11](../evidence/SESSION-11.md) |
+| every | [indexed quantification](../src/models/session11-scalar.ts) | [Behavior](every.md) | [Session 11](../evidence/SESSION-11.md) |
+| exhaust | [exact exhaustAll alias](../src/models/exhaust.ts) | [Behavior](exhaust.md) | [Session 11](../evidence/SESSION-11.md) |
+
+The [technical guide](../docs/SESSION-11-NOTIFICATIONS-SELECTION-QUANTIFIERS.md) explains policy axes and source constraints. As with all earlier examples, the generated four-lane traces are pure model predictions and do not replace independent actual RxJS tests.

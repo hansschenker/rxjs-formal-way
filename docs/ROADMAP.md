@@ -32,7 +32,9 @@ This is the current implementation tracker. The migration map preserves the orig
 | M09-C | concatMapTo, constant-inner FIFO subscription occurrences | Accepted within scope; [Session 9 evidence](../evidence/SESSION-09.md) |
 | M10-A | connect, debounce, defaultIfEmpty: selected connection, duration replacement, empty-source fallback | Accepted within scope; [Session 10 guide](SESSION-10-CONNECTION-AND-DURATIONS.md) |
 | M10-B | delay and delayWhen: independent time/duration release and completion barrier | Accepted within scope; [Session 10 evidence](../evidence/SESSION-10.md) |
-| M11+ | Remaining catalogue | 63 exports pending; not a universal interpreter |
+| M11-A | dematerialize/elementAt/endWith: notification unwrapping, indexed selection and synchronous suffix | Accepted within scope; [Session 11 guide](SESSION-11-NOTIFICATIONS-SELECTION-QUANTIFIERS.md) |
+| M11-B | every/exhaust: indexed universal quantification and exact deprecated exhaustAll alias | Accepted within scope; [Session 11 evidence](../evidence/SESSION-11.md) |
+| M12+ | Remaining catalogue | 58 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -156,3 +158,13 @@ Exactly five queued exports—**connect, debounce, defaultIfEmpty, delay, delayW
 [Push run 42352229850](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42352229850), job **128342625388**, tested implementation merge **fe5b2871545f2b9022f7427973d02533089ba06c**: **832 tests**, zero failures, and 432 generated-view checks passed. Generated files were committed at **951b4dacf71408c0de3aa5b4b58f0030f89a6a91**. [Independent read-only PR run 42352354713](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42352354713), job **128343006855**, also passed 832 tests and 432 drift checks, with generation and publication skipped. Synthetic checkout **f834a9487ca55ba1d75e3d8ca5f5796077aee495** shares Git tree **fe386e693087e460f601438c2e16e4b135ce7c3f** with the PR head. See [evidence](../evidence/SESSION-10.md) for exact provenance, scoped exclusions, 35 new named tests, 15 negative type assertions and preliminary corrections.
 
 **50 of 113 distinct exports accepted; 63 pending; zero carryovers.** Next eligible session is **8 November 2026 Europe/Zurich**: dematerialize, elementAt, endWith, every, exhaust. No second batch was opened today.
+
+## Session 11 closed: 8 November 2026
+
+Exactly five pending exports—**dematerialize, elementAt, endWith, every and exhaust**—were implemented with pinned RxJS 7.8.2 source inspection, canonical guarded Mealy contracts, Cω shapes, typed states/actions, scope constraints and independent native RxJS evidence. The deprecated **exhaust** export is an exact alias of **exhaustAll** and reuses its reviewed Mealy semantics with distinct public-export provenance. The original schema, runner, generator, strict validation settings and 50 previously accepted exports remain unchanged.
+
+[Implementation push CI 42458245679](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42458245679), job **128661758627**, tested actual main checkout `9a95129960efef0157ac826a66bf66104add73c0`. It generated and verified **472 deterministic views** (40 new) and passed **873 tests, zero failures** before committing artifacts at `f5578df41466eda0fde5b7c7ed638a8bf83ab082`. New cases: **20 model/view and 21 independent actual RxJS tests**; **14 negative type assertions**, 190 cumulative. No new bounded-enumeration count; existing comparisons remain covered by the full suite.
+
+[Independent read-only CI 42458341622](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42458341622), job **128662049773**, succeeded with **873 tests and 472 committed-view checks** while explicitly skipping generation and publication. Actual synthetic checkout `ff4d9dde60cdf04569c4e437218ef0a6396822ca` and PR head `2daf6bf33964a6ae4812b432ea6d3aeeed8b863c` share verified Git tree `b85f3036698fa47c9b8da0a446c9dcf70198f8e0`. See [Session 11 evidence](../evidence/SESSION-11.md) for exclusions and initial validation corrections.
+
+**55 of 113 distinct exports accepted, 58 pending; zero carryovers.** The next eligible session is **9 November 2026 Europe/Zurich**: `expand`, `finalize`, `find`, `findIndex`, `first`. No second daily batch.
