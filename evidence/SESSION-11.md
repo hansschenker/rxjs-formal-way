@@ -1,19 +1,45 @@
-# Session 11 evidence — pending independent verification
+# Session 11 evidence — notification, index, suffix, quantifier and alias policies
 
-**8 November 2026 · Europe/Zurich**. Exactly five queued distinct RxJS 7.8.2 operator export names reserved: **dematerialize, elementAt, endWith, every, exhaust**. The previous 50 accepted exports remain unchanged. The session reservation commit is **91d03c84ca94dd9d64833a59fa3ee6a0d0325501**.
+**8 November 2026 · Europe/Zurich.** Exactly five distinct queued RxJS **7.8.2** exports: **dematerialize, elementAt, endWith, every, exhaust**. No extra profile counts as an export; previously accepted 50 names were not regenerated. Reservation: `91d03c84ca94dd9d64833a59fa3ee6a0d0325501`. Version-pinned source: `e5351d02e225e275ac0e497c7b66eaa5f0c88791`.
 
-Version-pinned source revision **e5351d02e225e275ac0e497c7b66eaa5f0c88791**. See [the technical guide](../docs/SESSION-11-NOTIFICATIONS-SELECTION-QUANTIFIERS.md) for behavioral dimensions, scoped Mealy six-tuples and source links. The four new pure models are in src/models/session11-scalar.ts; the exact alias reuses the previously reviewed exhaustAll model in src/models/exhaust.ts. They use schema 1.1 and existing rendering, runner and generator infrastructure.
+## Scoped models and representations
 
-**Provisional status:** not accepted until actual CI execution is retrieved. No runtime claims can be made from model-predicted traces. A successful read-only committed-file drift check is required after artifacts are published. The expected five examples add forty projections to the prior 432, subject to successful execution.
+Four explicit guarded TypeScript models live in `src/models/session11-scalar.ts`; `src/models/exhaust.ts` reuses the already-reviewed `exhaustAll` Mealy transducer because pinned source declares `exhaust = exhaustAll`. This preserves the existing schema 1.1, state/transition runner, renderer and generation infrastructure.
 
-Scoped exclusions: reentrant observer/source delivery, malformed Notification objects, unsupported numeric elementAt indexes, deprecated scheduled endWith and every(thisArg), unbounded ObservableInput conversion, and throwing downstream observer/finalizer callbacks. Finite test coverage will not prove general semantic equivalence.
+The [technical guide](../docs/SESSION-11-NOTIFICATIONS-SELECTION-QUANTIFIERS.md) records Cω shapes, typed six-tuples, guarded legal inputs, value/cardinality/time/concurrency/cancellation/termination/sharing policies and source provenance. Five models contribute **40 deterministic generated projections**: manifest, BDD, STT, diagram, obligations, predicted JSON trace, predicted four-lane trace and readable operator page. The inventory is now **472 generated projections**. These traces are **model predictions**, never described as recordings of native RxJS.
 
-## Verification ledger
+## Successful implementation push and exact checkout
 
-- Tested checkout: **pending**
-- Syntax and strict TypeScript: **not yet verified**
-- Pure model and native RxJS 7.8.2 tests: **not yet verified**
-- Generation and drift validation: **not yet verified**
-- Independent read-only committed-file check: **not yet executed**
-- Accepted names: **none yet**
-- Carryovers: **dematerialize, elementAt, endWith, every, exhaust** until acceptance
+| Role | Exact identity |
+|---|---|
+| Implementation code PR | [#15](https://github.com/hansschenker/rxjs-formal-way/pull/15) |
+| **Actual checkout tested by main push** | **`9a95129960efef0157ac826a66bf66104add73c0`** |
+| Successful push CI | [run 42458245679](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42458245679) |
+| Retrieved job | **128661758627** |
+| Generated files commit after passing checks | **`f5578df41466eda0fde5b7c7ed638a8bf83ab082`** |
+
+The retrieved job log confirms the actual checkout through `git log -1 --format=%H`, and confirms on that checkout:
+
+```text
+Generated 472 deterministic projections.
+# tests 873
+# pass 873
+# fail 0
+Verified 472 deterministic projections.
+[main f5578df] docs: update verified generated operator projections
+40 files changed
+```
+
+Compared with the accepted Session 10 baseline (832 tests), the session adds **41 named tests**: **20 pure model/view tests and 21 independent actual RxJS 7.8.2 cases**. Fourteen new negative TypeScript assertions raise the cumulative total to **190**. No new bounded enumeration count was introduced; earlier bounded differential checks remained in the full suite.
+
+The first PR CI correctly caught a generic action-union TypeScript mismatch in the typed predicate model. This was corrected with typed callback-specific action constructors. The second PR CI passed syntax, strict TypeScript, all 873 tests, but failed the expected generation-drift check because its 40 new projections had not yet been committed. The unchanged main push workflow generated, tested, verified and committed those exact 40. No validation gate, schema, existing model or dependency was weakened.
+
+## Independent committed-file acceptance
+
+**Pending independent read-only pull-request result.** This document revision creates a documentation-only verification candidate. GitHub Actions must check the committed files with generation and publication steps *skipped*. The PR's head revision and its synthetic merge checkout must be identified separately, including Git tree provenance; never infer that the synthetic checkout equals the head SHA.
+
+## Scope and proof boundary
+
+Native tests independently cover materialized terminal short-circuit, opaque error/payload identity, indexed early teardown and missing-default behavior, successful-only suffix order, empty-source vacuous truth, predicate callback index, exact exhaust alias identity, busy suppression, active-inner ownership, cancellation and error. The legal model profiles exclude malformed notifications, arbitrary reentrancy, throwing observers/finalizers, numeric index values outside nonnegative safe integers, scheduled endWith, every(thisArg), unrestricted ObservableInput conversion and callback-time cancellation. The modeled missing-index error is a named abstraction; native tests inspect actual RxJS ArgumentOutOfRangeError.
+
+The finite test suite and generated views do not constitute universal proof of equivalence. **Acceptance is withheld until the independently retrieved committed-file CI check succeeds.**
