@@ -283,13 +283,20 @@ export type EveryModel<T>=OperatorModel<EveryParameters,EveryState<T>,EveryEvent
 const predicateRef=(index:number):ResourceRef=>({id:'predicate',generation:index});
 export function createEveryModel<T>():EveryModel<T>{
   type S=EveryState<T>;type E=EveryEvent<T>;type A=Action<boolean,T>;
+  // Typed local action constructors preserve the predicate callback input T.
+  // The generic common helpers also include an unknown callback variant and are not assignable to Action<boolean,T>.
+  const acquire:A={type:'subscribe',resource:source};
+  const release:A={type:'unsubscribe',resource:source};
+  const pass=(value:boolean):A=>({type:'notify',target:'downstream',notification:{kind:'N',value}});
+  const terminal:A={type:'notify',target:'downstream',notification:{kind:'C'}};
+  const fail=(reason:unknown):A=>({type:'notify',target:'downstream',notification:{kind:'E',error:reason}});
   const op='every',d=(id:string,from:string,event:string,to:string,guard:string,acts:string[],why:string)=>
     description(op,id,from,event,to,guard,acts,why);
   const matches=(s:S,e:E)=>s.phase==='Calling'&&('resource'in e)&&
     e.resource.id==='predicate'&&e.resource.generation===s.index;
   const rules:Rule<EveryParameters,S,E,A>[]=[
     {description:d('INIT','Unsubscribed','subscribe','Active','fresh execution',['subscribe source with index zero'],'Every subscriber has independent predicate index.'),
-      enabled:()=>true,react:()=>({state:{phase:'Active',index:0},actions:[subscribe(source)]})},
+      enabled:()=>true,react:()=>({state:{phase:'Active',index:0},actions:[acquire]})},
     {description:d('CALL','Active','source.next','Calling','source next at valid index',['invoke predicate with original value and index'],'The predicate is a user function; the canonical model requests its outcome but never executes it.'),
       enabled:s=>s.phase==='Active'&&natural(s.index)&&s.index<Number.MAX_SAFE_INTEGER,
       react:(s,e)=>{if(s.phase!=='Active'||e.type!=='source.next')throw Error('bad next');
@@ -301,18 +308,18 @@ export function createEveryModel<T>():EveryModel<T>{
         return {state:{phase:'Active',index:s.index+1},actions:[]};}},
     {description:d('FALSE','Calling','callback.return','Closed','correlated falsy predicate outcome',['emit false once','complete','unsubscribe'],'First falsy predicate result terminates immediately; no later source values are evaluated.'),
       enabled:(s,e)=>matches(s,e)&&e.type==='callback.return'&&!Boolean(e.value),
-      react:()=>({state:closed('predicate-false'),actions:[next(false),complete,unsubscribe(source)]})},
+      react:()=>({state:closed('predicate-false'),actions:[pass(false),terminal,release]})},
     {description:d('THROW','Calling','callback.throw','Closed','correlated throwing predicate',['forward exact thrown identity','release source'],'Thrown errors are not interpreted as false.'),
       enabled:(s,e)=>matches(s,e)&&e.type==='callback.throw',
       react:(_s,e)=>{if(e.type!=='callback.throw')throw Error('bad throw');
-        return {state:closed('callback-error'),actions:[error(e.error),unsubscribe(source)]};}},
+        return {state:closed('callback-error'),actions:[fail(e.error),release]};}},
     {description:d('SOURCE-COMPLETE','Active','source.complete','Closed','no falsy predicate occurred',['emit true once','complete','release source'],'Vacuous truth applies to the empty sequence.'),
-      enabled:()=>true,react:()=>({state:closed('complete'),actions:[next(true),complete,unsubscribe(source)]})},
+      enabled:()=>true,react:()=>({state:closed('complete'),actions:[pass(true),terminal,release]})},
     {description:d('SOURCE-ERROR','Active','source.error','Closed','upstream errors',['forward error without boolean','release source'],'Source error does not produce a final truth value.'),
       enabled:()=>true,react:(_s,e)=>{if(e.type!=='source.error')throw Error('bad source error');
-        return {state:closed('source-error'),actions:[error(e.error),unsubscribe(source)]};}},
+        return {state:closed('source-error'),actions:[fail(e.error),release]};}},
     {description:d('CANCEL','Active','cancel','Closed','explicit cancellation',['release source silently'],'Cancellation before decision produces no boolean.'),
-      enabled:()=>true,react:()=>({state:closed('cancel'),actions:[unsubscribe(source)]})},
+      enabled:()=>true,react:()=>({state:closed('cancel'),actions:[release]})},
   ];
   return {parameters:{predicateId:'predicate'},rules,
     metadata:metadata({operator:op,id:'every-indexed-predicate',
