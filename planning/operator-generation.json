@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "expand",
-    "finalize",
-    "find",
-    "findIndex",
-    "first",
     "groupBy",
     "ignoreElements",
     "isEmpty",
@@ -551,9 +546,20 @@
       "verificationRun": 40853083582
     },
     "expand": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-09",
+      "profiles": [
+        "unscheduled default-unbounded recursive feedback",
+        "concurrency-one FIFO admission queue",
+        "outer-completion recursive drain"
+      ],
+      "evidence": "evidence/SESSION-12.md",
+      "testedCommit": "9c6358b1f5db26e2e4059177186ae7d2b42bffe4",
+      "implementationRun": 42573265945,
+      "verificationRun": 42573479269,
+      "readOnlyHeadCommit": "3c35a22c6c134ce6813b9d6bc3b2a32fcc812fc7",
+      "readOnlyCheckout": "4e5d90495aca0a6b8365e37c9a5e76e8bf83e053",
+      "readOnlyTree": "49ddd9112c09505696750872227d8b7af8d21adf"
     },
     "filter": {
       "status": "accepted",
@@ -561,24 +567,68 @@
       "profiles": []
     },
     "finalize": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-09",
+      "profiles": [
+        "pass-through values",
+        "complete/error/cancel teardown callback",
+        "terminal-before-finalizer ordering"
+      ],
+      "evidence": "evidence/SESSION-12.md",
+      "testedCommit": "9c6358b1f5db26e2e4059177186ae7d2b42bffe4",
+      "implementationRun": 42573265945,
+      "verificationRun": 42573479269,
+      "readOnlyHeadCommit": "3c35a22c6c134ce6813b9d6bc3b2a32fcc812fc7",
+      "readOnlyCheckout": "4e5d90495aca0a6b8365e37c9a5e76e8bf83e053",
+      "readOnlyTree": "49ddd9112c09505696750872227d8b7af8d21adf"
     },
     "find": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-09",
+      "profiles": [
+        "indexed predicate first-match",
+        "undefined no-match sentinel",
+        "short-circuit and callback error"
+      ],
+      "evidence": "evidence/SESSION-12.md",
+      "testedCommit": "9c6358b1f5db26e2e4059177186ae7d2b42bffe4",
+      "implementationRun": 42573265945,
+      "verificationRun": 42573479269,
+      "readOnlyHeadCommit": "3c35a22c6c134ce6813b9d6bc3b2a32fcc812fc7",
+      "readOnlyCheckout": "4e5d90495aca0a6b8365e37c9a5e76e8bf83e053",
+      "readOnlyTree": "49ddd9112c09505696750872227d8b7af8d21adf"
     },
     "findIndex": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-09",
+      "profiles": [
+        "indexed predicate first-match",
+        "minus-one no-match sentinel",
+        "short-circuit and callback error"
+      ],
+      "evidence": "evidence/SESSION-12.md",
+      "testedCommit": "9c6358b1f5db26e2e4059177186ae7d2b42bffe4",
+      "implementationRun": 42573265945,
+      "verificationRun": 42573479269,
+      "readOnlyHeadCommit": "3c35a22c6c134ce6813b9d6bc3b2a32fcc812fc7",
+      "readOnlyCheckout": "4e5d90495aca0a6b8365e37c9a5e76e8bf83e053",
+      "readOnlyTree": "49ddd9112c09505696750872227d8b7af8d21adf"
     },
     "first": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-09",
+      "profiles": [
+        "direct or indexed-predicate first selection",
+        "explicit default versus EmptyError",
+        "explicit undefined default presence"
+      ],
+      "evidence": "evidence/SESSION-12.md",
+      "testedCommit": "9c6358b1f5db26e2e4059177186ae7d2b42bffe4",
+      "implementationRun": 42573265945,
+      "verificationRun": 42573479269,
+      "readOnlyHeadCommit": "3c35a22c6c134ce6813b9d6bc3b2a32fcc812fc7",
+      "readOnlyCheckout": "4e5d90495aca0a6b8365e37c9a5e76e8bf83e053",
+      "readOnlyTree": "49ddd9112c09505696750872227d8b7af8d21adf"
     },
     "groupBy": {
       "status": "pending",

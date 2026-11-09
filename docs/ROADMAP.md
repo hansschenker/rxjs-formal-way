@@ -34,7 +34,9 @@ This is the current implementation tracker. The migration map preserves the orig
 | M10-B | delay and delayWhen: independent time/duration release and completion barrier | Accepted within scope; [Session 10 evidence](../evidence/SESSION-10.md) |
 | M11-A | dematerialize/elementAt/endWith: notification unwrapping, indexed selection and synchronous suffix | Accepted within scope; [Session 11 guide](SESSION-11-NOTIFICATIONS-SELECTION-QUANTIFIERS.md) |
 | M11-B | every/exhaust: indexed universal quantification and exact deprecated exhaustAll alias | Accepted within scope; [Session 11 evidence](../evidence/SESSION-11.md) |
-| M12+ | Remaining catalogue | 58 exports pending; not a universal interpreter |
+| M12-A | expand/finalize: recursive admission and teardown callback policy | Accepted within scope; [Session 12 guide](SESSION-12-RECURSION-FINALIZATION-SEARCH.md) |
+| M12-B | find/findIndex/first: first-match selection, sentinels and default/error exhaustion | Accepted within scope; [Session 12 evidence](../evidence/SESSION-12.md) |
+| M13+ | Remaining catalogue | 53 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -168,3 +170,14 @@ Exactly five pending exports—**dematerialize, elementAt, endWith, every and ex
 [Independent read-only CI 42458341622](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42458341622), job **128662049773**, succeeded with **873 tests and 472 committed-view checks** while explicitly skipping generation and publication. Actual synthetic checkout `ff4d9dde60cdf04569c4e437218ef0a6396822ca` and PR head `2daf6bf33964a6ae4812b432ea6d3aeeed8b863c` share verified Git tree `b85f3036698fa47c9b8da0a446c9dcf70198f8e0`. See [Session 11 evidence](../evidence/SESSION-11.md) for exclusions and initial validation corrections.
 
 **55 of 113 distinct exports accepted, 58 pending; zero carryovers.** The next eligible session is **9 November 2026 Europe/Zurich**: `expand`, `finalize`, `find`, `findIndex`, `first`. No second daily batch.
+
+
+## Session 12 closed: 9 November 2026
+
+Exactly five pending exports—**expand, finalize, find, findIndex, first**—were modeled from pinned RxJS 7.8.2 source and accepted within explicitly documented profiles. `expand` makes recursive feedback and admission explicit, including default unbounded and concurrency-one FIFO profiles without the deprecated scheduler argument. `finalize` is modeled as pass-through dataflow plus one teardown callback action. `find` and `findIndex` share the same indexed first-match transition pattern but differ in output policy, while `first` adds direct/predicate selection plus explicit-default versus `EmptyError` exhaustion.
+
+[Push CI 42573265945](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42573265945), job **129015255046**, tested implementation merge `9c6358b1f5db26e2e4059177186ae7d2b42bffe4`: **919 tests passed, zero failures** and **512 deterministic projections** were generated and drift-checked. The workflow then committed **40 new generated files** at `7fbd3b7f35940a6fec42d4a6da95089e3ec52b41`. Session 12 adds **46 named tests**—24 model/view plus 22 independent native RxJS cases—and **15 negative TypeScript assertions**, bringing the cumulative negative-assertion count to **205**.
+
+Independent read-only [PR #18 run 42573479269](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42573479269), job **129015901191**, passed the same **919 tests and 512 committed-view checks** with generation and publication skipped. Its actual synthetic checkout `4e5d90495aca0a6b8365e37c9a5e76e8bf83e053` has the same Git tree `49ddd9112c09505696750872227d8b7af8d21adf` as PR head `3c35a22c6c134ce6813b9d6bc3b2a32fcc812fc7`. See [Session 12 evidence](../evidence/SESSION-12.md) for scope and provenance.
+
+**60 of 113 distinct exports accepted; 53 pending; zero carryovers.** The next eligible session is **10 November 2026 Europe/Zurich**: `groupBy`, `ignoreElements`, `isEmpty`, `last`, `mapTo`. No second daily batch was opened.

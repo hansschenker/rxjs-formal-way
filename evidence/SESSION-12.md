@@ -45,8 +45,19 @@ Native tests independently cover:
 
 ## Independent committed-file verification
 
-Pending in this documentation-only PR. Its CI must skip generation/publication and independently verify the already committed 512 projections. Exact synthetic checkout and matching PR-head Git tree will be recorded after retrieval.
+Documentation-only PR **#18** produced successful read-only CI run **42573479269**, job **129015901191**. Retrieved job steps show **generation skipped** and **publication skipped**. The execution log independently reports **919 tests passed, zero failures, and 512 committed projections verified**.
+
+| Role | Exact identity |
+|---|---|
+| Read-only PR head | `3c35a22c6c134ce6813b9d6bc3b2a32fcc812fc7` |
+| Read-only PR base | `7fbd3b7f35940a6fec42d4a6da95089e3ec52b41` |
+| Actual synthetic checkout from job log | `4e5d90495aca0a6b8365e37c9a5e76e8bf83e053` |
+| Read-only PR-head tree | `49ddd9112c09505696750872227d8b7af8d21adf` |
+| Synthetic checkout tree | `49ddd9112c09505696750872227d8b7af8d21adf` |
+| Evidence/guide merge | `e763b9af4ad4ccf3c8b8b5f60dafdf05c3ef4bdc` |
+
+The synthetic merge SHA is deliberately not called the PR-head SHA; their Git trees were inspected separately and are identical.
 
 ## Acceptance status
 
-Acceptance remains pending only the independent committed-file verification and final planning/roadmap closure. Finite tests and declared profiles are evidence, not a universal proof.
+**All five exports are accepted within their declared scopes.** There are zero carryovers and no unresolved blockers within scope. Inventory after Session 12: **60 of 113 accepted; 53 pending**. The next eligible Session 13 batch, not before **10 November 2026 Europe/Zurich**, is `groupBy`, `ignoreElements`, `isEmpty`, `last`, `mapTo`. Finite tests and declared profiles remain evidence, not a universal proof.

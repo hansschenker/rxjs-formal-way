@@ -2,16 +2,95 @@
   "schemaVersion": 1,
   "date": "2026-11-09",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-09T07:21:00+01:00",
   "startingCommit": "55e8a73aa560c0463ebaae10c073b8a220dfc902",
-  "selectedNames": ["expand", "finalize", "find", "findIndex", "first"],
-  "workedNames": [],
-  "completedNames": [],
+  "selectedNames": [
+    "expand",
+    "finalize",
+    "find",
+    "findIndex",
+    "first"
+  ],
+  "workedNames": [
+    "expand",
+    "finalize",
+    "find",
+    "findIndex",
+    "first"
+  ],
+  "completedNames": [
+    "expand",
+    "finalize",
+    "find",
+    "findIndex",
+    "first"
+  ],
   "carryovers": [],
-  "commits": [],
-  "checks": {},
+  "commits": [
+    "eb7f3de5360cdf4f14aaeb03c05382ddb292581d",
+    "9c6358b1f5db26e2e4059177186ae7d2b42bffe4",
+    "7fbd3b7f35940a6fec42d4a6da95089e3ec52b41",
+    "3c35a22c6c134ce6813b9d6bc3b2a32fcc812fc7",
+    "e763b9af4ad4ccf3c8b8b5f60dafdf05c3ef4bdc"
+  ],
+  "checks": {
+    "syntax": "passed implementation push CI 42573265945 and independent read-only PR CI 42573479269",
+    "types": "strict TypeScript passed with 15 new negative assertions; 205 cumulative",
+    "model": "24 new model/view named tests; full suite 919 passed",
+    "runtime": "22 new independent actual RxJS 7.8.2 named tests passed; no new bounded enumeration count",
+    "generated": "512 committed deterministic projections verified; 40 new",
+    "ci": "push 42573265945 succeeded; read-only PR 42573479269 succeeded with generation and publication skipped"
+  },
   "blockers": [],
   "evidence": "evidence/SESSION-12.md",
-  "nextSessionNotBefore": "2026-11-10"
+  "nextSessionNotBefore": "2026-11-10",
+  "notes": [
+    "Exactly five pending distinct exports selected from the live queue after Session 11 closed with zero carryovers.",
+    "Pinned RxJS 7.8.2 revision e5351d02e225e275ac0e497c7b66eaa5f0c88791.",
+    "expand accepted profiles are scheduler-free default unbounded and concurrency one; arbitrary positive concurrency and deprecated scheduler argument remain outside scope.",
+    "Initial PR CI passed all 919 tests and failed only because the 40 new generated projections were intentionally not yet committed.",
+    "Main push generated and verified all 512 projections, then committed 40 new files without weakening validation.",
+    "Read-only PR #18 checked synthetic merge 4e5d90495aca0a6b8365e37c9a5e76e8bf83e053; its Git tree equals the PR-head tree exactly.",
+    "Generated traces are model predictions, not native recordings; finite tests do not establish universal equivalence."
+  ],
+  "nextQueue": [
+    "groupBy",
+    "ignoreElements",
+    "isEmpty",
+    "last",
+    "mapTo"
+  ],
+  "closedAt": "2026-11-09T07:32:00+01:00",
+  "provenanceLimitations": [
+    "Read-only CI uses a synthetic merge checkout rather than the PR-head SHA; matching Git trees were independently verified.",
+    "expand scheduler and arbitrary concurrency profiles, deprecated predicate thisArg/overload details, callback/observer/finalizer reentrancy and throwing finalizers remain outside declared scopes.",
+    "Finite tests and generated traces are acceptance evidence, not a universal behavioral proof."
+  ],
+  "verification": {
+    "testedCommit": "9c6358b1f5db26e2e4059177186ae7d2b42bffe4",
+    "implementationCommit": "9c6358b1f5db26e2e4059177186ae7d2b42bffe4",
+    "generatedCommit": "7fbd3b7f35940a6fec42d4a6da95089e3ec52b41",
+    "pushRun": 42573265945,
+    "pushJob": 129015255046,
+    "readOnlyRun": 42573479269,
+    "readOnlyJob": 129015901191,
+    "prNumber": 18,
+    "readOnlyHeadCommit": "3c35a22c6c134ce6813b9d6bc3b2a32fcc812fc7",
+    "readOnlyBaseCommit": "7fbd3b7f35940a6fec42d4a6da95089e3ec52b41",
+    "readOnlyCheckout": "4e5d90495aca0a6b8365e37c9a5e76e8bf83e053",
+    "readOnlyHeadTree": "49ddd9112c09505696750872227d8b7af8d21adf",
+    "readOnlyCheckoutTree": "49ddd9112c09505696750872227d8b7af8d21adf",
+    "namedTestsPassed": 919,
+    "newNamedTests": 46,
+    "newModelNamedTests": 24,
+    "newRuntimeNamedTests": 22,
+    "negativeTypeAssertions": 205,
+    "newNegativeTypeAssertions": 15,
+    "generatedViews": 512,
+    "newGeneratedViews": 40,
+    "newBoundedModelRxjsScenarios": 0,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  }
 }
