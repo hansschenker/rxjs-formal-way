@@ -1,0 +1,330 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "first-predicate-required",
+    "operator": "first",
+    "purpose": "Emit the first source value, or first predicate match; on successful exhaustion emit an explicit default or error with EmptyError.",
+    "cardinality": {
+      "signature": "first(P?,D?) : T* -> (T|D)?",
+      "conditions": [
+        "At most one next value is emitted.",
+        "Predicate mode short-circuits on first truthy result; direct mode short-circuits on first source value.",
+        "Cω counts next values; terminal notifications, cancellation and resource release are separate obligations."
+      ]
+    },
+    "scope": {
+      "parameters": "predicate supplied; no default supplied",
+      "callbacks": "One correlated predicate outcome per tested value.",
+      "time": "No timer; first admissible source position controls output.",
+      "reentrancy": "One pending predicate outcome at a time.",
+      "exclusions": [
+        "Type-guard/BooleanConstructor specialization, deprecated overload nuances, callback/observer/finalizer reentry."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire one source subscription only when the result is subscribed."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing is introduced; each result subscription owns independent state and resources.",
+      "reset": "A fresh result subscription starts from Unsubscribed; Closed rejects all later model events.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        },
+        {
+          "id": "predicate",
+          "kind": "callback",
+          "owner": "present only when predicate profile is selected"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Commit next state, then interpret ordered actions. Callback actions are requests to external user functions, never executed by the pure model.",
+      "cancellationCheckpoints": [
+        "Between fully resolved reactions; cancellation releases owned work and emits no synthetic completion."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "begin a fresh lazy execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "source delivers an opaque value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source completes successfully"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source fails with its original error object"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream unsubscribes silently"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "correlated predicate returns a truthy/falsy result"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "correlated predicate throws"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "invoke-callback",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "cold description; nothing connected yet",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source connected with subscription-local state",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "predicate outcome pending in predicate profile",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal execution; no later model events are legal",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/first.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/filter.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/take.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/defaultIfEmpty.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/throwIfEmpty.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session12-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session12-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-12.md"
+    }
+  },
+  "parameters": {
+    "predicate": true,
+    "hasDefault": false,
+    "predicateId": "predicate"
+  },
+  "rules": [
+    {
+      "id": "FIRST-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "fresh execution",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-FIRST-INIT"
+      ],
+      "explanation": "First waits for the first admissible value."
+    },
+    {
+      "id": "FIRST-DIRECT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Closed",
+      "guard": "predicate omitted",
+      "actions": [
+        "emit first source value",
+        "complete",
+        "release source"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FIRST-DIRECT"
+      ],
+      "explanation": "Without a predicate, the first source value terminates immediately."
+    },
+    {
+      "id": "FIRST-CALL",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Calling",
+      "guard": "predicate supplied and index valid",
+      "actions": [
+        "invoke predicate"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-FIRST-CALL"
+      ],
+      "explanation": "With a predicate, first tests values until the first truthy result."
+    },
+    {
+      "id": "FIRST-MATCH",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Closed",
+      "guard": "correlated truthy predicate result",
+      "actions": [
+        "emit original matched value",
+        "complete",
+        "release source"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FIRST-MATCH"
+      ],
+      "explanation": "The first matching source value is forwarded unchanged."
+    },
+    {
+      "id": "FIRST-MISS",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Active",
+      "guard": "correlated falsy predicate result",
+      "actions": [
+        "advance predicate index silently"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-FIRST-MISS"
+      ],
+      "explanation": "Rejected values are skipped but consume their source index."
+    },
+    {
+      "id": "FIRST-THROW",
+      "from": "Calling",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "correlated predicate throw",
+      "actions": [
+        "error downstream",
+        "release source"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FIRST-THROW"
+      ],
+      "explanation": "Predicate exceptions remain errors."
+    },
+    {
+      "id": "FIRST-EMPTY-DEFAULT",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "no admissible value and explicit default supplied",
+      "actions": [
+        "emit default",
+        "complete",
+        "release source"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FIRST-EMPTY-DEFAULT"
+      ],
+      "explanation": "Explicit undefined is still a supplied default when argument two exists."
+    },
+    {
+      "id": "FIRST-EMPTY-ERROR",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "no admissible value and no default",
+      "actions": [
+        "error with EmptyError",
+        "release source"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FIRST-EMPTY-ERROR"
+      ],
+      "explanation": "Unlike find, first has an error policy for no matching value unless a default was supplied."
+    },
+    {
+      "id": "FIRST-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errors",
+      "actions": [
+        "forward exact error",
+        "release source"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FIRST-SOURCE-ERROR"
+      ],
+      "explanation": "Source failure suppresses default and EmptyError synthesis."
+    },
+    {
+      "id": "FIRST-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream closes",
+      "actions": [
+        "release source silently"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FIRST-CANCEL"
+      ],
+      "explanation": "Cancellation emits no default and no EmptyError."
+    }
+  ]
+}

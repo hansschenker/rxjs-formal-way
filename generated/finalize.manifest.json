@@ -1,0 +1,222 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "finalize-teardown-callback",
+    "operator": "finalize",
+    "purpose": "Mirror the source exactly and invoke a zero-argument teardown callback once on complete, error, or explicit unsubscribe.",
+    "cardinality": {
+      "signature": "finalize : (() -> Unit) -> T* -> T*",
+      "conditions": [
+        "All next values and terminal notifications retain source identity/order.",
+        "The callback itself contributes no stream value and its return value is ignored.",
+        "Cω counts next values; terminal notifications, cancellation and resource release are separate obligations."
+      ]
+    },
+    "scope": {
+      "parameters": "One zero-argument callback; no other options.",
+      "callbacks": "The finalizer is represented as an invoke-callback action with no meaningful input value; callback return is not a stream event.",
+      "time": "No scheduler or timer. Finalization is part of subscription teardown ordering.",
+      "reentrancy": "The pure model treats finalizer invocation as an atomic teardown action and excludes callback reentry/throws.",
+      "exclusions": [
+        "Throwing finalizer behavior, nested unsubscription from observer handlers, deprecated synchronous error handling details."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire one source subscription only when the result is subscribed."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing is introduced; each result subscription owns independent state and resources.",
+      "reset": "A fresh result subscription starts from Unsubscribed; Closed rejects all later model events.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        },
+        {
+          "id": "finalize",
+          "kind": "callback",
+          "owner": "registered teardown callback for this result subscription"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Commit next state, then interpret ordered actions. Callback actions are requests to external user functions, never executed by the pure model.",
+      "cancellationCheckpoints": [
+        "Between fully resolved reactions; cancellation releases owned work and emits no synthetic completion."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "begin a fresh lazy execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "source delivers an opaque value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source completes successfully"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source fails with its original error object"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream unsubscribes silently"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "invoke-callback",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "cold description; nothing connected yet",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source connected with subscription-local state",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal execution; no later model events are legal",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/finalize.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session12-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session12-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-12.md"
+    }
+  },
+  "parameters": {
+    "callbackId": "finalize"
+  },
+  "rules": [
+    {
+      "id": "FINALIZE-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "fresh execution",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-FINALIZE-INIT"
+      ],
+      "explanation": "The finalizer is registered for this result subscription."
+    },
+    {
+      "id": "FINALIZE-PASS",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source live",
+      "actions": [
+        "forward exact value"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-FINALIZE-PASS"
+      ],
+      "explanation": "finalize never transforms next values."
+    },
+    {
+      "id": "FINALIZE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes",
+      "actions": [
+        "complete downstream",
+        "release source",
+        "invoke finalizer once"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FINALIZE-COMPLETE"
+      ],
+      "explanation": "The callback runs as teardown after terminal notification."
+    },
+    {
+      "id": "FINALIZE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errors",
+      "actions": [
+        "error downstream",
+        "release source",
+        "invoke finalizer once"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FINALIZE-ERROR"
+      ],
+      "explanation": "Error identity is preserved; the finalizer still runs."
+    },
+    {
+      "id": "FINALIZE-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "explicit unsubscribe",
+      "actions": [
+        "release source",
+        "invoke finalizer once"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FINALIZE-CANCEL"
+      ],
+      "explanation": "Explicit cancellation is silent downstream but still executes the finalizer."
+    }
+  ]
+}

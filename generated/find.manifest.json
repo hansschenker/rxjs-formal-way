@@ -1,0 +1,281 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "find-first-match",
+    "operator": "find",
+    "purpose": "Emit the first source value whose indexed predicate is truthy; emit undefined if the source completes without a match.",
+    "cardinality": {
+      "signature": "find : (T! x Index! -> Boolean!) -> T* -> T?",
+      "conditions": [
+        "At most one source value is emitted; a finite no-match source emits one undefined value then completes.",
+        "First truthy result short-circuits source work.",
+        "Cω counts next values; terminal notifications, cancellation and resource release are separate obligations."
+      ]
+    },
+    "scope": {
+      "parameters": "Required predicate; deprecated thisArg and BooleanConstructor specialization excluded from the canonical profile.",
+      "callbacks": "One correlated predicate(value,index,source) outcome per tested value; source object identity is runtime-tested separately.",
+      "time": "No timer; source order determines predicate index and first-match selection.",
+      "reentrancy": "One pending predicate outcome at a time; source events during Calling are outside the non-reentrant profile.",
+      "exclusions": [
+        "Deprecated thisArg overload, arbitrary predicate reentry, observer/finalizer exceptions."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire one source subscription only when the result is subscribed."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing is introduced; each result subscription owns independent state and resources.",
+      "reset": "A fresh result subscription starts from Unsubscribed; Closed rejects all later model events.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        },
+        {
+          "id": "predicate",
+          "kind": "callback",
+          "owner": "one invocation per tested source value"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Commit next state, then interpret ordered actions. Callback actions are requests to external user functions, never executed by the pure model.",
+      "cancellationCheckpoints": [
+        "Between fully resolved reactions; cancellation releases owned work and emits no synthetic completion."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "begin a fresh lazy execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "source delivers an opaque value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source completes successfully"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source fails with its original error object"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream unsubscribes silently"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "correlated predicate returns a truthy/falsy result"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "correlated predicate throws"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "invoke-callback",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "cold description; nothing connected yet",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source connected with subscription-local state",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "one predicate outcome is pending",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal execution; no later model events are legal",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/find.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session12-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session12-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-12.md"
+    }
+  },
+  "parameters": {
+    "predicateId": "predicate",
+    "notFound": "undefined"
+  },
+  "rules": [
+    {
+      "id": "FIND-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "fresh execution",
+      "actions": [
+        "subscribe source with predicate index zero"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-FIND-INIT"
+      ],
+      "explanation": "find evaluates each source value until the first match."
+    },
+    {
+      "id": "FIND-CALL",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Calling",
+      "guard": "valid zero-based index",
+      "actions": [
+        "invoke predicate with original value/index"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-FIND-CALL"
+      ],
+      "explanation": "The pure model requests predicate outcome without executing user logic."
+    },
+    {
+      "id": "FIND-MATCH",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Closed",
+      "guard": "correlated truthy result",
+      "actions": [
+        "emit original matched value",
+        "complete",
+        "release source"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FIND-MATCH"
+      ],
+      "explanation": "The predicate result is control; the original input value is the output."
+    },
+    {
+      "id": "FIND-MISS",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Active",
+      "guard": "correlated falsy result",
+      "actions": [
+        "advance predicate index silently"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-FIND-MISS"
+      ],
+      "explanation": "Rejected values are not retained."
+    },
+    {
+      "id": "FIND-THROW",
+      "from": "Calling",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "correlated predicate throw",
+      "actions": [
+        "error downstream",
+        "release source"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FIND-THROW"
+      ],
+      "explanation": "Predicate throws are terminal errors, not a failed match."
+    },
+    {
+      "id": "FIND-NOT-FOUND",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "no value matched",
+      "actions": [
+        "emit undefined",
+        "complete",
+        "release source"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FIND-NOT-FOUND"
+      ],
+      "explanation": "Unlike first, find succeeds with undefined when no match exists."
+    },
+    {
+      "id": "FIND-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errors",
+      "actions": [
+        "forward exact error",
+        "release source"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FIND-SOURCE-ERROR"
+      ],
+      "explanation": "Source error suppresses the not-found value."
+    },
+    {
+      "id": "FIND-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream closes",
+      "actions": [
+        "release source silently"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-FIND-CANCEL"
+      ],
+      "explanation": "Cancellation emits neither undefined nor completion."
+    }
+  ]
+}

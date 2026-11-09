@@ -1,0 +1,171 @@
+{
+  "status": "finished-input",
+  "consumed": 5,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "first-predicate-required",
+      "executionId": "first-session12-example",
+      "ruleId": "FIRST-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "first-predicate-required",
+      "executionId": "first-session12-example",
+      "ruleId": "FIRST-CALL",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "index": 0
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 0,
+        "value": 1
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate",
+            "generation": 0
+          },
+          "value": 1,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "first-predicate-required",
+      "executionId": "first-session12-example",
+      "ruleId": "FIRST-MISS",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "predicate",
+          "generation": 0
+        },
+        "value": false
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 0,
+        "value": 1
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "first-predicate-required",
+      "executionId": "first-session12-example",
+      "ruleId": "FIRST-CALL",
+      "event": {
+        "type": "source.next",
+        "value": 3
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 1,
+        "value": 3
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate",
+            "generation": 1
+          },
+          "value": 3,
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "first-predicate-required",
+      "executionId": "first-session12-example",
+      "ruleId": "FIRST-MATCH",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "predicate",
+          "generation": 1
+        },
+        "value": true
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 1,
+        "value": 3
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 3
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

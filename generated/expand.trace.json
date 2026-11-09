@@ -1,0 +1,382 @@
+{
+  "status": "finished-input",
+  "consumed": 8,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "expand-unbounded",
+      "executionId": "expand-session12-example",
+      "ruleId": "EXPAND-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 0,
+        "active": [],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "expand-unbounded",
+      "executionId": "expand-session12-example",
+      "ruleId": "EXPAND-OUTER-ADMIT",
+      "event": {
+        "type": "outer.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "index": 0,
+        "active": [],
+        "queue": []
+      },
+      "after": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 1,
+        "active": [],
+        "queue": [],
+        "value": 1,
+        "callId": 0
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        },
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "project",
+            "generation": 0
+          },
+          "value": 1,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "expand-unbounded",
+      "executionId": "expand-session12-example",
+      "ruleId": "EXPAND-PROJECT-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "project",
+          "generation": 0
+        },
+        "value": "inner-0"
+      },
+      "before": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 1,
+        "active": [],
+        "queue": [],
+        "value": 1,
+        "callId": 0
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "id": "inner",
+            "generation": 0
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "expand-unbounded",
+      "executionId": "expand-session12-example",
+      "ruleId": "EXPAND-INNER-ADMIT-ACTIVE",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 0
+        },
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "id": "inner",
+            "generation": 0
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 2,
+        "active": [
+          {
+            "id": "inner",
+            "generation": 0
+          }
+        ],
+        "queue": [],
+        "value": 2,
+        "callId": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 2
+          }
+        },
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "project",
+            "generation": 1
+          },
+          "value": 2,
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "expand-unbounded",
+      "executionId": "expand-session12-example",
+      "ruleId": "EXPAND-PROJECT-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "project",
+          "generation": 1
+        },
+        "value": "inner-1"
+      },
+      "before": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 2,
+        "active": [
+          {
+            "id": "inner",
+            "generation": 0
+          }
+        ],
+        "queue": [],
+        "value": 2,
+        "callId": 1
+      },
+      "after": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "id": "inner",
+            "generation": 0
+          },
+          {
+            "id": "inner",
+            "generation": 1
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "expand-unbounded",
+      "executionId": "expand-session12-example",
+      "ruleId": "EXPAND-OUTER-COMPLETE",
+      "event": {
+        "type": "outer.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "id": "inner",
+            "generation": 0
+          },
+          {
+            "id": "inner",
+            "generation": 1
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "id": "inner",
+            "generation": 0
+          },
+          {
+            "id": "inner",
+            "generation": 1
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 4,
+      "modelId": "expand-unbounded",
+      "executionId": "expand-session12-example",
+      "ruleId": "EXPAND-INNER-COMPLETE-DRAINING-MORE",
+      "event": {
+        "type": "inner.complete",
+        "resource": {
+          "id": "inner",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "id": "inner",
+            "generation": 0
+          },
+          {
+            "id": "inner",
+            "generation": 1
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "id": "inner",
+            "generation": 1
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 5,
+      "modelId": "expand-unbounded",
+      "executionId": "expand-session12-example",
+      "ruleId": "EXPAND-INNER-COMPLETE-DRAINING-LAST",
+      "event": {
+        "type": "inner.complete",
+        "resource": {
+          "id": "inner",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "id": "inner",
+            "generation": 1
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

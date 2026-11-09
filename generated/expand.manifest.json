@@ -1,0 +1,470 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "expand-unbounded",
+    "operator": "expand",
+    "purpose": "Emit each admitted value, project it to an inner Observable, and recursively feed inner values back through the same expansion policy.",
+    "cardinality": {
+      "signature": "expand : (T! x Index! -> T*) -> T* -> T*",
+      "conditions": [
+        "Every admitted outer or recursive inner value is emitted before its projection is subscribed.",
+        "Unbounded profile admits every value immediately; no expansion queue is formed.",
+        "Outer completion waits for all admitted recursive inners and buffered values.",
+        "Cω counts next values; terminal notifications, cancellation and resource release are separate obligations."
+      ]
+    },
+    "scope": {
+      "parameters": "default unbounded concurrency; scheduler omitted",
+      "callbacks": "Projection is external: one correlated project(value,index) invocation per admitted value; modeled returns name Observable source tokens.",
+      "time": "No scheduler in the accepted profiles. Source/inner delivery order supplies time.",
+      "reentrancy": "Atomic non-reentrant projection outcomes and inner notifications; synchronous setup-time inner emissions are characterized only by native tests, not forced into the pure event model.",
+      "exclusions": [
+        "Deprecated scheduler argument, arbitrary ObservableInput conversion, concurrency values other than 1 or unbounded.",
+        "Projection/observer/finalizer reentrancy and cancellation inside notification delivery."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire only the original outer source; recursive inner subscriptions arise from admitted projection returns."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing is introduced; each result subscription owns independent state and resources.",
+      "reset": "A fresh result subscription starts from Unsubscribed; Closed rejects all later model events.",
+      "resources": [
+        {
+          "id": "outer",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        },
+        {
+          "id": "inner",
+          "kind": "subscription",
+          "owner": "one occurrence per admitted projection"
+        },
+        {
+          "id": "project",
+          "kind": "callback",
+          "owner": "correlated projection invocation"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Commit next state, then interpret ordered actions. Callback actions are requests to external user functions, never executed by the pure model.",
+      "cancellationCheckpoints": [
+        "Between fully resolved reactions; cancellation releases owned work and emits no synthetic completion."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "connect a fresh recursive expansion execution"
+      },
+      {
+        "type": "outer.next",
+        "origin": "outer",
+        "category": "notification",
+        "description": "original source produces a value eligible for expansion"
+      },
+      {
+        "type": "outer.complete",
+        "origin": "outer",
+        "category": "notification",
+        "description": "original source completes; admitted recursive work may remain"
+      },
+      {
+        "type": "outer.error",
+        "origin": "outer",
+        "category": "notification",
+        "description": "original source errors"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "correlated projection returns an Observable source token"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "correlated projection throws"
+      },
+      {
+        "type": "inner.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "active recursive inner emits a value that is fed back into expansion"
+      },
+      {
+        "type": "inner.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "an active recursive inner completes"
+      },
+      {
+        "type": "inner.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "an active recursive inner errors"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "release outer and active recursive inners silently"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "invoke-callback",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "cold description; nothing connected yet",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source connected with subscription-local state",
+        "terminal": false
+      },
+      {
+        "id": "Draining",
+        "description": "outer completed; recursive inner work remains",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "one projection outcome is pending",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal execution; no later model events are legal",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/expand.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/mergeInternals.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 behavior and teardown evidence"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session12-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session12-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-12.md"
+    }
+  },
+  "parameters": {
+    "concurrent": "unbounded",
+    "projectId": "project",
+    "scheduler": "none"
+  },
+  "rules": [
+    {
+      "id": "EXPAND-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "fresh execution",
+      "actions": [
+        "subscribe outer source"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-EXPAND-INIT"
+      ],
+      "explanation": "Expansion is lazy; projection has not run yet."
+    },
+    {
+      "id": "EXPAND-OUTER-ADMIT",
+      "from": "Active",
+      "event": "outer.next",
+      "to": "Calling",
+      "guard": "capacity available",
+      "actions": [
+        "emit input first",
+        "invoke projection with zero-based expansion index"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-EXPAND-OUTER-ADMIT"
+      ],
+      "explanation": "expand differs from mergeMap: every admitted input is itself emitted before its projection is subscribed."
+    },
+    {
+      "id": "EXPAND-INNER-ADMIT-ACTIVE",
+      "from": "Active",
+      "event": "inner.next",
+      "to": "Calling",
+      "guard": "known inner and expansion capacity available",
+      "actions": [
+        "emit recursive value",
+        "feed recursive value into projection"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-EXPAND-INNER-ADMIT-ACTIVE"
+      ],
+      "explanation": "An inner value becomes a new expansion input; it is not merely forwarded."
+    },
+    {
+      "id": "EXPAND-INNER-ADMIT-DRAINING",
+      "from": "Draining",
+      "event": "inner.next",
+      "to": "Calling",
+      "guard": "known inner and expansion capacity available",
+      "actions": [
+        "emit recursive value",
+        "feed recursive value into projection"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-EXPAND-INNER-ADMIT-DRAINING"
+      ],
+      "explanation": "An inner value becomes a new expansion input; it is not merely forwarded."
+    },
+    {
+      "id": "EXPAND-PROJECT-RETURN",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Active",
+      "guard": "correlated projection return while outer open",
+      "actions": [
+        "subscribe returned inner occurrence"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-EXPAND-PROJECT-RETURN"
+      ],
+      "explanation": "Each successful projection creates one independently identified inner subscription occurrence."
+    },
+    {
+      "id": "EXPAND-PROJECT-RETURN-DRAINING",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Draining",
+      "guard": "correlated projection return after outer completion",
+      "actions": [
+        "subscribe returned inner occurrence"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-EXPAND-PROJECT-RETURN-DRAINING"
+      ],
+      "explanation": "Recursive work remains legal after the original outer has completed."
+    },
+    {
+      "id": "EXPAND-PROJECT-THROW",
+      "from": "Calling",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "correlated projection throws",
+      "actions": [
+        "error downstream",
+        "release all owned subscriptions"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-EXPAND-PROJECT-THROW"
+      ],
+      "explanation": "Projection exceptions terminate expansion immediately."
+    },
+    {
+      "id": "EXPAND-INNER-COMPLETE-ACTIVE",
+      "from": "Active",
+      "event": "inner.complete",
+      "to": "Active",
+      "guard": "known inner completes with no queued value",
+      "actions": [
+        "release completed inner"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-EXPAND-INNER-COMPLETE-ACTIVE"
+      ],
+      "explanation": "Completion removes only that inner occurrence while the outer remains open."
+    },
+    {
+      "id": "EXPAND-INNER-COMPLETE-DRAINING-MORE",
+      "from": "Draining",
+      "event": "inner.complete",
+      "to": "Draining",
+      "guard": "known inner completes but other recursive work remains",
+      "actions": [
+        "release completed inner"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-EXPAND-INNER-COMPLETE-DRAINING-MORE"
+      ],
+      "explanation": "Draining continues until every admitted recursive inner has completed."
+    },
+    {
+      "id": "EXPAND-INNER-COMPLETE-DRAINING-LAST",
+      "from": "Draining",
+      "event": "inner.complete",
+      "to": "Closed",
+      "guard": "last known inner completes and no queue remains",
+      "actions": [
+        "release completed inner",
+        "complete downstream"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-EXPAND-INNER-COMPLETE-DRAINING-LAST"
+      ],
+      "explanation": "Outer is already complete, so the last recursive inner completion terminates expand."
+    },
+    {
+      "id": "EXPAND-INNER-ERROR-ACTIVE",
+      "from": "Active",
+      "event": "inner.error",
+      "to": "Closed",
+      "guard": "known inner errors",
+      "actions": [
+        "forward exact error",
+        "release outer if open and all active inners"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-EXPAND-INNER-ERROR-ACTIVE"
+      ],
+      "explanation": "Any admitted recursive inner error is terminal."
+    },
+    {
+      "id": "EXPAND-INNER-ERROR-DRAINING",
+      "from": "Draining",
+      "event": "inner.error",
+      "to": "Closed",
+      "guard": "known inner errors",
+      "actions": [
+        "forward exact error",
+        "release outer if open and all active inners"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-EXPAND-INNER-ERROR-DRAINING"
+      ],
+      "explanation": "Any admitted recursive inner error is terminal."
+    },
+    {
+      "id": "EXPAND-OUTER-COMPLETE",
+      "from": "Active",
+      "event": "outer.complete",
+      "to": "Draining",
+      "guard": "recursive work remains active or queued",
+      "actions": [
+        "release outer and wait"
+      ],
+      "nextState": "updated control and memory",
+      "obligations": [
+        "S12-EXPAND-OUTER-COMPLETE"
+      ],
+      "explanation": "Outer completion is not completion of expansion while recursive work remains."
+    },
+    {
+      "id": "EXPAND-OUTER-COMPLETE-IDLE",
+      "from": "Active",
+      "event": "outer.complete",
+      "to": "Closed",
+      "guard": "no recursive work remains",
+      "actions": [
+        "release outer",
+        "complete downstream"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-EXPAND-OUTER-COMPLETE-IDLE"
+      ],
+      "explanation": "The result completes when outer is done and no recursive work is live or buffered."
+    },
+    {
+      "id": "EXPAND-OUTER-ERROR",
+      "from": "Active",
+      "event": "outer.error",
+      "to": "Closed",
+      "guard": "outer errors",
+      "actions": [
+        "forward exact error",
+        "release outer and all active inners"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-EXPAND-OUTER-ERROR"
+      ],
+      "explanation": "Outer error cancels recursive work."
+    },
+    {
+      "id": "EXPAND-CANCEL-ACTIVE",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream closes",
+      "actions": [
+        "release owned subscriptions silently"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-EXPAND-CANCEL-ACTIVE"
+      ],
+      "explanation": "Cancellation drops buffered recursive values and never synthesizes completion."
+    },
+    {
+      "id": "EXPAND-CANCEL-DRAINING",
+      "from": "Draining",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream closes",
+      "actions": [
+        "release owned subscriptions silently"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-EXPAND-CANCEL-DRAINING"
+      ],
+      "explanation": "Cancellation drops buffered recursive values and never synthesizes completion."
+    },
+    {
+      "id": "EXPAND-CANCEL-CALLING",
+      "from": "Calling",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream closes between callback request and outcome",
+      "actions": [
+        "release owned subscriptions silently"
+      ],
+      "nextState": "terminal state with no owned live work",
+      "obligations": [
+        "S12-EXPAND-CANCEL-CALLING"
+      ],
+      "explanation": "The pending callback outcome is ignored after cancellation in this scoped model."
+    }
+  ]
+}

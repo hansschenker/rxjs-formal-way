@@ -1,0 +1,103 @@
+{
+  "status": "finished-input",
+  "consumed": 3,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "finalize-teardown-callback",
+      "executionId": "finalize-session12-example",
+      "ruleId": "FINALIZE-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "finalize-teardown-callback",
+      "executionId": "finalize-session12-example",
+      "ruleId": "FINALIZE-PASS",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "finalize-teardown-callback",
+      "executionId": "finalize-session12-example",
+      "ruleId": "FINALIZE-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "finalize",
+            "generation": 0
+          },
+          "index": 0
+        }
+      ]
+    }
+  ]
+}
