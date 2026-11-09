@@ -233,16 +233,26 @@ export function createExpandModel<T, Source = string>(concurrent: 1 | 'unbounded
     (s, e) => matchCall(s, e) && e.type === 'callback.throw',
     (s, e) => { if (s.phase !== 'Calling' || e.type !== 'callback.throw') throw new Error('invalid project throw'); return { state: closed('project-error'), actions: [error(e.error) as A, ...cleanup(s)] }; });
 
-  for (const phase of ['Active', 'Draining'] as const) {
-    add('INNER-COMPLETE-' + phase.toUpperCase(), phase, 'inner.complete', phase, 'known inner completes and no buffered value is waiting',
-      ['release completed inner'], 'Completion removes only that inner occurrence; other recursive work remains.',
-      (s, e) => s.phase === phase && matchingInner(s, e) && (s.queue.length === 0 || concurrent === 'unbounded'),
-      (s, e) => { if (s.phase !== phase || e.type !== 'inner.complete') throw new Error('invalid inner complete');
-        const active = s.active.filter(r => !same(r, e.resource));
-        if (phase === 'Draining' && active.length === 0 && s.queue.length === 0) return { state: closed('complete'), actions: [{ type: 'unsubscribe', resource: e.resource } as A, complete as A] };
-        return { state: { ...s, active }, actions: [{ type: 'unsubscribe', resource: e.resource } as A] }; });
+  add('INNER-COMPLETE-ACTIVE', 'Active', 'inner.complete', 'Active', 'known inner completes with no queued value',
+    ['release completed inner'], 'Completion removes only that inner occurrence while the outer remains open.',
+    (s, e) => s.phase === 'Active' && matchingInner(s, e) && s.queue.length === 0,
+    (s, e) => { if (s.phase !== 'Active' || e.type !== 'inner.complete') throw new Error('invalid active inner complete');
+      return { state: { ...s, active: s.active.filter(r => !same(r, e.resource)) }, actions: [{ type: 'unsubscribe', resource: e.resource } as A] }; });
 
-    if (concurrent === 1) {
+  add('INNER-COMPLETE-DRAINING-MORE', 'Draining', 'inner.complete', 'Draining', 'known inner completes but other recursive work remains',
+    ['release completed inner'], 'Draining continues until every admitted recursive inner has completed.',
+    (s, e) => s.phase === 'Draining' && matchingInner(s, e) && s.queue.length === 0 && s.active.length > 1,
+    (s, e) => { if (s.phase !== 'Draining' || e.type !== 'inner.complete') throw new Error('invalid draining inner complete');
+      return { state: { ...s, active: s.active.filter(r => !same(r, e.resource)) }, actions: [{ type: 'unsubscribe', resource: e.resource } as A] }; });
+
+  add('INNER-COMPLETE-DRAINING-LAST', 'Draining', 'inner.complete', 'Closed', 'last known inner completes and no queue remains',
+    ['release completed inner', 'complete downstream'], 'Outer is already complete, so the last recursive inner completion terminates expand.',
+    (s, e) => s.phase === 'Draining' && matchingInner(s, e) && s.queue.length === 0 && s.active.length === 1,
+    (_s, e) => { if (e.type !== 'inner.complete') throw new Error('invalid final inner complete');
+      return { state: closed('complete'), actions: [{ type: 'unsubscribe', resource: e.resource } as A, complete as A] }; });
+
+  if (concurrent === 1) {
+    for (const phase of ['Active', 'Draining'] as const) {
       add('INNER-DRAIN-' + phase.toUpperCase(), phase, 'inner.complete', 'Calling', 'known inner completes with queued value',
         ['release completed inner', 'emit oldest queued value', 'invoke projection for that value'],
         'The FIFO buffer is drained only after capacity becomes available.',
@@ -253,7 +263,9 @@ export function createExpandModel<T, Source = string>(concurrent: 1 | 'unbounded
           const begun = call({ index: s.index, active, queue: tail }, phase, head as T);
           return { state: begun.state, actions: [{ type: 'unsubscribe', resource: e.resource } as A, ...begun.actions] }; });
     }
+  }
 
+  for (const phase of ['Active', 'Draining'] as const) {
     add('INNER-ERROR-' + phase.toUpperCase(), phase, 'inner.error', 'Closed', 'known inner errors',
       ['forward exact error', 'release outer if open and all active inners'], 'Any admitted recursive inner error is terminal.',
       (s, e) => s.phase === phase && matchingInner(s, e) && e.type === 'inner.error',
