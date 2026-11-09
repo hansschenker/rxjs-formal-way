@@ -83,3 +83,12 @@ export type { DematerializeModel, DematerializeState, DematerializeEvent,
   EveryParameters, EveryModel, EveryState, EveryEvent } from './models/session11-scalar.js';
 export { createExhaustModel, exhaustExample } from './models/exhaust.js';
 export type { ExhaustModel, ExhaustEvent } from './models/exhaust.js';
+
+export { createExpandModel, expandExample, createFinalizeModel, finalizeExample,
+  createFindModel, findExample, createFindIndexModel, findIndexExample,
+  createFirstModel, firstExample } from './models/session12.js';
+export type { ExpandParameters, ExpandState, ExpandEvent, ExpandModel,
+  FinalizeParameters, FinalizeState, FinalizeEvent, FinalizeModel,
+  FindParameters, FindState, FindEvent, FindModel,
+  FindIndexParameters, FindIndexState, FindIndexEvent, FindIndexModel,
+  FirstParameters, FirstState, FirstEvent, FirstModel } from './models/session12.js';
