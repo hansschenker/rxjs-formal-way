@@ -60,6 +60,12 @@ import {
   createExhaustModel, exhaustExample
 } from '../dist/index.js';
 
+import {
+  createExpandModel, expandExample, createFinalizeModel, finalizeExample,
+  createFindModel, findExample, createFindIndexModel, findIndexExample,
+  createFirstModel, firstExample
+} from '../dist/index.js';
+
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
@@ -122,6 +128,11 @@ const examples = [
   ['endWith', createEndWithModel(['suffix-one', 'suffix-two']), endWithExample, 'endWith-session11-example'],
   ['every', createEveryModel(), everyExample, 'every-session11-example'],
   ['exhaust', createExhaustModel(), exhaustExample, 'exhaust-session11-example'],
+  ['expand', createExpandModel(), expandExample, 'expand-session12-example'],
+  ['finalize', createFinalizeModel(), finalizeExample, 'finalize-session12-example'],
+  ['find', createFindModel(), findExample, 'find-session12-example'],
+  ['findIndex', createFindIndexModel(), findIndexExample, 'findIndex-session12-example'],
+  ['first', createFirstModel(true), firstExample, 'first-session12-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
