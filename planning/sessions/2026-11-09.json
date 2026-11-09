@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-09",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-09T07:21:00+01:00",
+  "startingCommit": "55e8a73aa560c0463ebaae10c073b8a220dfc902",
+  "selectedNames": ["expand", "finalize", "find", "findIndex", "first"],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [],
+  "commits": [],
+  "checks": {},
+  "blockers": [],
+  "evidence": "evidence/SESSION-12.md",
+  "nextSessionNotBefore": "2026-11-10"
+}
