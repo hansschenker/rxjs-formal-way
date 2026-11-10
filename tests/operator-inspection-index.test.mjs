@@ -31,7 +31,7 @@ test('INSPECTION-INDEX audit: exposes the canonical eleven-step teaching workflo
   assert.match(text,/\[audit behavior\]\(\.\/audit\.md\)/);
   assert.match(text,/\[audit STT\]\(\.\.\/generated\/audit\.stt\.md\)/);
   assert.match(text,/\[src\/models\/audit\.ts\]\(\.\.\/src\/models\/audit\.ts\)/);
-  assert.match(text,/\[SESSION-07\.md\]\(\.\.\/evidence\/SESSION-07\.md\)/);
+  assert.match(text,/\[evidence\/SESSION-07\.md\]\(\.\.\/evidence\/SESSION-07\.md\)/);
 });
 
 test('INSPECTION-INDEX scan: groups multiple semantic profiles under one public export index',()=>{
@@ -40,7 +40,7 @@ test('INSPECTION-INDEX scan: groups multiple semantic profiles under one public 
     {name:'scan-unseeded',manifest:toManifest(createUnseededScanModel())},
   ],'src/models/scan.ts');
 
-  assert.ok(text.includes('Profiles represented: `scan-seeded`, `scan-unseeded`'));
+  assert.ok(text.includes('**Profiles represented:** `scan-seeded`, `scan-unseeded`'));
   assert.match(text,/\[scan-seeded behavior\]\(\.\/scan-seeded\.md\)/);
   assert.match(text,/\[scan-unseeded behavior\]\(\.\/scan-unseeded\.md\)/);
   assert.match(text,/\[scan-seeded trace\]\(\.\.\/generated\/scan-seeded\.trace\.md\)/);
