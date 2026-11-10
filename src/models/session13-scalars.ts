@@ -230,6 +230,14 @@ export function createLastModel<T,D=T>(predicate=false, defaultOption?: Readonly
   const p:LastParameters<D>={predicate,hasDefault:defaultOption!==undefined,
     defaultValue:defaultOption?.value as D,predicateId:'predicate'};
   type P=LastParameters<D>;type S=LastState<T>;type E=LastEvent<T>;type A=Action<T|D,T>;
+  // Primitive notification constructors are context-free actions; their generic Action<never>
+  // type also admits an impossible unknown-input callback branch, so narrow only the
+  // already-constructed source/notify actions to this model's concrete action alphabet.
+  const subSource=subscribe(source) as A;
+  const unsubSource=unsubscribe(source) as A;
+  const finish=complete as A;
+  const emit=(value:T|D):A=>next(value) as A;
+  const fail=(reason:unknown):A=>error(reason) as A;
   const d=(id:string,from:string,event:string,to:string,guard:string,actions:string[],why:string)=>
     ruleDesc('last',id,from,event,to,guard,actions,why);
   const match=(s:S,e:E):boolean=>s.phase==='Calling'&&
@@ -237,7 +245,7 @@ export function createLastModel<T,D=T>(predicate=false, defaultOption?: Readonly
     e.resource.id==='predicate'&&e.resource.generation===s.index-1;
   const rules:Rule<P,S,E,A>[]=[
     {description:d('INIT','Unsubscribed','subscribe','Active','fresh subscription',['subscribe source'],'No candidate is present initially, including no phantom undefined candidate.'),
-      enabled:()=>true,react:()=>({state:{phase:'Active',index:0,hasMatch:false,value:undefined},actions:[subscribe(source)]})},
+      enabled:()=>true,react:()=>({state:{phase:'Active',index:0,hasMatch:false,value:undefined},actions:[subSource]})},
     {description:d('TAKE','Active','source.next','Active','no predicate configured',['store last value; no output'],'Overwrite the candidate on every input without retaining older elements.'),
       enabled:(_s,_e,q)=>!q.predicate,
       react:(s,e)=>{if(s.phase!=='Active'||e.type!=='source.next')throw Error('bad last input');
@@ -258,22 +266,22 @@ export function createLastModel<T,D=T>(predicate=false, defaultOption?: Readonly
     {description:d('PREDICATE-ERROR','Calling','callback.throw','Closed','correlated callback throws',['forward same error','release source'],'An exception aborts the selection; no fallback is emitted.'),
       enabled:match,
       react:(_s,e)=>{if(e.type!=='callback.throw')throw Error('bad callback throw');
-        return {state:terminal('predicate-error'),actions:[error(e.error),unsubscribe(source)]};}},
+        return {state:terminal('predicate-error'),actions:[fail(e.error),unsubSource]};}},
     {description:d('EMIT-LAST','Active','source.complete','Closed','candidate exists',['emit last candidate','complete','release source'],'Only successful completion can expose the retained candidate.'),
       enabled:(s)=>s.phase==='Active'&&s.hasMatch,
       react:(s)=>{if(s.phase!=='Active')throw Error('bad complete');
-        return {state:terminal('complete'),actions:[next(s.value as T),complete,unsubscribe(source)]};}},
+        return {state:terminal('complete'),actions:[emit(s.value as T),finish,unsubSource]};}},
     {description:d('EMIT-DEFAULT','Active','source.complete','Closed','no candidate and default was explicitly supplied',['emit fallback','complete','release source'],'An explicit undefined fallback is distinct from no argument.'),
       enabled:(s,_e,q)=>s.phase==='Active'&&!s.hasMatch&&q.hasDefault,
-      react:(_s,_e,q)=>({state:terminal('complete'),actions:[next(q.defaultValue),complete,unsubscribe(source)]})},
+      react:(_s,_e,q)=>({state:terminal('complete'),actions:[emit(q.defaultValue),finish,unsubSource]})},
     {description:d('EMPTY-ERROR','Active','source.complete','Closed','no candidate and default absent',['emit EmptyError','release source'],'No matching input is an error without a configured fallback.'),
       enabled:(s,_e,q)=>s.phase==='Active'&&!s.hasMatch&&!q.hasDefault,
-      react:()=>({state:terminal('empty'),actions:[error(Object.assign(new Error('no elements in sequence'),{name:'EmptyError'})),unsubscribe(source)]})},
+      react:()=>({state:terminal('empty'),actions:[fail(Object.assign(new Error('no elements in sequence'),{name:'EmptyError'})),unsubSource]})},
     {description:d('SOURCE-ERROR','Active','source.error','Closed','source errors',['forward exact error','release source'],'No candidate or fallback is emitted when source fails.'),
       enabled:()=>true,react:(_s,e)=>{if(e.type!=='source.error')throw Error('bad error');
-        return {state:terminal('source-error'),actions:[error(e.error),unsubscribe(source)]};}},
+        return {state:terminal('source-error'),actions:[fail(e.error),unsubSource]};}},
     {description:d('CANCEL','Active','cancel','Closed','consumer closes',['release source silently'],'A cancelled stream never emits the retained value.'),
-      enabled:()=>true,react:()=>({state:terminal('cancel'),actions:[unsubscribe(source)]})},
+      enabled:()=>true,react:()=>({state:terminal('cancel'),actions:[unsubSource]})},
   ];
   const callbackInputs:readonly InputDescriptor[]=[
     ...sourceInputs,
