@@ -130,7 +130,7 @@ export function createGroupByModel<T,K>():GroupByModel<T,K>{
   const errorGroups=(s:M,e:unknown):A[]=>s.groups.map(g=>groupError(g.groupId,e) as A);
   const close=(reason:Extract<S,{phase:'Closed'}>['reason']):S=>({phase:'Closed',reason});
   const nextState=(s:M,outer:'Active'|'Orphaned',groups=s.groups):S=>({
-    phase:outer,...s,groups
+    phase:outer,index:s.index,nextGroupId:s.nextGroupId,groups
   });
   const distribute=(s:Extract<S,{phase:'Calling'}>,key:K):{state:S;actions:A[]}=>{
     const existing=findGroup(s,key);
