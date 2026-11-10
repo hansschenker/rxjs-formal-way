@@ -1,5 +1,11 @@
 # Executable operator profiles
 
+## Start with the Operator Inspection Index
+
+For every modeled public export, open `<operator>-index.md` first—for example [audit-index.md](audit-index.md). The generated index gives the same eleven-step path through Overview, Diagram, STT, BDD, Trace, Obligations, Manifest, Canonical Model, pinned RxJS source, Tests, and Evidence.
+
+The repository-wide method is documented in [RxJS Operator Inspection Workflow](../docs/OPERATOR-INSPECTION-WORKFLOW.md).
+
 Each configured profile has one canonical TypeScript rule set and eight generated views. Read the plain-language page first; use the milestone guide for assumptions and verification.
 
 | Operator | Canonical model | Readable page | Evidence |
