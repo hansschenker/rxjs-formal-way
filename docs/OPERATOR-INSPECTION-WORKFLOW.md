@@ -67,3 +67,10 @@ One public export can have several modeled profiles. For example, `scan` has see
 ## Reference example
 
 Use [audit-index.md](../operators/audit-index.md) as the reference inspection page.
+
+
+## Session integration rule
+
+Beginning with **Session 14** and continuing through **Session 23**, the inspection index is generated and accepted **inside the same operator session**. For each selected export, the session is incomplete until `operators/<operator>-index.md` is present, points to the session's canonical model/tests/evidence, and passes the same committed-file drift verification as the other generated projections.
+
+This does not change the five-export daily limit. The index is a navigation projection of the same canonical model, not an additional operator or specification.
