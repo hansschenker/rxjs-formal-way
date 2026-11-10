@@ -67,3 +67,79 @@ export function renderTrace<S, E extends Event, T>(trace: Trace<S, E, Action<T>>
     ].map(row => `| ${row.map(cell).join(' | ')} |`).join('\n') +
     '\n\nThe ordered-action column retains lifecycle observations omitted from the output-notification lane.\n';
 }
+
+export type InspectionProfile = Readonly<{
+  name: string;
+  manifest: OperatorManifest<unknown>;
+}>;
+
+const mdLink = (label: string, href: string): string => \`[\${label}](\${href})\`;
+const unique = <T>(values: readonly T[]): T[] => [...new Set(values)];
+
+export function renderInspectionIndex(
+  operator: string,
+  profiles: readonly InspectionProfile[],
+  canonicalModelPath: string,
+): string {
+  if (!profiles.length) throw new Error('inspection index requires at least one profile');
+  const primary = profiles.find(profile => profile.name === operator) ?? profiles[0]!;
+  const metadata = primary.manifest.metadata;
+  const profileLinks = (
+    suffix: string,
+    label: string,
+    base = '../generated/',
+  ): string => profiles.map(profile =>
+    mdLink(\`\${profile.name} \${label}\`, \`\${base}\${profile.name}\${suffix}\`)
+  ).join('<br>');
+
+  const sourceLinks = unique(profiles.flatMap(profile => profile.manifest.metadata.sources.map(source => source.url)))
+    .map(url => mdLink(url.split('/').at(-1) ?? url, url)).join('<br>');
+  const modelTests = unique(profiles.flatMap(profile => profile.manifest.metadata.evidence.modelTests))
+    .map(path => mdLink(path, \`../\${path}\`));
+  const runtimeTests = unique(profiles.flatMap(profile => profile.manifest.metadata.evidence.runtimeTests))
+    .map(path => mdLink(path, \`../\${path}\`));
+  const evidenceRecords = unique(profiles.map(profile => profile.manifest.metadata.evidence.record))
+    .map(path => mdLink(path, \`../\${path}\`)).join('<br>');
+
+  const rows = [
+    ['1', 'Operator Overview', profileLinks('.md', 'behavior', './'), 'What does this operator do?'],
+    ['2', 'State Diagram', profileLinks('.diagram.md', 'diagram'), 'What states can the operator be in?'],
+    ['3', 'State Transition Table', profileLinks('.stt.md', 'STT'), 'What happens for every legal state/event combination?'],
+    ['4', 'BDD Scenarios', profileLinks('.bdd.md', 'BDD'), 'How can the rules be read as Given–When–Then behavior?'],
+    ['5', 'Concrete Trace', profileLinks('.trace.md', 'trace'), 'How does one concrete execution unfold over time?'],
+    ['6', 'Verification Obligations', profileLinks('.obligations.md', 'obligations'), 'What claims must be checked?'],
+    ['7', 'Formal Manifest', profileLinks('.manifest.json', 'manifest'), 'What is the complete machine-readable specification?'],
+    ['8', 'Canonical Mealy Model', mdLink(canonicalModelPath, \`../\${canonicalModelPath}\`), 'How is the semantics encoded as executable guarded rules?'],
+    ['9', 'RxJS 7.8.2 Source', sourceLinks, 'What does the pinned RxJS implementation actually do?'],
+    ['10', 'Tests', [...modelTests, ...runtimeTests].join('<br>'), 'Does the model satisfy its rules, and does native RxJS exhibit the scoped behavior?'],
+    ['11', 'Evidence Ledger', evidenceRecords, 'What was actually executed, verified, accepted, and explicitly excluded?'],
+  ];
+
+  return header(\`\${operator}: Operator Inspection Index\`) +
+    'Use this page as the navigation spine for studying the operator. Start with the story, descend into the machine, then inspect the independent evidence.\\n\\n' +
+    \`**RxJS:** \${metadata.rxjsVersion}  \\n\` +
+    \`**Purpose:** \${metadata.purpose}  \\n\` +
+    \`**Cω shape:** \\\`\${metadata.cardinality.signature}\\\`  \\n\` +
+    \`**Profiles represented:** \${profiles.map(profile => \\\`\${profile.name}\\\`).join(', ')}\\n\\n\` +
+    '## Three teaching passes\\n\\n' +
+    '**Pass 1 — Understand:** 1 Overview → 2 Diagram → 5 Trace  \\n' +
+    '**Pass 2 — Specify:** 3 STT → 4 BDD → 7 Manifest → 8 Canonical Mealy Model  \\n' +
+    '**Pass 3 — Verify:** 9 RxJS Source → 10 Tests → 6 Obligations → 11 Evidence\\n\\n' +
+    '## Master chain\\n\\n' +
+    '\`State → Step → Trace → Behavior → Specification → Implementation → Verification\`\\n\\n' +
+    'The artifacts below are different projections of one canonical semantic model; native RxJS tests and the evidence ledger are independent verification evidence.\\n\\n' +
+    '## Inspection workflow\\n\\n' +
+    '| # | Inspection step | Artifact | Question it answers |\\n|---:|---|---|---|\\n' +
+    rows.map(row => \`| \${row.map(cell).join(' | ')} |\`).join('\\n') + '\\n\\n' +
+    '## Scope at a glance\\n\\n' +
+    \`**Parameters:** \${metadata.scope.parameters}\\n\\n\` +
+    \`**Callbacks:** \${metadata.scope.callbacks}\\n\\n\` +
+    \`**Time:** \${metadata.scope.time}\\n\\n\` +
+    \`**Reentrancy:** \${metadata.scope.reentrancy}\\n\\n\` +
+    \`**Sharing / ownership:** \${metadata.ownership.sharing}\\n\\n\` +
+    '**Explicit exclusions:**\\n\\n' +
+    metadata.scope.exclusions.map(item => \`- \${item}\`).join('\\n') + '\\n\\n' +
+    '## Recommended reading rule\\n\\n' +
+    'Do not treat the eleven artifacts as eleven independent specifications. Read them as eleven lenses over the same operator behavior, with the evidence ledger recording what was independently checked.\\n';
+}
+
