@@ -92,3 +92,11 @@ export type { ExpandParameters, ExpandState, ExpandEvent, ExpandModel,
   FindParameters, FindState, FindEvent, FindModel,
   FindIndexParameters, FindIndexState, FindIndexEvent, FindIndexModel,
   FirstParameters, FirstState, FirstEvent, FirstModel } from './models/session12.js';
+
+export { createGroupByModel, groupByExample } from './models/session13-groupBy.js';
+export type { GroupToken, GroupRecord, GroupByParameters, GroupByState, GroupByEvent, GroupByModel } from './models/session13-groupBy.js';
+export { createIgnoreElementsModel, ignoreElementsExample, createIsEmptyModel, isEmptyExample,
+  createLastModel, lastExample, createMapToModel, mapToExample } from './models/session13-scalars.js';
+export type { SimpleSourceEvent, IgnoreElementsState, IgnoreElementsEvent, IgnoreElementsModel,
+  IsEmptyState, IsEmptyEvent, IsEmptyModel, LastParameters, LastState, LastEvent, LastModel,
+  MapToParameters, MapToState, MapToEvent, MapToModel } from './models/session13-scalars.js';
