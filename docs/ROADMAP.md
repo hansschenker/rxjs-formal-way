@@ -36,7 +36,9 @@ This is the current implementation tracker. The migration map preserves the orig
 | M11-B | every/exhaust: indexed universal quantification and exact deprecated exhaustAll alias | Accepted within scope; [Session 11 evidence](../evidence/SESSION-11.md) |
 | M12-A | expand/finalize: recursive admission and teardown callback policy | Accepted within scope; [Session 12 guide](SESSION-12-RECURSION-FINALIZATION-SEARCH.md) |
 | M12-B | find/findIndex/first: first-match selection, sentinels and default/error exhaustion | Accepted within scope; [Session 12 evidence](../evidence/SESSION-12.md) |
-| M13+ | Remaining catalogue | 53 exports pending; not a universal interpreter |
+| M13-A | groupBy: keyed Subjects and retained upstream group lifetime | Accepted within scoped default Subject profile; [Session 13 guide](SESSION-13-GROUPS-AND-SCALAR-POLICIES.md) |
+| M13-B | ignoreElements/isEmpty/last/mapTo: scalar and terminal selection policies | Accepted within scope; [Session 13 evidence](../evidence/SESSION-13.md) |
+| M14+ | Remaining catalogue | 48 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -181,3 +183,13 @@ Exactly five pending exports—**expand, finalize, find, findIndex, first**—we
 Independent read-only [PR #18 run 42573479269](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42573479269), job **129015901191**, passed the same **919 tests and 512 committed-view checks** with generation and publication skipped. Its actual synthetic checkout `4e5d90495aca0a6b8365e37c9a5e76e8bf83e053` has the same Git tree `49ddd9112c09505696750872227d8b7af8d21adf` as PR head `3c35a22c6c134ce6813b9d6bc3b2a32fcc812fc7`. See [Session 12 evidence](../evidence/SESSION-12.md) for scope and provenance.
 
 **60 of 113 distinct exports accepted; 53 pending; zero carryovers.** The next eligible session is **10 November 2026 Europe/Zurich**: `groupBy`, `ignoreElements`, `isEmpty`, `last`, `mapTo`. No second daily batch was opened.
+
+## Session 13 closed: 10 November 2026
+
+Five queued RxJS 7.8.2 distinct export names—**groupBy, ignoreElements, isEmpty, last, mapTo**—were modeled against the pinned source revision `e5351d02e225e275ac0e497c7b66eaa5f0c88791`. GroupBy's accepted profile represents default keyed Subject creation and the exceptional shared-source lifetime in which subscribed group observers outlive cancellation of the outer observer. The four scalar exports preserve terminal delivery, bounded selection, predicate index/candidate behavior, and captured constant identity. The original canonical schema, runner, deterministic generator, strict TypeScript checks, and native RxJS test infrastructure remain unchanged.
+
+[Implementation PR #19](https://github.com/hansschenker/rxjs-formal-way/pull/19) merged as `42c1f180e5c6eb60a8b4106cffd363e16d4a307b`. Its last [pre-generation CI 42777120383](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42777120383) ran syntax, strict types and **971 named tests, zero failures**; it failed only the drift check on 40 intentionally not-yet-committed projections. The existing main push generated and committed 40 artifacts at `a565000fa31378b0a1eccdd3ae756723110cf33b`.
+
+Independent read-only [PR #20 CI 42777531650](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42777531650), job **129699440098**, independently passed the unchanged full check: **971 named tests, zero failures**, and **552 deterministic projections**. Generation and publication were skipped. The actual synthetic checkout `0f0bd9d31e2aeca7f6b57035a150b9aae27550d9` has zero changed files compared to the PR head `a47ba64b533f14ac94e4487a5b687a14348cf3a1`; exact provenance and excluded profiles are in [Session 13 evidence](../evidence/SESSION-13.md).
+
+**65 of 113 exports accepted, 48 pending; zero carryovers.** The next eligible batch (not before 11 November 2026 Europe/Zurich) is `materialize`, `merge`, `flatMap`, `mergeMapTo`, `mergeScan`. No sixth operator or second session was started.
