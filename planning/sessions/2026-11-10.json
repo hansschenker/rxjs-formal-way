@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-10",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-10T08:24:16+01:00",
+  "startingCommit": "48e27555b2a4e3082c2e123df3503445e91cb73e",
+  "selectedNames": [
+    "groupBy",
+    "ignoreElements",
+    "isEmpty",
+    "last",
+    "mapTo"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "groupBy",
+    "ignoreElements",
+    "isEmpty",
+    "last",
+    "mapTo"
+  ],
+  "commits": [],
+  "checks": {
+    "syntax": "not run",
+    "types": "not run",
+    "model": "not run",
+    "runtime": "not run",
+    "generated": "not run",
+    "ci": "not run"
+  },
+  "blockers": [],
+  "evidence": "evidence/SESSION-13.md",
+  "notes": [
+    "Five distinct pending export names selected from live queue after Session 12; no 2026-11-10 session log existed at reservation.",
+    "RxJS pinned version 7.8.2 and source revision e5351d02e225e275ac0e497c7b66eaa5f0c88791.",
+    "Only actual verified outcomes allow acceptance; any unfinished operator remains a carryover."
+  ]
+}
