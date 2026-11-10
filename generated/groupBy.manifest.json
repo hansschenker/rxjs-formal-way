@@ -1,0 +1,499 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "groupBy-default-subject-key-leases",
+    "operator": "groupBy",
+    "purpose": "Publish a grouped Observable once per new key; route each subsequent input to its keyed Subject; preserve upstream while an emitted child remains subscribed.",
+    "cardinality": {
+      "signature": "groupBy(key:T!→K!) : T* -> GroupedObservable<K,T>*; each group: T*",
+      "conditions": [
+        "Outer next cardinality equals distinct keys seen by the key selector under Map SameValueZero identity while outer is subscribed.",
+        "Every source next causes one key selector invocation and one Subject.next for that key, including the first value after group creation.",
+        "Group and outer completion/error are separate notifications with group-first ordering; cancellation is not completion."
+      ]
+    },
+    "scope": {
+      "parameters": "key selector only; identity elements, default Subject connector, no group duration; keys use JS Map SameValueZero.",
+      "callbacks": "One synchronous key selector outcome per source value, supplied externally; pure model never executes application logic.",
+      "time": "No timer/scheduler. Keys are assigned in source arrival order. A new group is announced before its first Subject.next.",
+      "reentrancy": "Atomic non-reentrant key callback; grouped subscribers can attach between modeled source notifications. At most one active subscriber per group.",
+      "exclusions": [
+        "Optional element, duration and custom connector profiles, including duration-driven group closure and reuse.",
+        "Multiple simultaneous subscribers per group; subscription inside the very same source-next action word is represented by ordered effects, not a nested model microstep.",
+        "User callback/observer reentrancy, throwing group subscribers and group subscriptions after terminal teardown."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "One upstream source connects only when the outer result is subscribed."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "The original source is shared between grouped Subject consumers by this operator instance; output groups themselves are live multicast Subjects.",
+      "reset": "New result subscription creates a new group registry and source lease. Orphaned outer subscription retains upstream only for active children.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "outer/grouped shared execution"
+        },
+        {
+          "id": "key",
+          "kind": "callback",
+          "owner": "one correlated key-selection call per source.next"
+        },
+        {
+          "id": "group:*",
+          "kind": "subscription",
+          "owner": "per-key Subject subscription owned by grouped consumers"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "On a new key notify the outer observer about the GroupToken BEFORE the new Subject is fed its first opaque value. Target group:<n> is the Subject, not the outer observer. Group child subscriber leases delay source teardown.",
+      "cancellationCheckpoints": [
+        "After a resolved key selection/Subject delivery; cancel outer silently, retain the source for subscribed children."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "outer observer subscribes, enabling one upstream execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "upstream value requires key selection"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "complete each known group before outer completion"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "propagate identical error to groups and outer"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "correlated key selector returns a key, using Map SameValueZero identity"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "key selector threw; error is sent to groups and outer"
+      },
+      {
+        "type": "group.subscribe",
+        "origin": "inner",
+        "category": "lifecycle",
+        "description": "one subscriber begins observing an emitted grouped Observable"
+      },
+      {
+        "type": "group.unsubscribe",
+        "origin": "inner",
+        "category": "lifecycle",
+        "description": "group subscriber releases its lease"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "outer consumer unsubscribes; child groups may keep upstream connected"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not connected; no groups exist",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "outer result and source connected; keyed groups in registry",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "waiting for one correlated key callback outcome",
+        "terminal": false
+      },
+      {
+        "id": "Orphaned",
+        "description": "outer canceled, but at least one child subscriber retains source",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "source stopped; all owned groups and connections released",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/groupBy.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned source: Map registry, group Subject dispatch, subscription lease and deferred teardown"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subject.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned source: Map registry, group Subject dispatch, subscription lease and deferred teardown"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned source: Map registry, group Subject dispatch, subscription lease and deferred teardown"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session13-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session13-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-13.md"
+    }
+  },
+  "parameters": {
+    "keySelectorId": "key",
+    "element": "identity",
+    "duration": "none",
+    "connector": "Subject",
+    "subscribersPerGroup": "at-most-one"
+  },
+  "rules": [
+    {
+      "id": "S13-GROUPBY-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "fresh outer subscriber",
+      "actions": [
+        "connect source"
+      ],
+      "explanation": "Nothing runs until subscribed.",
+      "nextState": "group keys and child subscriber leases remain subscription-local",
+      "obligations": [
+        "S13-GROUPBY-INIT"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-SELECT-Active",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Calling",
+      "guard": "shared source live; key index is safe",
+      "actions": [
+        "request one indexed key callback"
+      ],
+      "explanation": "Key is computed before any grouped-value delivery.",
+      "nextState": "group keys and child subscriber leases remain subscription-local",
+      "obligations": [
+        "S13-GROUPBY-SELECT-Active"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-DONE-Active",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source ends normally",
+      "actions": [
+        "complete all groups before outer",
+        "release source"
+      ],
+      "explanation": "The source completion is shared across all live groups, even if outer has already unsubscribed.",
+      "nextState": "terminal, group registry cleared on upstream teardown",
+      "obligations": [
+        "S13-GROUPBY-DONE-Active"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-ERROR-Active",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errors",
+      "actions": [
+        "error all groups before outer",
+        "release source"
+      ],
+      "explanation": "Original error object reaches all subscribed groups and (unless canceled) outer.",
+      "nextState": "terminal, group registry cleared on upstream teardown",
+      "obligations": [
+        "S13-GROUPBY-ERROR-Active"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-ATTACH-Active",
+      "from": "Active",
+      "event": "group.subscribe",
+      "to": "Active",
+      "guard": "known group has no active subscriber",
+      "actions": [
+        "attach one group consumer"
+      ],
+      "explanation": "Group subscriptions share upstream and increase its lifetime lease.",
+      "nextState": "group keys and child subscriber leases remain subscription-local",
+      "obligations": [
+        "S13-GROUPBY-ATTACH-Active"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-DETACH-ACTIVE",
+      "from": "Active",
+      "event": "group.unsubscribe",
+      "to": "Active",
+      "guard": "known group has its one active subscriber",
+      "actions": [
+        "release child lease"
+      ],
+      "explanation": "Outer remains subscribed and keeps upstream regardless of child count.",
+      "nextState": "group keys and child subscriber leases remain subscription-local",
+      "obligations": [
+        "S13-GROUPBY-DETACH-ACTIVE"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-SELECT-Orphaned",
+      "from": "Orphaned",
+      "event": "source.next",
+      "to": "Calling",
+      "guard": "shared source live; key index is safe",
+      "actions": [
+        "request one indexed key callback"
+      ],
+      "explanation": "Key is computed before any grouped-value delivery.",
+      "nextState": "group keys and child subscriber leases remain subscription-local",
+      "obligations": [
+        "S13-GROUPBY-SELECT-Orphaned"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-DONE-Orphaned",
+      "from": "Orphaned",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source ends normally",
+      "actions": [
+        "complete all groups before outer",
+        "release source"
+      ],
+      "explanation": "The source completion is shared across all live groups, even if outer has already unsubscribed.",
+      "nextState": "terminal, group registry cleared on upstream teardown",
+      "obligations": [
+        "S13-GROUPBY-DONE-Orphaned"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-ERROR-Orphaned",
+      "from": "Orphaned",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errors",
+      "actions": [
+        "error all groups before outer",
+        "release source"
+      ],
+      "explanation": "Original error object reaches all subscribed groups and (unless canceled) outer.",
+      "nextState": "terminal, group registry cleared on upstream teardown",
+      "obligations": [
+        "S13-GROUPBY-ERROR-Orphaned"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-ATTACH-Orphaned",
+      "from": "Orphaned",
+      "event": "group.subscribe",
+      "to": "Orphaned",
+      "guard": "known group has no active subscriber",
+      "actions": [
+        "attach one group consumer"
+      ],
+      "explanation": "Group subscriptions share upstream and increase its lifetime lease.",
+      "nextState": "group keys and child subscriber leases remain subscription-local",
+      "obligations": [
+        "S13-GROUPBY-ATTACH-Orphaned"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-DETACH-RETAIN",
+      "from": "Orphaned",
+      "event": "group.unsubscribe",
+      "to": "Orphaned",
+      "guard": "another group remains subscribed",
+      "actions": [
+        "release this group lease",
+        "retain source"
+      ],
+      "explanation": "Orphaned outer has no ownership, but another child still does.",
+      "nextState": "group keys and child subscriber leases remain subscription-local",
+      "obligations": [
+        "S13-GROUPBY-DETACH-RETAIN"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-DETACH-LAST",
+      "from": "Orphaned",
+      "event": "group.unsubscribe",
+      "to": "Closed",
+      "guard": "last live child lease released after outer cancellation",
+      "actions": [
+        "release child lease",
+        "disconnect source"
+      ],
+      "explanation": "This is the deferred groupBy teardown observed when group subscriptions outlive the outer consumer.",
+      "nextState": "terminal, group registry cleared on upstream teardown",
+      "obligations": [
+        "S13-GROUPBY-DETACH-LAST"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-KEY-EXISTING-Active",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Active",
+      "guard": "correlated key and Map has an existing subject",
+      "actions": [
+        "emit one value into existing keyed Subject"
+      ],
+      "explanation": "No second outer GroupedObservable is emitted for the same key.",
+      "nextState": "group keys and child subscriber leases remain subscription-local",
+      "obligations": [
+        "S13-GROUPBY-KEY-EXISTING-Active"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-KEY-NEW-Active",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Active",
+      "guard": "correlated key not yet in Map",
+      "actions": [
+        "announce GroupedObservable then Subject.next",
+        "feed original source value into new Subject"
+      ],
+      "explanation": "Group announcements precede first keyed value, allowing a synchronous outer observer to subscribe.",
+      "nextState": "group keys and child subscriber leases remain subscription-local",
+      "obligations": [
+        "S13-GROUPBY-KEY-NEW-Active"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-KEY-THROW-Active",
+      "from": "Calling",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "correlated key selector throws",
+      "actions": [
+        "error grouped subjects",
+        "error outer when subscribed",
+        "release source"
+      ],
+      "explanation": "The key selector error is delivered to all groups before the outer, with exact identity.",
+      "nextState": "terminal, group registry cleared on upstream teardown",
+      "obligations": [
+        "S13-GROUPBY-KEY-THROW-Active"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-KEY-EXISTING-Orphaned",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Orphaned",
+      "guard": "correlated key and Map has an existing subject",
+      "actions": [
+        "emit one value into existing keyed Subject"
+      ],
+      "explanation": "No second outer GroupedObservable is emitted for the same key.",
+      "nextState": "group keys and child subscriber leases remain subscription-local",
+      "obligations": [
+        "S13-GROUPBY-KEY-EXISTING-Orphaned"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-KEY-NEW-Orphaned",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Orphaned",
+      "guard": "correlated key not yet in Map",
+      "actions": [
+        "do not announce new group to cancelled outer",
+        "feed original source value into new Subject"
+      ],
+      "explanation": "Group announcements precede first keyed value, allowing a synchronous outer observer to subscribe.",
+      "nextState": "group keys and child subscriber leases remain subscription-local",
+      "obligations": [
+        "S13-GROUPBY-KEY-NEW-Orphaned"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-KEY-THROW-Orphaned",
+      "from": "Calling",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "correlated key selector throws",
+      "actions": [
+        "error grouped subjects",
+        "error outer when subscribed",
+        "release source"
+      ],
+      "explanation": "The key selector error is delivered to all groups before the outer, with exact identity.",
+      "nextState": "terminal, group registry cleared on upstream teardown",
+      "obligations": [
+        "S13-GROUPBY-KEY-THROW-Orphaned"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-CANCEL-NO-CHILD",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "outer unsubscribes with no active group subscribers",
+      "actions": [
+        "unsubscribe source silently"
+      ],
+      "explanation": "No live consumer keeps the source connected.",
+      "nextState": "terminal, group registry cleared on upstream teardown",
+      "obligations": [
+        "S13-GROUPBY-CANCEL-NO-CHILD"
+      ]
+    },
+    {
+      "id": "S13-GROUPBY-CANCEL-WITH-CHILD",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Orphaned",
+      "guard": "at least one group subscriber remains",
+      "actions": [
+        "outer subscription ends, shared source stays connected"
+      ],
+      "explanation": "groupBy intentionally keeps source alive for subscribed child groups.",
+      "nextState": "group keys and child subscriber leases remain subscription-local",
+      "obligations": [
+        "S13-GROUPBY-CANCEL-WITH-CHILD"
+      ]
+    }
+  ]
+}

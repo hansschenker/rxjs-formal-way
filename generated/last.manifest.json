@@ -1,0 +1,344 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "last-predicate-required",
+    "operator": "last",
+    "purpose": "Retain the final selected source value; reveal exactly one result only after source completes successfully.",
+    "cardinality": {
+      "signature": "last(P?,D?) : T* -> (T|D)?",
+      "conditions": [
+        "No downstream next before successful source completion.",
+        "A matching candidate yields one next then complete. No candidate yields explicit default or EmptyError.",
+        "Predicate indices count all source next notifications, including those rejected.",
+        "Cω describes next cardinality. Error, complete, cancellation, and resource release are separate events."
+      ]
+    },
+    "scope": {
+      "parameters": "Predicate enabled true; explicit default supplied false; default can be undefined.",
+      "callbacks": "When selected, indexed predicate receives source value/index/original source; pure model requests callback and receives a correlated truthy/falsy or throw event.",
+      "time": "No timer. Output occurs at successful source completion time; cancellation or error produces no retained candidate.",
+      "reentrancy": "Atomic non-reentrant source and callback-outcome steps. User observers may not synchronously re-enter the modeled execution.",
+      "exclusions": [
+        "Deprecated thisArg/BooleanConstructor type-narrowing signatures as distinct run-time policies; reentrant callback/source; observer throwing."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire one upstream subscription only when the resulting Observable is subscribed."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing, replay, or global storage; every output subscription has an independent machine.",
+      "reset": "Fresh state on each output subscription; Closed rejects later events.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        },
+        {
+          "id": "predicate",
+          "kind": "callback",
+          "owner": "one indexed last predicate invocation"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Commit state, then deliver ordered next/terminal/connection actions. Callback outcomes are supplied externally.",
+      "cancellationCheckpoints": [
+        "Between resolved source events; silence on cancellation."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start a fresh lazy execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "receive an opaque source value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "normal source completion"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source failure with original error identity"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "silent downstream cancellation"
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "indexed predicate returned truthy or falsy"
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "indexed predicate threw the original error object"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "description exists, source is not yet connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "one source execution is connected",
+        "terminal": false
+      },
+      {
+        "id": "Calling",
+        "description": "one indexed predicate invocation is awaiting a correlated outcome",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, failed or cancelled; no later events are legal",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/last.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 operator implementation and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/filter.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 operator implementation and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/takeLast.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 operator implementation and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/throwIfEmpty.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 operator implementation and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/defaultIfEmpty.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 operator implementation and lifecycle"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session13-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session13-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-13.md"
+    }
+  },
+  "parameters": {
+    "predicate": true,
+    "hasDefault": false,
+    "predicateId": "predicate"
+  },
+  "rules": [
+    {
+      "id": "S13-LAST-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "fresh subscription",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "updated control and subscription-local memory",
+      "obligations": [
+        "S13-LAST-INIT"
+      ],
+      "explanation": "No candidate is present initially, including no phantom undefined candidate."
+    },
+    {
+      "id": "S13-LAST-TAKE",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "no predicate configured",
+      "actions": [
+        "store last value; no output"
+      ],
+      "nextState": "updated control and subscription-local memory",
+      "obligations": [
+        "S13-LAST-TAKE"
+      ],
+      "explanation": "Overwrite the candidate on every input without retaining older elements."
+    },
+    {
+      "id": "S13-LAST-CHECK",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Calling",
+      "guard": "predicate configured and source value arrives",
+      "actions": [
+        "invoke indexed predicate"
+      ],
+      "nextState": "updated control and subscription-local memory",
+      "obligations": [
+        "S13-LAST-CHECK"
+      ],
+      "explanation": "Do not decide acceptance before the external callback outcome."
+    },
+    {
+      "id": "S13-LAST-MATCH",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Active",
+      "guard": "correlated callback returned truthy",
+      "actions": [
+        "remember pending value"
+      ],
+      "nextState": "updated control and subscription-local memory",
+      "obligations": [
+        "S13-LAST-MATCH"
+      ],
+      "explanation": "Last matching value replaces the previous candidate; no next yet."
+    },
+    {
+      "id": "S13-LAST-REJECT",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Active",
+      "guard": "correlated callback returned falsy",
+      "actions": [
+        "keep previous candidate"
+      ],
+      "nextState": "updated control and subscription-local memory",
+      "obligations": [
+        "S13-LAST-REJECT"
+      ],
+      "explanation": "Predicate selection is a local state policy, not output filtering yet."
+    },
+    {
+      "id": "S13-LAST-PREDICATE-ERROR",
+      "from": "Calling",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "correlated callback throws",
+      "actions": [
+        "forward same error",
+        "release source"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-LAST-PREDICATE-ERROR"
+      ],
+      "explanation": "An exception aborts the selection; no fallback is emitted."
+    },
+    {
+      "id": "S13-LAST-EMIT-LAST",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "candidate exists",
+      "actions": [
+        "emit last candidate",
+        "complete",
+        "release source"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-LAST-EMIT-LAST"
+      ],
+      "explanation": "Only successful completion can expose the retained candidate."
+    },
+    {
+      "id": "S13-LAST-EMIT-DEFAULT",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "no candidate and default was explicitly supplied",
+      "actions": [
+        "emit fallback",
+        "complete",
+        "release source"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-LAST-EMIT-DEFAULT"
+      ],
+      "explanation": "An explicit undefined fallback is distinct from no argument."
+    },
+    {
+      "id": "S13-LAST-EMPTY-ERROR",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "no candidate and default absent",
+      "actions": [
+        "emit EmptyError",
+        "release source"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-LAST-EMPTY-ERROR"
+      ],
+      "explanation": "No matching input is an error without a configured fallback."
+    },
+    {
+      "id": "S13-LAST-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errors",
+      "actions": [
+        "forward exact error",
+        "release source"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-LAST-SOURCE-ERROR"
+      ],
+      "explanation": "No candidate or fallback is emitted when source fails."
+    },
+    {
+      "id": "S13-LAST-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer closes",
+      "actions": [
+        "release source silently"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-LAST-CANCEL"
+      ],
+      "explanation": "A cancelled stream never emits the retained value."
+    }
+  ]
+}

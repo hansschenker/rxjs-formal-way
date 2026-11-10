@@ -1,0 +1,209 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "mapTo-constant",
+    "operator": "mapTo",
+    "purpose": "Preserve every emission moment but replace each input with the same captured constant.",
+    "cardinality": {
+      "signature": "mapTo(R!) : T* -> R*",
+      "conditions": [
+        "Exactly one output next for each source next while live.",
+        "Each output value is exactly the captured R reference, not a clone.",
+        "No extra time, subscription, sharing or scheduler policy.",
+        "Cω describes next cardinality. Error, complete, cancellation, and resource release are separate events."
+      ]
+    },
+    "scope": {
+      "parameters": "One captured constant, including undefined or object identities. Deprecated operator export in RxJS 7.8.2.",
+      "callbacks": "Internally implemented by map(() => value); modeled as no external variable callback.",
+      "time": "Every output has the arrival time of its source next.",
+      "reentrancy": "Atomic non-reentrant source and callback-outcome steps. User observers may not synchronously re-enter the modeled execution.",
+      "exclusions": [
+        "Callback binding and operator-construction anomalies; observer reentrancy."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire one upstream subscription only when the resulting Observable is subscribed."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing, replay, or global storage; every output subscription has an independent machine.",
+      "reset": "Fresh state on each output subscription; Closed rejects later events.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Commit state, then deliver ordered next/terminal/connection actions. Callback outcomes are supplied externally.",
+      "cancellationCheckpoints": [
+        "Between resolved source events; silence on cancellation."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start a fresh lazy execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "receive an opaque source value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "normal source completion"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source failure with original error identity"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "silent downstream cancellation"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "description exists, source is not yet connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "one source execution is connected",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, failed or cancelled; no later events are legal",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/mapTo.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 operator implementation and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/map.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 operator implementation and lifecycle"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session13-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session13-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-13.md"
+    }
+  },
+  "parameters": {
+    "value": "constant"
+  },
+  "rules": [
+    {
+      "id": "S13-MAPTO-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "new subscription",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "updated control and subscription-local memory",
+      "obligations": [
+        "S13-MAPTO-INIT"
+      ],
+      "explanation": "Constant is captured at operator construction, independent source execution starts on subscription."
+    },
+    {
+      "id": "S13-MAPTO-REPLACE",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "every input next",
+      "actions": [
+        "emit original constant instance"
+      ],
+      "nextState": "updated control and subscription-local memory",
+      "obligations": [
+        "S13-MAPTO-REPLACE"
+      ],
+      "explanation": "No input payload is inspected and the constant is not cloned or invoked."
+    },
+    {
+      "id": "S13-MAPTO-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes",
+      "actions": [
+        "complete",
+        "release source"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-MAPTO-COMPLETE"
+      ],
+      "explanation": "No delayed values remain."
+    },
+    {
+      "id": "S13-MAPTO-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errors",
+      "actions": [
+        "forward error",
+        "release source"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-MAPTO-ERROR"
+      ],
+      "explanation": "Error identity is unchanged."
+    },
+    {
+      "id": "S13-MAPTO-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancels",
+      "actions": [
+        "release source silently"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-MAPTO-CANCEL"
+      ],
+      "explanation": "Cancellation does not emit the constant."
+    }
+  ]
+}

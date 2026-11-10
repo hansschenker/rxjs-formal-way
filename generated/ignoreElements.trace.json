@@ -1,0 +1,104 @@
+{
+  "status": "finished-input",
+  "consumed": 4,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "ignoreElements-discard-next",
+      "executionId": "ignoreElements-session13-example",
+      "ruleId": "S13-IGNOREELEMENTS-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "ignoreElements-discard-next",
+      "executionId": "ignoreElements-session13-example",
+      "ruleId": "S13-IGNOREELEMENTS-DROP",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "ignoreElements-discard-next",
+      "executionId": "ignoreElements-session13-example",
+      "ruleId": "S13-IGNOREELEMENTS-DROP",
+      "event": {
+        "type": "source.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "ignoreElements-discard-next",
+      "executionId": "ignoreElements-session13-example",
+      "ruleId": "S13-IGNOREELEMENTS-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

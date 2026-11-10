@@ -1,0 +1,208 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "ignoreElements-discard-next",
+    "operator": "ignoreElements",
+    "purpose": "Suppress all next payloads, forwarding only the terminal source protocol.",
+    "cardinality": {
+      "signature": "ignoreElements : T* -> ∅*",
+      "conditions": [
+        "Exactly zero output next notifications for all source histories.",
+        "Normal completion/error follows upstream; cancellation is silent.",
+        "Cω describes next cardinality. Error, complete, cancellation, and resource release are separate events."
+      ]
+    },
+    "scope": {
+      "parameters": "No arguments.",
+      "callbacks": "No callbacks.",
+      "time": "No timer/scheduler; terminal time is the upstream terminal time.",
+      "reentrancy": "Atomic non-reentrant source and callback-outcome steps. User observers may not synchronously re-enter the modeled execution.",
+      "exclusions": [
+        "Reentrant source/observer delivery and throwing downstream handlers."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire one upstream subscription only when the resulting Observable is subscribed."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing, replay, or global storage; every output subscription has an independent machine.",
+      "reset": "Fresh state on each output subscription; Closed rejects later events.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Commit state, then deliver ordered next/terminal/connection actions. Callback outcomes are supplied externally.",
+      "cancellationCheckpoints": [
+        "Between resolved source events; silence on cancellation."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start a fresh lazy execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "receive an opaque source value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "normal source completion"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source failure with original error identity"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "silent downstream cancellation"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "description exists, source is not yet connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "one source execution is connected",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, failed or cancelled; no later events are legal",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/ignoreElements.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 operator implementation and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 operator implementation and lifecycle"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session13-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session13-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-13.md"
+    }
+  },
+  "parameters": {
+    "mode": "discard-next"
+  },
+  "rules": [
+    {
+      "id": "S13-IGNOREELEMENTS-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "new result subscription",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "updated control and subscription-local memory",
+      "obligations": [
+        "S13-IGNOREELEMENTS-INIT"
+      ],
+      "explanation": "Producer starts only when consumed."
+    },
+    {
+      "id": "S13-IGNOREELEMENTS-DROP",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "every source value",
+      "actions": [
+        "no downstream next"
+      ],
+      "nextState": "updated control and subscription-local memory",
+      "obligations": [
+        "S13-IGNOREELEMENTS-DROP"
+      ],
+      "explanation": "Discard opaque payload but retain source connection."
+    },
+    {
+      "id": "S13-IGNOREELEMENTS-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "normal termination",
+      "actions": [
+        "forward complete",
+        "release source"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-IGNOREELEMENTS-COMPLETE"
+      ],
+      "explanation": "Completion is a protocol signal, never a value."
+    },
+    {
+      "id": "S13-IGNOREELEMENTS-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "failure",
+      "actions": [
+        "forward identical error",
+        "release source"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-IGNOREELEMENTS-ERROR"
+      ],
+      "explanation": "Errors are not dropped by ignoreElements."
+    },
+    {
+      "id": "S13-IGNOREELEMENTS-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream unsubscribed",
+      "actions": [
+        "release source silently"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-IGNOREELEMENTS-CANCEL"
+      ],
+      "explanation": "Never synthesize terminal notifications."
+    }
+  ]
+}

@@ -1,0 +1,266 @@
+{
+  "status": "finished-input",
+  "consumed": 8,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "last-predicate-required",
+      "executionId": "last-session13-example",
+      "ruleId": "S13-LAST-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 0,
+        "hasMatch": false
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "last-predicate-required",
+      "executionId": "last-session13-example",
+      "ruleId": "S13-LAST-CHECK",
+      "event": {
+        "type": "source.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "index": 0,
+        "hasMatch": false
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 1,
+        "hasMatch": false,
+        "pending": 1
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate",
+            "generation": 0
+          },
+          "value": 1,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "last-predicate-required",
+      "executionId": "last-session13-example",
+      "ruleId": "S13-LAST-REJECT",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "predicate",
+          "generation": 0
+        },
+        "value": false
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 1,
+        "hasMatch": false,
+        "pending": 1
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1,
+        "hasMatch": false
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "last-predicate-required",
+      "executionId": "last-session13-example",
+      "ruleId": "S13-LAST-CHECK",
+      "event": {
+        "type": "source.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1,
+        "hasMatch": false
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 2,
+        "hasMatch": false,
+        "pending": 2
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate",
+            "generation": 1
+          },
+          "value": 2,
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "last-predicate-required",
+      "executionId": "last-session13-example",
+      "ruleId": "S13-LAST-MATCH",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "predicate",
+          "generation": 1
+        },
+        "value": true
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 2,
+        "hasMatch": false,
+        "pending": 2
+      },
+      "after": {
+        "phase": "Active",
+        "index": 2,
+        "hasMatch": true,
+        "value": 2
+      },
+      "actions": []
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "last-predicate-required",
+      "executionId": "last-session13-example",
+      "ruleId": "S13-LAST-CHECK",
+      "event": {
+        "type": "source.next",
+        "value": 3
+      },
+      "before": {
+        "phase": "Active",
+        "index": 2,
+        "hasMatch": true,
+        "value": 2
+      },
+      "after": {
+        "phase": "Calling",
+        "index": 3,
+        "hasMatch": true,
+        "value": 2,
+        "pending": 3
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate",
+            "generation": 2
+          },
+          "value": 3,
+          "index": 2
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "last-predicate-required",
+      "executionId": "last-session13-example",
+      "ruleId": "S13-LAST-REJECT",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "predicate",
+          "generation": 2
+        },
+        "value": false
+      },
+      "before": {
+        "phase": "Calling",
+        "index": 3,
+        "hasMatch": true,
+        "value": 2,
+        "pending": 3
+      },
+      "after": {
+        "phase": "Active",
+        "index": 3,
+        "hasMatch": true,
+        "value": 2
+      },
+      "actions": []
+    },
+    {
+      "sequence": 7,
+      "time": 7,
+      "modelId": "last-predicate-required",
+      "executionId": "last-session13-example",
+      "ruleId": "S13-LAST-EMIT-LAST",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 3,
+        "hasMatch": true,
+        "value": 2
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 2
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

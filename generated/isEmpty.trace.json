@@ -1,0 +1,76 @@
+{
+  "status": "finished-input",
+  "consumed": 2,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "isEmpty-short-circuit",
+      "executionId": "isEmpty-session13-example",
+      "ruleId": "S13-ISEMPTY-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 5,
+      "modelId": "isEmpty-short-circuit",
+      "executionId": "isEmpty-session13-example",
+      "ruleId": "S13-ISEMPTY-EMPTY",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": true
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

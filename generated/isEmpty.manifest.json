@@ -1,0 +1,212 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "isEmpty-short-circuit",
+    "operator": "isEmpty",
+    "purpose": "Emit false and complete upon first next; emit true and complete only on empty successful completion.",
+    "cardinality": {
+      "signature": "isEmpty : T* -> Boolean?",
+      "conditions": [
+        "Successful finite execution emits exactly one boolean.",
+        "First source next ends the upstream subscription before further cooperative next values.",
+        "Error/cancel emits no boolean.",
+        "Cω describes next cardinality. Error, complete, cancellation, and resource release are separate events."
+      ]
+    },
+    "scope": {
+      "parameters": "No arguments.",
+      "callbacks": "No callback or source value inspection.",
+      "time": "No timer; decision is synchronous on first next or empty completion.",
+      "reentrancy": "Atomic non-reentrant source and callback-outcome steps. User observers may not synchronously re-enter the modeled execution.",
+      "exclusions": [
+        "Synchronous reentry within observer callbacks."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire one upstream subscription only when the resulting Observable is subscribed."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing, replay, or global storage; every output subscription has an independent machine.",
+      "reset": "Fresh state on each output subscription; Closed rejects later events.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current result subscription"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Commit state, then deliver ordered next/terminal/connection actions. Callback outcomes are supplied externally.",
+      "cancellationCheckpoints": [
+        "Between resolved source events; silence on cancellation."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start a fresh lazy execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "receive an opaque source value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "normal source completion"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source failure with original error identity"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "silent downstream cancellation"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "description exists, source is not yet connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "one source execution is connected",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, failed or cancelled; no later events are legal",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/isEmpty.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 operator implementation and lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 operator implementation and lifecycle"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session13-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session13-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-13.md"
+    }
+  },
+  "parameters": {
+    "mode": "early-emptiness-test"
+  },
+  "rules": [
+    {
+      "id": "S13-ISEMPTY-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "new result subscription",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "updated control and subscription-local memory",
+      "obligations": [
+        "S13-ISEMPTY-INIT"
+      ],
+      "explanation": "Start upstream when the result is connected."
+    },
+    {
+      "id": "S13-ISEMPTY-NONEMPTY",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Closed",
+      "guard": "first next value",
+      "actions": [
+        "emit false",
+        "complete",
+        "unsubscribe source"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-ISEMPTY-NONEMPTY"
+      ],
+      "explanation": "Any source next, even undefined, disproves emptiness and terminates immediately."
+    },
+    {
+      "id": "S13-ISEMPTY-EMPTY",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completed before next",
+      "actions": [
+        "emit true",
+        "complete",
+        "release source"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-ISEMPTY-EMPTY"
+      ],
+      "explanation": "An empty, successfully terminated source has exactly one boolean output."
+    },
+    {
+      "id": "S13-ISEMPTY-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "error before first next",
+      "actions": [
+        "forward same error",
+        "release source"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-ISEMPTY-ERROR"
+      ],
+      "explanation": "A failed source is not classified as empty."
+    },
+    {
+      "id": "S13-ISEMPTY-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer closes before result",
+      "actions": [
+        "release source silently"
+      ],
+      "nextState": "terminal with no owned work",
+      "obligations": [
+        "S13-ISEMPTY-CANCEL"
+      ],
+      "explanation": "Cancellation gives no true/false answer."
+    }
+  ]
+}
