@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "groupBy",
-    "ignoreElements",
-    "isEmpty",
-    "last",
-    "mapTo",
     "materialize",
     "merge",
     "flatMap",
@@ -631,24 +626,73 @@
       "readOnlyTree": "49ddd9112c09505696750872227d8b7af8d21adf"
     },
     "groupBy": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-10",
+      "profiles": [
+        "default-Subject key selector only; Map SameValueZero",
+        "new-group outer announcement before first Subject.next",
+        "one active subscriber per group; outer cancellation with child source lease",
+        "group/outer termination fanout; source and key-selector errors"
+      ],
+      "evidence": "evidence/SESSION-13.md",
+      "testedCommit": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9",
+      "implementationCommit": "42c1f180e5c6eb60a8b4106cffd363e16d4a307b",
+      "generatedCommit": "a565000fa31378b0a1eccdd3ae756723110cf33b",
+      "verificationRun": 42777531650,
+      "verificationJob": 129699440098,
+      "readOnlyHeadCommit": "a47ba64b533f14ac94e4487a5b687a14348cf3a1",
+      "readOnlyCheckout": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9"
     },
     "ignoreElements": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-10",
+      "profiles": [
+        "suppress all next notifications",
+        "pass through source complete/error; silent cancel"
+      ],
+      "evidence": "evidence/SESSION-13.md",
+      "testedCommit": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9",
+      "implementationCommit": "42c1f180e5c6eb60a8b4106cffd363e16d4a307b",
+      "generatedCommit": "a565000fa31378b0a1eccdd3ae756723110cf33b",
+      "verificationRun": 42777531650,
+      "verificationJob": 129699440098,
+      "readOnlyHeadCommit": "a47ba64b533f14ac94e4487a5b687a14348cf3a1",
+      "readOnlyCheckout": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9"
     },
     "isEmpty": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-10",
+      "profiles": [
+        "first-next false plus early termination",
+        "empty-complete true",
+        "error identity and silent cancellation"
+      ],
+      "evidence": "evidence/SESSION-13.md",
+      "testedCommit": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9",
+      "implementationCommit": "42c1f180e5c6eb60a8b4106cffd363e16d4a307b",
+      "generatedCommit": "a565000fa31378b0a1eccdd3ae756723110cf33b",
+      "verificationRun": 42777531650,
+      "verificationJob": 129699440098,
+      "readOnlyHeadCommit": "a47ba64b533f14ac94e4487a5b687a14348cf3a1",
+      "readOnlyCheckout": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9"
     },
     "last": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-10",
+      "profiles": [
+        "plain final candidate on successful completion",
+        "indexed-predicate last match",
+        "explicit default including undefined versus EmptyError",
+        "source/callback error identity; cancellation drops candidate"
+      ],
+      "evidence": "evidence/SESSION-13.md",
+      "testedCommit": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9",
+      "implementationCommit": "42c1f180e5c6eb60a8b4106cffd363e16d4a307b",
+      "generatedCommit": "a565000fa31378b0a1eccdd3ae756723110cf33b",
+      "verificationRun": 42777531650,
+      "verificationJob": 129699440098,
+      "readOnlyHeadCommit": "a47ba64b533f14ac94e4487a5b687a14348cf3a1",
+      "readOnlyCheckout": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9"
     },
     "map": {
       "status": "accepted",
@@ -656,9 +700,21 @@
       "profiles": []
     },
     "mapTo": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-10",
+      "profiles": [
+        "deprecated constant-map alias; captured reference identity",
+        "one constant next per source next",
+        "source terminal and cancellation unchanged"
+      ],
+      "evidence": "evidence/SESSION-13.md",
+      "testedCommit": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9",
+      "implementationCommit": "42c1f180e5c6eb60a8b4106cffd363e16d4a307b",
+      "generatedCommit": "a565000fa31378b0a1eccdd3ae756723110cf33b",
+      "verificationRun": 42777531650,
+      "verificationJob": 129699440098,
+      "readOnlyHeadCommit": "a47ba64b533f14ac94e4487a5b687a14348cf3a1",
+      "readOnlyCheckout": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9"
     },
     "materialize": {
       "status": "pending",
