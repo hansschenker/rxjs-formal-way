@@ -3,7 +3,7 @@ import { dirname } from 'node:path';
 import { createTakeModel, takeExample, createMapModel, mapExample, createFilterModel, filterExample,
   createSeededScanModel, createUnseededScanModel, seededScanExample, unseededScanExample,
   createDebounceTimeModel, debounceTimeExample, runDebounceTimeTrace,
-  toManifest, runTrace, renderTable, renderBdd, renderDiagram, renderObligations, renderBehavior, renderTrace } from '../dist/index.js';
+  toManifest, runTrace, renderTable, renderBdd, renderDiagram, renderObligations, renderBehavior, renderTrace, renderInspectionIndex } from '../dist/index.js';
 
 import { createSwitchMapModel, createMergeMapModel, createConcatMapModel, createExhaustMapModel,
   switchMapExample, mergeMapExample, concatMapExample, exhaustMapExample, createShareModel, shareExample } from '../dist/index.js';
@@ -69,6 +69,33 @@ import {
 import { createGroupByModel, groupByExample, createIgnoreElementsModel, ignoreElementsExample,
   createIsEmptyModel, isEmptyExample, createLastModel, lastExample,
   createMapToModel, mapToExample } from '../dist/index.js';
+
+const canonicalModelPaths = {
+  take:'src/models/take.ts', map:'src/models/map.ts', filter:'src/models/filter.ts', scan:'src/models/scan.ts',
+  debounceTime:'src/models/debounceTime.ts', switchMap:'src/models/flatten.ts', mergeMap:'src/models/flatten.ts',
+  concatMap:'src/models/flatten.ts', exhaustMap:'src/models/flatten.ts', share:'src/models/share.ts',
+  switchAll:'src/models/all.ts', mergeAll:'src/models/all.ts', concatAll:'src/models/all.ts', exhaustAll:'src/models/all.ts',
+  shareReplay:'src/models/shareReplay.ts', distinctUntilChanged:'src/models/adjacent.ts',
+  distinctUntilKeyChanged:'src/models/adjacent.ts', distinct:'src/models/distinct.ts', pairwise:'src/models/pairwise.ts',
+  startWith:'src/models/startWith.ts', skip:'src/models/gating.ts', takeWhile:'src/models/gating.ts',
+  skipWhile:'src/models/gating.ts', takeUntil:'src/models/until.ts', skipUntil:'src/models/until.ts',
+  reduce:'src/models/aggregate.ts', count:'src/models/aggregate.ts', toArray:'src/models/aggregate.ts',
+  min:'src/models/aggregate.ts', max:'src/models/aggregate.ts', audit:'src/models/audit.ts', auditTime:'src/models/audit.ts',
+  buffer:'src/models/buffering.ts', bufferCount:'src/models/buffering.ts', bufferTime:'src/models/bufferTime.ts',
+  bufferToggle:'src/models/bufferSelectors.ts', bufferWhen:'src/models/bufferSelectors.ts',
+  catchError:'src/models/catchError.ts', combineAll:'src/models/combineLatestAll.ts',
+  combineLatestAll:'src/models/combineLatestAll.ts', combineLatest:'src/models/session09-joins.ts',
+  combineLatestWith:'src/models/session09-joins.ts', concat:'src/models/session09-joins.ts',
+  concatWith:'src/models/session09-joins.ts', concatMapTo:'src/models/concatMapTo.ts',
+  connect:'src/models/connect.ts', debounce:'src/models/debounce.ts', defaultIfEmpty:'src/models/defaultIfEmpty.ts',
+  delay:'src/models/delayPolicy.ts', delayWhen:'src/models/delayPolicy.ts',
+  dematerialize:'src/models/session11-scalar.ts', elementAt:'src/models/session11-scalar.ts',
+  endWith:'src/models/session11-scalar.ts', every:'src/models/session11-scalar.ts', exhaust:'src/models/exhaust.ts',
+  expand:'src/models/session12.ts', finalize:'src/models/session12.ts', find:'src/models/session12.ts',
+  findIndex:'src/models/session12.ts', first:'src/models/session12.ts',
+  groupBy:'src/models/session13-groupBy.ts', ignoreElements:'src/models/session13-scalars.ts',
+  isEmpty:'src/models/session13-scalars.ts', last:'src/models/session13-scalars.ts', mapTo:'src/models/session13-scalars.ts',
+};
 
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
@@ -145,9 +172,14 @@ const examples = [
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
+const inspectionProfiles = new Map();
 for (const [name, model, inputs, executionId, traceRunner = runTrace] of examples) {
   const manifest = toManifest(model);
   const trace = traceRunner(model, inputs, { executionId });
+  const operator = manifest.metadata.operator;
+  const profiles = inspectionProfiles.get(operator) ?? [];
+  profiles.push({ name, manifest });
+  inspectionProfiles.set(operator, profiles);
   for (const [path, content] of [
     [`generated/${name}.manifest.json`, json(manifest)],
     [`generated/${name}.stt.md`, renderTable(manifest)],
@@ -161,6 +193,13 @@ for (const [name, model, inputs, executionId, traceRunner = runTrace] of example
     if (files.has(path)) throw new Error(`Duplicate generation target: ${path}`);
     files.set(path, content);
   }
+}
+for (const [operator, profiles] of inspectionProfiles) {
+  const canonicalModelPath = canonicalModelPaths[operator];
+  if (!canonicalModelPath) throw new Error(`Missing canonical model path for inspection index: ${operator}`);
+  const path = `operators/${operator}-index.md`;
+  if (files.has(path)) throw new Error(`Duplicate generation target: ${path}`);
+  files.set(path, renderInspectionIndex(operator, profiles, canonicalModelPath));
 }
 const check = process.argv.includes('--check');
 let failures = 0;
