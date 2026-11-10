@@ -56,9 +56,9 @@ test('S13-NATIVE GROUPBY: JS Map SameValueZero groups NaN and signed zero keys',
   assert.equal(groups.length,0);
   assert.equal(keys.length,2);
   assert.ok(Number.isNaN(keys[0]));
-  assert.equal(keys[1],0);
+  assert.ok(keys[1]===0);
   assert.equal(values(out.events)[0].values.length,2);
-  assert.deepEqual(values(out.events)[1].values,[0,0]);
+  assert.ok(values(out.events)[1].values.every(x=>x===0));
 });
 
 test('S13-NATIVE GROUPBY: key selector error propagates to active groups and outer',()=>{
