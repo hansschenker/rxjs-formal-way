@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-10",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-10T08:24:16+01:00",
   "startingCommit": "48e27555b2a4e3082c2e123df3503445e91cb73e",
   "selectedNames": [
@@ -12,29 +12,96 @@
     "last",
     "mapTo"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
+  "workedNames": [
     "groupBy",
     "ignoreElements",
     "isEmpty",
     "last",
     "mapTo"
   ],
-  "commits": [],
+  "completedNames": [
+    "groupBy",
+    "ignoreElements",
+    "isEmpty",
+    "last",
+    "mapTo"
+  ],
+  "carryovers": [],
+  "commits": [
+    "51960f40353c3c5339285554344070c8f67f35d5",
+    "8b76d877db71c9f35f52fbc55c856bb035529760",
+    "c4d2502ab822bc75ee32e01de7a330b8cd90daab",
+    "be5bc9dbb40d5a199c80e193064976d8e18ea2a6",
+    "164d26af2401ac77979663d11eb35129a4a8628a",
+    "42c1f180e5c6eb60a8b4106cffd363e16d4a307b",
+    "a565000fa31378b0a1eccdd3ae756723110cf33b",
+    "a47ba64b533f14ac94e4487a5b687a14348cf3a1",
+    "9c0935d0a59caa4ca4b0020e60ff5633d2db25cf",
+    "430708cd8ebdab81fb0d3fd034d1515eae1c83d6",
+    "20943a1807db8e5a8236f3f936fcac5efedf7748",
+    "b4d67a4d79cb0b7d031a78b8dfdf8e5833f4d879"
+  ],
   "checks": {
-    "syntax": "not run",
-    "types": "not run",
-    "model": "not run",
-    "runtime": "not run",
-    "generated": "not run",
-    "ci": "not run"
+    "syntax": "passed read-only PR CI 42777531650; also passed pre-generation PR CI 42777120383",
+    "types": "strict TypeScript passed with 18 new negative assertions (223 cumulative); no checks relaxed",
+    "model": "24 new canonical model/view named tests; full suite 971 passed",
+    "runtime": "28 new independent actual RxJS 7.8.2 named tests; full suite 971 passed; no new bounded enumeration count",
+    "generated": "552 committed deterministic projections verified by read-only CI 42777531650 (40 new); generation and publication skipped",
+    "ci": "read-only PR #20 run 42777531650 job 129699440098 succeeded; implementation PR #19 run 42777120383 passed syntax/types/971 tests but failed expected missing 40 view drift before main generation; exact main push CI run ID not retrieved"
   },
   "blockers": [],
   "evidence": "evidence/SESSION-13.md",
   "notes": [
-    "Five distinct pending export names selected from live queue after Session 12; no 2026-11-10 session log existed at reservation.",
-    "RxJS pinned version 7.8.2 and source revision e5351d02e225e275ac0e497c7b66eaa5f0c88791.",
-    "Only actual verified outcomes allow acceptance; any unfinished operator remains a carryover."
+    "Exactly five pending distinct exports selected live after Session 12; prior same-date log was absent. No additional names worked.",
+    "All five source files inspected at RxJS 7.8.2 commit e5351d02e225e275ac0e497c7b66eaa5f0c88791.",
+    "Model code committed to main during initial reservation; implementation PR #19 then corrected generic primitive Action variance without loosening strict TS checks.",
+    "Pre-generation PR run 42777120383 passed 971 tests and syntax/types, failed solely because 40 newly generated views were missing; the existing main generator then committed all 40.",
+    "Independent read-only run 42777531650 passed the complete unmodified check, including 971 named tests and drift-checking 552 views. Generation/publication steps were skipped.",
+    "Actual read-only checkout 0f0bd9d31e2aeca7f6b57035a150b9aae27550d9 differs from PR head a47ba64b533f14ac94e4487a5b687a14348cf3a1 by a synthetic merge commit only; compare_commits returned zero changed files.",
+    "The exact main push workflow run ID/outcome was not available through the current connector's PR-only commit-run lookup, so it is not labeled passed.",
+    "All acceptance claims are within declared non-reentrant/default-connector profiles; generated traces are pure model predictions rather than native recordings."
+  ],
+  "nextQueue": [
+    "materialize",
+    "merge",
+    "flatMap",
+    "mergeMapTo",
+    "mergeScan"
+  ],
+  "nextSessionNotBefore": "2026-11-11",
+  "closedAt": "2026-11-10T08:47:44+01:00",
+  "verification": {
+    "implementationCommit": "42c1f180e5c6eb60a8b4106cffd363e16d4a307b",
+    "implementationPrHead": "164d26af2401ac77979663d11eb35129a4a8628a",
+    "generatedCommit": "a565000fa31378b0a1eccdd3ae756723110cf33b",
+    "testedCommit": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9",
+    "preGenerationPrRun": 42777120383,
+    "preGenerationJob": 129698119477,
+    "preGenerationStatus": "failed generation drift due 40 missing new projections; syntax/types and 971 named tests passed",
+    "readOnlyRun": 42777531650,
+    "readOnlyJob": 129699440098,
+    "readOnlyPrNumber": 20,
+    "readOnlyHeadCommit": "a47ba64b533f14ac94e4487a5b687a14348cf3a1",
+    "readOnlyBaseCommit": "a565000fa31378b0a1eccdd3ae756723110cf33b",
+    "readOnlyCheckout": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9",
+    "readOnlyHeadVsCheckoutChangedFiles": 0,
+    "namedTestsPassed": 971,
+    "newNamedTests": 52,
+    "newModelNamedTests": 24,
+    "newRuntimeNamedTests": 28,
+    "newNegativeTypeAssertions": 18,
+    "negativeTypeAssertions": 223,
+    "generatedViews": 552,
+    "newGeneratedViews": 40,
+    "newBoundedModelRxjsScenarios": 0,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true,
+    "mainPushRun": "not retrieved; no result claimed"
+  },
+  "provenanceLimitations": [
+    "Read-only CI executes GitHub synthetic pull-request merge SHA, not the original PR head. Zero-file compare verifies identical checked content.",
+    "The main push run ID/status cannot be retrieved via available PR-only commit workflow lookup; generated files were committed and independently checked.",
+    "Finite scoped tests and model-generated traces do not prove unrestricted observable equivalence.",
+    "groupBy options element/duration/custom connector and multiple simultaneous subscribers per group; reentrant observer/source callbacks; specialized deprecated overloads remain outside current scoped acceptance."
   ]
 }
