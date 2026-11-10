@@ -66,6 +66,10 @@ import {
   createFirstModel, firstExample
 } from '../dist/index.js';
 
+import { createGroupByModel, groupByExample, createIgnoreElementsModel, ignoreElementsExample,
+  createIsEmptyModel, isEmptyExample, createLastModel, lastExample,
+  createMapToModel, mapToExample } from '../dist/index.js';
+
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
 const examples = [
   ['take', createTakeModel(2), takeExample, 'take-2-example'],
@@ -133,6 +137,11 @@ const examples = [
   ['find', createFindModel(), findExample, 'find-session12-example'],
   ['findIndex', createFindIndexModel(), findIndexExample, 'findIndex-session12-example'],
   ['first', createFirstModel(true), firstExample, 'first-session12-example'],
+  ['groupBy', createGroupByModel(), groupByExample, 'groupBy-session13-example'],
+  ['ignoreElements', createIgnoreElementsModel(), ignoreElementsExample, 'ignoreElements-session13-example'],
+  ['isEmpty', createIsEmptyModel(), isEmptyExample, 'isEmpty-session13-example'],
+  ['last', createLastModel(true), lastExample, 'last-session13-example'],
+  ['mapTo', createMapToModel('constant'), mapToExample, 'mapTo-session13-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();

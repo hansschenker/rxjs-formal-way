@@ -112,6 +112,11 @@ const metadata:ModelMetadata={
 
 export function createGroupByModel<T,K>():GroupByModel<T,K>{
   type P=GroupByParameters;type S=GroupByState<T,K>;type E=GroupByEvent<T,K>;type A=Action<GroupToken<K>|T,T>;
+  // Preserve precise key callback typing; only safe primitive connection actions are narrowed.
+  const sub=(ref:ResourceRef):A=>subscribe(ref) as A;
+  const unsub=(ref:ResourceRef):A=>unsubscribe(ref) as A;
+  const subSource=sub(source);
+  const unsubSource=unsub(source);
   type M=GroupMemory<K>;
   const p:P={keySelectorId:'key',element:'identity',duration:'none',connector:'Subject',subscribersPerGroup:'at-most-one'};
   const rules:Rule<P,S,E,A>[]=[];
@@ -144,7 +149,7 @@ export function createGroupByModel<T,K>():GroupByModel<T,K>{
     ]};
   };
   add('INIT','Unsubscribed','subscribe','Active','fresh outer subscriber',['connect source'],'Nothing runs until subscribed.',
-    ()=>true,()=>({state:{phase:'Active',index:0,nextGroupId:0,groups:[]},actions:[subscribe(source)]}));
+    ()=>true,()=>({state:{phase:'Active',index:0,nextGroupId:0,groups:[]},actions:[subSource]}));
   for(const phase of ['Active','Orphaned'] as const){
     add('SELECT-'+phase,phase,'source.next','Calling','shared source live; key index is safe',
       ['request one indexed key callback'],'Key is computed before any grouped-value delivery.',
@@ -158,27 +163,27 @@ export function createGroupByModel<T,K>():GroupByModel<T,K>{
       ['complete all groups before outer','release source'],'The source completion is shared across all live groups, even if outer has already unsubscribed.',
       ()=>true,(s)=>{if(!connected(s))throw Error('not connected');
         return {state:close('complete'),actions:[
-          ...completeGroups(s),...(phase==='Active'?[complete as A]:[]),unsubscribe(source)
+          ...completeGroups(s),...(phase==='Active'?[complete as A]:[]),unsubSource
         ]};});
     add('ERROR-'+phase,phase,'source.error','Closed','source errors',
       ['error all groups before outer','release source'],'Original error object reaches all subscribed groups and (unless canceled) outer.',
       ()=>true,(s,e)=>{if(!connected(s)||e.type!=='source.error')throw Error('not source error');
         return {state:close('source-error'),actions:[
-          ...errorGroups(s,e.error),...(phase==='Active'?[error(e.error) as A]:[]),unsubscribe(source)
+          ...errorGroups(s,e.error),...(phase==='Active'?[error(e.error) as A]:[]),unsubSource
         ]};});
     add('ATTACH-'+phase,phase,'group.subscribe',phase,'known group has no active subscriber',
       ['attach one group consumer'],'Group subscriptions share upstream and increase its lifetime lease.',
       (s,e)=>connected(s)&&e.type==='group.subscribe'&&byId(s,e.groupId)?.subscribers===0,
       (s,e)=>{if(!connected(s)||e.type!=='group.subscribe')throw Error('not group subscription');
         const groups=s.groups.map(g=>g.groupId===e.groupId?{...g,subscribers:1 as const}:g);
-        return {state:nextState(s,phase,groups),actions:[subscribe(groupResource(e.groupId))]};});
+        return {state:nextState(s,phase,groups),actions:[sub(groupResource(e.groupId))]};});
     if(phase==='Active'){
       add('DETACH-ACTIVE',phase,'group.unsubscribe',phase,'known group has its one active subscriber',
         ['release child lease'],'Outer remains subscribed and keeps upstream regardless of child count.',
         (s,e)=>connected(s)&&e.type==='group.unsubscribe'&&byId(s,e.groupId)?.subscribers===1,
         (s,e)=>{if(s.phase!=='Active'||e.type!=='group.unsubscribe')throw Error('not active detach');
           return {state:nextState(s,'Active',s.groups.map(g=>g.groupId===e.groupId?{...g,subscribers:0 as const}:g)),
-            actions:[unsubscribe(groupResource(e.groupId))]};});
+            actions:[unsub(groupResource(e.groupId))]};});
     } else {
       add('DETACH-RETAIN',phase,'group.unsubscribe',phase,'another group remains subscribed',
         ['release this group lease','retain source'],'Orphaned outer has no ownership, but another child still does.',
@@ -186,7 +191,7 @@ export function createGroupByModel<T,K>():GroupByModel<T,K>{
           byId(s,e.groupId)?.subscribers===1&&s.groups.some(g=>g.groupId!==e.groupId&&g.subscribers===1),
         (s,e)=>{if(s.phase!=='Orphaned'||e.type!=='group.unsubscribe')throw Error('not detach');
           return {state:nextState(s,'Orphaned',s.groups.map(g=>g.groupId===e.groupId?{...g,subscribers:0 as const}:g)),
-            actions:[unsubscribe(groupResource(e.groupId))]};});
+            actions:[unsub(groupResource(e.groupId))]};});
       add('DETACH-LAST',phase,'group.unsubscribe','Closed','last live child lease released after outer cancellation',
         ['release child lease','disconnect source'],'This is the deferred groupBy teardown observed when group subscriptions outlive the outer consumer.',
         (s,e)=>s.phase==='Orphaned'&&e.type==='group.unsubscribe'&&
@@ -194,7 +199,7 @@ export function createGroupByModel<T,K>():GroupByModel<T,K>{
           !s.groups.some(g=>g.groupId!==e.groupId&&g.subscribers===1),
         (_s,e)=>{if(e.type!=='group.unsubscribe')throw Error('not detach');
           return {state:close('last-child-left'),
-            actions:[unsubscribe(groupResource(e.groupId)),unsubscribe(source)]};});
+            actions:[unsub(groupResource(e.groupId)),unsubSource]};});
     }
   }
   for(const resume of ['Active','Orphaned'] as const){
@@ -218,13 +223,13 @@ export function createGroupByModel<T,K>():GroupByModel<T,K>{
       (s,e)=>validCallback(s,e)&&s.phase==='Calling'&&s.resume===resume&&e.type==='callback.throw',
       (s,e)=>{if(s.phase!=='Calling'||e.type!=='callback.throw')throw Error('bad throw');
         return {state:close('key-error'),actions:[
-          ...errorGroups(s,e.error),...(resume==='Active'?[error(e.error) as A]:[]),unsubscribe(source)
+          ...errorGroups(s,e.error),...(resume==='Active'?[error(e.error) as A]:[]),unsubSource
         ]};});
   }
   add('CANCEL-NO-CHILD','Active','cancel','Closed','outer unsubscribes with no active group subscribers',
     ['unsubscribe source silently'],'No live consumer keeps the source connected.',
     s=>s.phase==='Active'&&!hasChild(s),
-    ()=>({state:close('cancel'),actions:[unsubscribe(source)]}));
+    ()=>({state:close('cancel'),actions:[unsubSource]}));
   add('CANCEL-WITH-CHILD','Active','cancel','Orphaned','at least one group subscriber remains',
     ['outer subscription ends, shared source stays connected'],'groupBy intentionally keeps source alive for subscribed child groups.',
     s=>s.phase==='Active'&&hasChild(s),
