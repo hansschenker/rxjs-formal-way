@@ -120,7 +120,7 @@ export function renderInspectionIndex(
     `**RxJS:** ${metadata.rxjsVersion}  \n` +
     `**Purpose:** ${metadata.purpose}  \n` +
     `**Cω shape:** \`${metadata.cardinality.signature}\`  \n` +
-    `**Profiles represented:** ${profiles.map(profile => \`${profile.name}\`).join(', ')}\n\n` +
+    `**Profiles represented:** ${profiles.map(profile => '`' + profile.name + '`').join(', ')}\n\n` +
     '## Three teaching passes\n\n' +
     '**Pass 1 — Understand:** 1 Overview → 2 Diagram → 5 Trace  \n' +
     '**Pass 2 — Specify:** 3 STT → 4 BDD → 7 Manifest → 8 Canonical Mealy Model  \n' +
