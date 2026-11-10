@@ -41,7 +41,31 @@ All generated JSON traces and four-lane views are **canonical model predictions*
 
 ## Read-only verification
 
-Independent committed-file verification is intentionally performed on a separate documentation/evidence-only pull request, with generation and publication disabled by the repository's existing pull-request CI path. Its result and checkout identity will be recorded after retrieval; **not yet claimed passed in this draft**.
+Independent documentation-only [PR #20](https://github.com/hansschenker/rxjs-formal-way/pull/20) verified the committed generated files after the 40-file publication at `a565000fa31378b0a1eccdd3ae756723110cf33b`.
+
+[Read-only PR run **42777531650**](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42777531650), job **129699440098**, concluded **success**. Its retrieved job steps show that **"Generate projections on main before checking" was skipped** and **"Commit validated generated projections" was skipped**. The unmodified `npm run check` job ran syntax, strict TypeScript, all model/runtime tests, and generated-file drift verification:
+
+```text
+# tests 971
+# pass 971
+# fail 0
+# skipped 0
+Verified 552 deterministic projections.
+```
+
+| Reference | SHA or result |
+|---|---|
+| Read-only PR head | `a47ba64b533f14ac94e4487a5b687a14348cf3a1` |
+| Read-only base | `a565000fa31378b0a1eccdd3ae756723110cf33b` |
+| Actual synthetic test checkout from retrieved checkout job log | `0f0bd9d31e2aeca7f6b57035a150b9aae27550d9` |
+| Comparison PR head → synthetic checkout | **Zero changed files** (`compare_commits` ahead by one merge commit) |
+| Evidence PR merge on main | `9c0935d0a59caa4ca4b0020e60ff5633d2db25cf` |
+
+The synthetic merge commit is **not** mislabeled as the PR head or implementation commit; a zero-file diff confirms identical checked content across the two revisions. The exact main push workflow run ID was not returned by the available commit-run lookup (which only reports PR runs); the generated commit exists and the independent read-only check passed on all committed files. Do not treat an unretrieved push job as separately verified.
+
+## Acceptance
+
+All **five** export names are accepted **within the explicitly documented profiles**, based on 971 successful named tests, 552 deterministic generation-drift checks, 18 additional negative TypeScript assertions and independent actual RxJS behavior tests. There are **zero carryovers**, **65 of 113** accepted export names, and **48 pending**. No universal equivalence proof is claimed. The next queue begins `materialize`, `merge`, `flatMap`, `mergeMapTo`, `mergeScan`.
 
 ## Explicit exclusions and scope limits
 
