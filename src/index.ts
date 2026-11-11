@@ -101,3 +101,13 @@ export { createIgnoreElementsModel, ignoreElementsExample, createIsEmptyModel, i
 export type { SimpleSourceEvent, IgnoreElementsState, IgnoreElementsEvent, IgnoreElementsModel,
   IsEmptyState, IsEmptyEvent, IsEmptyModel, LastParameters, LastState, LastEvent, LastModel,
   MapToParameters, MapToState, MapToEvent, MapToModel } from './models/session13-scalars.js';
+
+export { createMaterializeModel, materializeExample } from './models/session14-materialize.js';
+export type { MaterializedValue, MaterializeState, MaterializeEvent, MaterializeModel } from './models/session14-materialize.js';
+export { createMergeModel, mergeExample } from './models/session14-merge.js';
+export type { MergeParameters, MergeState, MergeEvent, MergeModel } from './models/session14-merge.js';
+export { createFlatMapModel, flatMapExample, createMergeMapToModel, mergeMapToExample,
+  createMergeScanModel, mergeScanExample } from './models/session14-flatten.js';
+export type { FlatMapModel, FlatMapEvent, MergeMapToModel, MergeMapToEvent,
+  MergeScanParameters, MergeScanState, MergeScanEvent, MergeScanModel,
+  AccumulatorInput } from './models/session14-flatten.js';
