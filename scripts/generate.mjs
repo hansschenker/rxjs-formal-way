@@ -69,6 +69,9 @@ import {
 import { createGroupByModel, groupByExample, createIgnoreElementsModel, ignoreElementsExample,
   createIsEmptyModel, isEmptyExample, createLastModel, lastExample,
   createMapToModel, mapToExample } from '../dist/index.js';
+import { createMaterializeModel, materializeExample, createMergeModel, mergeExample,
+  createFlatMapModel, flatMapExample, createMergeMapToModel, mergeMapToExample,
+  createMergeScanModel, mergeScanExample } from '../dist/index.js';
 
 const canonicalModelPaths = {
   take:'src/models/take.ts', map:'src/models/map.ts', filter:'src/models/filter.ts', scan:'src/models/scan.ts',
@@ -95,6 +98,9 @@ const canonicalModelPaths = {
   findIndex:'src/models/session12.ts', first:'src/models/session12.ts',
   groupBy:'src/models/session13-groupBy.ts', ignoreElements:'src/models/session13-scalars.ts',
   isEmpty:'src/models/session13-scalars.ts', last:'src/models/session13-scalars.ts', mapTo:'src/models/session13-scalars.ts',
+  materialize:'src/models/session14-materialize.ts', merge:'src/models/session14-merge.ts',
+  flatMap:'src/models/session14-flatten.ts', mergeMapTo:'src/models/session14-flatten.ts',
+  mergeScan:'src/models/session14-flatten.ts',
 };
 
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
@@ -169,6 +175,11 @@ const examples = [
   ['isEmpty', createIsEmptyModel(), isEmptyExample, 'isEmpty-session13-example'],
   ['last', createLastModel(true), lastExample, 'last-session13-example'],
   ['mapTo', createMapToModel('constant'), mapToExample, 'mapTo-session13-example'],
+  ['materialize', createMaterializeModel(), materializeExample, 'materialize-session14-example'],
+  ['merge', createMergeModel(2,2), mergeExample, 'merge-session14-example'],
+  ['flatMap', createFlatMapModel(2), flatMapExample, 'flatMap-session14-example'],
+  ['mergeMapTo', createMergeMapToModel('shared',2), mergeMapToExample, 'mergeMapTo-session14-example'],
+  ['mergeScan', createMergeScanModel(0,2), mergeScanExample, 'mergeScan-session14-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
