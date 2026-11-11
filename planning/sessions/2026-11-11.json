@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-11",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-11T08:19:29+01:00",
   "startingCommit": "164b8c02c045b98d724444ab9605e37a8362bbfa",
   "selectedNames": [
@@ -12,27 +12,37 @@
     "mergeMapTo",
     "mergeScan"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
+  "workedNames": [
     "materialize",
     "merge",
     "flatMap",
     "mergeMapTo",
     "mergeScan"
   ],
+  "completedNames": [
+    "materialize",
+    "merge",
+    "flatMap",
+    "mergeMapTo",
+    "mergeScan"
+  ],
+  "carryovers": [],
   "checks": {
-    "syntax": "not run",
-    "types": "not run",
-    "model": "not run",
-    "runtime": "not run",
-    "generated": "not run",
-    "ci": "not run"
+    "syntax": "passed implementation main push and independent read-only PR CI",
+    "types": "strict TypeScript passed including 15 new negative assertions",
+    "model": "20 new model/view named tests; complete suite 1015 passed, zero failures",
+    "runtime": "21 new independent native RxJS named tests; complete suite 1015 passed, zero failures",
+    "generated": "45 new artifacts including five required export-level inspection indices; 662 deterministic projections drift-verified by independent read-only PR",
+    "ci": "main push run 42980571840 job 130389761778 SUCCESS; independent read-only run 42980757675 job 130390355972 SUCCESS; pre-generation PR run 42980343008 FAILED only as expected on missing 45 projections"
   },
   "blockers": [],
   "notes": [
-    "Live main queue and prior logs inspected; no existing 2026-11-11 session log. Session 14 reserved, hard maximum five distinct export names.",
-    "Session 14–23 requires generated export-level inspection index per accepted operator."
+    "One session reserved on 2026-11-11 after consulting live default branch and dated sessions, no existing same-date log.",
+    "Exactly five pending RxJS 7.8.2 exports modeled at pinned source e5351d02e225e275ac0e497c7b66eaa5f0c88791; no overload/profile counted extra.",
+    "Main push CI generated 45 deterministic files and checked 662 total, including all five required export-level inspection index pages.",
+    "Read-only CI independently checked 662 committed projections while generation and publication were skipped.",
+    "All acceptance claims scoped; predictions are not native traces; no new bounded enumeration count.",
+    "No additional daily batch; 43 pending names remain."
   ],
   "nextQueue": [
     "mergeWith",
@@ -40,5 +50,60 @@
     "observeOn",
     "onErrorResumeNext",
     "partition"
+  ],
+  "commits": [
+    "8388b7704c6f9d99ae6a81affbd8602a4626e5df",
+    "7e4188fde543d5165ecdae1b8ef4973d9a755fa9",
+    "160fcf2d97fd3db11fe51cf3d47de35204ff91a2",
+    "0dc63dcd2a6026eeef38ae65c5f9a83da7dae575",
+    "072f2b8db650a0bfce48164b91303bfea03df82c",
+    "e074b5a7ed56f286351ac95f5881062fd11cd1ea",
+    "71f5cf155fcea566bf6586d3a81c859533dad341",
+    "08d564276e5a2a213e1f9ef8fa5e2127aafdd009",
+    "6aada9aaab62e48f46ff36da0c7a9b101b82fe80",
+    "566ff6e00805cb671a020f73844905ff54e2a672",
+    "06c9c516da2869d4ba7117fd53202ddb6d19d2f0",
+    "707a887495a0307c6f327163ab170f2871139c12"
+  ],
+  "evidence": "evidence/SESSION-14.md",
+  "nextSessionNotBefore": "2026-11-12",
+  "closedAt": "2026-11-11T08:40:03+01:00",
+  "verification": {
+    "implementationPr": 24,
+    "implementationPrHead": "08d564276e5a2a213e1f9ef8fa5e2127aafdd009",
+    "implementationMerge": "6aada9aaab62e48f46ff36da0c7a9b101b82fe80",
+    "generatedCommit": "566ff6e00805cb671a020f73844905ff54e2a672",
+    "preGenerationPrRun": 42980343008,
+    "preGenerationPrJob": 130389040215,
+    "preGenerationStatus": "failed only on 45 missing projections; syntax/types and 1015 tests passed",
+    "mainPushRun": 42980571840,
+    "mainPushJob": 130389761778,
+    "mainPushConclusion": "success",
+    "readOnlyPr": 25,
+    "readOnlyRun": 42980757675,
+    "readOnlyJob": 130390355972,
+    "readOnlyConclusion": "success",
+    "readOnlyHeadCommit": "06c9c516da2869d4ba7117fd53202ddb6d19d2f0",
+    "readOnlyCheckout": "1d17bbc3ca07e959cf3e943e98e93ba5b4698292",
+    "readOnlyHeadVsCheckoutChangedFiles": 0,
+    "testedCommit": "1d17bbc3ca07e959cf3e943e98e93ba5b4698292",
+    "namedTestsPassed": 1015,
+    "namedTestFailures": 0,
+    "newNamedTests": 41,
+    "newModelNamedTests": 20,
+    "newRuntimeNamedTests": 21,
+    "newNegativeTypeAssertions": 15,
+    "generatedViews": 662,
+    "newGeneratedViews": 45,
+    "newInspectionIndices": 5,
+    "inspectionIndicesDriftVerified": true,
+    "newBoundedModelRxjsScenarios": 0,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  },
+  "provenanceLimitations": [
+    "Read-only CI executes GitHub synthetic PR merge checkout, not original PR head; zero-file comparison verifies content identity.",
+    "Finite tests cannot establish unrestricted behavioral equivalence or arbitrary reentrancy.",
+    "Unsupported scheduler/ObservableInput/result-selector parameter domains and Notification class/prototype identity excluded."
   ]
 }

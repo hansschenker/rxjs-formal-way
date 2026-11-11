@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "materialize",
-    "merge",
-    "flatMap",
-    "mergeMapTo",
-    "mergeScan",
     "mergeWith",
     "multicast",
     "observeOn",
@@ -717,9 +712,22 @@
       "readOnlyCheckout": "0f0bd9d31e2aeca7f6b57035a150b9aae27550d9"
     },
     "materialize": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-11",
+      "profiles": [
+        "source next -> N value",
+        "source complete -> C value then output complete",
+        "source error -> E value then output complete",
+        "silent cancellation"
+      ],
+      "evidence": "evidence/SESSION-14.md",
+      "testedCommit": "6aada9aaab62e48f46ff36da0c7a9b101b82fe80",
+      "generatedCommit": "566ff6e00805cb671a020f73844905ff54e2a672",
+      "implementationRun": 42980571840,
+      "verificationRun": 42980757675,
+      "readOnlyHeadCommit": "06c9c516da2869d4ba7117fd53202ddb6d19d2f0",
+      "readOnlyCheckout": "1d17bbc3ca07e959cf3e943e98e93ba5b4698292",
+      "inspectionIndex": "operators/materialize-index.md"
     },
     "max": {
       "status": "accepted",
@@ -736,9 +744,22 @@
       "readOnlyCheckout": "693325757bea224f27a3b945cb193d9b07fb402e"
     },
     "merge": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-11",
+      "profiles": [
+        "pipeable source-first unscheduled Observable inputs",
+        "bounded concurrency 2 and FIFO pending sources",
+        "unbounded admissible parameter",
+        "source error and cancellation resource ownership"
+      ],
+      "evidence": "evidence/SESSION-14.md",
+      "testedCommit": "6aada9aaab62e48f46ff36da0c7a9b101b82fe80",
+      "generatedCommit": "566ff6e00805cb671a020f73844905ff54e2a672",
+      "implementationRun": 42980571840,
+      "verificationRun": 42980757675,
+      "readOnlyHeadCommit": "06c9c516da2869d4ba7117fd53202ddb6d19d2f0",
+      "readOnlyCheckout": "1d17bbc3ca07e959cf3e943e98e93ba5b4698292",
+      "inspectionIndex": "operators/merge-index.md"
     },
     "mergeAll": {
       "status": "accepted",
@@ -753,9 +774,21 @@
       "verificationRun": 41182614115
     },
     "flatMap": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-11",
+      "profiles": [
+        "deprecated exact mergeMap alias",
+        "concurrency 2 allow-overlap admissions",
+        "queue and inner lifecycle inherited"
+      ],
+      "evidence": "evidence/SESSION-14.md",
+      "testedCommit": "6aada9aaab62e48f46ff36da0c7a9b101b82fe80",
+      "generatedCommit": "566ff6e00805cb671a020f73844905ff54e2a672",
+      "implementationRun": 42980571840,
+      "verificationRun": 42980757675,
+      "readOnlyHeadCommit": "06c9c516da2869d4ba7117fd53202ddb6d19d2f0",
+      "readOnlyCheckout": "1d17bbc3ca07e959cf3e943e98e93ba5b4698292",
+      "inspectionIndex": "operators/flatMap-index.md"
     },
     "mergeMap": {
       "status": "accepted",
@@ -770,14 +803,38 @@
       "verificationRun": 40853083582
     },
     "mergeMapTo": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-11",
+      "profiles": [
+        "constant Observable identity across occurrences",
+        "concurrency 2 with FIFO queue",
+        "multiple subscriptions to same hot/cold source"
+      ],
+      "evidence": "evidence/SESSION-14.md",
+      "testedCommit": "6aada9aaab62e48f46ff36da0c7a9b101b82fe80",
+      "generatedCommit": "566ff6e00805cb671a020f73844905ff54e2a672",
+      "implementationRun": 42980571840,
+      "verificationRun": 42980757675,
+      "readOnlyHeadCommit": "06c9c516da2869d4ba7117fd53202ddb6d19d2f0",
+      "readOnlyCheckout": "1d17bbc3ca07e959cf3e943e98e93ba5b4698292",
+      "inspectionIndex": "operators/mergeMapTo-index.md"
     },
     "mergeScan": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-11",
+      "profiles": [
+        "seed and latest inner emission accumulator",
+        "concurrency 2 stale snapshot overlap",
+        "bounded queue and projection-index semantics"
+      ],
+      "evidence": "evidence/SESSION-14.md",
+      "testedCommit": "6aada9aaab62e48f46ff36da0c7a9b101b82fe80",
+      "generatedCommit": "566ff6e00805cb671a020f73844905ff54e2a672",
+      "implementationRun": 42980571840,
+      "verificationRun": 42980757675,
+      "readOnlyHeadCommit": "06c9c516da2869d4ba7117fd53202ddb6d19d2f0",
+      "readOnlyCheckout": "1d17bbc3ca07e959cf3e943e98e93ba5b4698292",
+      "inspectionIndex": "operators/mergeScan-index.md"
     },
     "mergeWith": {
       "status": "pending",

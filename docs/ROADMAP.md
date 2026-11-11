@@ -38,7 +38,9 @@ This is the current implementation tracker. The migration map preserves the orig
 | M12-B | find/findIndex/first: first-match selection, sentinels and default/error exhaustion | Accepted within scope; [Session 12 evidence](../evidence/SESSION-12.md) |
 | M13-A | groupBy: keyed Subjects and retained upstream group lifetime | Accepted within scoped default Subject profile; [Session 13 guide](SESSION-13-GROUPS-AND-SCALAR-POLICIES.md) |
 | M13-B | ignoreElements/isEmpty/last/mapTo: scalar and terminal selection policies | Accepted within scope; [Session 13 evidence](../evidence/SESSION-13.md) |
-| M14+ | Remaining catalogue | 48 exports pending; not a universal interpreter |
+| M14-A | materialize and pipeable merge: notification encoding, unscheduled static-source concurrency/FIFO | Accepted within scope; [Session 14 evidence](../evidence/SESSION-14.md) |
+| M14-B | flatMap exact alias, mergeMapTo constant-source occurrences, mergeScan latest inner accumulation | Accepted within scope; [Session 14 technical guide](SESSION-14-NOTIFICATIONS-AND-MERGE.md) |
+| M14+ | Remaining catalogue | 43 exports pending; not a universal interpreter |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -193,3 +195,12 @@ Five queued RxJS 7.8.2 distinct export names—**groupBy, ignoreElements, isEmpt
 Independent read-only [PR #20 CI 42777531650](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42777531650), job **129699440098**, independently passed the unchanged full check: **971 named tests, zero failures**, and **552 deterministic projections**. Generation and publication were skipped. The actual synthetic checkout `0f0bd9d31e2aeca7f6b57035a150b9aae27550d9` has zero changed files compared to the PR head `a47ba64b533f14ac94e4487a5b687a14348cf3a1`; exact provenance and excluded profiles are in [Session 13 evidence](../evidence/SESSION-13.md).
 
 **65 of 113 exports accepted, 48 pending; zero carryovers.** The next eligible batch (not before 11 November 2026 Europe/Zurich) is `materialize`, `merge`, `flatMap`, `mergeMapTo`, `mergeScan`. No sixth operator or second session was started.
+
+
+## Session 14 closed: 11 November 2026
+
+The live queue selected exactly five pending names—**materialize, merge, flatMap, mergeMapTo, mergeScan**—in one Europe/Zurich session. The established canonical model, guarded rule runner, TypeScript checks and generator were reused, including the **new Session 14–23 requirement** to provide an export-level eleven-step inspection index for every worked operator.
+
+[Main push CI 42980571840](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42980571840) tested implementation `6aada9aaab62e48f46ff36da0c7a9b101b82fe80`, passed **1,015 tests**, generated and verified **662 deterministic projections**, then committed **45 new artifacts** at `566ff6e00805cb671a020f73844905ff54e2a672`. [Read-only PR CI 42980757675](https://github.com/hansschenker/rxjs-formal-way/actions/runs/42980757675) independently succeeded on already committed content with generation and publication skipped; GitHub's synthetic merge checkout and PR head have zero file differences. There were **20 new model/view tests, 21 new native RxJS tests, 15 negative TypeScript assertions**, and no new bounded-enumeration count. The earlier pre-generation PR CI failed exclusively on the 45 missing views; it is not reported as passing. All five `*-index.md` pages were committed and drift checked. See the [evidence ledger](../evidence/SESSION-14.md) and [technical guide](SESSION-14-NOTIFICATIONS-AND-MERGE.md).
+
+**70 of 113 exports accepted within declared scopes; 43 pending, no carryovers.** No sixth operator or second daily session.
