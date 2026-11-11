@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-11",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-11T08:19:29+01:00",
+  "startingCommit": "164b8c02c045b98d724444ab9605e37a8362bbfa",
+  "selectedNames": [
+    "materialize",
+    "merge",
+    "flatMap",
+    "mergeMapTo",
+    "mergeScan"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "materialize",
+    "merge",
+    "flatMap",
+    "mergeMapTo",
+    "mergeScan"
+  ],
+  "checks": {
+    "syntax": "not run",
+    "types": "not run",
+    "model": "not run",
+    "runtime": "not run",
+    "generated": "not run",
+    "ci": "not run"
+  },
+  "blockers": [],
+  "notes": [
+    "Live main queue and prior logs inspected; no existing 2026-11-11 session log. Session 14 reserved, hard maximum five distinct export names.",
+    "Session 14–23 requires generated export-level inspection index per accepted operator."
+  ],
+  "nextQueue": [
+    "mergeWith",
+    "multicast",
+    "observeOn",
+    "onErrorResumeNext",
+    "partition"
+  ]
+}
