@@ -1,0 +1,247 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "merge-static-2-concurrency-2",
+    "operator": "merge",
+    "purpose": "Merge one piped source and configured other Observables; bounded concurrency starts later sources FIFO.",
+    "cardinality": {
+      "signature": "merge : T0* × ... × Tn* → (T0 | ... | Tn)*",
+      "conditions": [
+        "Every connected input next forwards exactly once in actual arrival order.",
+        "Output completion requires every input completion; any input error terminates immediately.",
+        "A bounded concurrency limit delays subscriptions to later supplied sources, not their values."
+      ]
+    },
+    "scope": {
+      "parameters": "Pipeable deprecated merge export with 2 other valid Observable inputs; concurrency 2; no scheduler.",
+      "callbacks": "No callbacks. Input payloads are opaque and preserve identity.",
+      "time": "No internal clock; all inputs supply their notification times. Source-first subscriptions are ordered.",
+      "reentrancy": "Atomic nonreentrant subscriptions; synchronous input delivery during acquisition is excluded.",
+      "exclusions": [
+        "Deprecated scheduler overload and Promise/Iterable conversions, synchronous sources during subscription setup.",
+        "Reentrant observers and source callbacks, teardown throws and unbounded scenario counts over 32 others."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire source 0 before other Observable arguments; up to concurrency limit."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "Merge does not create sharing; each result subscription independently acquires input subscriptions.",
+      "reset": "Fresh live and pending indices; no shared queue between consumers.",
+      "resources": [
+        {
+          "id": "input",
+          "kind": "subscription",
+          "owner": "result execution; generation is input argument index"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Preserve event arrival order and release completed sources; concurrency slots are FIFO.",
+      "cancellationCheckpoints": [
+        "Between external notifications; cancel all live sources silently, discard pending."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "connect result"
+      },
+      {
+        "type": "input.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "value from a subscribed source"
+      },
+      {
+        "type": "input.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "one input completed"
+      },
+      {
+        "type": "input.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "one input failed"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "consumer unsubscribed"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no active subscriptions",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "zero or more live inputs and ordered pending sources",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminated or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/merge.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned pipeable merge and concurrency/pending admission semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/mergeAll.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned pipeable merge and concurrency/pending admission semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/mergeInternals.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned pipeable merge and concurrency/pending admission semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session14-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session14-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-14.md"
+    }
+  },
+  "parameters": {
+    "otherSources": 2,
+    "concurrent": 2,
+    "scheduler": "none"
+  },
+  "rules": [
+    {
+      "id": "S14-MERGE-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first consumer connection",
+      "actions": [
+        "subscribe source first then available others"
+      ],
+      "explanation": "All inputs are fixed at operator construction; the source at input 0 is subscribed first.",
+      "nextState": "live and pending indices respect FIFO admission",
+      "obligations": [
+        "S14-MERGE-INIT"
+      ]
+    },
+    {
+      "id": "S14-MERGE-NEXT",
+      "from": "Active",
+      "event": "input.next",
+      "to": "Active",
+      "guard": "resource is currently subscribed",
+      "actions": [
+        "forward exact payload"
+      ],
+      "explanation": "Any admitted input contributes values in actual event order without changing subscription ownership.",
+      "nextState": "live and pending indices respect FIFO admission",
+      "obligations": [
+        "S14-MERGE-NEXT"
+      ]
+    },
+    {
+      "id": "S14-MERGE-REFILL",
+      "from": "Active",
+      "event": "input.complete",
+      "to": "Active",
+      "guard": "live input complete and pending FIFO is nonempty",
+      "actions": [
+        "release completed input",
+        "subscribe next waiting input"
+      ],
+      "explanation": "At a bounded concurrency limit, completion frees a slot for the next supplied source.",
+      "nextState": "live and pending indices respect FIFO admission",
+      "obligations": [
+        "S14-MERGE-REFILL"
+      ]
+    },
+    {
+      "id": "S14-MERGE-COMPLETE-WAIT",
+      "from": "Active",
+      "event": "input.complete",
+      "to": "Active",
+      "guard": "pending empty and other inputs live",
+      "actions": [
+        "release completed input"
+      ],
+      "explanation": "Completion waits for every connected input and queued source to finish.",
+      "nextState": "live and pending indices respect FIFO admission",
+      "obligations": [
+        "S14-MERGE-COMPLETE-WAIT"
+      ]
+    },
+    {
+      "id": "S14-MERGE-COMPLETE-LAST",
+      "from": "Active",
+      "event": "input.complete",
+      "to": "Closed",
+      "guard": "pending empty, final live input",
+      "actions": [
+        "complete result",
+        "release final input"
+      ],
+      "explanation": "Only the final input completion ends the result normally.",
+      "nextState": "terminal, no subscriptions",
+      "obligations": [
+        "S14-MERGE-COMPLETE-LAST"
+      ]
+    },
+    {
+      "id": "S14-MERGE-ERROR",
+      "from": "Active",
+      "event": "input.error",
+      "to": "Closed",
+      "guard": "any live source fails",
+      "actions": [
+        "forward exact error",
+        "release every subscribed input"
+      ],
+      "explanation": "A single source failure immediately tears down all live sources and discards pending subscriptions.",
+      "nextState": "terminal, no subscriptions",
+      "obligations": [
+        "S14-MERGE-ERROR"
+      ]
+    },
+    {
+      "id": "S14-MERGE-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer unsubscribe",
+      "actions": [
+        "release all live sources, no notification"
+      ],
+      "explanation": "Downstream cancellation is silent; queued inputs are never subscribed.",
+      "nextState": "terminal, no subscriptions",
+      "obligations": [
+        "S14-MERGE-CANCEL"
+      ]
+    }
+  ]
+}

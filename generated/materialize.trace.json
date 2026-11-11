@@ -1,0 +1,141 @@
+{
+  "status": "finished-input",
+  "consumed": 4,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "materialize-notifications",
+      "executionId": "materialize-session14-example",
+      "ruleId": "S14-MATERIALIZE-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "materialize-notifications",
+      "executionId": "materialize-session14-example",
+      "ruleId": "S14-MATERIALIZE-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": "alpha"
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "kind": "N",
+              "value": "alpha",
+              "hasValue": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 3,
+      "modelId": "materialize-notifications",
+      "executionId": "materialize-session14-example",
+      "ruleId": "S14-MATERIALIZE-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": "beta"
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "kind": "N",
+              "value": "beta",
+              "hasValue": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 4,
+      "modelId": "materialize-notifications",
+      "executionId": "materialize-session14-example",
+      "ruleId": "S14-MATERIALIZE-END",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "kind": "C",
+              "hasValue": false
+            }
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

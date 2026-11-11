@@ -1,0 +1,538 @@
+{
+  "status": "finished-input",
+  "consumed": 10,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "mergeMapTo-constant-2",
+      "executionId": "mergeMapTo-session14-example",
+      "ruleId": "MERGEMAPTO-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 0,
+        "active": [],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "mergeMapTo-constant-2",
+      "executionId": "mergeMapTo-session14-example",
+      "ruleId": "MERGEMAPTO-ADMIT",
+      "event": {
+        "type": "outer.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "index": 0,
+        "active": [],
+        "queue": []
+      },
+      "after": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 1,
+        "active": [],
+        "queue": [],
+        "callId": 0,
+        "input": 1
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "constant",
+            "generation": 0
+          },
+          "value": 1,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "mergeMapTo-constant-2",
+      "executionId": "mergeMapTo-session14-example",
+      "ruleId": "MERGEMAPTO-RETURN-ACTIVE",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "constant",
+          "generation": 0
+        },
+        "value": "shared"
+      },
+      "before": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 1,
+        "active": [],
+        "queue": [],
+        "callId": 0,
+        "input": 1
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "mergeMapTo-constant-2",
+      "executionId": "mergeMapTo-session14-example",
+      "ruleId": "MERGEMAPTO-ADMIT",
+      "event": {
+        "type": "outer.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": [],
+        "callId": 1,
+        "input": 2
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "constant",
+            "generation": 1
+          },
+          "value": 2,
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "mergeMapTo-constant-2",
+      "executionId": "mergeMapTo-session14-example",
+      "ruleId": "MERGEMAPTO-RETURN-ACTIVE",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "constant",
+          "generation": 1
+        },
+        "value": "shared"
+      },
+      "before": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": [],
+        "callId": 1,
+        "input": 2
+      },
+      "after": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "mergeMapTo-constant-2",
+      "executionId": "mergeMapTo-session14-example",
+      "ruleId": "MERGEMAPTO-OUTER-WAIT",
+      "event": {
+        "type": "outer.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 4,
+      "modelId": "mergeMapTo-constant-2",
+      "executionId": "mergeMapTo-session14-example",
+      "ruleId": "MERGEMAPTO-NEXT-DRAINING",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 0
+        },
+        "value": "A"
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "A"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 5,
+      "modelId": "mergeMapTo-constant-2",
+      "executionId": "mergeMapTo-session14-example",
+      "ruleId": "MERGEMAPTO-NEXT-DRAINING",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 1
+        },
+        "value": "B"
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "B"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 6,
+      "modelId": "mergeMapTo-constant-2",
+      "executionId": "mergeMapTo-session14-example",
+      "ruleId": "MERGEMAPTO-INNER-END-DRAINING",
+      "event": {
+        "type": "inner.complete",
+        "resource": {
+          "id": "inner",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 9,
+      "time": 7,
+      "modelId": "mergeMapTo-constant-2",
+      "executionId": "mergeMapTo-session14-example",
+      "ruleId": "MERGEMAPTO-LAST-INNER",
+      "event": {
+        "type": "inner.complete",
+        "resource": {
+          "id": "inner",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

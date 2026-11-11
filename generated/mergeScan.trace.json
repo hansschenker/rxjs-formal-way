@@ -1,0 +1,823 @@
+{
+  "status": "finished-input",
+  "consumed": 14,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete",
+    "accumulator": 9
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed",
+        "accumulator": 0
+      },
+      "after": {
+        "phase": "Active",
+        "index": 0,
+        "active": [],
+        "queue": [],
+        "accumulator": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-ADMIT",
+      "event": {
+        "type": "outer.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "index": 0,
+        "active": [],
+        "queue": [],
+        "accumulator": 0
+      },
+      "after": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 1,
+        "active": [],
+        "queue": [],
+        "callId": 0,
+        "input": 1,
+        "accumulator": 0
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "accumulator",
+            "generation": 0
+          },
+          "value": {
+            "accumulator": 0,
+            "value": 1
+          },
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-RETURN-ACTIVE",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "accumulator",
+          "generation": 0
+        },
+        "value": "first"
+      },
+      "before": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 1,
+        "active": [],
+        "queue": [],
+        "callId": 0,
+        "input": 1,
+        "accumulator": 0
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "first"
+          }
+        ],
+        "queue": [],
+        "accumulator": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-ADMIT",
+      "event": {
+        "type": "outer.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "first"
+          }
+        ],
+        "queue": [],
+        "accumulator": 0
+      },
+      "after": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "first"
+          }
+        ],
+        "queue": [],
+        "callId": 1,
+        "input": 2,
+        "accumulator": 0
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "accumulator",
+            "generation": 1
+          },
+          "value": {
+            "accumulator": 0,
+            "value": 2
+          },
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-RETURN-ACTIVE",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "accumulator",
+          "generation": 1
+        },
+        "value": "second"
+      },
+      "before": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "first"
+          }
+        ],
+        "queue": [],
+        "callId": 1,
+        "input": 2,
+        "accumulator": 0
+      },
+      "after": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "first"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          }
+        ],
+        "queue": [],
+        "accumulator": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-NEXT-ACTIVE",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 0
+        },
+        "value": 5
+      },
+      "before": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "first"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          }
+        ],
+        "queue": [],
+        "accumulator": 0
+      },
+      "after": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "first"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          }
+        ],
+        "queue": [],
+        "accumulator": 5
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 5
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 4,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-QUEUE",
+      "event": {
+        "type": "outer.next",
+        "value": 3
+      },
+      "before": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "first"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          }
+        ],
+        "queue": [],
+        "accumulator": 5
+      },
+      "after": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "first"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          }
+        ],
+        "queue": [
+          3
+        ],
+        "accumulator": 5
+      },
+      "actions": []
+    },
+    {
+      "sequence": 7,
+      "time": 5,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-OUTER-WAIT",
+      "event": {
+        "type": "outer.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "first"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          }
+        ],
+        "queue": [
+          3
+        ],
+        "accumulator": 5
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "first"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          }
+        ],
+        "queue": [
+          3
+        ],
+        "accumulator": 5
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 6,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-DRAIN-DRAINING",
+      "event": {
+        "type": "inner.complete",
+        "resource": {
+          "id": "inner",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "first"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          }
+        ],
+        "queue": [
+          3
+        ],
+        "accumulator": 5
+      },
+      "after": {
+        "phase": "Calling",
+        "resume": "Draining",
+        "index": 3,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          }
+        ],
+        "queue": [],
+        "callId": 2,
+        "input": 3,
+        "accumulator": 5
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        },
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "accumulator",
+            "generation": 2
+          },
+          "value": {
+            "accumulator": 5,
+            "value": 3
+          },
+          "index": 2
+        }
+      ]
+    },
+    {
+      "sequence": 9,
+      "time": 6,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-RETURN-DRAINING",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "accumulator",
+          "generation": 2
+        },
+        "value": "third"
+      },
+      "before": {
+        "phase": "Calling",
+        "resume": "Draining",
+        "index": 3,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          }
+        ],
+        "queue": [],
+        "callId": 2,
+        "input": 3,
+        "accumulator": 5
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 3,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 2
+            },
+            "source": "third"
+          }
+        ],
+        "queue": [],
+        "accumulator": 5
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 10,
+      "time": 7,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-NEXT-DRAINING",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 1
+        },
+        "value": 8
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 3,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 2
+            },
+            "source": "third"
+          }
+        ],
+        "queue": [],
+        "accumulator": 5
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 3,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 2
+            },
+            "source": "third"
+          }
+        ],
+        "queue": [],
+        "accumulator": 8
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 8
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 11,
+      "time": 8,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-INNER-END-DRAINING",
+      "event": {
+        "type": "inner.complete",
+        "resource": {
+          "id": "inner",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 3,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "second"
+          },
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 2
+            },
+            "source": "third"
+          }
+        ],
+        "queue": [],
+        "accumulator": 8
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 3,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 2
+            },
+            "source": "third"
+          }
+        ],
+        "queue": [],
+        "accumulator": 8
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 12,
+      "time": 9,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-NEXT-DRAINING",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 2
+        },
+        "value": 9
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 3,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 2
+            },
+            "source": "third"
+          }
+        ],
+        "queue": [],
+        "accumulator": 8
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 3,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 2
+            },
+            "source": "third"
+          }
+        ],
+        "queue": [],
+        "accumulator": 9
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 9
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 13,
+      "time": 10,
+      "modelId": "mergeScan-accumulator-2",
+      "executionId": "mergeScan-session14-example",
+      "ruleId": "MERGESCAN-LAST-INNER",
+      "event": {
+        "type": "inner.complete",
+        "resource": {
+          "id": "inner",
+          "generation": 2
+        }
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 3,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 2
+            },
+            "source": "third"
+          }
+        ],
+        "queue": [],
+        "accumulator": 9
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete",
+        "accumulator": 9
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 2
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

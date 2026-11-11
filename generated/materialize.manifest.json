@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "materialize-notifications",
+    "operator": "materialize",
+    "purpose": "Turn next, error and completion protocol signals into typed next values, then complete on original terminal signals.",
+    "cardinality": {
+      "signature": "materialize : T* -> Notification<T>*",
+      "conditions": [
+        "Every source next maps to one N value at the same notification moment.",
+        "Successful completion adds a C value followed by result completion.",
+        "Source failure adds an E value retaining error identity, then result completion.",
+        "Nonterminating or cancelled sources have no synthetic terminal Notification value."
+      ]
+    },
+    "scope": {
+      "parameters": "No arguments.",
+      "callbacks": "No user callbacks or value inspection.",
+      "time": "Source timing and ordering are preserved; no timer or scheduler is introduced.",
+      "reentrancy": "Non-reentrant source delivery after subscription setup.",
+      "exclusions": [
+        "No equivalence claim for Notification class prototype, cached C instance, or property descriptors; semantic kind/value/error/hasValue are modeled.",
+        "Synchronous reentrancy, observer throws and teardown throws are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire exactly one source upon result subscription."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing. Every output subscription has its own source connection.",
+      "reset": "Closed never accepts further input.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result subscriber"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Emit value-wrapped terminal first, then complete result; release source once.",
+      "cancellationCheckpoints": [
+        "Between notifications; cancel releases upstream silently."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start lazy execution"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "source payload"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source normal end"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source failure"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "consumer cancellation"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not yet connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source connected",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/materialize.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned 7.8.2 Notification construction, completion and teardown"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Notification.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned 7.8.2 Notification construction, completion and teardown"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned 7.8.2 Notification construction, completion and teardown"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session14-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session14-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-14.md"
+    }
+  },
+  "parameters": {
+    "mode": "notification-as-value"
+  },
+  "rules": [
+    {
+      "id": "S14-MATERIALIZE-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first consumer subscription",
+      "actions": [
+        "subscribe source"
+      ],
+      "explanation": "The declared dataflow is lazy.",
+      "nextState": "one subscribed source",
+      "obligations": [
+        "S14-MATERIALIZE-INIT"
+      ]
+    },
+    {
+      "id": "S14-MATERIALIZE-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source next value, including undefined",
+      "actions": [
+        "emit N Notification as next"
+      ],
+      "explanation": "Wrap each source value without looking inside it.",
+      "nextState": "one subscribed source",
+      "obligations": [
+        "S14-MATERIALIZE-NEXT"
+      ]
+    },
+    {
+      "id": "S14-MATERIALIZE-END",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes normally",
+      "actions": [
+        "emit C Notification as next",
+        "complete output",
+        "release source"
+      ],
+      "explanation": "The source completion is encoded as a value, then the result completes.",
+      "nextState": "no owned source and no legal late events",
+      "obligations": [
+        "S14-MATERIALIZE-END"
+      ]
+    },
+    {
+      "id": "S14-MATERIALIZE-FAIL",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errors",
+      "actions": [
+        "emit E Notification as next",
+        "complete output",
+        "release source"
+      ],
+      "explanation": "The original error is retained by identity as the E payload; the RESULT completes, not errors.",
+      "nextState": "no owned source and no legal late events",
+      "obligations": [
+        "S14-MATERIALIZE-FAIL"
+      ]
+    },
+    {
+      "id": "S14-MATERIALIZE-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer cancels",
+      "actions": [
+        "release source without notifications"
+      ],
+      "explanation": "Cancellation is silent and does not fabricate a terminal Notification value.",
+      "nextState": "no owned source and no legal late events",
+      "obligations": [
+        "S14-MATERIALIZE-CANCEL"
+      ]
+    }
+  ]
+}

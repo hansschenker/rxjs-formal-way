@@ -1,0 +1,319 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "merge-static-2-concurrency-2",
+      "executionId": "merge-session14-example",
+      "ruleId": "S14-MERGE-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "live": [
+          0,
+          1
+        ],
+        "pending": [
+          2
+        ],
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "merge-static-2-concurrency-2",
+      "executionId": "merge-session14-example",
+      "ruleId": "S14-MERGE-NEXT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 0
+        },
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "live": [
+          0,
+          1
+        ],
+        "pending": [
+          2
+        ],
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "live": [
+          0,
+          1
+        ],
+        "pending": [
+          2
+        ],
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "merge-static-2-concurrency-2",
+      "executionId": "merge-session14-example",
+      "ruleId": "S14-MERGE-NEXT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        },
+        "value": 10
+      },
+      "before": {
+        "phase": "Active",
+        "live": [
+          0,
+          1
+        ],
+        "pending": [
+          2
+        ],
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "live": [
+          0,
+          1
+        ],
+        "pending": [
+          2
+        ],
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 10
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "merge-static-2-concurrency-2",
+      "executionId": "merge-session14-example",
+      "ruleId": "S14-MERGE-REFILL",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "live": [
+          0,
+          1
+        ],
+        "pending": [
+          2
+        ],
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "live": [
+          1,
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "merge-static-2-concurrency-2",
+      "executionId": "merge-session14-example",
+      "ruleId": "S14-MERGE-NEXT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 2
+        },
+        "value": 20
+      },
+      "before": {
+        "phase": "Active",
+        "live": [
+          1,
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "live": [
+          1,
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 20
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "merge-static-2-concurrency-2",
+      "executionId": "merge-session14-example",
+      "ruleId": "S14-MERGE-COMPLETE-WAIT",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "live": [
+          1,
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "live": [
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "merge-static-2-concurrency-2",
+      "executionId": "merge-session14-example",
+      "ruleId": "S14-MERGE-COMPLETE-LAST",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 2
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "live": [
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 2
+          }
+        }
+      ]
+    }
+  ]
+}
