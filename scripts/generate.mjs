@@ -73,6 +73,10 @@ import { createMaterializeModel, materializeExample, createMergeModel, mergeExam
   createFlatMapModel, flatMapExample, createMergeMapToModel, mergeMapToExample,
   createMergeScanModel, mergeScanExample } from '../dist/index.js';
 
+import { createMergeWithModel, mergeWithExample, createMulticastModel, multicastExample,
+ createObserveOnModel, observeOnExample, createOnErrorResumeNextModel, onErrorResumeNextExample,
+ createPartitionModel, partitionExample } from '../dist/index.js';
+
 const canonicalModelPaths = {
   take:'src/models/take.ts', map:'src/models/map.ts', filter:'src/models/filter.ts', scan:'src/models/scan.ts',
   debounceTime:'src/models/debounceTime.ts', switchMap:'src/models/flatten.ts', mergeMap:'src/models/flatten.ts',
@@ -101,6 +105,9 @@ const canonicalModelPaths = {
   materialize:'src/models/session14-materialize.ts', merge:'src/models/session14-merge.ts',
   flatMap:'src/models/session14-flatten.ts', mergeMapTo:'src/models/session14-flatten.ts',
   mergeScan:'src/models/session14-flatten.ts',
+  mergeWith:'src/models/session15-aliases.ts', multicast:'src/models/session15-aliases.ts',
+  observeOn:'src/models/session15-observeOn.ts', onErrorResumeNext:'src/models/session15-onErrorResumeNext.ts',
+  partition:'src/models/session15-partition.ts',
 };
 
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
@@ -180,6 +187,11 @@ const examples = [
   ['flatMap', createFlatMapModel(2), flatMapExample, 'flatMap-session14-example'],
   ['mergeMapTo', createMergeMapToModel('shared',2), mergeMapToExample, 'mergeMapTo-session14-example'],
   ['mergeScan', createMergeScanModel(0,2), mergeScanExample, 'mergeScan-session14-example'],
+  ['mergeWith', createMergeWithModel(2), mergeWithExample, 'mergeWith-session15-example'],
+  ['multicast', createMulticastModel(), multicastExample, 'multicast-session15-example'],
+  ['observeOn', createObserveOnModel(2), observeOnExample, 'observeOn-session15-example'],
+  ['onErrorResumeNext', createOnErrorResumeNextModel(2), onErrorResumeNextExample, 'onErrorResumeNext-session15-example'],
+  ['partition', createPartitionModel(), partitionExample, 'partition-session15-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
