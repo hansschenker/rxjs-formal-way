@@ -98,7 +98,11 @@ test('S15 NATIVE observeOn: source scheduler unchanged and scheduler actions own
  const frames=[];
  const scheduler=new TestScheduler(()=>{});
  scheduler.schedule(()=>frames.push('external'),1);
- scheduler.schedule(()=>{collect(of(1).pipe(observeOn(scheduler,3))).events.forEach(e=>frames.push(e.kind));},2);
+ scheduler.schedule(()=>{
+  of(1).pipe(observeOn(scheduler,3)).subscribe({
+   next:()=>frames.push('N'),complete:()=>frames.push('C'),
+  });
+ },2);
  scheduler.flush();
  assert.deepEqual(frames,['external','N','C']);
 });
@@ -128,7 +132,7 @@ test('S15 NATIVE onErrorResumeNext: cancellation prevents subscription to later 
  assert.equal(first.observed,false);assert.equal(second.observed,false);assert.deepEqual(out.events,[]);
 });
 test('S15 NATIVE onErrorResumeNext: deprecated operator alias is the pipeable with variant',async()=>{
- const { onErrorResumeNextWith }=await import('rxjs/operators');
+ const { onErrorResumeNextWith }=await import('rxjs');
  assert.strictEqual(onErrorResumeNext,onErrorResumeNextWith);
 });
 
