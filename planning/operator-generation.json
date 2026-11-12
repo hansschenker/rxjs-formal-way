@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "mergeWith",
-    "multicast",
-    "observeOn",
-    "onErrorResumeNext",
-    "partition",
     "pluck",
     "publish",
     "publishBehavior",
@@ -837,9 +832,22 @@
       "inspectionIndex": "operators/mergeScan-index.md"
     },
     "mergeWith": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-12",
+      "profiles": [
+        "source-first unscheduled Observable inputs; unbounded overlap",
+        "no scheduler or concurrency parameter; 0-32 other inputs"
+      ],
+      "evidence": "evidence/SESSION-15.md",
+      "testedCommit": "d50ce4bfcef77117ca5d313da7ed5473d47633c3",
+      "generatedCommit": "cb1416e1125a8150f22ef9901990fcf9e75d2937",
+      "implementationRun": 43174421942,
+      "verificationRun": 43174656466,
+      "verificationJob": 131035863742,
+      "readOnlyHeadCommit": "59c9ef58f67960926fb9486594a89cc41e9f4b53",
+      "readOnlyCheckout": "63f07c609a987fc7f63a1ab69c96e374ca6b47c3",
+      "readOnlyTree": "6f2c1ad0c61ef211ea19a8025ef9358f29db8958",
+      "inspectionIndex": "operators/mergeWith-index.md"
     },
     "min": {
       "status": "accepted",
@@ -856,19 +864,61 @@
       "readOnlyCheckout": "693325757bea224f27a3b945cb193d9b07fb402e"
     },
     "multicast": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-12",
+      "profiles": [
+        "fresh Subject factory plus selector merging two shared branches",
+        "selected branches subscribed before one source connection",
+        "selector-less ConnectableObservable and fixed Subject excluded"
+      ],
+      "evidence": "evidence/SESSION-15.md",
+      "testedCommit": "d50ce4bfcef77117ca5d313da7ed5473d47633c3",
+      "generatedCommit": "cb1416e1125a8150f22ef9901990fcf9e75d2937",
+      "implementationRun": 43174421942,
+      "verificationRun": 43174656466,
+      "verificationJob": 131035863742,
+      "readOnlyHeadCommit": "59c9ef58f67960926fb9486594a89cc41e9f4b53",
+      "readOnlyCheckout": "63f07c609a987fc7f63a1ab69c96e374ca6b47c3",
+      "readOnlyTree": "6f2c1ad0c61ef211ea19a8025ef9358f29db8958",
+      "inspectionIndex": "operators/multicast-index.md"
     },
     "observeOn": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-12",
+      "profiles": [
+        "deferred FIFO scheduler; nonnegative safe-integer delay",
+        "one scheduled task per next/error/complete; immediate source subscription",
+        "silent cancellation of pending scheduled notifications"
+      ],
+      "evidence": "evidence/SESSION-15.md",
+      "testedCommit": "d50ce4bfcef77117ca5d313da7ed5473d47633c3",
+      "generatedCommit": "cb1416e1125a8150f22ef9901990fcf9e75d2937",
+      "implementationRun": 43174421942,
+      "verificationRun": 43174656466,
+      "verificationJob": 131035863742,
+      "readOnlyHeadCommit": "59c9ef58f67960926fb9486594a89cc41e9f4b53",
+      "readOnlyCheckout": "63f07c609a987fc7f63a1ab69c96e374ca6b47c3",
+      "readOnlyTree": "6f2c1ad0c61ef211ea19a8025ef9358f29db8958",
+      "inspectionIndex": "operators/observeOn-index.md"
     },
     "onErrorResumeNext": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-12",
+      "profiles": [
+        "deprecated pipeable alias of onErrorResumeNextWith",
+        "serial valid Observable inputs; advance on complete or error",
+        "swallow input errors; final normal completion and silent cancellation"
+      ],
+      "evidence": "evidence/SESSION-15.md",
+      "testedCommit": "d50ce4bfcef77117ca5d313da7ed5473d47633c3",
+      "generatedCommit": "cb1416e1125a8150f22ef9901990fcf9e75d2937",
+      "implementationRun": 43174421942,
+      "verificationRun": 43174656466,
+      "verificationJob": 131035863742,
+      "readOnlyHeadCommit": "59c9ef58f67960926fb9486594a89cc41e9f4b53",
+      "readOnlyCheckout": "63f07c609a987fc7f63a1ab69c96e374ca6b47c3",
+      "readOnlyTree": "6f2c1ad0c61ef211ea19a8025ef9358f29db8958",
+      "inspectionIndex": "operators/onErrorResumeNext-index.md"
     },
     "pairwise": {
       "status": "accepted",
@@ -881,9 +931,23 @@
       "verificationRun": 41286526038
     },
     "partition": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-12",
+      "profiles": [
+        "two independent filter-like source subscriptions; no implicit sharing",
+        "one subscription per branch; separate indexed predicate histories",
+        "branch-local callback errors and silent cancellation"
+      ],
+      "evidence": "evidence/SESSION-15.md",
+      "testedCommit": "d50ce4bfcef77117ca5d313da7ed5473d47633c3",
+      "generatedCommit": "cb1416e1125a8150f22ef9901990fcf9e75d2937",
+      "implementationRun": 43174421942,
+      "verificationRun": 43174656466,
+      "verificationJob": 131035863742,
+      "readOnlyHeadCommit": "59c9ef58f67960926fb9486594a89cc41e9f4b53",
+      "readOnlyCheckout": "63f07c609a987fc7f63a1ab69c96e374ca6b47c3",
+      "readOnlyTree": "6f2c1ad0c61ef211ea19a8025ef9358f29db8958",
+      "inspectionIndex": "operators/partition-index.md"
     },
     "pluck": {
       "status": "pending",
