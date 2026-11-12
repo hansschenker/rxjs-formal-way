@@ -111,3 +111,11 @@ export { createFlatMapModel, flatMapExample, createMergeMapToModel, mergeMapToEx
 export type { FlatMapModel, FlatMapEvent, MergeMapToModel, MergeMapToEvent,
   MergeScanParameters, MergeScanState, MergeScanEvent, MergeScanModel,
   AccumulatorInput } from './models/session14-flatten.js';
+
+export { createMergeWithModel, createMulticastModel, mergeWithExample, multicastExample } from './models/session15-aliases.js';
+export { createObserveOnModel, observeOnExample } from './models/session15-observeOn.js';
+export type { ObserveOnParameters, ScheduledNotification, ObserveOnState, ObserveOnEvent, ObserveOnModel } from './models/session15-observeOn.js';
+export { createOnErrorResumeNextModel, onErrorResumeNextExample } from './models/session15-onErrorResumeNext.js';
+export type { ResumeNextParameters, ResumeNextState, ResumeNextEvent, ResumeNextModel } from './models/session15-onErrorResumeNext.js';
+export { createPartitionModel, partitionExample } from './models/session15-partition.js';
+export type { PartitionBranch, PartitionSlot, PartitionParameters, PartitionState, PartitionEvent, PartitionModel } from './models/session15-partition.js';
