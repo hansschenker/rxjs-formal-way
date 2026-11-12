@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-12",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-12T08:03:07+01:00",
   "startingCommit": "5281bcdc7df9a4457a17de3e8a860420d810def7",
   "selectedNames": [
@@ -12,28 +12,101 @@
     "onErrorResumeNext",
     "partition"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
+  "workedNames": [
     "mergeWith",
     "multicast",
     "observeOn",
     "onErrorResumeNext",
     "partition"
   ],
-  "checks": {},
+  "completedNames": [
+    "mergeWith",
+    "multicast",
+    "observeOn",
+    "onErrorResumeNext",
+    "partition"
+  ],
+  "carryovers": [],
+  "checks": {
+    "syntax": "passed in main push CI 43174421942 and independent read-only CI 43174656466",
+    "types": "strict TypeScript passed; 17 new negative assertions recorded",
+    "model": "17 new canonical model/view named tests; complete suite 1053 passed, zero failures",
+    "runtime": "21 new independent native RxJS 7.8.2 named tests; complete suite 1053 passed, zero failures",
+    "generated": "707 committed deterministic projections drift-verified; 45 new artifacts including five required export-level inspection indexes",
+    "ci": "main push 43174421942 job 131035100160 success; read-only 43174656466 job 131035863742 success with generation/publication skipped"
+  },
   "blockers": [],
   "notes": [
     "Session 15 reserved after live main branch, queue, roadmap and dated log checks; five distinct export names maximum.",
-    "Session 14–23 export-level inspection-index requirement applies. No acceptance without independent actual RxJS tests, generated drift check, and retrieved CI."
+    "Session 14–23 export-level inspection-index requirement applies. No acceptance without independent actual RxJS tests, generated drift check, and retrieved CI.",
+    "Resumed the already-started same-date session after implementation and generated artifacts were present; no duplicate reservation, sixth name or catch-up batch.",
+    "Pinned RxJS 7.8.2 source revision e5351d02e225e275ac0e497c7b66eaa5f0c88791 retained.",
+    "Read-only CI checked synthetic merge 63f07c609a987fc7f63a1ab69c96e374ca6b47c3; independently retrieved Git trees match PR head 59c9ef58f67960926fb9486594a89cc41e9f4b53 exactly.",
+    "All five generated inspection indexes were included in the 707 committed-projection drift check with generation and publication skipped.",
+    "Tracker update was checked against a byte-identical reconstruction of its original Git blob; only five operator records and their queue entries changed.",
+    "Final closure changes documentation and planning only; it is not represented as the implementation checkout tested by the recorded CI.",
+    "75 of 113 exports accepted within declared scopes; 38 pending; no new bounded exhaustive comparison count claimed."
   ],
   "nextQueue": [
-    "mergeWith",
-    "multicast",
-    "observeOn",
-    "onErrorResumeNext",
-    "partition"
+    "pluck",
+    "publish",
+    "publishBehavior",
+    "publishLast",
+    "publishReplay"
   ],
-  "commits": [],
-  "evidence": "evidence/SESSION-15.md"
+  "commits": [
+    "eb82980226bcf6d0a10b169acc332e768b2ad763",
+    "08436ad10c0910eee9c2c54f4eddf272aa739960",
+    "d50ce4bfcef77117ca5d313da7ed5473d47633c3",
+    "cb1416e1125a8150f22ef9901990fcf9e75d2937",
+    "59c9ef58f67960926fb9486594a89cc41e9f4b53",
+    "f81331ac5a9801436b444d398f62a60140473b3e",
+    "d3006cf9975da1792217d78130d8605dc1a7bfcb",
+    "2b22405f75210635070afec40a5a848b8c62c5a7",
+    "361539f1388a053e5d6f447089204e7f6d91c8c9"
+  ],
+  "evidence": "evidence/SESSION-15.md",
+  "nextSessionNotBefore": "2026-11-13",
+  "closedAt": "2026-11-12T10:23:00+01:00",
+  "verification": {
+    "implementationPr": 26,
+    "implementationPrHead": "08436ad10c0910eee9c2c54f4eddf272aa739960",
+    "implementationMerge": "d50ce4bfcef77117ca5d313da7ed5473d47633c3",
+    "testedCommit": "d50ce4bfcef77117ca5d313da7ed5473d47633c3",
+    "generatedCommit": "cb1416e1125a8150f22ef9901990fcf9e75d2937",
+    "preGenerationPrRun": 43174292944,
+    "preGenerationPrJob": 131034673989,
+    "preGenerationStatus": "failed only generation drift on 45 not-yet-committed projections; syntax, strict types and all 1053 named tests passed",
+    "mainPushRun": 43174421942,
+    "mainPushJob": 131035100160,
+    "mainPushConclusion": "success",
+    "readOnlyPr": 27,
+    "readOnlyRun": 43174656466,
+    "readOnlyJob": 131035863742,
+    "readOnlyConclusion": "success",
+    "readOnlyHeadCommit": "59c9ef58f67960926fb9486594a89cc41e9f4b53",
+    "readOnlyBaseCommit": "cb1416e1125a8150f22ef9901990fcf9e75d2937",
+    "readOnlyCheckout": "63f07c609a987fc7f63a1ab69c96e374ca6b47c3",
+    "readOnlyHeadTree": "6f2c1ad0c61ef211ea19a8025ef9358f29db8958",
+    "readOnlyCheckoutTree": "6f2c1ad0c61ef211ea19a8025ef9358f29db8958",
+    "namedTestsPassed": 1053,
+    "namedTestFailures": 0,
+    "newNamedTests": 38,
+    "newModelNamedTests": 17,
+    "newRuntimeNamedTests": 21,
+    "newNegativeTypeAssertions": 17,
+    "generatedViews": 707,
+    "newGeneratedViews": 45,
+    "newInspectionIndices": 5,
+    "inspectionIndicesDriftVerified": true,
+    "newBoundedModelRxjsScenarios": 0,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  },
+  "provenanceLimitations": [
+    "Read-only CI executes a GitHub synthetic PR merge checkout, not the PR-head SHA; independently retrieved identical Git trees establish checked-content identity.",
+    "multicast acceptance covers the fresh-Subject factory-plus-selector profile only; fixed Subject, selector-less ConnectableObservable and refCount remain outside scope.",
+    "Arbitrary reentrancy, throwing observers/finalizers, non-FIFO/custom schedulers, broad ObservableInput conversions and excluded overloads remain outside scope.",
+    "Finite model/runtime tests are evidence within declared profiles, not unrestricted behavioral equivalence. Model traces are predictions, not native recordings."
+  ]
 }
