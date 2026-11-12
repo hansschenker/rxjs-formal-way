@@ -10,8 +10,8 @@
     "check:types": "tsc -p tsconfig.types.json",
     "test": "npm run build && node --test tests/*.test.mjs",
     "test:model": "npm run build && node --test tests/*-model.test.mjs",
-    "generate": "npm run build && node scripts/generate.mjs",
-    "check:generated": "npm run build && node scripts/generate.mjs --check",
+    "generate": "npm run build && node scripts/generate.mjs && node scripts/generate-mergeWith-scenarios.mjs",
+    "check:generated": "npm run build && node scripts/generate.mjs --check && node scripts/generate-mergeWith-scenarios.mjs --check",
     "check:syntax": "node scripts/check-syntax.mjs",
     "check": "npm run check:syntax && npm run check:types && npm test && npm run check:generated"
   },

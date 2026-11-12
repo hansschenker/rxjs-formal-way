@@ -15,11 +15,82 @@ const source = (path: string) => ({
   purpose: 'Pinned RxJS 7.8.2 export delegation and subscription semantics',
 });
 
-/** mergeWith is exactly the unscheduled, unbounded-concurrency pipeable merge profile. */
+/** Specialize the reusable merge machine, not merely its rule identifiers.
+ * This profile excludes input delivery during subscription acquisition.
+ * The pending field is retained for type compatibility, but is invariantly empty.
+ */
 export function createMergeWithModel<T>(otherSources = 2): MergeModel<T> {
   const base = createMergeModel<T>(otherSources);
+  const descriptions = {
+    INIT: {
+      guard: 'first consumer connection',
+      actions: ['subscribe source 0 first, then every configured other input in argument order'],
+      nextState: 'Active; live inputs are 0 through ' + otherSources + '; pending is empty',
+      explanation: 'All configured inputs are subscribed in argument order. There is no concurrency limit or waiting-source admission policy in mergeWith.',
+    },
+    NEXT: {
+      guard: 'input resource belongs to the current live-input set',
+      actions: ['forward the exact input payload once'],
+      nextState: 'Active; the live-input set is unchanged; pending remains empty',
+      explanation: 'A value from any live input flows downstream unchanged in delivery order; it does not change subscription ownership.',
+    },
+    'COMPLETE-WAIT': {
+      guard: 'the completing input is live and at least one other input remains live',
+      actions: ['release the completed input; emit no result notification'],
+      nextState: 'Active; remove the completed input from the live-input set; pending remains empty',
+      explanation: 'One input completion removes only that input. The result waits while any other input remains live.',
+    },
+    'COMPLETE-LAST': {
+      guard: 'the completing input is the only live input',
+      actions: ['release the final input and run its registered teardown', 'complete the result'],
+      nextState: 'Closed with reason complete; no owned input subscriptions',
+      explanation: 'For completion delivered after subscription setup, the final input teardown precedes normal result completion. Subscription-time emissions and late teardown registration are outside this profile.',
+    },
+    ERROR: {
+      guard: 'the failing input belongs to the live-input set',
+      actions: ['forward the exact error', 'release every live input in subscription order'],
+      nextState: 'Closed with reason input-error; no owned input subscriptions',
+      explanation: 'An input failure errors the result and tears down every live input, including the failing one. No value is manufactured.',
+    },
+    CANCEL: {
+      guard: 'the result is Active and the consumer unsubscribes',
+      actions: ['release every live input in subscription order; emit no result notification'],
+      nextState: 'Closed with reason cancel; no owned input subscriptions',
+      explanation: 'Consumer cancellation is silent downstream and releases all live input subscriptions. No completion notification is synthesized.',
+    },
+  };
+  const rules: MergeModel<T>['rules'] = base.rules
+    .filter(rule => rule.description.id !== 'S14-MERGE-REFILL')
+    .filter(rule => otherSources > 0 || rule.description.id !== 'S14-MERGE-COMPLETE-WAIT')
+    .map(rule => {
+      const suffix = rule.description.id.slice('S14-MERGE-'.length) as keyof typeof descriptions;
+      return {
+        ...rule,
+        description: {
+          ...rule.description,
+          ...descriptions[suffix],
+          id: 'S15-MERGEWITH-' + suffix,
+          obligations: ['S15-MERGEWITH-' + suffix],
+        },
+        react: (state, event, parameters) => {
+          const reaction = rule.react(state, event, parameters);
+          // RxJS mergeInternals checks final completion in onFinalize, after
+          // OperatorSubscriber has unsubscribed its registered input teardown.
+          return suffix === 'COMPLETE-LAST'
+            ? { ...reaction, actions: [...reaction.actions].reverse() }
+            : reaction;
+        },
+      };
+    });
   return {
     ...base,
+    rules,
+    validateState: (state, parameters) => [
+      ...base.validateState(state, parameters),
+      ...(state.phase === 'Active' && state.pending.length !== 0 ? ['mergeWith cannot have pending input subscriptions'] : []),
+      ...(state.phase === 'Active' && state.total !== otherSources + 1 ? ['mergeWith input inventory does not match its profile'] : []),
+      ...(parameters.concurrent !== 'unbounded' ? ['mergeWith concurrency must be unbounded'] : []),
+    ],
     metadata: {
       ...base.metadata, id: 'mergeWith-unbounded-' + otherSources, operator: 'mergeWith',
       purpose: 'Unbounded pipeable merge of the source and fixed other Observable inputs.',
@@ -34,20 +105,34 @@ export function createMergeWithModel<T>(otherSources = 2): MergeModel<T> {
       scope: {
         ...base.metadata.scope,
         parameters: 'Exactly ' + otherSources + ' other valid Observable inputs; unbounded concurrency, no scheduler argument.',
-        exclusions: ['No Promise/Iterable source conversion or reentrant synchronous emissions during acquisition.',
-          'No deprecated concurrency/scheduler overload (these belong to merge, not mergeWith).'],
+        reentrancy: 'Subscription setup is atomic. Inputs deliver only after all subscriptions and their teardowns have been registered. No observer or teardown reentry.',
+        exclusions: ['No Promise/Iterable source conversion or synchronous input emissions during subscription acquisition.',
+          'No concurrency/scheduler argument; equal-time delivery order belongs to the supplied sources and scheduler.',
+          'No cancellation inside observer delivery, throwing/reentrant observers or finalizers, or input inventories above 32 others.'],
+      },
+      initialization: { ...base.metadata.initialization,
+        sourceSubscription: 'Acquire source 0 first, then every configured other input; no pending queue.' },
+      dispatch: { ...base.metadata.dispatch,
+        actionSemantics: 'Ordered subscription, notification and registered-input-teardown observations. Normal final input teardown precedes result completion; error notification precedes result-owned cleanup.',
+        cancellationCheckpoints: ['Between external notifications; cancel every live input silently.'],
       },
       ownership: { ...base.metadata.ownership,
+        reset: 'Fresh live-input set per result subscription; pending is always empty.',
         sharing: 'No sharing: every result subscription independently subscribes to all input Observables.' },
+      controls: base.metadata.controls.map(control => control.id === 'Active'
+        ? { ...control, description: 'one or more live inputs; no pending input subscriptions' } : control),
       sources: [source('src/internal/operators/mergeWith.ts'), source('src/internal/operators/merge.ts'),
-        source('src/internal/operators/mergeInternals.ts')],
-      evidence,
+        source('src/internal/operators/mergeInternals.ts'), source('src/internal/operators/OperatorSubscriber.ts'),
+        source('spec/operators/mergeWith-spec.ts')],
+      evidence: {
+        ...evidence,
+        modelTests: [...evidence.modelTests, 'tests/mergeWith-refinement.test.mjs'],
+        runtimeTests: [...evidence.runtimeTests, 'tests/mergeWith-refinement.test.mjs'],
+        record: 'evidence/REFINEMENT-MERGEWITH.md',
+        scenarios: 'generated/mergeWith.scenarios.md',
+        coverage: 'generated/mergeWith.coverage.md',
+      },
     },
-    rules: base.rules.map(rule => ({
-      ...rule, description: { ...rule.description,
-        id: rule.description.id.replace('S14-MERGE-', 'S15-MERGEWITH-'),
-        obligations: rule.description.obligations.map(x => x.replace('S14-MERGE-', 'S15-MERGEWITH-')) },
-    })),
   };
 }
 

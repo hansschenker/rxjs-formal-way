@@ -31,13 +31,19 @@ for(const [name,create,example] of [
   assert.ok(trace.steps.every(s=>s.ruleId.startsWith('S15-')));
  });
 }
-test('S15 MERGEWITH: exactly the reviewed merge state machine and no concurrency override',()=>{
+test('S15 MERGEWITH: reuse unbounded state transitions with corrected registered-teardown ordering',()=>{
  const e=mergeWithExample;
  const a=runTrace(createMergeWithModel(2),e,{executionId:'mw'});
  const b=runTrace(createMergeModel(2),e,{executionId:'m'});
- assert.deepEqual(a.steps.map(x=>x.actions),b.steps.map(x=>x.actions));
+ assert.deepEqual(a.steps.slice(0,-1).map(x=>x.actions),b.steps.slice(0,-1).map(x=>x.actions));
  assert.deepEqual(a.steps.map(x=>x.after),b.steps.map(x=>x.after));
  assert.deepEqual(a.steps[0].actions.map(x=>x.resource.generation),[0,1,2]);
+ // The old base model does not establish native cleanup order. The refinement
+ // checks this exact sequence independently against RxJS registered teardowns.
+ assert.deepEqual(a.steps.at(-1).actions,[
+  {type:'unsubscribe',resource:ref('input',2)},
+  {type:'notify',target:'downstream',notification:{kind:'C'}},
+ ]);
 });
 test('S15 MERGEWITH: error releases all live inputs; pending cannot notify',()=>{
  const err=Symbol('merge error'),m=createMergeWithModel(2);

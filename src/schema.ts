@@ -61,6 +61,9 @@ export type ModelMetadata = Readonly<{
     runtimeTests: readonly string[];
     status: 'specified' | 'source-inspected' | 'runtime-checked';
     record: string;
+    /** Optional repository-relative navigation; these links do not assert a passing run. */
+    scenarios?: string;
+    coverage?: string;
   }>;
 }>;
 
