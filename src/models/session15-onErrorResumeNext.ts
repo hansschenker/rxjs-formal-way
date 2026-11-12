@@ -48,7 +48,7 @@ export function createOnErrorResumeNextModel<T>(otherSources=2):ResumeNextModel<
      enabled:(s:S,e:E)=>current(s,e)&&active(s)&&s.current+1===s.total,
      react:(s:S)=>{if(!active(s))throw Error('not active');return {state:closed('exhausted'),
        actions:[unsub<T>(s.current),complete<T>()]};}},
-  ] as R[])),
+  ] as R[]),
   {description:d('CANCEL','cancel','Closed','downstream cancellation',['unsubscribe current; no output terminal'],
      'Cancellation drops all unstarted inputs, never resuming after an explicit unsubscribe.'),
    enabled:()=>true,react:s=>{if(!active(s))throw Error('not active');return {state:closed('cancel'),actions:[unsub<T>(s.current)]};}},
