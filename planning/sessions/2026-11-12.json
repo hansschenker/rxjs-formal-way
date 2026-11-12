@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-12",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-12T08:03:07+01:00",
+  "startingCommit": "5281bcdc7df9a4457a17de3e8a860420d810def7",
+  "selectedNames": [
+    "mergeWith",
+    "multicast",
+    "observeOn",
+    "onErrorResumeNext",
+    "partition"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "mergeWith",
+    "multicast",
+    "observeOn",
+    "onErrorResumeNext",
+    "partition"
+  ],
+  "checks": {},
+  "blockers": [],
+  "notes": [
+    "Session 15 reserved after live main branch, queue, roadmap and dated log checks; five distinct export names maximum.",
+    "Session 14–23 export-level inspection-index requirement applies. No acceptance without independent actual RxJS tests, generated drift check, and retrieved CI."
+  ],
+  "nextQueue": [
+    "mergeWith",
+    "multicast",
+    "observeOn",
+    "onErrorResumeNext",
+    "partition"
+  ],
+  "commits": [],
+  "evidence": "evidence/SESSION-15.md"
+}
