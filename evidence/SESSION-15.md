@@ -27,7 +27,22 @@ No new operator APIs or weakened validation. Three independent machines `session
 
 Main push CI checked actual implementation commit `d50ce4bf...` after merging PR #26. Its log records `Generated 707 deterministic projections`, `# tests 1053`, `# pass 1053`, `# fail 0`, `Verified 707 deterministic projections`, and a generated commit adding 45 files, including five inspection indexes. This is an executed result, not an inferred count.
 
-The independent read-only PR verification and final closure will be recorded **only after the corresponding run has completed and its job result has been retrieved**. Until then the dated log remains started and no operator acceptance is claimed for this session.
+## Independent committed-file verification
+
+[Read-only PR #27](https://github.com/hansschenker/rxjs-formal-way/pull/27) ran the unchanged validation workflow against the already committed artifacts. [Run 43174656466](https://github.com/hansschenker/rxjs-formal-way/actions/runs/43174656466), job **131035863742**, completed with **success**. The retrieved job steps explicitly mark generation and publication **skipped**. Its execution log confirms syntax and strict TypeScript checks, **1,053 named tests passed with zero failures**, and **707 committed deterministic projections verified**.
+
+| Provenance | Exact identity |
+|---|---|
+| Read-only PR head | `59c9ef58f67960926fb9486594a89cc41e9f4b53` |
+| Read-only PR base | `cb1416e1125a8150f22ef9901990fcf9e75d2937` |
+| Actual synthetic checkout from `git log -1 --format=%H` | `63f07c609a987fc7f63a1ab69c96e374ca6b47c3` |
+| PR-head Git tree | `6f2c1ad0c61ef211ea19a8025ef9358f29db8958` |
+| Tested-checkout Git tree | `6f2c1ad0c61ef211ea19a8025ef9358f29db8958` |
+| Evidence PR merge | `f81331ac5a9801436b444d398f62a60140473b3e` |
+
+The two tree identities were retrieved independently from GitHub's Git commit objects. The synthetic checkout is not mislabeled as the PR head; their checked file content is identical. The subsequent closure edits change documentation and planning only and are not represented as the implementation tested by this run.
+
+All five required inspection indexes were included in the committed-file drift check: `operators/mergeWith-index.md`, `operators/multicast-index.md`, `operators/observeOn-index.md`, `operators/onErrorResumeNext-index.md`, and `operators/partition-index.md`. The session adds **45 generated artifacts**: forty standard profile projections and five export-level indexes.
 
 ## Test evidence and corrections
 
@@ -39,4 +54,8 @@ Initial CI [43173849919](https://github.com/hansschenker/rxjs-formal-way/actions
 
 Arbitrary reentrancy, source emissions during subscription acquisition, throwing observer/finalizer handlers, non-FIFO or custom schedulers, non-Observable input conversions, fixed-Subject/selector-less multicast overloads, multiple subscribers to one `partition` result and other explicitly excluded overloads remain **outside** the accepted behavioral claims. Actual tests plus finite traces do not provide a universal equivalence proof.
 
-**Pending final gate:** independent read-only CI on already committed generated files, with generation/publication skipped, together with exact checkout provenance and a dated log closure.
+## Acceptance
+
+The independent verification gate is satisfied. **All five exports are accepted within their declared scopes**, with **zero carryovers and no unresolved in-scope blockers**. Inventory: **75 of 113 exports accepted; 38 pending**. The existing dated Session 15 was resumed and closed; no duplicate session, sixth name, or catch-up batch was started.
+
+The next pending batch is **Session 16**, not before **13 November 2026, Europe/Zurich**: `pluck`, `publish`, `publishBehavior`, `publishLast`, `publishReplay`.
