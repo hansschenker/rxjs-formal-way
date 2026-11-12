@@ -1,0 +1,399 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "observeOn-virtual-fifo-2",
+      "executionId": "observeOn-session15-example",
+      "ruleId": "S15-OBSERVEON-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 0,
+        "lastSourceTime": 0,
+        "pending": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "observeOn-virtual-fifo-2",
+      "executionId": "observeOn-session15-example",
+      "ruleId": "S15-OBSERVEON-QUEUE-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": "a",
+        "now": 1
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 0,
+        "lastSourceTime": 0,
+        "pending": []
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 1,
+        "lastSourceTime": 1,
+        "pending": [
+          {
+            "id": 0,
+            "due": 3,
+            "kind": "N",
+            "value": "a"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "scheduled",
+            "generation": 0
+          },
+          "delay": 2
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "observeOn-virtual-fifo-2",
+      "executionId": "observeOn-session15-example",
+      "ruleId": "S15-OBSERVEON-QUEUE-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": "b",
+        "now": 2
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 1,
+        "lastSourceTime": 1,
+        "pending": [
+          {
+            "id": 0,
+            "due": 3,
+            "kind": "N",
+            "value": "a"
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 2,
+        "lastSourceTime": 2,
+        "pending": [
+          {
+            "id": 0,
+            "due": 3,
+            "kind": "N",
+            "value": "a"
+          },
+          {
+            "id": 1,
+            "due": 4,
+            "kind": "N",
+            "value": "b"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "scheduled",
+            "generation": 1
+          },
+          "delay": 2
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "observeOn-virtual-fifo-2",
+      "executionId": "observeOn-session15-example",
+      "ruleId": "S15-OBSERVEON-QUEUE-COMPLETE",
+      "event": {
+        "type": "source.complete",
+        "now": 3
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": true,
+        "nextId": 2,
+        "lastSourceTime": 2,
+        "pending": [
+          {
+            "id": 0,
+            "due": 3,
+            "kind": "N",
+            "value": "a"
+          },
+          {
+            "id": 1,
+            "due": 4,
+            "kind": "N",
+            "value": "b"
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 3,
+        "lastSourceTime": 3,
+        "pending": [
+          {
+            "id": 0,
+            "due": 3,
+            "kind": "N",
+            "value": "a"
+          },
+          {
+            "id": 1,
+            "due": 4,
+            "kind": "N",
+            "value": "b"
+          },
+          {
+            "id": 2,
+            "due": 5,
+            "kind": "C"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "scheduled",
+            "generation": 2
+          },
+          "delay": 2
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 3,
+      "modelId": "observeOn-virtual-fifo-2",
+      "executionId": "observeOn-session15-example",
+      "ruleId": "S15-OBSERVEON-FIRE-NEXT",
+      "event": {
+        "type": "timer.fire",
+        "resource": {
+          "id": "scheduled",
+          "generation": 0
+        },
+        "now": 3
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 3,
+        "lastSourceTime": 3,
+        "pending": [
+          {
+            "id": 0,
+            "due": 3,
+            "kind": "N",
+            "value": "a"
+          },
+          {
+            "id": 1,
+            "due": 4,
+            "kind": "N",
+            "value": "b"
+          },
+          {
+            "id": 2,
+            "due": 5,
+            "kind": "C"
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 3,
+        "lastSourceTime": 3,
+        "pending": [
+          {
+            "id": 1,
+            "due": 4,
+            "kind": "N",
+            "value": "b"
+          },
+          {
+            "id": 2,
+            "due": 5,
+            "kind": "C"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "a"
+          }
+        },
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "scheduled",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 4,
+      "modelId": "observeOn-virtual-fifo-2",
+      "executionId": "observeOn-session15-example",
+      "ruleId": "S15-OBSERVEON-FIRE-NEXT",
+      "event": {
+        "type": "timer.fire",
+        "resource": {
+          "id": "scheduled",
+          "generation": 1
+        },
+        "now": 4
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 3,
+        "lastSourceTime": 3,
+        "pending": [
+          {
+            "id": 1,
+            "due": 4,
+            "kind": "N",
+            "value": "b"
+          },
+          {
+            "id": 2,
+            "due": 5,
+            "kind": "C"
+          }
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 3,
+        "lastSourceTime": 3,
+        "pending": [
+          {
+            "id": 2,
+            "due": 5,
+            "kind": "C"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "b"
+          }
+        },
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "scheduled",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 5,
+      "modelId": "observeOn-virtual-fifo-2",
+      "executionId": "observeOn-session15-example",
+      "ruleId": "S15-OBSERVEON-FIRE-COMPLETE",
+      "event": {
+        "type": "timer.fire",
+        "resource": {
+          "id": "scheduled",
+          "generation": 2
+        },
+        "now": 5
+      },
+      "before": {
+        "phase": "Active",
+        "sourceLive": false,
+        "nextId": 3,
+        "lastSourceTime": 3,
+        "pending": [
+          {
+            "id": 2,
+            "due": 5,
+            "kind": "C"
+          }
+        ]
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "scheduled",
+            "generation": 2
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,228 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "exhausted"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "onErrorResumeNext-pipeable-2",
+      "executionId": "onErrorResumeNext-session15-example",
+      "ruleId": "S15-ONERRORRESUMENEXT-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "onErrorResumeNext-pipeable-2",
+      "executionId": "onErrorResumeNext-session15-example",
+      "ruleId": "S15-ONERRORRESUMENEXT-NEXT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 0
+        },
+        "value": "first"
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "first"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "onErrorResumeNext-pipeable-2",
+      "executionId": "onErrorResumeNext-session15-example",
+      "ruleId": "S15-ONERRORRESUMENEXT-ERROR-ADVANCE",
+      "event": {
+        "type": "input.error",
+        "resource": {
+          "id": "input",
+          "generation": 0
+        },
+        "error": "swallowed"
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "current": 1,
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "onErrorResumeNext-pipeable-2",
+      "executionId": "onErrorResumeNext-session15-example",
+      "ruleId": "S15-ONERRORRESUMENEXT-NEXT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        },
+        "value": "recovery"
+      },
+      "before": {
+        "phase": "Active",
+        "current": 1,
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "current": 1,
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "recovery"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "onErrorResumeNext-pipeable-2",
+      "executionId": "onErrorResumeNext-session15-example",
+      "ruleId": "S15-ONERRORRESUMENEXT-COMPLETE-ADVANCE",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "current": 1,
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "current": 2,
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 1
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "onErrorResumeNext-pipeable-2",
+      "executionId": "onErrorResumeNext-session15-example",
+      "ruleId": "S15-ONERRORRESUMENEXT-ERROR-LAST",
+      "event": {
+        "type": "input.error",
+        "resource": {
+          "id": "input",
+          "generation": 2
+        },
+        "error": "also swallowed"
+      },
+      "before": {
+        "phase": "Active",
+        "current": 2,
+        "total": 3
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "exhausted"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 2
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

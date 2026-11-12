@@ -1,0 +1,279 @@
+{
+  "metadata": {
+    "id": "multicast-factory-selector-two-branches",
+    "operator": "multicast",
+    "purpose": "Deprecated multicast(() => new Subject(), selector) with two branches set up before connecting one original source.",
+    "cardinality": {
+      "signature": "multicast(SubjectFactory, merge(shared$,shared$)) : T* → (T + T)*",
+      "conditions": [
+        "One source subscription per selected-result subscription, despite two consumers of the shared Subject.",
+        "The selected output is subscribed before the source is acquired, including synchronous producers.",
+        "A factory creates a fresh Subject for every output subscription; a fixed Subject instance has different reuse semantics and is out of scope."
+      ]
+    },
+    "scope": {
+      "parameters": "Deprecated subjectFactory plus selector overload. Factory returns fresh plain Subject; selector merges shared$ twice.",
+      "callbacks": "Selector construction modeled as a synchronous correlated callback; no source side effect before selected subscription.",
+      "time": "No scheduler or timer. Source dictates the timing; one source next causes two same-moment selected outputs.",
+      "reentrancy": "Synchronous source notifications after completed selector setup are supported; arbitrary selector reentry and synchronous selected-result termination are excluded.",
+      "exclusions": [
+        "Subject instance reuse, selector-less ConnectableObservable.connect/refCount, ReplaySubject/BehaviorSubject/AsyncSubject, custom connector and arbitrary selectors.",
+        "Synchronous selected-result early termination, observer reentrancy and throwing finalizers."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Create Subject, call selector, subscribe selected output, then connect original source."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "Within one selected-result subscription, one Subject multicasts a single source connection to two selected branches. Separate result subscriptions get separate Subjects.",
+      "reset": "New Subject and selected subscriptions for each fresh output subscription.",
+      "resources": [
+        {
+          "id": "selector",
+          "kind": "callback",
+          "owner": "result subscription"
+        },
+        {
+          "id": "selected",
+          "kind": "subscription",
+          "owner": "result and two Subject subscribers"
+        },
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "one shared source connection per selected result"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Subscribe selected Observable before subscribing producer; each producer next broadcasts same payload into both registered branches.",
+      "cancellationCheckpoints": [
+        "After selector setup; between source notifications.",
+        "Release selected subscriptions and original source on termination."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "new connect result subscription"
+      },
+      {
+        "type": "selector.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "configured selector returns Observable"
+      },
+      {
+        "type": "selector.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "selector construction failed"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "single producer emission"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "producer completes"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "producer errors"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "cancel result"
+      }
+    ],
+    "actionTypes": [
+      "notify",
+      "subscribe",
+      "unsubscribe",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no connector built",
+        "terminal": false
+      },
+      {
+        "id": "Preparing",
+        "description": "selector output not yet subscribed",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "Subject consumers installed before source",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal or cancelled",
+        "terminal": true
+      }
+    ],
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/multicast.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 export delegation and subscription semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/connect.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 export delegation and subscription semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/ConnectableObservable.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 export delegation and subscription semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session15-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session15-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-15.md"
+    }
+  },
+  "parameters": {
+    "connector": "Subject",
+    "selector": "merge-two-shared-branches"
+  },
+  "rules": [
+    {
+      "id": "S15-MULTICAST-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Preparing",
+      "guard": "fresh subscriber",
+      "actions": [
+        "create local Subject",
+        "request configured selector before source connection"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-S15-MULTICAST-INIT"
+      ],
+      "explanation": "A fresh Subject is allocated per subscription, followed by synchronous selector invocation."
+    },
+    {
+      "id": "S15-MULTICAST-SELECTOR-READY",
+      "from": "Preparing",
+      "event": "selector.return",
+      "to": "Active",
+      "guard": "matching selected Observable",
+      "actions": [
+        "subscribe the selected output and its two shared branches",
+        "only then subscribe original source"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-S15-MULTICAST-SELECTOR-READY"
+      ],
+      "explanation": "Both selected branches listen to the multicast Subject before a synchronous source can emit."
+    },
+    {
+      "id": "S15-MULTICAST-SELECTOR-THROW",
+      "from": "Preparing",
+      "event": "selector.throw",
+      "to": "Closed",
+      "guard": "selector threw before source subscription",
+      "actions": [
+        "error without subscribing source"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-S15-MULTICAST-SELECTOR-THROW"
+      ],
+      "explanation": "No source is connected when selector construction fails."
+    },
+    {
+      "id": "S15-MULTICAST-BROADCAST",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source subscribed through Subject",
+      "actions": [
+        "broadcast opaque value to branch 1",
+        "broadcast same value to branch 2"
+      ],
+      "nextState": "state with documented resource ownership",
+      "obligations": [
+        "S10-S15-MULTICAST-BROADCAST"
+      ],
+      "explanation": "Both branches receive the same object without cloning; selector merge emits two output notifications."
+    },
+    {
+      "id": "S15-MULTICAST-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes",
+      "actions": [
+        "Subject completes selected branches",
+        "complete result",
+        "tear down selected then source"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-S15-MULTICAST-COMPLETE"
+      ],
+      "explanation": "Completion propagates through the configured selected stream, not as a second output completion."
+    },
+    {
+      "id": "S15-MULTICAST-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errors",
+      "actions": [
+        "Subject errors selected branches",
+        "forward original error",
+        "release both subscriptions"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-S15-MULTICAST-ERROR"
+      ],
+      "explanation": "The original error identity is preserved; no values are emitted after termination."
+    },
+    {
+      "id": "S15-MULTICAST-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancels",
+      "actions": [
+        "tear down selected and source, no terminal notification"
+      ],
+      "nextState": "terminated; no late events legal",
+      "obligations": [
+        "S10-S15-MULTICAST-CANCEL"
+      ],
+      "explanation": "Explicit cancellation stops the one source and both selected consumers silently."
+    }
+  ]
+}

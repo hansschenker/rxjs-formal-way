@@ -1,0 +1,272 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "observeOn-virtual-fifo-2",
+    "operator": "observeOn",
+    "purpose": "Reschedule all source notifications, including completion and errors, with independently owned scheduler tasks.",
+    "cardinality": {
+      "signature": "observeOn : T* → T* (notification-time shifted)",
+      "conditions": [
+        "Every source next becomes exactly one scheduled next unless cancelled first.",
+        "Source complete and source error are both scheduled notifications, never immediate result signals.",
+        "FIFO scheduler tie order preserves input order at equal deadlines; consumer cancellation releases every queued action."
+      ]
+    },
+    "scope": {
+      "parameters": "Virtual FIFO scheduler supplied externally; nonnegative safe integer delay 2.",
+      "callbacks": "No user projection callbacks; opaque source values and error identities remain unchanged.",
+      "time": "Source arrival and scheduler.fire times are inputs. Due time is arrival+delay, and only a legal head-of-queue timer can fire.",
+      "reentrancy": "Atomic nonreentrant delivery. Scheduler callbacks do not reenter current transitions.",
+      "exclusions": [
+        "Custom or non-FIFO schedulers; negative/nonintegral/overflow delay, synchronous recursive SchedulerActions.",
+        "Downstream observer reentrancy and throwing teardown; source acquisition may not synchronously deliver reentrant events."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Subscribe source immediately; reschedule its notifications independently."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "None; each consumer gets fresh source and scheduled-action subscriptions.",
+      "reset": "New queue and token counter per subscription; cancellation clears queued actions.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result subscriber"
+        },
+        {
+          "id": "scheduled",
+          "kind": "timer",
+          "owner": "result subscriber until fire or cancel"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "scheduled",
+      "actionSemantics": "Queue arrival in stable order. Emit downstream only when scheduler returns the matching token at or after its deadline.",
+      "cancellationCheckpoints": [
+        "Between source arrivals and queued timer actions."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "connect source"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "queue a source value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "queue source completion"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "queue source error"
+      },
+      {
+        "type": "timer.fire",
+        "origin": "timer",
+        "category": "time",
+        "description": "scheduler executes queued action"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "cancel scheduled work"
+      }
+    ],
+    "actionTypes": [
+      "notify",
+      "subscribe",
+      "unsubscribe",
+      "schedule",
+      "cancel-timer"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source may be live and queued notifications await scheduler",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "completed, errored or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/observeOn.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and scheduled notification teardown"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/util/executeSchedule.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned implementation and scheduled notification teardown"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session15-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session15-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-15.md"
+    }
+  },
+  "parameters": {
+    "delay": 2,
+    "scheduler": "virtual FIFO"
+  },
+  "rules": [
+    {
+      "id": "S15-OBSERVEON-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first subscription",
+      "actions": [
+        "subscribe source"
+      ],
+      "explanation": "The source is acquired only when a consumer subscribes.",
+      "obligations": [
+        "S15-OBSERVEON-INIT"
+      ],
+      "nextState": "ordered notifications and source ownership retained"
+    },
+    {
+      "id": "S15-OBSERVEON-QUEUE-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source live and time is valid",
+      "actions": [
+        "queue one scheduled next"
+      ],
+      "explanation": "No immediate downstream next; each source emission owns an independent scheduler action.",
+      "obligations": [
+        "S15-OBSERVEON-QUEUE-NEXT"
+      ],
+      "nextState": "ordered notifications and source ownership retained"
+    },
+    {
+      "id": "S15-OBSERVEON-QUEUE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Active",
+      "guard": "source live and time valid",
+      "actions": [
+        "queue scheduled completion",
+        "release source"
+      ],
+      "explanation": "Completion is also scheduled, unlike delay. A source completion does not immediately terminate the result.",
+      "obligations": [
+        "S15-OBSERVEON-QUEUE-COMPLETE"
+      ],
+      "nextState": "ordered notifications and source ownership retained"
+    },
+    {
+      "id": "S15-OBSERVEON-QUEUE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Active",
+      "guard": "source live and time valid",
+      "actions": [
+        "queue original error",
+        "release source"
+      ],
+      "explanation": "Errors are scheduled rather than immediately forwarded; previously queued notifications retain FIFO priority.",
+      "obligations": [
+        "S15-OBSERVEON-QUEUE-ERROR"
+      ],
+      "nextState": "ordered notifications and source ownership retained"
+    },
+    {
+      "id": "S15-OBSERVEON-FIRE-NEXT",
+      "from": "Active",
+      "event": "timer.fire",
+      "to": "Active",
+      "guard": "head scheduled notification is next and due",
+      "actions": [
+        "emit remembered payload",
+        "retire timer"
+      ],
+      "explanation": "Delivery occurs at the scheduler-supplied fire event, not the original source event.",
+      "obligations": [
+        "S15-OBSERVEON-FIRE-NEXT"
+      ],
+      "nextState": "ordered notifications and source ownership retained"
+    },
+    {
+      "id": "S15-OBSERVEON-FIRE-COMPLETE",
+      "from": "Active",
+      "event": "timer.fire",
+      "to": "Closed",
+      "guard": "head scheduled completion is due",
+      "actions": [
+        "complete result",
+        "retire timer"
+      ],
+      "explanation": "The result completes only when the scheduled completion action fires.",
+      "obligations": [
+        "S15-OBSERVEON-FIRE-COMPLETE"
+      ],
+      "nextState": "terminal; no scheduled notifications remain"
+    },
+    {
+      "id": "S15-OBSERVEON-FIRE-ERROR",
+      "from": "Active",
+      "event": "timer.fire",
+      "to": "Closed",
+      "guard": "head scheduled source error is due",
+      "actions": [
+        "forward exact original error",
+        "retire timer"
+      ],
+      "explanation": "The error object is unchanged but its delivery is rescheduled.",
+      "obligations": [
+        "S15-OBSERVEON-FIRE-ERROR"
+      ],
+      "nextState": "terminal; no scheduled notifications remain"
+    },
+    {
+      "id": "S15-OBSERVEON-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream unsubscribed",
+      "actions": [
+        "cancel all scheduled actions",
+        "release live source, no terminal"
+      ],
+      "explanation": "Consumer cancellation is immediate and silent; it does not force queued work.",
+      "obligations": [
+        "S15-OBSERVEON-CANCEL"
+      ],
+      "nextState": "terminal; no scheduled notifications remain"
+    }
+  ]
+}

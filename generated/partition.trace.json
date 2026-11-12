@@ -1,0 +1,361 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "reason": "both-closed"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "partition-two-independent-branch-subscriptions",
+      "executionId": "partition-session15-example",
+      "ruleId": "S15-PARTITION-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "pass": {
+          "status": "live",
+          "index": 0,
+          "pending": null
+        },
+        "fail": {
+          "status": "live",
+          "index": 0,
+          "pending": null
+        }
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "partition-two-independent-branch-subscriptions",
+      "executionId": "partition-session15-example",
+      "ruleId": "S15-PARTITION-PREDICATE-REQUEST",
+      "event": {
+        "type": "source.next",
+        "branch": "pass",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "pass": {
+          "status": "live",
+          "index": 0,
+          "pending": null
+        },
+        "fail": {
+          "status": "live",
+          "index": 0,
+          "pending": null
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "pass": {
+          "status": "live",
+          "index": 1,
+          "pending": {
+            "index": 0,
+            "value": 2
+          }
+        },
+        "fail": {
+          "status": "live",
+          "index": 0,
+          "pending": null
+        }
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate-pass",
+            "generation": 0
+          },
+          "index": 0,
+          "value": 2
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "partition-two-independent-branch-subscriptions",
+      "executionId": "partition-session15-example",
+      "ruleId": "S15-PARTITION-PREDICATE-RETURN",
+      "event": {
+        "type": "predicate.return",
+        "resource": {
+          "id": "predicate-pass",
+          "generation": 0
+        },
+        "result": true
+      },
+      "before": {
+        "phase": "Active",
+        "pass": {
+          "status": "live",
+          "index": 1,
+          "pending": {
+            "index": 0,
+            "value": 2
+          }
+        },
+        "fail": {
+          "status": "live",
+          "index": 0,
+          "pending": null
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "pass": {
+          "status": "live",
+          "index": 1,
+          "pending": null
+        },
+        "fail": {
+          "status": "live",
+          "index": 0,
+          "pending": null
+        }
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "pass",
+          "notification": {
+            "kind": "N",
+            "value": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "partition-two-independent-branch-subscriptions",
+      "executionId": "partition-session15-example",
+      "ruleId": "S15-PARTITION-PREDICATE-REQUEST",
+      "event": {
+        "type": "source.next",
+        "branch": "fail",
+        "value": 3
+      },
+      "before": {
+        "phase": "Active",
+        "pass": {
+          "status": "live",
+          "index": 1,
+          "pending": null
+        },
+        "fail": {
+          "status": "live",
+          "index": 0,
+          "pending": null
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "pass": {
+          "status": "live",
+          "index": 1,
+          "pending": null
+        },
+        "fail": {
+          "status": "live",
+          "index": 1,
+          "pending": {
+            "index": 0,
+            "value": 3
+          }
+        }
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate-fail",
+            "generation": 0
+          },
+          "index": 0,
+          "value": 3
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "partition-two-independent-branch-subscriptions",
+      "executionId": "partition-session15-example",
+      "ruleId": "S15-PARTITION-PREDICATE-RETURN",
+      "event": {
+        "type": "predicate.return",
+        "resource": {
+          "id": "predicate-fail",
+          "generation": 0
+        },
+        "result": false
+      },
+      "before": {
+        "phase": "Active",
+        "pass": {
+          "status": "live",
+          "index": 1,
+          "pending": null
+        },
+        "fail": {
+          "status": "live",
+          "index": 1,
+          "pending": {
+            "index": 0,
+            "value": 3
+          }
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "pass": {
+          "status": "live",
+          "index": 1,
+          "pending": null
+        },
+        "fail": {
+          "status": "live",
+          "index": 1,
+          "pending": null
+        }
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "fail",
+          "notification": {
+            "kind": "N",
+            "value": 3
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "partition-two-independent-branch-subscriptions",
+      "executionId": "partition-session15-example",
+      "ruleId": "S15-PARTITION-SOURCE-COMPLETE-PASS-WAIT",
+      "event": {
+        "type": "source.complete",
+        "branch": "pass"
+      },
+      "before": {
+        "phase": "Active",
+        "pass": {
+          "status": "live",
+          "index": 1,
+          "pending": null
+        },
+        "fail": {
+          "status": "live",
+          "index": 1,
+          "pending": null
+        }
+      },
+      "after": {
+        "phase": "Active",
+        "pass": {
+          "status": "closed",
+          "index": 1,
+          "pending": null
+        },
+        "fail": {
+          "status": "live",
+          "index": 1,
+          "pending": null
+        }
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "pass",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 4,
+      "modelId": "partition-two-independent-branch-subscriptions",
+      "executionId": "partition-session15-example",
+      "ruleId": "S15-PARTITION-SOURCE-COMPLETE-FAIL-LAST",
+      "event": {
+        "type": "source.complete",
+        "branch": "fail"
+      },
+      "before": {
+        "phase": "Active",
+        "pass": {
+          "status": "closed",
+          "index": 1,
+          "pending": null
+        },
+        "fail": {
+          "status": "live",
+          "index": 1,
+          "pending": null
+        }
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "both-closed"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "fail",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 1
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,247 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "onErrorResumeNext-pipeable-2",
+    "operator": "onErrorResumeNext",
+    "purpose": "Sequentially forward the original and later Observable sources, moving to the next on either completion or error.",
+    "cardinality": {
+      "signature": "onErrorResumeNext : T0* × ... × Tn* → (T0 | ... | Tn)*",
+      "conditions": [
+        "Exactly one input is subscribed at a time; values retain identity and order within an input.",
+        "Either completion or error of a current input starts the next supplied source.",
+        "When the final input completes or errors, emit a normal result completion; never emit an error notification."
+      ]
+    },
+    "scope": {
+      "parameters": "Pipeable deprecated onErrorResumeNext alias of onErrorResumeNextWith; 2 other valid Observable sources, no promises or iterables.",
+      "callbacks": "No callbacks or inspection of error values. Error details are intentionally discarded.",
+      "time": "Only active source notifications determine time; no timer. Sequential resource acquisition is synchronous in each terminal reaction.",
+      "reentrancy": "Atomic nonreentrant source terminal steps and subscription acquisition.",
+      "exclusions": [
+        "Synchronous reentrant emission during subscription acquisition; arbitrary ObservableInput conversions and conversion throws.",
+        "Unbounded argument counts over 32; any user observer callback reentry or throwing teardown."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Subscribe source at input index 0; other inputs wait for previous termination."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing; one input active per result subscription.",
+      "reset": "Each result execution starts at index 0 and forgets earlier errors.",
+      "resources": [
+        {
+          "id": "input",
+          "kind": "subscription",
+          "owner": "current result, generation is fixed source position"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Current input terminal tears down its subscription before acquiring next. Error is never forwarded.",
+      "cancellationCheckpoints": [
+        "Between notifications; unsubscribe current and discard pending inputs."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start result"
+      },
+      {
+        "type": "input.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "current source value"
+      },
+      {
+        "type": "input.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "current source completed"
+      },
+      {
+        "type": "input.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "current source failed; swallow error"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "cancel result"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "exactly one input source live",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "result complete or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/operators/index.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned pipeable alias and sequential error-resume execution"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/onErrorResumeNextWith.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned pipeable alias and sequential error-resume execution"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/onErrorResumeNext.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned pipeable alias and sequential error-resume execution"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session15-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session15-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-15.md"
+    }
+  },
+  "parameters": {
+    "otherSources": 2,
+    "mode": "sequential-error-swallow"
+  },
+  "rules": [
+    {
+      "id": "S15-ONERRORRESUMENEXT-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first subscription",
+      "actions": [
+        "connect piped source index 0"
+      ],
+      "explanation": "The pipeable export subscribes the original source first and defers every later source.",
+      "nextState": "one current subscription; others waiting",
+      "obligations": [
+        "S15-ONERRORRESUMENEXT-INIT"
+      ]
+    },
+    {
+      "id": "S15-ONERRORRESUMENEXT-NEXT",
+      "from": "Active",
+      "event": "input.next",
+      "to": "Active",
+      "guard": "matching current source",
+      "actions": [
+        "forward opaque input value"
+      ],
+      "explanation": "Only the currently subscribed input may contribute next values.",
+      "nextState": "one current subscription; others waiting",
+      "obligations": [
+        "S15-ONERRORRESUMENEXT-NEXT"
+      ]
+    },
+    {
+      "id": "S15-ONERRORRESUMENEXT-COMPLETE-ADVANCE",
+      "from": "Active",
+      "event": "input.complete",
+      "to": "Active",
+      "guard": "current input terminal and one later input remains",
+      "actions": [
+        "release current",
+        "subscribe next input"
+      ],
+      "explanation": "Both completion and error advance to the next input; errors are deliberately swallowed.",
+      "nextState": "one current subscription; others waiting",
+      "obligations": [
+        "S15-ONERRORRESUMENEXT-COMPLETE-ADVANCE"
+      ]
+    },
+    {
+      "id": "S15-ONERRORRESUMENEXT-COMPLETE-LAST",
+      "from": "Active",
+      "event": "input.complete",
+      "to": "Closed",
+      "guard": "final current input terminates",
+      "actions": [
+        "release final input",
+        "complete result without propagating error"
+      ],
+      "explanation": "An error from the last input also produces normal completion, never an output error.",
+      "nextState": "all source subscriptions released",
+      "obligations": [
+        "S15-ONERRORRESUMENEXT-COMPLETE-LAST"
+      ]
+    },
+    {
+      "id": "S15-ONERRORRESUMENEXT-ERROR-ADVANCE",
+      "from": "Active",
+      "event": "input.error",
+      "to": "Active",
+      "guard": "current input terminal and one later input remains",
+      "actions": [
+        "release current",
+        "subscribe next input"
+      ],
+      "explanation": "Both completion and error advance to the next input; errors are deliberately swallowed.",
+      "nextState": "one current subscription; others waiting",
+      "obligations": [
+        "S15-ONERRORRESUMENEXT-ERROR-ADVANCE"
+      ]
+    },
+    {
+      "id": "S15-ONERRORRESUMENEXT-ERROR-LAST",
+      "from": "Active",
+      "event": "input.error",
+      "to": "Closed",
+      "guard": "final current input terminates",
+      "actions": [
+        "release final input",
+        "complete result without propagating error"
+      ],
+      "explanation": "An error from the last input also produces normal completion, never an output error.",
+      "nextState": "all source subscriptions released",
+      "obligations": [
+        "S15-ONERRORRESUMENEXT-ERROR-LAST"
+      ]
+    },
+    {
+      "id": "S15-ONERRORRESUMENEXT-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancellation",
+      "actions": [
+        "unsubscribe current; no output terminal"
+      ],
+      "explanation": "Cancellation drops all unstarted inputs, never resuming after an explicit unsubscribe.",
+      "nextState": "all source subscriptions released",
+      "obligations": [
+        "S15-ONERRORRESUMENEXT-CANCEL"
+      ]
+    }
+  ]
+}

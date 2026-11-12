@@ -1,0 +1,270 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "mergeWith-unbounded-2",
+      "executionId": "mergeWith-session15-example",
+      "ruleId": "S15-MERGEWITH-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "live": [
+          0,
+          1,
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 1
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "mergeWith-unbounded-2",
+      "executionId": "mergeWith-session15-example",
+      "ruleId": "S15-MERGEWITH-NEXT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        },
+        "value": "other"
+      },
+      "before": {
+        "phase": "Active",
+        "live": [
+          0,
+          1,
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "live": [
+          0,
+          1,
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "other"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "mergeWith-unbounded-2",
+      "executionId": "mergeWith-session15-example",
+      "ruleId": "S15-MERGEWITH-NEXT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 0
+        },
+        "value": "source"
+      },
+      "before": {
+        "phase": "Active",
+        "live": [
+          0,
+          1,
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "live": [
+          0,
+          1,
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "source"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "mergeWith-unbounded-2",
+      "executionId": "mergeWith-session15-example",
+      "ruleId": "S15-MERGEWITH-COMPLETE-WAIT",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "live": [
+          0,
+          1,
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "live": [
+          1,
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "mergeWith-unbounded-2",
+      "executionId": "mergeWith-session15-example",
+      "ruleId": "S15-MERGEWITH-COMPLETE-WAIT",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "live": [
+          1,
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "after": {
+        "phase": "Active",
+        "live": [
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "mergeWith-unbounded-2",
+      "executionId": "mergeWith-session15-example",
+      "ruleId": "S15-MERGEWITH-COMPLETE-LAST",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 2
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "live": [
+          2
+        ],
+        "pending": [],
+        "total": 3
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 2
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,461 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "operator": "partition",
+    "id": "partition-two-independent-branch-subscriptions",
+    "purpose": "Construct two separately subscribed filter results, with inverse predicate admission and independent indexed callback state.",
+    "cardinality": {
+      "signature": "partition : (T → Bool) × T* → (T*,T*)",
+      "conditions": [
+        "Each branch separately subscribes to the source; results are not necessarily a single shared execution.",
+        "Pass accepts exactly values whose branch-specific predicate outcome is true; fail accepts values with false.",
+        "Each subscription uses its own zero-based index; completion, error, cancellation and callback throw are branch-local.",
+        "Predicate output is a routing decision, not a modification of the opaque payload."
+      ]
+    },
+    "scope": {
+      "parameters": "Predicate/value input, no deprecated thisArg; both result branches separately subscribed in the model witness.",
+      "callbacks": "An indexed predicate callback runs once per source next PER BRANCH. Callback outcomes are correlated to branch and index, not computed internally.",
+      "time": "Each independent upstream subscription supplies its own time; cold sources can execute twice, hot sources can share an external producer.",
+      "reentrancy": "Atomic indexed predicate request and resolution before the next event for that branch.",
+      "exclusions": [
+        "A single shared-source router is explicitly not partition. Only one subscription per result branch is modeled; multiple subscribers to either result are out of scope.",
+        "Synchronous reentrancy during predicate evaluation, deprecated thisArg and throwing observer/finalizers."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "The modeled witness connects both returned Observables, resulting in TWO source subscriptions."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No implicit sharing. Two branches independently subscribe to the source; one closing does not close the other.",
+      "reset": "Each branch has its own index and pending predicate; source teardown is independent.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "one source subscription per branch, generation 0/1"
+        },
+        {
+          "id": "predicate-pass",
+          "kind": "callback",
+          "owner": "pass branch indexed callback"
+        },
+        {
+          "id": "predicate-fail",
+          "kind": "callback",
+          "owner": "fail branch indexed callback"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Request one predicate per input to each subscribed branch; only the appropriate branch may receive a next.",
+      "cancellationCheckpoints": [
+        "Between branch events and their resolved callbacks; cancellation is branch-local."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "subscribe to both returned branches in model witness"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "a value arriving at an independently subscribed branch"
+      },
+      {
+        "type": "predicate.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "one correlated boolean predicate outcome"
+      },
+      {
+        "type": "predicate.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "predicate evaluation threw"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "branch-local normal completion"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "branch-local source failure"
+      },
+      {
+        "type": "branch.cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "cancel just one output branch"
+      }
+    ],
+    "actionTypes": [
+      "notify",
+      "subscribe",
+      "unsubscribe",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "two returned observables unconnected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "at least one branch live",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "both branches terminated/cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/partition.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned independent filter and inverted predicate semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/filter.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned independent filter and inverted predicate semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/util/not.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned independent filter and inverted predicate semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session15-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session15-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-15.md"
+    }
+  },
+  "parameters": {
+    "predicate": "indexed",
+    "subscriptionMode": "two independent filtered outputs"
+  },
+  "rules": [
+    {
+      "id": "S15-PARTITION-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "both returned Observables are subscribed as independent consumers",
+      "actions": [
+        "subscribe source once for pass branch",
+        "subscribe source separately for fail branch"
+      ],
+      "nextState": "independent branch indices and subscription ownership",
+      "obligations": [
+        "S15-PARTITION-INIT"
+      ],
+      "explanation": "partition is two filter calls, not one multicast router. Each branch has its own source subscription and predicate index."
+    },
+    {
+      "id": "S15-PARTITION-PREDICATE-REQUEST",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "that branch is live and not awaiting a callback",
+      "actions": [
+        "request indexed branch predicate; retain opaque source value"
+      ],
+      "nextState": "independent branch indices and subscription ownership",
+      "obligations": [
+        "S15-PARTITION-PREDICATE-REQUEST"
+      ],
+      "explanation": "The same cold source may execute twice, and predicate indices are independent per branch."
+    },
+    {
+      "id": "S15-PARTITION-PREDICATE-RETURN",
+      "from": "Active",
+      "event": "predicate.return",
+      "to": "Active",
+      "guard": "matching branch callback and boolean result",
+      "actions": [
+        "emit on matching branch only; otherwise discard",
+        "clear pending callback"
+      ],
+      "nextState": "independent branch indices and subscription ownership",
+      "obligations": [
+        "S15-PARTITION-PREDICATE-RETURN"
+      ],
+      "explanation": "Pass branch accepts true and fail branch accepts false; neither branch clones payloads."
+    },
+    {
+      "id": "S15-PARTITION-PREDICATE-THROW-PASS-WAIT",
+      "from": "Active",
+      "event": "predicate.throw",
+      "to": "Active",
+      "guard": "only pass branch live and other branch live",
+      "actions": [
+        "forward predicate throw only to this branch",
+        "unsubscribe this branch"
+      ],
+      "nextState": "independent branch indices and subscription ownership",
+      "obligations": [
+        "S15-PARTITION-PREDICATE-THROW-PASS-WAIT"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-PREDICATE-THROW-PASS-LAST",
+      "from": "Active",
+      "event": "predicate.throw",
+      "to": "Closed",
+      "guard": "only pass branch live and other branch closed",
+      "actions": [
+        "forward predicate throw only to this branch",
+        "unsubscribe this branch"
+      ],
+      "nextState": "both independent source subscriptions closed",
+      "obligations": [
+        "S15-PARTITION-PREDICATE-THROW-PASS-LAST"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-PREDICATE-THROW-FAIL-WAIT",
+      "from": "Active",
+      "event": "predicate.throw",
+      "to": "Active",
+      "guard": "only fail branch live and other branch live",
+      "actions": [
+        "forward predicate throw only to this branch",
+        "unsubscribe this branch"
+      ],
+      "nextState": "independent branch indices and subscription ownership",
+      "obligations": [
+        "S15-PARTITION-PREDICATE-THROW-FAIL-WAIT"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-PREDICATE-THROW-FAIL-LAST",
+      "from": "Active",
+      "event": "predicate.throw",
+      "to": "Closed",
+      "guard": "only fail branch live and other branch closed",
+      "actions": [
+        "forward predicate throw only to this branch",
+        "unsubscribe this branch"
+      ],
+      "nextState": "both independent source subscriptions closed",
+      "obligations": [
+        "S15-PARTITION-PREDICATE-THROW-FAIL-LAST"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-SOURCE-COMPLETE-PASS-WAIT",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Active",
+      "guard": "only pass branch live and other branch live",
+      "actions": [
+        "complete this branch",
+        "unsubscribe this source"
+      ],
+      "nextState": "independent branch indices and subscription ownership",
+      "obligations": [
+        "S15-PARTITION-SOURCE-COMPLETE-PASS-WAIT"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-SOURCE-COMPLETE-PASS-LAST",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "only pass branch live and other branch closed",
+      "actions": [
+        "complete this branch",
+        "unsubscribe this source"
+      ],
+      "nextState": "both independent source subscriptions closed",
+      "obligations": [
+        "S15-PARTITION-SOURCE-COMPLETE-PASS-LAST"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-SOURCE-COMPLETE-FAIL-WAIT",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Active",
+      "guard": "only fail branch live and other branch live",
+      "actions": [
+        "complete this branch",
+        "unsubscribe this source"
+      ],
+      "nextState": "independent branch indices and subscription ownership",
+      "obligations": [
+        "S15-PARTITION-SOURCE-COMPLETE-FAIL-WAIT"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-SOURCE-COMPLETE-FAIL-LAST",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "only fail branch live and other branch closed",
+      "actions": [
+        "complete this branch",
+        "unsubscribe this source"
+      ],
+      "nextState": "both independent source subscriptions closed",
+      "obligations": [
+        "S15-PARTITION-SOURCE-COMPLETE-FAIL-LAST"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-SOURCE-ERROR-PASS-WAIT",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Active",
+      "guard": "only pass branch live and other branch live",
+      "actions": [
+        "error only this branch",
+        "unsubscribe source"
+      ],
+      "nextState": "independent branch indices and subscription ownership",
+      "obligations": [
+        "S15-PARTITION-SOURCE-ERROR-PASS-WAIT"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-SOURCE-ERROR-PASS-LAST",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "only pass branch live and other branch closed",
+      "actions": [
+        "error only this branch",
+        "unsubscribe source"
+      ],
+      "nextState": "both independent source subscriptions closed",
+      "obligations": [
+        "S15-PARTITION-SOURCE-ERROR-PASS-LAST"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-SOURCE-ERROR-FAIL-WAIT",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Active",
+      "guard": "only fail branch live and other branch live",
+      "actions": [
+        "error only this branch",
+        "unsubscribe source"
+      ],
+      "nextState": "independent branch indices and subscription ownership",
+      "obligations": [
+        "S15-PARTITION-SOURCE-ERROR-FAIL-WAIT"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-SOURCE-ERROR-FAIL-LAST",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "only fail branch live and other branch closed",
+      "actions": [
+        "error only this branch",
+        "unsubscribe source"
+      ],
+      "nextState": "both independent source subscriptions closed",
+      "obligations": [
+        "S15-PARTITION-SOURCE-ERROR-FAIL-LAST"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-BRANCH-CANCEL-PASS-WAIT",
+      "from": "Active",
+      "event": "branch.cancel",
+      "to": "Active",
+      "guard": "only pass branch live and other branch live",
+      "actions": [
+        "unsubscribe this branch silently"
+      ],
+      "nextState": "independent branch indices and subscription ownership",
+      "obligations": [
+        "S15-PARTITION-BRANCH-CANCEL-PASS-WAIT"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-BRANCH-CANCEL-PASS-LAST",
+      "from": "Active",
+      "event": "branch.cancel",
+      "to": "Closed",
+      "guard": "only pass branch live and other branch closed",
+      "actions": [
+        "unsubscribe this branch silently"
+      ],
+      "nextState": "both independent source subscriptions closed",
+      "obligations": [
+        "S15-PARTITION-BRANCH-CANCEL-PASS-LAST"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-BRANCH-CANCEL-FAIL-WAIT",
+      "from": "Active",
+      "event": "branch.cancel",
+      "to": "Active",
+      "guard": "only fail branch live and other branch live",
+      "actions": [
+        "unsubscribe this branch silently"
+      ],
+      "nextState": "independent branch indices and subscription ownership",
+      "obligations": [
+        "S15-PARTITION-BRANCH-CANCEL-FAIL-WAIT"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    },
+    {
+      "id": "S15-PARTITION-BRANCH-CANCEL-FAIL-LAST",
+      "from": "Active",
+      "event": "branch.cancel",
+      "to": "Closed",
+      "guard": "only fail branch live and other branch closed",
+      "actions": [
+        "unsubscribe this branch silently"
+      ],
+      "nextState": "both independent source subscriptions closed",
+      "obligations": [
+        "S15-PARTITION-BRANCH-CANCEL-FAIL-LAST"
+      ],
+      "explanation": "Each result Observable owns one independent source subscription and terminal state."
+    }
+  ]
+}
