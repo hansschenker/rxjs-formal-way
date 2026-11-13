@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-13",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-13T08:13:04+01:00",
+  "startingCommit": "371554c5fd3ab6805e420ec77ee96c50b460b345",
+  "selectedNames": [
+    "pluck",
+    "publish",
+    "publishBehavior",
+    "publishLast",
+    "publishReplay"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "pluck",
+    "publish",
+    "publishBehavior",
+    "publishLast",
+    "publishReplay"
+  ],
+  "checks": {
+    "syntax": "not run",
+    "types": "not run",
+    "model": "not run",
+    "runtime": "not run",
+    "generated": "not run",
+    "ci": "not retrieved"
+  },
+  "blockers": [],
+  "notes": [
+    "No local-date session file existed at reservation time; only this one daily session will be attempted.",
+    "Session 14–23 inspection indexes mandatory; no acceptance without pinned-source analysis, named canonical guarded model, actual RxJS evidence and CI."
+  ],
+  "nextQueue": [
+    "race",
+    "raceWith",
+    "repeat",
+    "repeatWhen",
+    "retry"
+  ]
+}
