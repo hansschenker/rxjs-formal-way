@@ -1,0 +1,336 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "publishBehavior-legacy-fixed-subject",
+    "operator": "publishBehavior",
+    "purpose": "BehaviorSubject sends its seed or most recent value immediately to newly registered live observers; after termination it does not replay. An explicit connect() controls the source, not the number of observers.",
+    "cardinality": {
+      "signature": "publishBehavior : T* -> T* per observer (connection-scoped)",
+      "conditions": [
+        "Manual connection and observer subscription are separate operations; observers never automatically start or stop the source.",
+        "BehaviorSubject sends its seed or most recent value immediately to newly registered live observers; after termination it does not replay.",
+        "Unsubscribe of one observer is silent, and a source error forwards the exact error object."
+      ]
+    },
+    "scope": {
+      "parameters": "Selector-less legacy ConnectableObservable; explicitly captured seed; fixed BehaviorSubject instance.",
+      "callbacks": "No user selector, projection or subscriber callback executes inside the pure model.",
+      "time": "No scheduler is added; source events occur at supplied times. Replay has infinite time window and count-only eviction. New subscriptions synchronously replay memory.",
+      "reentrancy": "Non-reentrant event delivery; source is not synchronous within connect() acquisition. Registered teardowns and one terminal connection only.",
+      "exclusions": [
+        "Selector overloads of publish/publishReplay, timestamp-provider/windowTime expiration, arbitrary scheduler ties and getter side effects.",
+        "Reconnect after a terminal source notification, synchronous emission during connect(), observer callbacks that unsubscribe reentrantly.",
+        "RefCount auto-connection, arbitrary custom Subject subclass, throwing observer or teardown."
+      ]
+    },
+    "initialization": {
+      "control": "Ready",
+      "event": "observer.subscribe",
+      "sourceSubscription": "No source subscribed until explicit connect() is called; subscription to the connectable Subject may precede connect."
+    },
+    "ownership": {
+      "state": "external-instance",
+      "sharing": "One fixed publishBehavior Subject and one explicitly owned upstream connection serve all observers of the same connectable instance.",
+      "reset": "Explicit disconnect releases upstream but preserves subject and subscribers; source terminal stops the subject for this profile. New operator application makes a new instance.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "connectable instance / manual connection"
+        },
+        {
+          "id": "observer",
+          "kind": "subscription",
+          "owner": "individually registered Subject observers"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Ordered Subject notifications with exact cache and terminal behavior; no callbacks or work are executed by the model.",
+      "cancellationCheckpoints": [
+        "Observer cancellation never implicitly disconnects upstream.",
+        "Explicit disconnect is silent and retains observers; no next is legal without a source connection."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "observer.subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "attach an addressed Subject consumer"
+      },
+      {
+        "type": "observer.cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "remove only one consumer"
+      },
+      {
+        "type": "connect",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "explicit source connection"
+      },
+      {
+        "type": "disconnect",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "explicit upstream connection cancellation"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "current connected source value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source successful terminal"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source failure"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Ready",
+        "description": "Subject exists but upstream not connected",
+        "terminal": false
+      },
+      {
+        "id": "Connected",
+        "description": "one source live, many observers may be live",
+        "terminal": false
+      },
+      {
+        "id": "Stopped",
+        "description": "Subject terminated and upstream released",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/publishBehavior.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 source and subscription lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/multicast.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 source and subscription lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/ConnectableObservable.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 source and subscription lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/BehaviorSubject.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 source and subscription lifecycle"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session16-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session16-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-16.md"
+    }
+  },
+  "parameters": {
+    "operator": "publishBehavior",
+    "seed": 0,
+    "bufferSize": 2,
+    "windowTime": "unbounded"
+  },
+  "rules": [
+    {
+      "id": "S16-PUBLISHBEHAVIOR-JOIN-READY",
+      "from": "Ready",
+      "event": "observer.subscribe",
+      "to": "Ready",
+      "guard": "new nonnegative observer id",
+      "actions": [
+        "register subscriber",
+        "synchronously replay variant-specific current memory"
+      ],
+      "explanation": "A new consumer joins the existing Subject; no new upstream source subscription is acquired.",
+      "nextState": "Existing connection and all previous subscriber registrations remain.",
+      "obligations": [
+        "S16-PUBLISHBEHAVIOR-JOIN-READY"
+      ]
+    },
+    {
+      "id": "S16-PUBLISHBEHAVIOR-LEAVE-READY",
+      "from": "Ready",
+      "event": "observer.cancel",
+      "to": "Ready",
+      "guard": "observer is registered",
+      "actions": [
+        "unsubscribe only that observer, not the source connection"
+      ],
+      "explanation": "Manual observer cancellation does not disconnect the source; there is no refCount.",
+      "nextState": "The Subject remains live; other observers and the source are unaffected.",
+      "obligations": [
+        "S16-PUBLISHBEHAVIOR-LEAVE-READY"
+      ]
+    },
+    {
+      "id": "S16-PUBLISHBEHAVIOR-JOIN-CONNECTED",
+      "from": "Connected",
+      "event": "observer.subscribe",
+      "to": "Connected",
+      "guard": "new nonnegative observer id",
+      "actions": [
+        "register subscriber",
+        "synchronously replay variant-specific current memory"
+      ],
+      "explanation": "A new consumer joins the existing Subject; no new upstream source subscription is acquired.",
+      "nextState": "Existing connection and all previous subscriber registrations remain.",
+      "obligations": [
+        "S16-PUBLISHBEHAVIOR-JOIN-CONNECTED"
+      ]
+    },
+    {
+      "id": "S16-PUBLISHBEHAVIOR-LEAVE-CONNECTED",
+      "from": "Connected",
+      "event": "observer.cancel",
+      "to": "Connected",
+      "guard": "observer is registered",
+      "actions": [
+        "unsubscribe only that observer, not the source connection"
+      ],
+      "explanation": "Manual observer cancellation does not disconnect the source; there is no refCount.",
+      "nextState": "The Subject remains live; other observers and the source are unaffected.",
+      "obligations": [
+        "S16-PUBLISHBEHAVIOR-LEAVE-CONNECTED"
+      ]
+    },
+    {
+      "id": "S16-PUBLISHBEHAVIOR-CONNECT",
+      "from": "Ready",
+      "event": "connect",
+      "to": "Connected",
+      "guard": "no active upstream source connection",
+      "actions": [
+        "acquire one source subscription"
+      ],
+      "explanation": "Manual connect starts the producer once for all current observers.",
+      "nextState": "Connected; source subscription generation owned by this connectable object.",
+      "obligations": [
+        "S16-PUBLISHBEHAVIOR-CONNECT"
+      ]
+    },
+    {
+      "id": "S16-PUBLISHBEHAVIOR-CONNECT-IDEMPOTENT",
+      "from": "Connected",
+      "event": "connect",
+      "to": "Connected",
+      "guard": "connection already live",
+      "actions": [
+        "return existing connection, no new subscribe"
+      ],
+      "explanation": "A second connect call reuses the live upstream connection.",
+      "nextState": "Same source generation and observer set.",
+      "obligations": [
+        "S16-PUBLISHBEHAVIOR-CONNECT-IDEMPOTENT"
+      ]
+    },
+    {
+      "id": "S16-PUBLISHBEHAVIOR-DISCONNECT",
+      "from": "Connected",
+      "event": "disconnect",
+      "to": "Ready",
+      "guard": "explicit upstream connection cancellation",
+      "actions": [
+        "unsubscribe only the source connection, never complete subject observers"
+      ],
+      "explanation": "Manual connection unsubscribe preserves fixed Subject state, subscribers and cached values.",
+      "nextState": "Ready for a further manual connection; source generation advances.",
+      "obligations": [
+        "S16-PUBLISHBEHAVIOR-DISCONNECT"
+      ]
+    },
+    {
+      "id": "S16-PUBLISHBEHAVIOR-SOURCE-NEXT",
+      "from": "Connected",
+      "event": "source.next",
+      "to": "Connected",
+      "guard": "notification from current source generation",
+      "actions": [
+        "update Subject memory according to connector",
+        "forward immediately except AsyncSubject publishLast"
+      ],
+      "explanation": "Publish/Behavior/Replay forward now; AsyncSubject holds only the last value until successful completion.",
+      "nextState": "Connected with variant-specific memory and unchanged subscriber ownership.",
+      "obligations": [
+        "S16-PUBLISHBEHAVIOR-SOURCE-NEXT"
+      ]
+    },
+    {
+      "id": "S16-PUBLISHBEHAVIOR-SOURCE-COMPLETE",
+      "from": "Connected",
+      "event": "source.complete",
+      "to": "Stopped",
+      "guard": "current source completed",
+      "actions": [
+        "disconnect source",
+        "AsyncSubject emits last value if present",
+        "complete all current consumers"
+      ],
+      "explanation": "One completed fixed Subject retains its connector-specific completion semantics for future subscribers.",
+      "nextState": "Stopped successfully; no subscribed observers or upstream connection.",
+      "obligations": [
+        "S16-PUBLISHBEHAVIOR-SOURCE-COMPLETE"
+      ]
+    },
+    {
+      "id": "S16-PUBLISHBEHAVIOR-SOURCE-ERROR",
+      "from": "Connected",
+      "event": "source.error",
+      "to": "Stopped",
+      "guard": "current source fails",
+      "actions": [
+        "disconnect source",
+        "error every current consumer with same object"
+      ],
+      "explanation": "An error is terminal. ReplaySubject retains its prior values for a late subscriber; other Subjects do not.",
+      "nextState": "Stopped in error with unchanged ReplaySubject cache; no observers.",
+      "obligations": [
+        "S16-PUBLISHBEHAVIOR-SOURCE-ERROR"
+      ]
+    },
+    {
+      "id": "S16-PUBLISHBEHAVIOR-LATE-SUBSCRIBE",
+      "from": "Stopped",
+      "event": "observer.subscribe",
+      "to": "Stopped",
+      "guard": "new nonnegative observer id",
+      "actions": [
+        "deliver terminal retained memory allowed by the Subject subtype",
+        "deliver terminal notification"
+      ],
+      "explanation": "Late subscribers receive connector-specific replay: ReplaySubject even before an error, AsyncSubject only after completion.",
+      "nextState": "Stopped; subscriber is not retained and source is never re-acquired.",
+      "obligations": [
+        "S16-PUBLISHBEHAVIOR-LATE-SUBSCRIBE"
+      ]
+    }
+  ]
+}

@@ -5,13 +5,13 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | S15-MERGEWITH-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(input#0); subscribe(input#1); subscribe(input#2) | {"phase":"Active","live":[0,1,2],"pending":[],"total":3} |
 | 1 | 1 | S15-MERGEWITH-NEXT | {"type":"input.next","resource":{"id":"input","generation":1},"value":"other"} | {"phase":"Active","live":[0,1,2],"pending":[],"total":3} | downstream.N("other") | {"phase":"Active","live":[0,1,2],"pending":[],"total":3} |
 | 2 | 2 | S15-MERGEWITH-NEXT | {"type":"input.next","resource":{"id":"input","generation":0},"value":"source"} | {"phase":"Active","live":[0,1,2],"pending":[],"total":3} | downstream.N("source") | {"phase":"Active","live":[0,1,2],"pending":[],"total":3} |
 | 3 | 3 | S15-MERGEWITH-COMPLETE-WAIT | {"type":"input.complete","resource":{"id":"input","generation":0}} | {"phase":"Active","live":[0,1,2],"pending":[],"total":3} | unsubscribe(input#0) | {"phase":"Active","live":[1,2],"pending":[],"total":3} |
 | 4 | 4 | S15-MERGEWITH-COMPLETE-WAIT | {"type":"input.complete","resource":{"id":"input","generation":1}} | {"phase":"Active","live":[1,2],"pending":[],"total":3} | unsubscribe(input#1) | {"phase":"Active","live":[2],"pending":[],"total":3} |
-| 5 | 5 | S15-MERGEWITH-COMPLETE-LAST | {"type":"input.complete","resource":{"id":"input","generation":2}} | {"phase":"Active","live":[2],"pending":[],"total":3} | downstream.C(); unsubscribe(input#2) | {"phase":"Closed","reason":"complete"} |
+| 5 | 5 | S15-MERGEWITH-COMPLETE-LAST | {"type":"input.complete","resource":{"id":"input","generation":2}} | {"phase":"Active","live":[2],"pending":[],"total":3} | unsubscribe(input#2); downstream.C() | {"phase":"Closed","reason":"complete"} |
 
 ## Four lanes
 

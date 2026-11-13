@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | CONCATWITH-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(input#0) | {"phase":"Active","current":0,"slots":[{"ready":false,"live":true},{"ready":false,"live":false},{"ready":false,"live":false}]} |
 | 1 | 1 | CONCATWITH-NEXT | {"type":"input.next","resource":{"id":"input","generation":0},"value":1} | {"phase":"Active","current":0,"slots":[{"ready":false,"live":true},{"ready":false,"live":false},{"ready":false,"live":false}]} | downstream.N(1) | {"phase":"Active","current":0,"slots":[{"ready":false,"live":true},{"ready":false,"live":false},{"ready":false,"live":false}]} |
 | 2 | 2 | CONCATWITH-COMPLETE-ADVANCE | {"type":"input.complete","resource":{"id":"input","generation":0}} | {"phase":"Active","current":0,"slots":[{"ready":false,"live":true},{"ready":false,"live":false},{"ready":false,"live":false}]} | unsubscribe(input#0); subscribe(input#1) | {"phase":"Active","current":1,"slots":[{"ready":false,"live":false},{"ready":false,"live":true},{"ready":false,"live":false}]} |

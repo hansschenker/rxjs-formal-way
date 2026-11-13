@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | FLATMAP-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(outer#0) | {"phase":"Active","index":0,"active":[],"queue":[]} |
 | 1 | 1 | FLATMAP-ADMIT | {"type":"outer.next","value":1} | {"phase":"Active","index":0,"active":[],"queue":[]} | invoke(project#0, value=1, index=0) | {"phase":"Calling","resume":"Active","index":1,"active":[],"queue":[],"callId":0,"input":1} |
 | 2 | 1 | FLATMAP-RETURN-ACTIVE | {"type":"callback.return","resource":{"id":"project","generation":0},"value":"a"} | {"phase":"Calling","resume":"Active","index":1,"active":[],"queue":[],"callId":0,"input":1} | subscribe(inner#0) | {"phase":"Active","index":1,"active":[{"resource":{"id":"inner","generation":0},"source":"a"}],"queue":[]} |

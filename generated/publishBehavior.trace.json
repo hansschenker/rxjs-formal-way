@@ -1,0 +1,298 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Stopped",
+    "subscribers": [],
+    "generation": 0,
+    "retained": [],
+    "last": 5,
+    "hasLast": true,
+    "terminal": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "publishBehavior-legacy-fixed-subject",
+      "executionId": "publishBehavior-session16-example",
+      "ruleId": "S16-PUBLISHBEHAVIOR-JOIN-READY",
+      "event": {
+        "type": "observer.subscribe",
+        "observer": 0
+      },
+      "before": {
+        "phase": "Ready",
+        "subscribers": [],
+        "generation": 0,
+        "retained": [],
+        "last": 0,
+        "hasLast": true,
+        "terminal": null
+      },
+      "after": {
+        "phase": "Ready",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [],
+        "last": 0,
+        "hasLast": true,
+        "terminal": null
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "observer",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "observer-0",
+          "notification": {
+            "kind": "N",
+            "value": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "publishBehavior-legacy-fixed-subject",
+      "executionId": "publishBehavior-session16-example",
+      "ruleId": "S16-PUBLISHBEHAVIOR-CONNECT",
+      "event": {
+        "type": "connect"
+      },
+      "before": {
+        "phase": "Ready",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [],
+        "last": 0,
+        "hasLast": true,
+        "terminal": null
+      },
+      "after": {
+        "phase": "Connected",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [],
+        "last": 0,
+        "hasLast": true,
+        "terminal": null
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "publishBehavior-legacy-fixed-subject",
+      "executionId": "publishBehavior-session16-example",
+      "ruleId": "S16-PUBLISHBEHAVIOR-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": 5
+      },
+      "before": {
+        "phase": "Connected",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [],
+        "last": 0,
+        "hasLast": true,
+        "terminal": null
+      },
+      "after": {
+        "phase": "Connected",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [],
+        "last": 5,
+        "hasLast": true,
+        "terminal": null
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "observer-0",
+          "notification": {
+            "kind": "N",
+            "value": 5
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "publishBehavior-legacy-fixed-subject",
+      "executionId": "publishBehavior-session16-example",
+      "ruleId": "S16-PUBLISHBEHAVIOR-JOIN-CONNECTED",
+      "event": {
+        "type": "observer.subscribe",
+        "observer": 1
+      },
+      "before": {
+        "phase": "Connected",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [],
+        "last": 5,
+        "hasLast": true,
+        "terminal": null
+      },
+      "after": {
+        "phase": "Connected",
+        "subscribers": [
+          0,
+          1
+        ],
+        "generation": 0,
+        "retained": [],
+        "last": 5,
+        "hasLast": true,
+        "terminal": null
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "observer",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "observer-1",
+          "notification": {
+            "kind": "N",
+            "value": 5
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "publishBehavior-legacy-fixed-subject",
+      "executionId": "publishBehavior-session16-example",
+      "ruleId": "S16-PUBLISHBEHAVIOR-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Connected",
+        "subscribers": [
+          0,
+          1
+        ],
+        "generation": 0,
+        "retained": [],
+        "last": 5,
+        "hasLast": true,
+        "terminal": null
+      },
+      "after": {
+        "phase": "Stopped",
+        "subscribers": [],
+        "generation": 0,
+        "retained": [],
+        "last": 5,
+        "hasLast": true,
+        "terminal": "complete"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "observer-0",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "observer-1",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "publishBehavior-legacy-fixed-subject",
+      "executionId": "publishBehavior-session16-example",
+      "ruleId": "S16-PUBLISHBEHAVIOR-LATE-SUBSCRIBE",
+      "event": {
+        "type": "observer.subscribe",
+        "observer": 2
+      },
+      "before": {
+        "phase": "Stopped",
+        "subscribers": [],
+        "generation": 0,
+        "retained": [],
+        "last": 5,
+        "hasLast": true,
+        "terminal": "complete"
+      },
+      "after": {
+        "phase": "Stopped",
+        "subscribers": [],
+        "generation": 0,
+        "retained": [],
+        "last": 5,
+        "hasLast": true,
+        "terminal": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "observer-2",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

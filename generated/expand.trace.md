@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | EXPAND-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(outer#0) | {"phase":"Active","index":0,"active":[],"queue":[]} |
 | 1 | 1 | EXPAND-OUTER-ADMIT | {"type":"outer.next","value":1} | {"phase":"Active","index":0,"active":[],"queue":[]} | downstream.N(1); invoke(project#0, value=1, index=0) | {"phase":"Calling","resume":"Active","index":1,"active":[],"queue":[],"value":1,"callId":0} |
 | 2 | 1 | EXPAND-PROJECT-RETURN | {"type":"callback.return","resource":{"id":"project","generation":0},"value":"inner-0"} | {"phase":"Calling","resume":"Active","index":1,"active":[],"queue":[],"value":1,"callId":0} | subscribe(inner#0) | {"phase":"Active","index":1,"active":[{"id":"inner","generation":0}],"queue":[]} |

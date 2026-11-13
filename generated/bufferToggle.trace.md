@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | BUFFERTOGGLE-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(openings#0); subscribe(source#0) | {"phase":"Active","sourceLive":true,"openingsLive":true,"nextId":0,"records":[]} |
 | 1 | 1 | BUFFERTOGGLE-OPENINGS-NEXT | {"type":"openings.next","value":"a"} | {"phase":"Active","sourceLive":true,"openingsLive":true,"nextId":0,"records":[]} | invoke(selector#0, value="a", index=0) | {"phase":"Calling","sourceLive":true,"openingsLive":true,"nextId":1,"records":[{"id":0,"values":[],"closingLive":false}],"pending":0} |
 | 2 | 1 | BUFFERTOGGLE-CALLBACK-RETURN | {"type":"callback.return","resource":{"id":"selector","generation":0}} | {"phase":"Calling","sourceLive":true,"openingsLive":true,"nextId":1,"records":[{"id":0,"values":[],"closingLive":false}],"pending":0} | subscribe(closing#0) | {"phase":"Active","sourceLive":true,"openingsLive":true,"nextId":1,"records":[{"id":0,"values":[],"closingLive":true}]} |

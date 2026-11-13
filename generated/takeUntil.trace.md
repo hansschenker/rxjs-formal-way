@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | TAKEUNTIL-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(notifier#0) | {"phase":"Starting","open":true,"notifierLive":true} |
 | 1 | 0 | TAKEUNTIL-SOURCE-CONNECT | {"type":"setup.ready"} | {"phase":"Starting","open":true,"notifierLive":true} | subscribe(source#0) | {"phase":"Active","open":true,"notifierLive":true} |
 | 2 | 1 | TAKEUNTIL-PASS | {"type":"source.next","value":"a"} | {"phase":"Active","open":true,"notifierLive":true} | downstream.N("a") | {"phase":"Active","open":true,"notifierLive":true} |

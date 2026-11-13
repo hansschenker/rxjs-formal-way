@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | BUFFERWHEN-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | invoke(selector#0, value=undefined, index=0) | {"phase":"Calling","sourceLive":false,"openingsLive":false,"nextId":1,"records":[{"id":0,"values":[],"closingLive":false}],"pending":0} |
 | 1 | 0 | BUFFERWHEN-CALLBACK-RETURN | {"type":"callback.return","resource":{"id":"selector","generation":0}} | {"phase":"Calling","sourceLive":false,"openingsLive":false,"nextId":1,"records":[{"id":0,"values":[],"closingLive":false}],"pending":0} | subscribe(closing#0); subscribe(source#0) | {"phase":"Active","sourceLive":true,"openingsLive":false,"nextId":1,"records":[{"id":0,"values":[],"closingLive":true}]} |
 | 2 | 1 | BUFFERWHEN-SOURCE-NEXT | {"type":"source.next","value":1} | {"phase":"Active","sourceLive":true,"openingsLive":false,"nextId":1,"records":[{"id":0,"values":[],"closingLive":true}]} |  | {"phase":"Active","sourceLive":true,"openingsLive":false,"nextId":1,"records":[{"id":0,"values":[1],"closingLive":true}]} |

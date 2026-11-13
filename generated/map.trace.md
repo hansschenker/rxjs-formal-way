@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | MAP-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active","index":0} |
 | 1 | 10 | MAP-CALL | {"type":"source.next","value":2} | {"phase":"Active","index":0} | invoke(project#0, value=2, index=0) | {"phase":"Calling","index":1,"callId":0,"input":2} |
 | 2 | 10 | MAP-RETURN | {"type":"callback.return","resource":{"id":"project","generation":0},"value":20} | {"phase":"Calling","index":1,"callId":0,"input":2} | downstream.N(20) | {"phase":"Active","index":1} |

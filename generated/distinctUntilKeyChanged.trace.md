@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | DISTINCTUNTILKEYCHANGED-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active","index":0,"hasPrevious":false} |
 | 1 | 1 | DISTINCTUNTILKEYCHANGED-SELECT | {"type":"source.next","value":{"code":"a"}} | {"phase":"Active","index":0,"hasPrevious":false} | invoke(key#0, value={"code":"a"}, index=0) | {"phase":"Selecting","index":1,"callId":0,"input":{"code":"a"},"hasPrevious":false} |
 | 2 | 1 | DISTINCTUNTILKEYCHANGED-FIRST | {"type":"key.return","resource":{"id":"key","generation":0},"value":"a"} | {"phase":"Selecting","index":1,"callId":0,"input":{"code":"a"},"hasPrevious":false} | downstream.N({"code":"a"}) | {"phase":"Active","index":1,"hasPrevious":true,"previousKey":"a"} |

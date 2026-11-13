@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | SHARE-CONNECT | {"type":"subscriber.subscribe","subscriber":"A"} | {"phase":"Disconnected","nextConnection":0,"used":[]} | subscribe(source#0) | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A"],"used":["A"],"nextConnection":1} |
 | 1 | 1 | SHARE-JOIN | {"type":"subscriber.subscribe","subscriber":"B"} | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A"],"used":["A"],"nextConnection":1} |  | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A","B"],"used":["A","B"],"nextConnection":1} |
 | 2 | 2 | SHARE-NEXT | {"type":"source.next","resource":{"id":"source","generation":0},"value":"x"} | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A","B"],"used":["A","B"],"nextConnection":1} | A.N("x"); B.N("x") | {"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A","B"],"used":["A","B"],"nextConnection":1} |

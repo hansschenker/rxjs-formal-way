@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | DEFAULTIFEMPTY-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active","hasValue":false} |
 | 1 | 3 | DEFAULTIFEMPTY-EMPTY | {"type":"source.complete"} | {"phase":"Active","hasValue":false} | downstream.N("fallback"); downstream.C(); unsubscribe(source#0) | {"phase":"Closed","reason":"complete"} |
 

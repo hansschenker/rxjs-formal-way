@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | S13-MAPTO-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active"} |
 | 1 | 2 | S13-MAPTO-REPLACE | {"type":"source.next","value":8} | {"phase":"Active"} | downstream.N("constant") | {"phase":"Active"} |
 | 2 | 3 | S13-MAPTO-REPLACE | {"type":"source.next","value":9} | {"phase":"Active"} | downstream.N("constant") | {"phase":"Active"} |

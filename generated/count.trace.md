@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | AGG-COUNT-PLAIN-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Collecting","index":0,"memory":{"present":true,"value":0}} |
 | 1 | 1 | AGG-COUNT-PLAIN-PLAIN-COUNT | {"type":"source.next","value":1} | {"phase":"Collecting","index":0,"memory":{"present":true,"value":0}} |  | {"phase":"Collecting","index":1,"memory":{"present":true,"value":1}} |
 | 2 | 2 | AGG-COUNT-PLAIN-PLAIN-COUNT | {"type":"source.next","value":2} | {"phase":"Collecting","index":1,"memory":{"present":true,"value":1}} |  | {"phase":"Collecting","index":2,"memory":{"present":true,"value":2}} |

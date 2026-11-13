@@ -11,10 +11,9 @@ stateDiagram-v2
     state "Closed" as s2
     [*] --> s0
     s0 --> s1 : S15-MERGEWITH-INIT subscribe [first consumer connection]
-    s1 --> s1 : S15-MERGEWITH-NEXT input.next [resource is currently subscribed]
-    s1 --> s1 : S15-MERGEWITH-REFILL input.complete [live input complete and pending FIFO is nonempty]
-    s1 --> s1 : S15-MERGEWITH-COMPLETE-WAIT input.complete [pending empty and other inputs live]
-    s1 --> s2 : S15-MERGEWITH-COMPLETE-LAST input.complete [pending empty, final live input]
-    s1 --> s2 : S15-MERGEWITH-ERROR input.error [any live source fails]
-    s1 --> s2 : S15-MERGEWITH-CANCEL cancel [consumer unsubscribe]
+    s1 --> s1 : S15-MERGEWITH-NEXT input.next [input resource belongs to the current live-input set]
+    s1 --> s1 : S15-MERGEWITH-COMPLETE-WAIT input.complete [the completing input is live and at least one other input remains live]
+    s1 --> s2 : S15-MERGEWITH-COMPLETE-LAST input.complete [the completing input is the only live input]
+    s1 --> s2 : S15-MERGEWITH-ERROR input.error [the failing input belongs to the live-input set]
+    s1 --> s2 : S15-MERGEWITH-CANCEL cancel [the result is Active and the consumer unsubscribes]
 ```

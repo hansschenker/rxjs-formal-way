@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | SKIPUNTIL-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(notifier#0) | {"phase":"Starting","open":false,"notifierLive":true} |
 | 1 | 0 | SKIPUNTIL-SOURCE-CONNECT | {"type":"setup.ready"} | {"phase":"Starting","open":false,"notifierLive":true} | subscribe(source#0) | {"phase":"Active","open":false,"notifierLive":true} |
 | 2 | 1 | SKIPUNTIL-DROP | {"type":"source.next","value":"a"} | {"phase":"Active","open":false,"notifierLive":true} |  | {"phase":"Active","open":false,"notifierLive":true} |

@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | S14-MATERIALIZE-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active"} |
 | 1 | 1 | S14-MATERIALIZE-NEXT | {"type":"source.next","value":"alpha"} | {"phase":"Active"} | downstream.N({"kind":"N","value":"alpha","hasValue":true}) | {"phase":"Active"} |
 | 2 | 3 | S14-MATERIALIZE-NEXT | {"type":"source.next","value":"beta"} | {"phase":"Active"} | downstream.N({"kind":"N","value":"beta","hasValue":true}) | {"phase":"Active"} |

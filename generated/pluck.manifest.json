@@ -1,0 +1,210 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "pluck-plain-data-path",
+    "operator": "pluck",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Deprecated nested-property projection implemented as a map; preserves value order and timing.",
+    "cardinality": {
+      "signature": "pluck(path) : T* -> U* (one output next per source next)",
+      "conditions": [
+        "Every source next yields exactly one projected value, even if the property is missing.",
+        "The source error/completion and the downstream cancellation control termination; there is no inner Observable.",
+        "Projection does not share, resubscribe or schedule the input."
+      ]
+    },
+    "scope": {
+      "parameters": "One to three non-empty own/plain-data string property keys; no empty paths.",
+      "callbacks": "No user callback; read nested plain data directly as in the pinned map-based implementation.",
+      "time": "No clock or scheduler is introduced; every projected output occurs in its source notification step.",
+      "reentrancy": "Atomic non-reentrant source notifications and primitive/plain-object property access.",
+      "exclusions": [
+        "Getters and proxies with side effects or throws, symbol keys, dynamically mutated paths.",
+        "Constructor-time error for zero path elements is represented by factory rejection, not a stream notification."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Exactly one source subscription per result execution."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "None; each subscription independently projects one source.",
+      "reset": "New downstream subscription resets count; no caches or shared Subjects.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "downstream execution"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Synchronous notification forwarding, no invented timers.",
+      "cancellationCheckpoints": [
+        "Between source notifications; a cancelled result cannot receive more values."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start independent source"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "receive data"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "complete source"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source failure"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream unsubscribe"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no source connection",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source live",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "complete, error or cancellation",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/pluck.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 source and subscription lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/map.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 source and subscription lifecycle"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session16-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session16-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-16.md"
+    }
+  },
+  "parameters": {
+    "path": [
+      "person",
+      "name"
+    ]
+  },
+  "rules": [
+    {
+      "id": "S16-PLUCK-INIT",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first downstream connection",
+      "actions": [
+        "subscribe one source"
+      ],
+      "explanation": "One independent cold execution begins for each downstream subscription.",
+      "nextState": "Active with zero projected values.",
+      "obligations": [
+        "S16-PLUCK-INIT"
+      ]
+    },
+    {
+      "id": "S16-PLUCK-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "plain-data property path can be read",
+      "actions": [
+        "emit one nested property value, including undefined"
+      ],
+      "explanation": "Walk the configured keys in order. A null or undefined intermediate stops the walk and produces undefined.",
+      "nextState": "Active with source value count increased by one.",
+      "obligations": [
+        "S16-PLUCK-NEXT"
+      ]
+    },
+    {
+      "id": "S16-PLUCK-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes",
+      "actions": [
+        "forward completion and release source"
+      ],
+      "explanation": "The operator adds no values on completion.",
+      "nextState": "Closed complete; no source ownership.",
+      "obligations": [
+        "S16-PLUCK-COMPLETE"
+      ]
+    },
+    {
+      "id": "S16-PLUCK-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source errors",
+      "actions": [
+        "forward exact error and release source"
+      ],
+      "explanation": "Source failure is not converted into a property value.",
+      "nextState": "Closed error; no source ownership.",
+      "obligations": [
+        "S16-PLUCK-ERROR"
+      ]
+    },
+    {
+      "id": "S16-PLUCK-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancels",
+      "actions": [
+        "release source without notifying downstream"
+      ],
+      "explanation": "Cancellation stops this independent projection execution.",
+      "nextState": "Closed cancelled; no source ownership.",
+      "obligations": [
+        "S16-PLUCK-CANCEL"
+      ]
+    }
+  ]
+}

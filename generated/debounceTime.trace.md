@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | DEBOUNCE-INIT | {"type":"subscribe","now":0} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Idle","now":0,"nextTimer":0} |
 | 1 | 1 | DEBOUNCE-START | {"type":"source.next","now":1,"value":"a"} | {"phase":"Idle","now":0,"nextTimer":0} | schedule(debounce-timer#0, delay=3) | {"phase":"Pending","now":1,"nextTimer":1,"value":"a","lastTime":1,"deadline":4,"scheduledFor":4,"timer":{"id":"debounce-timer","generation":0}} |
 | 2 | 3 | DEBOUNCE-REPLACE | {"type":"source.next","now":3,"value":"b"} | {"phase":"Pending","now":1,"nextTimer":1,"value":"a","lastTime":1,"deadline":4,"scheduledFor":4,"timer":{"id":"debounce-timer","generation":0}} |  | {"phase":"Pending","now":3,"nextTimer":1,"value":"b","lastTime":3,"deadline":6,"scheduledFor":4,"timer":{"id":"debounce-timer","generation":0}} |

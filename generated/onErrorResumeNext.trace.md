@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | S15-ONERRORRESUMENEXT-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(input#0) | {"phase":"Active","current":0,"total":3} |
 | 1 | 1 | S15-ONERRORRESUMENEXT-NEXT | {"type":"input.next","resource":{"id":"input","generation":0},"value":"first"} | {"phase":"Active","current":0,"total":3} | downstream.N("first") | {"phase":"Active","current":0,"total":3} |
 | 2 | 2 | S15-ONERRORRESUMENEXT-ERROR-ADVANCE | {"type":"input.error","resource":{"id":"input","generation":0},"error":"swallowed"} | {"phase":"Active","current":0,"total":3} | unsubscribe(input#0); subscribe(input#1) | {"phase":"Active","current":1,"total":3} |

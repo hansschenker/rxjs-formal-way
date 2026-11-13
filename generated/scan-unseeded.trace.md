@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | SCAN-INIT-UNSEEDED | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Empty","index":0} |
 | 1 | 10 | SCAN-FIRST | {"type":"source.next","value":1} | {"phase":"Empty","index":0} | downstream.N(1) | {"phase":"Active","accumulator":1,"index":1} |
 | 2 | 20 | SCAN-CALL | {"type":"source.next","value":2} | {"phase":"Active","accumulator":1,"index":1} | invoke(accumulator#1, value={"accumulator":1,"value":2}, index=1) | {"phase":"Calling","accumulator":1,"input":2,"callId":1,"index":2} |

@@ -4,30 +4,27 @@
 
 Unbounded pipeable merge of the source and fixed other Observable inputs.
 
-**Scope:** Exactly 2 other valid Observable inputs; unbounded concurrency, no scheduler argument.. Atomic nonreentrant subscriptions; synchronous input delivery during acquisition is excluded.
+**Scope:** Exactly 2 other valid Observable inputs; unbounded concurrency, no scheduler argument.. Subscription setup is atomic. Inputs deliver only after all subscriptions and their teardowns have been registered. No observer or teardown reentry.
 
 **Dataflow shape:** `mergeWith : T* × U1* × ... × Un* → (T | U1 | ... | Un)*`. Each live input next is forwarded once, as soon as delivered. The source is subscribed first, then every configured other Observable; there is no concurrency argument. Completion waits for all sources; first error terminates and cancels the rest.
 
 <!-- S15-MERGEWITH-INIT -->
-All inputs are fixed at operator construction; the source at input 0 is subscribed first.
+All configured inputs are subscribed in argument order. There is no concurrency limit or waiting-source admission policy in mergeWith.
 
 <!-- S15-MERGEWITH-NEXT -->
-Any admitted input contributes values in actual event order without changing subscription ownership.
-
-<!-- S15-MERGEWITH-REFILL -->
-At a bounded concurrency limit, completion frees a slot for the next supplied source.
+A value from any live input flows downstream unchanged in delivery order; it does not change subscription ownership.
 
 <!-- S15-MERGEWITH-COMPLETE-WAIT -->
-Completion waits for every connected input and queued source to finish.
+One input completion removes only that input. The result waits while any other input remains live.
 
 <!-- S15-MERGEWITH-COMPLETE-LAST -->
-Only the final input completion ends the result normally.
+For completion delivered after subscription setup, the final input teardown precedes normal result completion. Subscription-time emissions and late teardown registration are outside this profile.
 
 <!-- S15-MERGEWITH-ERROR -->
-A single source failure immediately tears down all live sources and discards pending subscriptions.
+An input failure errors the result and tears down every live input, including the failing one. No value is manufactured.
 
 <!-- S15-MERGEWITH-CANCEL -->
-Downstream cancellation is silent; queued inputs are never subscribed.
+Consumer cancellation is silent downstream and releases all live input subscriptions. No completion notification is synthesized.
 
 **Time:** No internal clock; all inputs supply their notification times. Source-first subscriptions are ordered.
 
@@ -35,6 +32,8 @@ Downstream cancellation is silent; queued inputs are never subscribed.
 
 **Callbacks:** No callbacks. Input payloads are opaque and preserve identity.
 
-**Excluded:** No Promise/Iterable source conversion or reentrant synchronous emissions during acquisition. No deprecated concurrency/scheduler overload (these belong to merge, not mergeWith).
+**Excluded:** No Promise/Iterable source conversion or synchronous input emissions during subscription acquisition. No concurrency/scheduler argument; equal-time delivery order belongs to the supplied sources and scheduler. No cancellation inside observer delivery, throwing/reentrant observers or finalizers, or input inventories above 32 others.
 
-The runtime is not generated from these paragraphs. [Evidence](../evidence/SESSION-15.md) is reported separately from this specification.
+[Concrete scenarios](../generated/mergeWith.scenarios.md) distinguish model predictions from separately executed runtime evidence.
+
+The runtime is not generated from these paragraphs. [Evidence](../evidence/REFINEMENT-MERGEWITH.md) is reported separately from this specification.

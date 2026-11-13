@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | AGG-MAX-DEFAULT-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Collecting","index":0,"memory":{"present":false}} |
 | 1 | 1 | AGG-MAX-DEFAULT-FIRST | {"type":"source.next","value":5} | {"phase":"Collecting","index":0,"memory":{"present":false}} |  | {"phase":"Collecting","index":1,"memory":{"present":true,"value":5}} |
 | 2 | 2 | AGG-MAX-DEFAULT-CALL | {"type":"source.next","value":3} | {"phase":"Collecting","index":1,"memory":{"present":true,"value":5}} | invoke(aggregate-callback#1, value={"previous":5,"incoming":3}, index=1) | {"phase":"Calling","index":2,"callId":1,"memory":{"present":true,"value":5},"input":3} |

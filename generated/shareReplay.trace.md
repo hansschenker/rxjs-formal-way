@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | SHAREREPLAY-CONNECT | {"type":"subscriber.subscribe","subscriber":"A","now":0} | {"core":{"phase":"Disconnected","nextConnection":0,"used":[]},"buffer":[],"clock":0} | subscribe(source#0) | {"core":{"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A"],"used":["A"],"nextConnection":1},"buffer":[],"clock":0} |
 | 1 | 1 | SHAREREPLAY-NEXT | {"type":"source.next","resource":{"id":"source","generation":0},"value":"a","now":1} | {"core":{"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A"],"used":["A"],"nextConnection":1},"buffer":[],"clock":0} | A.N("a") | {"core":{"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A"],"used":["A"],"nextConnection":1},"buffer":[{"value":"a","expiresAt":7}],"clock":1} |
 | 2 | 2 | SHAREREPLAY-NEXT | {"type":"source.next","resource":{"id":"source","generation":0},"value":"b","now":2} | {"core":{"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A"],"used":["A"],"nextConnection":1},"buffer":[{"value":"a","expiresAt":7}],"clock":1} | A.N("b") | {"core":{"phase":"Connected","connection":{"id":"source","generation":0},"subscribers":["A"],"used":["A"],"nextConnection":1},"buffer":[{"value":"a","expiresAt":7},{"value":"b","expiresAt":8}],"clock":2} |

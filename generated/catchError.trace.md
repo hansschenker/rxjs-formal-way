@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | CATCHERROR-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Source"} |
 | 1 | 1 | CATCHERROR-SOURCE-NEXT | {"type":"source.next","value":1} | {"phase":"Source"} | downstream.N(1) | {"phase":"Source"} |
 | 2 | 2 | CATCHERROR-SOURCE-ERROR | {"type":"source.error","error":"fail"} | {"phase":"Source"} | invoke(selector#0, value="fail", index=0) | {"phase":"Calling","originalError":"fail"} |

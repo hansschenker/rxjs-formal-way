@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | DELAY-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active","sourceLive":true,"nextId":0,"items":[]} |
 | 1 | 1 | DELAY-SOURCE-NEXT | {"type":"source.next","now":1,"value":1} | {"phase":"Active","sourceLive":true,"nextId":0,"items":[]} | schedule(timer#0, delay=3) | {"phase":"Active","sourceLive":true,"nextId":1,"items":[{"id":0,"value":1,"stage":"pending","deadline":4}]} |
 | 2 | 2 | DELAY-SOURCE-NEXT | {"type":"source.next","now":2,"value":2} | {"phase":"Active","sourceLive":true,"nextId":1,"items":[{"id":0,"value":1,"stage":"pending","deadline":4}]} | schedule(timer#1, delay=3) | {"phase":"Active","sourceLive":true,"nextId":2,"items":[{"id":0,"value":1,"stage":"pending","deadline":4},{"id":1,"value":2,"stage":"pending","deadline":5}]} |

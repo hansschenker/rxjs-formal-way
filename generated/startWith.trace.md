@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | STARTWITH-INIT-PREFIX | {"type":"subscribe"} | {"phase":"Unsubscribed"} |  | {"phase":"Prefix","index":0} |
 | 1 | 0 | STARTWITH-EMIT | {"type":"prefix.next"} | {"phase":"Prefix","index":0} | downstream.N("before-a") | {"phase":"Prefix","index":1} |
 | 2 | 0 | STARTWITH-EMIT | {"type":"prefix.next"} | {"phase":"Prefix","index":1} | downstream.N("before-b") | {"phase":"Prefix","index":2} |

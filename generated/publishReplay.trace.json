@@ -1,0 +1,437 @@
+{
+  "status": "finished-input",
+  "consumed": 8,
+  "state": {
+    "phase": "Stopped",
+    "subscribers": [],
+    "generation": 0,
+    "retained": [
+      5,
+      7
+    ],
+    "last": 7,
+    "hasLast": true,
+    "terminal": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "publishReplay-legacy-fixed-subject",
+      "executionId": "publishReplay-session16-example",
+      "ruleId": "S16-PUBLISHREPLAY-JOIN-READY",
+      "event": {
+        "type": "observer.subscribe",
+        "observer": 0
+      },
+      "before": {
+        "phase": "Ready",
+        "subscribers": [],
+        "generation": 0,
+        "retained": [],
+        "hasLast": false,
+        "terminal": null
+      },
+      "after": {
+        "phase": "Ready",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [],
+        "hasLast": false,
+        "terminal": null
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "observer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "publishReplay-legacy-fixed-subject",
+      "executionId": "publishReplay-session16-example",
+      "ruleId": "S16-PUBLISHREPLAY-CONNECT",
+      "event": {
+        "type": "connect"
+      },
+      "before": {
+        "phase": "Ready",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [],
+        "hasLast": false,
+        "terminal": null
+      },
+      "after": {
+        "phase": "Connected",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [],
+        "hasLast": false,
+        "terminal": null
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "publishReplay-legacy-fixed-subject",
+      "executionId": "publishReplay-session16-example",
+      "ruleId": "S16-PUBLISHREPLAY-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": 3
+      },
+      "before": {
+        "phase": "Connected",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [],
+        "hasLast": false,
+        "terminal": null
+      },
+      "after": {
+        "phase": "Connected",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [
+          3
+        ],
+        "last": 3,
+        "hasLast": true,
+        "terminal": null
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "observer-0",
+          "notification": {
+            "kind": "N",
+            "value": 3
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "publishReplay-legacy-fixed-subject",
+      "executionId": "publishReplay-session16-example",
+      "ruleId": "S16-PUBLISHREPLAY-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": 5
+      },
+      "before": {
+        "phase": "Connected",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [
+          3
+        ],
+        "last": 3,
+        "hasLast": true,
+        "terminal": null
+      },
+      "after": {
+        "phase": "Connected",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [
+          3,
+          5
+        ],
+        "last": 5,
+        "hasLast": true,
+        "terminal": null
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "observer-0",
+          "notification": {
+            "kind": "N",
+            "value": 5
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "publishReplay-legacy-fixed-subject",
+      "executionId": "publishReplay-session16-example",
+      "ruleId": "S16-PUBLISHREPLAY-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": 7
+      },
+      "before": {
+        "phase": "Connected",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [
+          3,
+          5
+        ],
+        "last": 5,
+        "hasLast": true,
+        "terminal": null
+      },
+      "after": {
+        "phase": "Connected",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [
+          5,
+          7
+        ],
+        "last": 7,
+        "hasLast": true,
+        "terminal": null
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "observer-0",
+          "notification": {
+            "kind": "N",
+            "value": 7
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "publishReplay-legacy-fixed-subject",
+      "executionId": "publishReplay-session16-example",
+      "ruleId": "S16-PUBLISHREPLAY-JOIN-CONNECTED",
+      "event": {
+        "type": "observer.subscribe",
+        "observer": 1
+      },
+      "before": {
+        "phase": "Connected",
+        "subscribers": [
+          0
+        ],
+        "generation": 0,
+        "retained": [
+          5,
+          7
+        ],
+        "last": 7,
+        "hasLast": true,
+        "terminal": null
+      },
+      "after": {
+        "phase": "Connected",
+        "subscribers": [
+          0,
+          1
+        ],
+        "generation": 0,
+        "retained": [
+          5,
+          7
+        ],
+        "last": 7,
+        "hasLast": true,
+        "terminal": null
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "observer",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "observer-1",
+          "notification": {
+            "kind": "N",
+            "value": 5
+          }
+        },
+        {
+          "type": "notify",
+          "target": "observer-1",
+          "notification": {
+            "kind": "N",
+            "value": 7
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "publishReplay-legacy-fixed-subject",
+      "executionId": "publishReplay-session16-example",
+      "ruleId": "S16-PUBLISHREPLAY-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Connected",
+        "subscribers": [
+          0,
+          1
+        ],
+        "generation": 0,
+        "retained": [
+          5,
+          7
+        ],
+        "last": 7,
+        "hasLast": true,
+        "terminal": null
+      },
+      "after": {
+        "phase": "Stopped",
+        "subscribers": [],
+        "generation": 0,
+        "retained": [
+          5,
+          7
+        ],
+        "last": 7,
+        "hasLast": true,
+        "terminal": "complete"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "observer-0",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "observer-1",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 7,
+      "modelId": "publishReplay-legacy-fixed-subject",
+      "executionId": "publishReplay-session16-example",
+      "ruleId": "S16-PUBLISHREPLAY-LATE-SUBSCRIBE",
+      "event": {
+        "type": "observer.subscribe",
+        "observer": 2
+      },
+      "before": {
+        "phase": "Stopped",
+        "subscribers": [],
+        "generation": 0,
+        "retained": [
+          5,
+          7
+        ],
+        "last": 7,
+        "hasLast": true,
+        "terminal": "complete"
+      },
+      "after": {
+        "phase": "Stopped",
+        "subscribers": [],
+        "generation": 0,
+        "retained": [
+          5,
+          7
+        ],
+        "last": 7,
+        "hasLast": true,
+        "terminal": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "observer-2",
+          "notification": {
+            "kind": "N",
+            "value": 5
+          }
+        },
+        {
+          "type": "notify",
+          "target": "observer-2",
+          "notification": {
+            "kind": "N",
+            "value": 7
+          }
+        },
+        {
+          "type": "notify",
+          "target": "observer-2",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

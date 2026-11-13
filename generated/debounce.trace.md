@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | DEBOUNCE-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active","nextId":0} |
 | 1 | 1 | DEBOUNCE-NEW-VALUE | {"type":"source.next","value":1} | {"phase":"Active","nextId":0} | invoke(selector#0, value=1, index=0) | {"phase":"Calling","nextId":1,"pending":{"id":0,"value":1,"live":false}} |
 | 2 | 1 | DEBOUNCE-DURATION-RETURN | {"type":"callback.return","resource":{"id":"selector","generation":0}} | {"phase":"Calling","nextId":1,"pending":{"id":0,"value":1,"live":false}} | subscribe(duration#0) | {"phase":"Active","nextId":1,"pending":{"id":0,"value":1,"live":true}} |

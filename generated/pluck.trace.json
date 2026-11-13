@@ -1,0 +1,143 @@
+{
+  "status": "finished-input",
+  "consumed": 4,
+  "state": {
+    "phase": "Closed",
+    "count": 2,
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "pluck-plain-data-path",
+      "executionId": "pluck-session16-example",
+      "ruleId": "S16-PLUCK-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed",
+        "count": 0,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "count": 0,
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "pluck-plain-data-path",
+      "executionId": "pluck-session16-example",
+      "ruleId": "S16-PLUCK-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": {
+          "person": {
+            "name": "Ada"
+          }
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "count": 0,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "count": 1,
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "Ada"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "pluck-plain-data-path",
+      "executionId": "pluck-session16-example",
+      "ruleId": "S16-PLUCK-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": {
+          "person": {}
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "count": 1,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "count": 2,
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "pluck-plain-data-path",
+      "executionId": "pluck-session16-example",
+      "ruleId": "S16-PLUCK-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "count": 2,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Closed",
+        "count": 2,
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

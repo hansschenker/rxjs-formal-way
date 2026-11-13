@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | S15-OBSERVEON-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active","sourceLive":true,"nextId":0,"lastSourceTime":0,"pending":[]} |
 | 1 | 1 | S15-OBSERVEON-QUEUE-NEXT | {"type":"source.next","value":"a","now":1} | {"phase":"Active","sourceLive":true,"nextId":0,"lastSourceTime":0,"pending":[]} | schedule(scheduled#0, delay=2) | {"phase":"Active","sourceLive":true,"nextId":1,"lastSourceTime":1,"pending":[{"id":0,"due":3,"kind":"N","value":"a"}]} |
 | 2 | 2 | S15-OBSERVEON-QUEUE-NEXT | {"type":"source.next","value":"b","now":2} | {"phase":"Active","sourceLive":true,"nextId":1,"lastSourceTime":1,"pending":[{"id":0,"due":3,"kind":"N","value":"a"}]} | schedule(scheduled#1, delay=2) | {"phase":"Active","sourceLive":true,"nextId":2,"lastSourceTime":2,"pending":[{"id":0,"due":3,"kind":"N","value":"a"},{"id":1,"due":4,"kind":"N","value":"b"}]} |

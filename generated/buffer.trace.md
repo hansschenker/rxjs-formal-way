@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | BUFFER-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0); subscribe(closing-notifier#0) | {"phase":"Active","seen":0,"notifierLive":true,"records":[{"start":0,"values":[]}]} |
 | 1 | 1 | BUFFER-NEXT | {"type":"source.next","value":1} | {"phase":"Active","seen":0,"notifierLive":true,"records":[{"start":0,"values":[]}]} |  | {"phase":"Active","seen":1,"notifierLive":true,"records":[{"start":0,"values":[1]}]} |
 | 2 | 2 | BUFFER-NEXT | {"type":"source.next","value":2} | {"phase":"Active","seen":1,"notifierLive":true,"records":[{"start":0,"values":[1]}]} |  | {"phase":"Active","seen":2,"notifierLive":true,"records":[{"start":0,"values":[1,2]}]} |

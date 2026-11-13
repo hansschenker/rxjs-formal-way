@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | FILTER-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active","index":0} |
 | 1 | 10 | FILTER-CALL | {"type":"source.next","value":3} | {"phase":"Active","index":0} | invoke(predicate#0, value=3, index=0) | {"phase":"Calling","index":1,"callId":0,"input":3} |
 | 2 | 10 | FILTER-DROP | {"type":"callback.return","resource":{"id":"predicate","generation":0},"value":false} | {"phase":"Calling","index":1,"callId":0,"input":3} |  | {"phase":"Active","index":1} |

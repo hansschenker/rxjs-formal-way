@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | PAIRWISE-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active","hasPrevious":false} |
 | 1 | 1 | PAIRWISE-FIRST | {"type":"source.next","value":"a"} | {"phase":"Active","hasPrevious":false} |  | {"phase":"Active","hasPrevious":true,"previous":"a"} |
 | 2 | 2 | PAIRWISE-NEXT | {"type":"source.next","value":"b"} | {"phase":"Active","hasPrevious":true,"previous":"a"} | downstream.N(["a","b"]) | {"phase":"Active","hasPrevious":true,"previous":"b"} |

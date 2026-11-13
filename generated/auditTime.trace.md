@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | AUDITTIME-INIT | {"type":"subscribe","now":0} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Idle","now":0,"nextId":0} |
 | 1 | 1 | AUDITTIME-START | {"type":"source.next","now":1,"value":"a"} | {"phase":"Idle","now":0,"nextId":0} | schedule(audit-timer#0, delay=3) | {"phase":"Pending","now":1,"nextId":1,"value":"a","duration":{"id":"audit-timer","generation":0},"scheduledFor":4} |
 | 2 | 2 | AUDITTIME-REPLACE | {"type":"source.next","now":2,"value":"b"} | {"phase":"Pending","now":1,"nextId":1,"value":"a","duration":{"id":"audit-timer","generation":0},"scheduledFor":4} |  | {"phase":"Pending","now":2,"nextId":1,"value":"b","duration":{"id":"audit-timer","generation":0},"scheduledFor":4} |

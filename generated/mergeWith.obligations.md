@@ -2,74 +2,64 @@
 
 > Generated from the canonical model by npm run generate. Do not edit this projection.
 
-A rule creates an obligation, not a proof of exhaustive behavior. Test identifiers below resolve in tests/session15-rxjs.test.mjs.
+A rule creates an obligation, not a proof of exhaustive behavior. Test identifiers below resolve in tests/session15-rxjs.test.mjs, tests/mergeWith-refinement.test.mjs.
 
 ## S15-MERGEWITH-INIT
 
 Reach **Unsubscribed** with **first consumer connection**, then provide **subscribe**.
 
-Expect, in order: subscribe source first then available others.
+Expect, in order: subscribe source 0 first, then every configured other input in argument order.
 
-Resulting state: live and pending indices respect FIFO admission. Verify future silence after termination and source lifetime independently of value assertions.
+Resulting state: Active; live inputs are 0 through 2; pending is empty. Verify future silence after termination and source lifetime independently of value assertions.
 
 Runtime witnesses: S15-MERGEWITH-INIT.
 
 ## S15-MERGEWITH-NEXT
 
-Reach **Active** with **resource is currently subscribed**, then provide **input.next**.
+Reach **Active** with **input resource belongs to the current live-input set**, then provide **input.next**.
 
-Expect, in order: forward exact payload.
+Expect, in order: forward the exact input payload once.
 
-Resulting state: live and pending indices respect FIFO admission. Verify future silence after termination and source lifetime independently of value assertions.
+Resulting state: Active; the live-input set is unchanged; pending remains empty. Verify future silence after termination and source lifetime independently of value assertions.
 
 Runtime witnesses: S15-MERGEWITH-NEXT.
 
-## S15-MERGEWITH-REFILL
-
-Reach **Active** with **live input complete and pending FIFO is nonempty**, then provide **input.complete**.
-
-Expect, in order: release completed input; subscribe next waiting input.
-
-Resulting state: live and pending indices respect FIFO admission. Verify future silence after termination and source lifetime independently of value assertions.
-
-Runtime witnesses: S15-MERGEWITH-REFILL.
-
 ## S15-MERGEWITH-COMPLETE-WAIT
 
-Reach **Active** with **pending empty and other inputs live**, then provide **input.complete**.
+Reach **Active** with **the completing input is live and at least one other input remains live**, then provide **input.complete**.
 
-Expect, in order: release completed input.
+Expect, in order: release the completed input; emit no result notification.
 
-Resulting state: live and pending indices respect FIFO admission. Verify future silence after termination and source lifetime independently of value assertions.
+Resulting state: Active; remove the completed input from the live-input set; pending remains empty. Verify future silence after termination and source lifetime independently of value assertions.
 
 Runtime witnesses: S15-MERGEWITH-COMPLETE-WAIT.
 
 ## S15-MERGEWITH-COMPLETE-LAST
 
-Reach **Active** with **pending empty, final live input**, then provide **input.complete**.
+Reach **Active** with **the completing input is the only live input**, then provide **input.complete**.
 
-Expect, in order: complete result; release final input.
+Expect, in order: release the final input and run its registered teardown; complete the result.
 
-Resulting state: terminal, no subscriptions. Verify future silence after termination and source lifetime independently of value assertions.
+Resulting state: Closed with reason complete; no owned input subscriptions. Verify future silence after termination and source lifetime independently of value assertions.
 
 Runtime witnesses: S15-MERGEWITH-COMPLETE-LAST.
 
 ## S15-MERGEWITH-ERROR
 
-Reach **Active** with **any live source fails**, then provide **input.error**.
+Reach **Active** with **the failing input belongs to the live-input set**, then provide **input.error**.
 
-Expect, in order: forward exact error; release every subscribed input.
+Expect, in order: forward the exact error; release every live input in subscription order.
 
-Resulting state: terminal, no subscriptions. Verify future silence after termination and source lifetime independently of value assertions.
+Resulting state: Closed with reason input-error; no owned input subscriptions. Verify future silence after termination and source lifetime independently of value assertions.
 
 Runtime witnesses: S15-MERGEWITH-ERROR.
 
 ## S15-MERGEWITH-CANCEL
 
-Reach **Active** with **consumer unsubscribe**, then provide **cancel**.
+Reach **Active** with **the result is Active and the consumer unsubscribes**, then provide **cancel**.
 
-Expect, in order: release all live sources, no notification.
+Expect, in order: release every live input in subscription order; emit no result notification.
 
-Resulting state: terminal, no subscriptions. Verify future silence after termination and source lifetime independently of value assertions.
+Resulting state: Closed with reason cancel; no owned input subscriptions. Verify future silence after termination and source lifetime independently of value assertions.
 
 Runtime witnesses: S15-MERGEWITH-CANCEL.

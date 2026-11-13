@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | DELAYWHEN-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active","sourceLive":true,"nextId":0,"items":[]} |
 | 1 | 1 | DELAYWHEN-SOURCE-SELECT | {"type":"source.next","now":1,"value":1} | {"phase":"Active","sourceLive":true,"nextId":0,"items":[]} | invoke(selector#0, value=1, index=0) | {"phase":"Active","sourceLive":true,"nextId":1,"items":[{"id":0,"value":1,"stage":"calling"}]} |
 | 2 | 1 | DELAYWHEN-SELECTOR-RETURN | {"type":"callback.return","resource":{"id":"selector","generation":0}} | {"phase":"Active","sourceLive":true,"nextId":1,"items":[{"id":0,"value":1,"stage":"calling"}]} | subscribe(duration#0) | {"phase":"Active","sourceLive":true,"nextId":1,"items":[{"id":0,"value":1,"stage":"pending"}]} |

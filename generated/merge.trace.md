@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | S14-MERGE-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(input#0); subscribe(input#1) | {"phase":"Active","live":[0,1],"pending":[2],"total":3} |
 | 1 | 1 | S14-MERGE-NEXT | {"type":"input.next","resource":{"id":"input","generation":0},"value":1} | {"phase":"Active","live":[0,1],"pending":[2],"total":3} | downstream.N(1) | {"phase":"Active","live":[0,1],"pending":[2],"total":3} |
 | 2 | 2 | S14-MERGE-NEXT | {"type":"input.next","resource":{"id":"input","generation":1},"value":10} | {"phase":"Active","live":[0,1],"pending":[2],"total":3} | downstream.N(10) | {"phase":"Active","live":[0,1],"pending":[2],"total":3} |

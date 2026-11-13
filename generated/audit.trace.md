@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | AUDIT-INIT | {"type":"subscribe","now":0} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Idle","now":0,"nextId":0} |
 | 1 | 1 | AUDIT-START | {"type":"source.next","now":1,"value":"a"} | {"phase":"Idle","now":0,"nextId":0} | invoke(duration-selector#0, value="a", index=0) | {"phase":"Calling","now":1,"nextId":1,"value":"a","callback":{"id":"duration-selector","generation":0}} |
 | 2 | 1 | AUDIT-CALL-RETURN | {"type":"callback.return","now":1,"resource":{"id":"duration-selector","generation":0}} | {"phase":"Calling","now":1,"nextId":1,"value":"a","callback":{"id":"duration-selector","generation":0}} | subscribe(duration#0) | {"phase":"Pending","now":1,"nextId":1,"value":"a","duration":{"id":"duration","generation":0},"scheduledFor":1} |

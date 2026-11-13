@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | MERGESCAN-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed","accumulator":0} | subscribe(outer#0) | {"phase":"Active","index":0,"active":[],"queue":[],"accumulator":0} |
 | 1 | 1 | MERGESCAN-ADMIT | {"type":"outer.next","value":1} | {"phase":"Active","index":0,"active":[],"queue":[],"accumulator":0} | invoke(accumulator#0, value={"accumulator":0,"value":1}, index=0) | {"phase":"Calling","resume":"Active","index":1,"active":[],"queue":[],"callId":0,"input":1,"accumulator":0} |
 | 2 | 1 | MERGESCAN-RETURN-ACTIVE | {"type":"callback.return","resource":{"id":"accumulator","generation":0},"value":"first"} | {"phase":"Calling","resume":"Active","index":1,"active":[],"queue":[],"callId":0,"input":1,"accumulator":0} | subscribe(inner#0) | {"phase":"Active","index":1,"active":[{"resource":{"id":"inner","generation":0},"source":"first"}],"queue":[],"accumulator":0} |

@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | BUFFERTIME-INIT | {"type":"subscribe","now":0} | {"phase":"Unsubscribed"} | schedule(buffer-window#0, delay=3); subscribe(source#0) | {"phase":"Active","now":0,"nextWindowId":1,"nextCreationId":0,"windows":[{"id":0,"startedAt":0,"closesAt":3,"values":[]}],"creationAt":null,"creation":null} |
 | 1 | 1 | BUFFERTIME-NEXT | {"type":"source.next","now":1,"value":1} | {"phase":"Active","now":0,"nextWindowId":1,"nextCreationId":0,"windows":[{"id":0,"startedAt":0,"closesAt":3,"values":[]}],"creationAt":null,"creation":null} |  | {"phase":"Active","now":1,"nextWindowId":1,"nextCreationId":0,"windows":[{"id":0,"startedAt":0,"closesAt":3,"values":[1]}],"creationAt":null,"creation":null} |
 | 2 | 2 | BUFFERTIME-NEXT | {"type":"source.next","now":2,"value":2} | {"phase":"Active","now":1,"nextWindowId":1,"nextCreationId":0,"windows":[{"id":0,"startedAt":0,"closesAt":3,"values":[1]}],"creationAt":null,"creation":null} |  | {"phase":"Active","now":2,"nextWindowId":1,"nextCreationId":0,"windows":[{"id":0,"startedAt":0,"closesAt":3,"values":[1,2]}],"creationAt":null,"creation":null} |

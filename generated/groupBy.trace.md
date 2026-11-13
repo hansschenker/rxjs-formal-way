@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | S13-GROUPBY-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active","index":0,"nextGroupId":0,"groups":[]} |
 | 1 | 1 | S13-GROUPBY-SELECT-Active | {"type":"source.next","value":1} | {"phase":"Active","index":0,"nextGroupId":0,"groups":[]} | invoke(key#0, value=1, index=0) | {"phase":"Calling","resume":"Active","index":1,"nextGroupId":0,"groups":[],"pending":1} |
 | 2 | 1 | S13-GROUPBY-KEY-NEW-Active | {"type":"callback.return","resource":{"id":"key","generation":0},"value":"odd"} | {"phase":"Calling","resume":"Active","index":1,"nextGroupId":0,"groups":[],"pending":1} | downstream.N({"key":"odd","groupId":0}); group:0.N(1) | {"phase":"Active","index":1,"nextGroupId":1,"groups":[{"groupId":0,"key":"odd","subscribers":0}]} |

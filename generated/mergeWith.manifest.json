@@ -17,21 +17,22 @@
       "parameters": "Exactly 2 other valid Observable inputs; unbounded concurrency, no scheduler argument.",
       "callbacks": "No callbacks. Input payloads are opaque and preserve identity.",
       "time": "No internal clock; all inputs supply their notification times. Source-first subscriptions are ordered.",
-      "reentrancy": "Atomic nonreentrant subscriptions; synchronous input delivery during acquisition is excluded.",
+      "reentrancy": "Subscription setup is atomic. Inputs deliver only after all subscriptions and their teardowns have been registered. No observer or teardown reentry.",
       "exclusions": [
-        "No Promise/Iterable source conversion or reentrant synchronous emissions during acquisition.",
-        "No deprecated concurrency/scheduler overload (these belong to merge, not mergeWith)."
+        "No Promise/Iterable source conversion or synchronous input emissions during subscription acquisition.",
+        "No concurrency/scheduler argument; equal-time delivery order belongs to the supplied sources and scheduler.",
+        "No cancellation inside observer delivery, throwing/reentrant observers or finalizers, or input inventories above 32 others."
       ]
     },
     "initialization": {
       "control": "Unsubscribed",
       "event": "subscribe",
-      "sourceSubscription": "Acquire source 0 before other Observable arguments; up to concurrency limit."
+      "sourceSubscription": "Acquire source 0 first, then every configured other input; no pending queue."
     },
     "ownership": {
       "state": "subscription-local",
       "sharing": "No sharing: every result subscription independently subscribes to all input Observables.",
-      "reset": "Fresh live and pending indices; no shared queue between consumers.",
+      "reset": "Fresh live-input set per result subscription; pending is always empty.",
       "resources": [
         {
           "id": "input",
@@ -42,9 +43,9 @@
     },
     "dispatch": {
       "policy": "atomic-non-reentrant",
-      "actionSemantics": "Preserve event arrival order and release completed sources; concurrency slots are FIFO.",
+      "actionSemantics": "Ordered subscription, notification and registered-input-teardown observations. Normal final input teardown precedes result completion; error notification precedes result-owned cleanup.",
       "cancellationCheckpoints": [
-        "Between external notifications; cancel all live sources silently, discard pending."
+        "Between external notifications; cancel every live input silently."
       ]
     },
     "inputs": [
@@ -92,7 +93,7 @@
       },
       {
         "id": "Active",
-        "description": "zero or more live inputs and ordered pending sources",
+        "description": "one or more live inputs; no pending input subscriptions",
         "terminal": false
       },
       {
@@ -116,17 +117,31 @@
         "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/mergeInternals.ts",
         "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
         "purpose": "Pinned RxJS 7.8.2 export delegation and subscription semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 export delegation and subscription semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/mergeWith-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 export delegation and subscription semantics"
       }
     ],
     "evidence": {
       "modelTests": [
-        "tests/session15-model.test.mjs"
+        "tests/session15-model.test.mjs",
+        "tests/mergeWith-refinement.test.mjs"
       ],
       "runtimeTests": [
-        "tests/session15-rxjs.test.mjs"
+        "tests/session15-rxjs.test.mjs",
+        "tests/mergeWith-refinement.test.mjs"
       ],
       "status": "source-inspected",
-      "record": "evidence/SESSION-15.md"
+      "record": "evidence/REFINEMENT-MERGEWITH.md",
+      "scenarios": "generated/mergeWith.scenarios.md",
+      "coverage": "generated/mergeWith.coverage.md"
     }
   },
   "parameters": {
@@ -142,10 +157,10 @@
       "to": "Active",
       "guard": "first consumer connection",
       "actions": [
-        "subscribe source first then available others"
+        "subscribe source 0 first, then every configured other input in argument order"
       ],
-      "explanation": "All inputs are fixed at operator construction; the source at input 0 is subscribed first.",
-      "nextState": "live and pending indices respect FIFO admission",
+      "explanation": "All configured inputs are subscribed in argument order. There is no concurrency limit or waiting-source admission policy in mergeWith.",
+      "nextState": "Active; live inputs are 0 through 2; pending is empty",
       "obligations": [
         "S15-MERGEWITH-INIT"
       ]
@@ -155,30 +170,14 @@
       "from": "Active",
       "event": "input.next",
       "to": "Active",
-      "guard": "resource is currently subscribed",
+      "guard": "input resource belongs to the current live-input set",
       "actions": [
-        "forward exact payload"
+        "forward the exact input payload once"
       ],
-      "explanation": "Any admitted input contributes values in actual event order without changing subscription ownership.",
-      "nextState": "live and pending indices respect FIFO admission",
+      "explanation": "A value from any live input flows downstream unchanged in delivery order; it does not change subscription ownership.",
+      "nextState": "Active; the live-input set is unchanged; pending remains empty",
       "obligations": [
         "S15-MERGEWITH-NEXT"
-      ]
-    },
-    {
-      "id": "S15-MERGEWITH-REFILL",
-      "from": "Active",
-      "event": "input.complete",
-      "to": "Active",
-      "guard": "live input complete and pending FIFO is nonempty",
-      "actions": [
-        "release completed input",
-        "subscribe next waiting input"
-      ],
-      "explanation": "At a bounded concurrency limit, completion frees a slot for the next supplied source.",
-      "nextState": "live and pending indices respect FIFO admission",
-      "obligations": [
-        "S15-MERGEWITH-REFILL"
       ]
     },
     {
@@ -186,12 +185,12 @@
       "from": "Active",
       "event": "input.complete",
       "to": "Active",
-      "guard": "pending empty and other inputs live",
+      "guard": "the completing input is live and at least one other input remains live",
       "actions": [
-        "release completed input"
+        "release the completed input; emit no result notification"
       ],
-      "explanation": "Completion waits for every connected input and queued source to finish.",
-      "nextState": "live and pending indices respect FIFO admission",
+      "explanation": "One input completion removes only that input. The result waits while any other input remains live.",
+      "nextState": "Active; remove the completed input from the live-input set; pending remains empty",
       "obligations": [
         "S15-MERGEWITH-COMPLETE-WAIT"
       ]
@@ -201,13 +200,13 @@
       "from": "Active",
       "event": "input.complete",
       "to": "Closed",
-      "guard": "pending empty, final live input",
+      "guard": "the completing input is the only live input",
       "actions": [
-        "complete result",
-        "release final input"
+        "release the final input and run its registered teardown",
+        "complete the result"
       ],
-      "explanation": "Only the final input completion ends the result normally.",
-      "nextState": "terminal, no subscriptions",
+      "explanation": "For completion delivered after subscription setup, the final input teardown precedes normal result completion. Subscription-time emissions and late teardown registration are outside this profile.",
+      "nextState": "Closed with reason complete; no owned input subscriptions",
       "obligations": [
         "S15-MERGEWITH-COMPLETE-LAST"
       ]
@@ -217,13 +216,13 @@
       "from": "Active",
       "event": "input.error",
       "to": "Closed",
-      "guard": "any live source fails",
+      "guard": "the failing input belongs to the live-input set",
       "actions": [
-        "forward exact error",
-        "release every subscribed input"
+        "forward the exact error",
+        "release every live input in subscription order"
       ],
-      "explanation": "A single source failure immediately tears down all live sources and discards pending subscriptions.",
-      "nextState": "terminal, no subscriptions",
+      "explanation": "An input failure errors the result and tears down every live input, including the failing one. No value is manufactured.",
+      "nextState": "Closed with reason input-error; no owned input subscriptions",
       "obligations": [
         "S15-MERGEWITH-ERROR"
       ]
@@ -233,12 +232,12 @@
       "from": "Active",
       "event": "cancel",
       "to": "Closed",
-      "guard": "consumer unsubscribe",
+      "guard": "the result is Active and the consumer unsubscribes",
       "actions": [
-        "release all live sources, no notification"
+        "release every live input in subscription order; emit no result notification"
       ],
-      "explanation": "Downstream cancellation is silent; queued inputs are never subscribed.",
-      "nextState": "terminal, no subscriptions",
+      "explanation": "Consumer cancellation is silent downstream and releases all live input subscriptions. No completion notification is synthesized.",
+      "nextState": "Closed with reason cancel; no owned input subscriptions",
       "obligations": [
         "S15-MERGEWITH-CANCEL"
       ]

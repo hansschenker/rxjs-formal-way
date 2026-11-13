@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | COMBINELATESTWITH-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(input#0); subscribe(input#1) | {"phase":"Active","current":0,"slots":[{"ready":false,"live":true},{"ready":false,"live":true}]} |
 | 1 | 1 | COMBINELATESTWITH-WAIT | {"type":"input.next","resource":{"id":"input","generation":0},"value":1} | {"phase":"Active","current":0,"slots":[{"ready":false,"live":true},{"ready":false,"live":true}]} |  | {"phase":"Active","current":0,"slots":[{"ready":true,"live":true,"value":1},{"ready":false,"live":true}]} |
 | 2 | 2 | COMBINELATESTWITH-EMIT | {"type":"input.next","resource":{"id":"input","generation":1},"value":10} | {"phase":"Active","current":0,"slots":[{"ready":true,"live":true,"value":1},{"ready":false,"live":true}]} | downstream.N([1,10]) | {"phase":"Active","current":0,"slots":[{"ready":true,"live":true,"value":1},{"ready":true,"live":true,"value":10}]} |

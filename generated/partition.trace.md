@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | S15-PARTITION-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0); subscribe(source#1) | {"phase":"Active","pass":{"status":"live","index":0,"pending":null},"fail":{"status":"live","index":0,"pending":null}} |
 | 1 | 1 | S15-PARTITION-PREDICATE-REQUEST | {"type":"source.next","branch":"pass","value":2} | {"phase":"Active","pass":{"status":"live","index":0,"pending":null},"fail":{"status":"live","index":0,"pending":null}} | invoke(predicate-pass#0, value=2, index=0) | {"phase":"Active","pass":{"status":"live","index":1,"pending":{"index":0,"value":2}},"fail":{"status":"live","index":0,"pending":null}} |
 | 2 | 1 | S15-PARTITION-PREDICATE-RETURN | {"type":"predicate.return","resource":{"id":"predicate-pass","generation":0},"result":true} | {"phase":"Active","pass":{"status":"live","index":1,"pending":{"index":0,"value":2}},"fail":{"status":"live","index":0,"pending":null}} | pass.N(2) | {"phase":"Active","pass":{"status":"live","index":1,"pending":null},"fail":{"status":"live","index":0,"pending":null}} |

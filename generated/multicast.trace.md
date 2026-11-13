@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | S15-MULTICAST-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | invoke(selector#0, value=undefined, index=0) | {"phase":"Preparing"} |
 | 1 | 0 | S15-MULTICAST-SELECTOR-READY | {"type":"selector.return","resource":{"id":"selector","generation":0}} | {"phase":"Preparing"} | subscribe(selected#0); subscribe(source#0) | {"phase":"Active"} |
 | 2 | 1 | S15-MULTICAST-BROADCAST | {"type":"source.next","value":1} | {"phase":"Active"} | downstream.N(1); downstream.N(1) | {"phase":"Active"} |

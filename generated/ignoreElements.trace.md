@@ -5,7 +5,7 @@
 **Model-predicted**, not a recording of RxJS execution. Input times come from the scenario; sequence breaks ties. Payloads in this exported example are JSON-safe symbols.
 
 | Sequence | Time | Rule | Input | Before | Ordered actions | After |
-|---:|---:|---|---|---|---|---|
+|---:|---:|---|---|---|---|
 | 0 | 0 | S13-IGNOREELEMENTS-INIT | {"type":"subscribe"} | {"phase":"Unsubscribed"} | subscribe(source#0) | {"phase":"Active"} |
 | 1 | 1 | S13-IGNOREELEMENTS-DROP | {"type":"source.next","value":1} | {"phase":"Active"} |  | {"phase":"Active"} |
 | 2 | 2 | S13-IGNOREELEMENTS-DROP | {"type":"source.next","value":2} | {"phase":"Active"} |  | {"phase":"Active"} |
