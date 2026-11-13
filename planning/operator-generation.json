@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "pluck",
-    "publish",
-    "publishBehavior",
-    "publishLast",
-    "publishReplay",
     "race",
     "raceWith",
     "repeat",
@@ -950,29 +945,89 @@
       "inspectionIndex": "operators/partition-index.md"
     },
     "pluck": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-13",
+      "profiles": [
+        "plain-data nested string property path (one to three keys)",
+        "missing/nullish keys yield undefined without changing cardinality",
+        "exact source termination and downstream cancellation"
+      ],
+      "evidence": "evidence/SESSION-16.md",
+      "testedCommit": "2df3fe326487b8c27e84614791d9cac36bb0e1df",
+      "generatedCommit": "adf2f591e8790a49f8592306e45ef11a80179261",
+      "implementationRun": 43386110883,
+      "verificationRun": 43386508048,
+      "readOnlyHeadCommit": "b7352f51dcebda85dce4415e3e932a66e436037a",
+      "readOnlyCheckout": "25af0c794ab4abc51e62aa15a6bd1cd011bd5f31",
+      "readOnlyTree": "167d0c949615d3417de2311000510c6b9a93ed3c"
     },
     "publish": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-13",
+      "profiles": [
+        "selector-less ConnectableObservable with fixed Subject",
+        "explicit connection lifetime and addressed multiple observer subscriptions",
+        "no refCount and no replay; error and terminal behavior"
+      ],
+      "evidence": "evidence/SESSION-16.md",
+      "testedCommit": "2df3fe326487b8c27e84614791d9cac36bb0e1df",
+      "generatedCommit": "adf2f591e8790a49f8592306e45ef11a80179261",
+      "implementationRun": 43386110883,
+      "verificationRun": 43386508048,
+      "readOnlyHeadCommit": "b7352f51dcebda85dce4415e3e932a66e436037a",
+      "readOnlyCheckout": "25af0c794ab4abc51e62aa15a6bd1cd011bd5f31",
+      "readOnlyTree": "167d0c949615d3417de2311000510c6b9a93ed3c"
     },
     "publishBehavior": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-13",
+      "profiles": [
+        "selector-less fixed BehaviorSubject with explicit seed",
+        "current-value replay to newly attached live observers",
+        "no late value replay after terminal and no automatic connection"
+      ],
+      "evidence": "evidence/SESSION-16.md",
+      "testedCommit": "2df3fe326487b8c27e84614791d9cac36bb0e1df",
+      "generatedCommit": "adf2f591e8790a49f8592306e45ef11a80179261",
+      "implementationRun": 43386110883,
+      "verificationRun": 43386508048,
+      "readOnlyHeadCommit": "b7352f51dcebda85dce4415e3e932a66e436037a",
+      "readOnlyCheckout": "25af0c794ab4abc51e62aa15a6bd1cd011bd5f31",
+      "readOnlyTree": "167d0c949615d3417de2311000510c6b9a93ed3c"
     },
     "publishLast": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-13",
+      "profiles": [
+        "selector-less fixed AsyncSubject",
+        "retain final value, flush only upon successful completion including late subscribers",
+        "empty completion and error suppress final replay"
+      ],
+      "evidence": "evidence/SESSION-16.md",
+      "testedCommit": "2df3fe326487b8c27e84614791d9cac36bb0e1df",
+      "generatedCommit": "adf2f591e8790a49f8592306e45ef11a80179261",
+      "implementationRun": 43386110883,
+      "verificationRun": 43386508048,
+      "readOnlyHeadCommit": "b7352f51dcebda85dce4415e3e932a66e436037a",
+      "readOnlyCheckout": "25af0c794ab4abc51e62aa15a6bd1cd011bd5f31",
+      "readOnlyTree": "167d0c949615d3417de2311000510c6b9a93ed3c"
     },
     "publishReplay": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-13",
+      "profiles": [
+        "selector-less fixed ReplaySubject with infinite time window",
+        "count bound (2) plus zero-size clamp to one",
+        "late FIFO replay after completion and error; manual connection ownership"
+      ],
+      "evidence": "evidence/SESSION-16.md",
+      "testedCommit": "2df3fe326487b8c27e84614791d9cac36bb0e1df",
+      "generatedCommit": "adf2f591e8790a49f8592306e45ef11a80179261",
+      "implementationRun": 43386110883,
+      "verificationRun": 43386508048,
+      "readOnlyHeadCommit": "b7352f51dcebda85dce4415e3e932a66e436037a",
+      "readOnlyCheckout": "25af0c794ab4abc51e62aa15a6bd1cd011bd5f31",
+      "readOnlyTree": "167d0c949615d3417de2311000510c6b9a93ed3c"
     },
     "race": {
       "status": "pending",
