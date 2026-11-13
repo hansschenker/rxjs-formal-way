@@ -119,3 +119,10 @@ export { createOnErrorResumeNextModel, onErrorResumeNextExample } from './models
 export type { ResumeNextParameters, ResumeNextState, ResumeNextEvent, ResumeNextModel } from './models/session15-onErrorResumeNext.js';
 export { createPartitionModel, partitionExample } from './models/session15-partition.js';
 export type { PartitionBranch, PartitionSlot, PartitionParameters, PartitionState, PartitionEvent, PartitionModel } from './models/session15-partition.js';
+
+export { createPluckModel, pluckPath, pluckExample, createPublishModel,
+  createPublishPlainModel, createPublishBehaviorModel, createPublishLastModel,
+  createPublishReplayModel, publishExample, publishBehaviorExample,
+  publishLastExample, publishReplayExample } from './models/session16.js';
+export type { PluckParameters, PluckState, PluckEvent, PluckModel,
+  PublishOperator, PublishParameters, PublishState, PublishEvent, PublishModel } from './models/session16.js';
