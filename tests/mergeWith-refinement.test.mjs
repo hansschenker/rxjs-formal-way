@@ -117,8 +117,9 @@ test('MW-MODEL: unbounded specialization has no refill and rejects fabricated pe
   const impossible = {...active,live:[0,1],pending:[2]};
   assert.ok(model.validateState(impossible,model.parameters).some(e => e.includes('pending')));
   assert.throws(() => stepModel(model,impossible,{type:'cancel'}), error => {
-    assert.match(error.message, /invalid input state/);
-    assert.ok(error.details.some(detail => detail.includes('pending')));
+    // stepModel reports validateState errors in Error.message; it does not attach .details.
+    // Assert the exact invariant rather than a nonexistent runner exception shape.
+    assert.match(error.message, /mergeWith cannot have pending input subscriptions/);
     return true;
   });
   assert.equal(createMergeWithModel(0).rules.length,5);
