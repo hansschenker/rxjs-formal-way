@@ -42,7 +42,9 @@ This is the current implementation tracker. The migration map preserves the orig
 | M14-B | flatMap exact alias, mergeMapTo constant-source occurrences, mergeScan latest inner accumulation | Accepted within scope; [Session 14 technical guide](SESSION-14-NOTIFICATIONS-AND-MERGE.md) |
 | M15-A | mergeWith and multicast: unbounded joins and factory-plus-selector shared connection | Accepted within scope; [Session 15 technical guide](SESSION-15-SHARING-SCHEDULING-AND-PARTITION.md) |
 | M15-B | observeOn, onErrorResumeNext and partition: scheduled notifications, serial recovery and independent branches | Accepted within scope; [Session 15 evidence](../evidence/SESSION-15.md) |
-| M16+ | Remaining catalogue | 38 exports pending; not a universal interpreter |
+| M16-A | pluck: nested projection, missing path semantics, exact source terminal/cancellation | Accepted within plain-data path scope; [Session 16 guide](SESSION-16-LEGACY-CONNECTABLES.md) |
+| M16-B | publish/publishBehavior/publishLast/publishReplay: fixed-Subject manual connection, memory, completion, replay and per-observer ownership | Accepted within selector-less scopes; [Session 16 evidence](../evidence/SESSION-16.md) |
+| M17+ | Remaining catalogue | 33 exports pending; no universal interpreter or unmodeled overload equivalence |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
