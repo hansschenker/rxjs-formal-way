@@ -77,6 +77,10 @@ import { createMergeWithModel, mergeWithExample, createMulticastModel, multicast
  createObserveOnModel, observeOnExample, createOnErrorResumeNextModel, onErrorResumeNextExample,
  createPartitionModel, partitionExample } from '../dist/index.js';
 
+import { createPluckModel, pluckExample, createPublishPlainModel, publishExample,
+  createPublishBehaviorModel, publishBehaviorExample, createPublishLastModel, publishLastExample,
+  createPublishReplayModel, publishReplayExample } from '../dist/index.js';
+
 const canonicalModelPaths = {
   take:'src/models/take.ts', map:'src/models/map.ts', filter:'src/models/filter.ts', scan:'src/models/scan.ts',
   debounceTime:'src/models/debounceTime.ts', switchMap:'src/models/flatten.ts', mergeMap:'src/models/flatten.ts',
@@ -108,6 +112,9 @@ const canonicalModelPaths = {
   mergeWith:'src/models/session15-aliases.ts', multicast:'src/models/session15-aliases.ts',
   observeOn:'src/models/session15-observeOn.ts', onErrorResumeNext:'src/models/session15-onErrorResumeNext.ts',
   partition:'src/models/session15-partition.ts',
+  pluck:'src/models/session16.ts', publish:'src/models/session16.ts',
+  publishBehavior:'src/models/session16.ts', publishLast:'src/models/session16.ts',
+  publishReplay:'src/models/session16.ts',
 };
 
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
@@ -192,6 +199,11 @@ const examples = [
   ['observeOn', createObserveOnModel(2), observeOnExample, 'observeOn-session15-example'],
   ['onErrorResumeNext', createOnErrorResumeNextModel(2), onErrorResumeNextExample, 'onErrorResumeNext-session15-example'],
   ['partition', createPartitionModel(), partitionExample, 'partition-session15-example'],
+  ['pluck', createPluckModel(['person','name']), pluckExample, 'pluck-session16-example'],
+  ['publish', createPublishPlainModel(), publishExample, 'publish-session16-example'],
+  ['publishBehavior', createPublishBehaviorModel(0), publishBehaviorExample, 'publishBehavior-session16-example'],
+  ['publishLast', createPublishLastModel(), publishLastExample, 'publishLast-session16-example'],
+  ['publishReplay', createPublishReplayModel(2), publishReplayExample, 'publishReplay-session16-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
