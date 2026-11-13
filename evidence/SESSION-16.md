@@ -24,7 +24,14 @@
 
 ## Independent read-only verification
 
-**Pending separate PR run at the time of this draft.** Do not call this session accepted or closed until the read-only run with generation/publication skipped is retrieved and verified. The session log must record the exact independent checkout and its Git tree (if a synthetic PR merge revision).
+[Independent verification PR #31](https://github.com/hansschenker/rxjs-formal-way/pull/31) was opened **after** generation and merged after the read-only checks passed.
+
+- [CI run 43386508048](https://github.com/hansschenker/rxjs-formal-way/actions/runs/43386508048), job `131756137024`: **success**, exactly 1,129 named tests passed with 0 failures, syntax and strict TypeScript passed, **752 ordinary deterministic projections** and **3 dedicated mergeWith scenario projections** drift-verified.
+- The read-only job's `Generate projections on main before checking` and `Commit validated generated projections` steps were **both skipped**, proving committed files (not newly generated replacements) were checked.
+- PR head **`b7352f51dcebda85dce4415e3e932a66e436037a`**; actual GitHub synthetic PR merge checkout **`25af0c794ab4abc51e62aa15a6bd1cd011bd5f31`**. GitHub source commit inspection independently confirms both have the identical Git tree **`167d0c949615d3417de2311000510c6b9a93ed3c`**, so the checked content matches the recorded PR head exactly.
+- Read-only evidence/guide merge: [`a2fcf290a1dccd4922943185f6af8b05ba2df10d`](https://github.com/hansschenker/rxjs-formal-way/commit/a2fcf290a1dccd4922943185f6af8b05ba2df10d). This documentation merge is **not** represented as the implementation checkout used for runtime tests.
+
+All five `operators/*-index.md` inspection pages are present in the 752 committed projections and were drift-verified. **36 new named tests** (model and independent RxJS) were included in the 1,129-test suite; **15 negative strict TypeScript assertions** were added. No new exhaustive bounded-comparison count is claimed.
 
 ## Declared verification scope and limitations
 
@@ -36,5 +43,5 @@
 - No selector overload for `publish`/`publishReplay`, custom timestamp/time window, automatic refCount, arbitrary reentrancy, source notifications while subscribe/connect teardown is being registered, postterminal source reconnection, throwing observer/finalizer or other explicitly excluded parameter profiles.
 - Model-predicted traces are not native RxJS execution recordings; finite tests are not a universal equivalence proof.
 
-**Carryovers or completed exports:** to be finalized after independent read-only verification. No sixth export was attempted.  
+**Accepted names:** `pluck`, `publish`, `publishBehavior`, `publishLast`, `publishReplay`, all within their explicit source-inspected profiles. **Carryovers:** none. **Inventory:** 80/113 accepted, 33 pending. No sixth export, second session or catch-up batch was attempted.  
 **Next untouched queue:** `race`, `raceWith`, `repeat`, `repeatWhen`, `retry`.
