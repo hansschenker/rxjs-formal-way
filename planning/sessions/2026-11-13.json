@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-13",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-13T08:13:04+01:00",
   "startingCommit": "371554c5fd3ab6805e420ec77ee96c50b460b345",
   "selectedNames": [
@@ -12,27 +12,41 @@
     "publishLast",
     "publishReplay"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
+  "workedNames": [
     "pluck",
     "publish",
     "publishBehavior",
     "publishLast",
     "publishReplay"
   ],
+  "completedNames": [
+    "pluck",
+    "publish",
+    "publishBehavior",
+    "publishLast",
+    "publishReplay"
+  ],
+  "carryovers": [],
   "checks": {
-    "syntax": "not run",
-    "types": "not run",
-    "model": "not run",
-    "runtime": "not run",
-    "generated": "not run",
-    "ci": "not retrieved"
+    "syntax": "passed in implementation main push CI 43386110883 and independent read-only CI 43386508048",
+    "types": "strict TypeScript passed in both; 15 new @ts-expect-error negative assertions",
+    "model": "Session 16 guarded canonical model tests passed; full suite 1129 named tests, zero failures",
+    "runtime": "independent actual pinned RxJS 7.8.2 tests passed; full suite 1129 named tests, zero failures",
+    "generated": "752 ordinary committed deterministic projections plus 3 mergeWith scenario projections drift-verified; 45 new export projections, including 5 required inspection indexes",
+    "ci": "main push run 43386110883 job 131754887292 success; read-only PR run 43386508048 job 131756137024 success; generation and publication skipped in read-only CI"
   },
   "blockers": [],
   "notes": [
-    "No local-date session file existed at reservation time; only this one daily session will be attempted.",
-    "Session 14–23 inspection indexes mandatory; no acceptance without pinned-source analysis, named canonical guarded model, actual RxJS evidence and CI."
+    "Read live plan/tracker/roadmap and confirmed no 2026-11-13 log before reserving this single daily session.",
+    "Pinned RxJS 7.8.2 source revision e5351d02e225e275ac0e497c7b66eaa5f0c88791 inspected for all five exports plus Subject/Connectable internals.",
+    "One session only, exactly five operator export names; publish selector and profile overloads not counted as extra operators.",
+    "Independent native RxJS 7.8.2 tests for property projection, manual connection, per-observer lifecycle, seed/current value, AsyncSubject terminal last, ReplaySubject count-only FIFO cache, errors and cancellations.",
+    "Existing faulty mergeWith negative-test assertion corrected to assert real runner Error.message while retaining invalid-state rejection; earlier unrelated mergeWith and render drift repaired by established main generation.",
+    "Initial implementation PR failure was 1129 tests with 0 failures but expected uncommitted generation drift; main push generated and validated 752+3 projections.",
+    "All five required export-level inspection indexes were committed and verified in independent read-only run with generation and publication skipped.",
+    "Read-only CI ran synthetic merge checkout 25af0c794ab4abc51e62aa15a6bd1cd011bd5f31, whose Git tree 167d0c949615d3417de2311000510c6b9a93ed3c equals PR head b7352f51dcebda85dce4415e3e932a66e436037a.",
+    "Planning and evidence closure commits are documentation/metadata changes, not represented as the implementation checkout tested by main CI.",
+    "Exactly 80/113 operator exports accepted within declared scopes; 33 pending. No new bounded exhaustive equivalence claim."
   ],
   "nextQueue": [
     "race",
@@ -40,5 +54,57 @@
     "repeat",
     "repeatWhen",
     "retry"
+  ],
+  "closedAt": "2026-11-13T08:37:43+01:00",
+  "commits": [
+    "8a8777af5969168b91ee4f8cdc1b338fdad83738",
+    "1e106228c589f17907fb0904cbfa5a704d1a066f",
+    "2df3fe326487b8c27e84614791d9cac36bb0e1df",
+    "adf2f591e8790a49f8592306e45ef11a80179261",
+    "b7352f51dcebda85dce4415e3e932a66e436037a",
+    "a2fcf290a1dccd4922943185f6af8b05ba2df10d",
+    "cb5441e219e29dd79b77c97eeb5d895946b18357",
+    "8168643f893fa574a13819c8fc6af50215e05fd5",
+    "ce55f3564901ad3cce38cc14bc6ffa070882875f"
+  ],
+  "evidence": "evidence/SESSION-16.md",
+  "nextSessionNotBefore": "2026-11-14",
+  "verification": {
+    "implementationPr": 30,
+    "implementationPrHead": "1e106228c589f17907fb0904cbfa5a704d1a066f",
+    "implementationMerge": "2df3fe326487b8c27e84614791d9cac36bb0e1df",
+    "testedCommit": "2df3fe326487b8c27e84614791d9cac36bb0e1df",
+    "generatedCommit": "adf2f591e8790a49f8592306e45ef11a80179261",
+    "preGenerationPrRun": 43385793248,
+    "preGenerationPrConclusion": "failed only generation drift; syntax and strict TypeScript passed and all 1129 named tests passed",
+    "mainPushRun": 43386110883,
+    "mainPushJob": 131754887292,
+    "mainPushConclusion": "success",
+    "readOnlyPr": 31,
+    "readOnlyRun": 43386508048,
+    "readOnlyJob": 131756137024,
+    "readOnlyConclusion": "success",
+    "readOnlyHeadCommit": "b7352f51dcebda85dce4415e3e932a66e436037a",
+    "readOnlyBaseCommit": "adf2f591e8790a49f8592306e45ef11a80179261",
+    "readOnlyCheckout": "25af0c794ab4abc51e62aa15a6bd1cd011bd5f31",
+    "readOnlyHeadTree": "167d0c949615d3417de2311000510c6b9a93ed3c",
+    "readOnlyCheckoutTree": "167d0c949615d3417de2311000510c6b9a93ed3c",
+    "namedTestsPassed": 1129,
+    "namedTestFailures": 0,
+    "newNamedTests": 36,
+    "newNegativeTypeAssertions": 15,
+    "generatedViews": 752,
+    "mergeWithScenarioViews": 3,
+    "newGeneratedViews": 45,
+    "newInspectionIndices": 5,
+    "inspectionIndicesDriftVerified": true,
+    "newBoundedModelRxjsScenarios": 0,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  },
+  "provenanceLimitations": [
+    "The read-only CI checkout is a synthetic PR merge, not the PR head SHA; independently checked Git tree equality establishes checked-content identity.",
+    "Selector overloads of publish and publishReplay, refCount, finite windowTime, arbitrary reentrancy and synchronous connect-time source emission remain outside accepted scopes.",
+    "Model traces are predictions, not native RxJS execution recordings, and finite observations do not establish universal equivalence."
   ]
 }
