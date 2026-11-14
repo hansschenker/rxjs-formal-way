@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-14",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-14T08:47:48+01:00",
+  "startingCommit": "cf1722262de5061050270206a5d595f212ae389a",
+  "selectedNames": [
+    "race",
+    "raceWith",
+    "repeat",
+    "repeatWhen",
+    "retry"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "race",
+    "raceWith",
+    "repeat",
+    "repeatWhen",
+    "retry"
+  ],
+  "checks": {
+    "syntax": "not run",
+    "types": "not run",
+    "model": "not run",
+    "runtime": "not run",
+    "generated": "not run",
+    "ci": "not run"
+  },
+  "blockers": [],
+  "notes": [
+    "Live main, dated log absence, daily plan, roadmap and export tracker read before reserving one Europe/Zurich session.",
+    "Five export names reserved; no accepted 2026-10-28 baseline name selected.",
+    "Model acceptance requires pinned-source inspection, guarded Mealy rules, actual RxJS tests, generated artifacts and retrieved CI; no checks claimed passed yet."
+  ],
+  "nextQueue": [
+    "retryWhen",
+    "refCount",
+    "sample",
+    "sampleTime",
+    "sequenceEqual"
+  ]
+}
