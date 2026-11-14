@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { Observable, Subject, of, race, raceWith, repeat, repeatWhen, retry } from 'rxjs';
+import { Observable, Subject, of, raceWith, repeat, repeatWhen, retry } from 'rxjs';
+import { race as pipeRace } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 
 const tracked=()=>{
@@ -36,7 +37,7 @@ const observed=(observable)=>{
 
 test('S17 RXJS race: legacy pipeable export elects first next, not merely first subscription',()=>{
   const left=new Subject(),mid=new Subject(),right=new Subject();
-  const x=observed(left.pipe(race(mid,right)));
+  const x=observed(left.pipe(pipeRace(mid,right)));
   assert.deepEqual([left.observers.length,mid.observers.length,right.observers.length],[1,1,1]);
   mid.next({id:'winner'});
   assert.deepEqual([left.observers.length,mid.observers.length,right.observers.length],[0,1,0]);
@@ -46,7 +47,7 @@ test('S17 RXJS race: legacy pipeable export elects first next, not merely first 
 });
 test('S17 RXJS race: legacy array overload has same source-first candidate behavior',()=>{
   const main=new Subject(),a=new Subject(),b=new Subject();
-  const x=observed(main.pipe(race([a,b])));
+  const x=observed(main.pipe(pipeRace([a,b])));
   b.next(9);a.next(8);b.complete();
   assert.deepEqual(x.events,[{kind:'N',value:9},{kind:'C'}]);
 });
