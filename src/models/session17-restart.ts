@@ -223,7 +223,7 @@ export function createRestartModel<T>(
         failures.push('repeat subscription count exceeded');
       if(operator==='retry'&&s.failures>count)
         failures.push('retry failure budget exceeded');
-      if(s.phase==='Closed'&&s.reason==='none')failures.push('closed lacks reason');
+      if(s.phase==='Closed'&&!['complete','error','cancel','empty'].includes(s.reason))failures.push('closed lacks reason');
       return failures;
     },
     validateReaction:(_before,e,r)=>[
