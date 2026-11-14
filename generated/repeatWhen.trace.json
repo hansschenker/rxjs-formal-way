@@ -1,0 +1,277 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "generation": 1,
+    "notifier": "open",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "repeatWhen-persistent-notifier-post-setup",
+      "executionId": "repeatWhen-session17-example",
+      "ruleId": "S17-REPEATWHEN-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed",
+        "generation": 0,
+        "notifier": "absent",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "generation": 0,
+        "notifier": "absent",
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "repeatWhen-persistent-notifier-post-setup",
+      "executionId": "repeatWhen-session17-example",
+      "ruleId": "S17-REPEATWHEN-VALUE",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": "initial"
+      },
+      "before": {
+        "phase": "Active",
+        "generation": 0,
+        "notifier": "absent",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "generation": 0,
+        "notifier": "absent",
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "initial"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "repeatWhen-persistent-notifier-post-setup",
+      "executionId": "repeatWhen-session17-example",
+      "ruleId": "S17-REPEATWHEN-FIRST-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "generation": 0,
+        "notifier": "absent",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Waiting",
+        "generation": 0,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "notifier",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "completionsSubject",
+          "notification": {
+            "kind": "N"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 5,
+      "modelId": "repeatWhen-persistent-notifier-post-setup",
+      "executionId": "repeatWhen-session17-example",
+      "ruleId": "S17-REPEATWHEN-RESTART",
+      "event": {
+        "type": "notifier.next"
+      },
+      "before": {
+        "phase": "Waiting",
+        "generation": 0,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "generation": 1,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 6,
+      "modelId": "repeatWhen-persistent-notifier-post-setup",
+      "executionId": "repeatWhen-session17-example",
+      "ruleId": "S17-REPEATWHEN-VALUE",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 1
+        },
+        "value": "repeated"
+      },
+      "before": {
+        "phase": "Active",
+        "generation": 1,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "generation": 1,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "repeated"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 7,
+      "modelId": "repeatWhen-persistent-notifier-post-setup",
+      "executionId": "repeatWhen-session17-example",
+      "ruleId": "S17-REPEATWHEN-SOURCE-COMPLETE-WAIT",
+      "event": {
+        "type": "source.complete",
+        "resource": {
+          "id": "source",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "generation": 1,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Waiting",
+        "generation": 1,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "completionsSubject",
+          "notification": {
+            "kind": "N"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 8,
+      "modelId": "repeatWhen-persistent-notifier-post-setup",
+      "executionId": "repeatWhen-session17-example",
+      "ruleId": "S17-REPEATWHEN-NOTIFIER-COMPLETE-WAIT",
+      "event": {
+        "type": "notifier.complete"
+      },
+      "before": {
+        "phase": "Waiting",
+        "generation": 1,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Closed",
+        "generation": 1,
+        "notifier": "open",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "notifier",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

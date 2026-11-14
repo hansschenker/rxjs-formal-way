@@ -1,0 +1,232 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "repeat-bounded-restart-2",
+    "operator": "repeat",
+    "purpose": "Repeat source after successful completion up to a total source-subscription count.",
+    "cardinality": {
+      "signature": "repeat(count) : Cω(count) -> T* -> T*",
+      "conditions": [
+        "count=0 produces no source subscription and only successful empty completion.",
+        "Each source success except the final causes a fresh source subscription.",
+        "An error terminates the result; values across all completed attempts remain delivered."
+      ]
+    },
+    "scope": {
+      "parameters": "Finite safe-integer bound in 0..8. Total subscriptions including the initial one.",
+      "callbacks": "No notifier callback or delay selector in this profile.",
+      "time": "Resubscription is immediate following source terminal delivery. Time of later notifications belongs to each new producer.",
+      "reentrancy": "Nonreentrant, post-setup notifications; only bounded finite runs.",
+      "exclusions": [
+        "Unbounded (Infinity), fractional/negative counts, numeric or notifier-function delays and scheduler-driven resubscription.",
+        "Synchronous terminal notifications during subscription setup, reentrant observers and teardown exceptions."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire one source generation 0 at first downstream subscription."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "None: each result subscription independently executes and restarts source.",
+      "reset": "New result subscription resets generation, attempts and error counter.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current attempt; generation increments on restart"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Terminal source event may dispose the current generation then subscribe the next; actions are ordered within a transition.",
+      "cancellationCheckpoints": [
+        "Between source notifications and after every restarted source acquisition."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "connect a result"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "value from current source generation"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "successful source completion"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source failed"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream cancellation"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no producer connection",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "one active source generation with restart counters",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "complete, error or cancel",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/repeat.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 restart, completion/error and resource lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 restart, completion/error and resource lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 restart, completion/error and resource lifecycle"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session17-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session17-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-17.md"
+    }
+  },
+  "parameters": {
+    "operator": "repeat",
+    "count": 2,
+    "resetOnSuccess": false,
+    "delays": "none"
+  },
+  "rules": [
+    {
+      "id": "S17-REPEAT-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first downstream subscription",
+      "actions": [
+        "subscribe source generation 0"
+      ],
+      "explanation": "The output subscribes to the producer lazily; a fresh source execution begins.",
+      "nextState": "Active with attempt=1 and failure counter=0.",
+      "obligations": [
+        "S17-REPEAT-START"
+      ]
+    },
+    {
+      "id": "S17-REPEAT-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "matching live source generation",
+      "actions": [
+        "forward value unchanged"
+      ],
+      "explanation": "Every source value is delivered even when later source completion/error causes another subscription.",
+      "nextState": "Remain Active with the current generation and updated failure counter.",
+      "obligations": [
+        "S17-REPEAT-NEXT"
+      ]
+    },
+    {
+      "id": "S17-REPEAT-RESTART",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Active",
+      "guard": "matching source and attempts<count",
+      "actions": [
+        "release completed source",
+        "subscribe a new source generation"
+      ],
+      "explanation": "A successful completion triggers a new source subscription until the total subscription count is reached.",
+      "nextState": "New generation active with attempts incremented; old source disposed.",
+      "obligations": [
+        "S17-REPEAT-RESTART"
+      ]
+    },
+    {
+      "id": "S17-REPEAT-FINAL-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "matching source and attempts=count",
+      "actions": [
+        "complete result",
+        "release final source"
+      ],
+      "explanation": "The count is total subscriptions, not additional resubscriptions.",
+      "nextState": "Closed complete after the specified number of source executions.",
+      "obligations": [
+        "S17-REPEAT-FINAL-COMPLETE"
+      ]
+    },
+    {
+      "id": "S17-REPEAT-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "any matching source error",
+      "actions": [
+        "forward exact error and release source"
+      ],
+      "explanation": "Repeat never retries failures. Error ends the entire result at once.",
+      "nextState": "Closed in error.",
+      "obligations": [
+        "S17-REPEAT-ERROR"
+      ]
+    },
+    {
+      "id": "S17-REPEAT-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancels active subscription",
+      "actions": [
+        "release current source without an output notification"
+      ],
+      "explanation": "Cancellation ends the current attempt and prevents later restarts; no result completion is synthesized.",
+      "nextState": "Closed cancel.",
+      "obligations": [
+        "S17-REPEAT-CANCEL"
+      ]
+    }
+  ]
+}

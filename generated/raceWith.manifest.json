@@ -1,0 +1,283 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "raceWith-fixed-observables-atomic-subscription",
+    "operator": "raceWith",
+    "purpose": "Race source and other Observables, cancel losing sources on the first next; early error/complete terminates.",
+    "cardinality": {
+      "signature": "raceWith : (T0*, T1*, ..., Tn*) -> (T0 | ... | Tn)*",
+      "conditions": [
+        "The first next from any input elects exactly one winner and the winner contributes all later next values.",
+        "An error or completion before any next terminates immediately even if another input may have produced a value later.",
+        "After first next, only the winning source may complete or error the result."
+      ]
+    },
+    "scope": {
+      "parameters": "0..32 additional ordinary Observable inputs; race legacy array/variadic overloads normalized to same candidate order.",
+      "callbacks": "No user callbacks or result selectors; opaque input values preserve identity.",
+      "time": "Notifications are ordered by source/scheduler arrival. Race itself creates no timers or scheduler.",
+      "reentrancy": "Atomic non-reentrant post-setup notifications; every input subscribed in source-first argument order before delivery.",
+      "exclusions": [
+        "Synchronous emission/completion/error during subscription acquisition, which may prevent later candidate subscriptions.",
+        "Promises/iterables, errors during input conversion, observer reentrancy, throwing teardown and scheduler-specific interleavings."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "A fresh, result-local connection subscribes input 0 then each other input; zero others is identity."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing; each downstream subscription creates a new race across inputs.",
+      "reset": "Fresh input live set and winner=null per result subscription.",
+      "resources": [
+        {
+          "id": "input",
+          "kind": "subscription",
+          "owner": "result subscription; generation is fixed input index"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "First next cancels all earlier/later losing subscriptions before forwarding its payload. Early error/complete terminates all inputs.",
+      "cancellationCheckpoints": [
+        "Between notifications, and immediately on first winner."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "connect the race"
+      },
+      {
+        "type": "input.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "candidate emitted value"
+      },
+      {
+        "type": "input.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "candidate completed"
+      },
+      {
+        "type": "input.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "candidate failed"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "consumer cancels"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "not connected",
+        "terminal": false
+      },
+      {
+        "id": "Racing",
+        "description": "all candidates live; no first next yet",
+        "terminal": false
+      },
+      {
+        "id": "Winner",
+        "description": "only selected winner live",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminated or cancelled",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/raceWith.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned RxJS 7.8.2 actual race delegation and raceInit"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/raceWith.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned RxJS 7.8.2 actual race delegation and raceInit"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/race.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned RxJS 7.8.2 actual race delegation and raceInit"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session17-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session17-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-17.md"
+    }
+  },
+  "parameters": {
+    "operator": "raceWith",
+    "others": 2
+  },
+  "rules": [
+    {
+      "id": "S17-RACEWITH-SUBSCRIBE",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Racing",
+      "guard": "first result subscription with valid fixed Observable inputs",
+      "actions": [
+        "subscribe source input 0 and then every additional input in order"
+      ],
+      "explanation": "Each observer owns one independent race; no producer is shared.",
+      "nextState": "All source subscriptions live; no winner.",
+      "obligations": [
+        "S17-RACEWITH-SUBSCRIBE"
+      ]
+    },
+    {
+      "id": "S17-RACEWITH-FIRST-NEXT",
+      "from": "Racing",
+      "event": "input.next",
+      "to": "Winner",
+      "guard": "any live input emits the first value after connection setup",
+      "actions": [
+        "unsubscribe every losing input",
+        "forward winner payload"
+      ],
+      "explanation": "Only a next notification elects a winner. Losing subscriptions are cancelled synchronously and never resume.",
+      "nextState": "The winning input alone remains live; its index is permanent.",
+      "obligations": [
+        "S17-RACEWITH-FIRST-NEXT"
+      ]
+    },
+    {
+      "id": "S17-RACEWITH-WINNER-NEXT",
+      "from": "Winner",
+      "event": "input.next",
+      "to": "Winner",
+      "guard": "value is from selected winner subscription",
+      "actions": [
+        "forward next value unchanged"
+      ],
+      "explanation": "Once a winner is chosen all its subsequent values are forwarded; first value is not the end of the race subscription.",
+      "nextState": "Winner and resource identity unchanged.",
+      "obligations": [
+        "S17-RACEWITH-WINNER-NEXT"
+      ]
+    },
+    {
+      "id": "S17-RACEWITH-EARLY-COMPLETE",
+      "from": "Racing",
+      "event": "input.complete",
+      "to": "Closed",
+      "guard": "any racing input completes without a prior next",
+      "actions": [
+        "complete result",
+        "release every competing subscription"
+      ],
+      "explanation": "A completion before any first next closes the downstream subscriber. It does not select a continuing winner.",
+      "nextState": "Closed successfully without a winner.",
+      "obligations": [
+        "S17-RACEWITH-EARLY-COMPLETE"
+      ]
+    },
+    {
+      "id": "S17-RACEWITH-EARLY-ERROR",
+      "from": "Racing",
+      "event": "input.error",
+      "to": "Closed",
+      "guard": "any racing input errors before any first next",
+      "actions": [
+        "forward exact error",
+        "release every competing subscription"
+      ],
+      "explanation": "A failure before a first value fails the result and tears down every live candidate.",
+      "nextState": "Closed in error without a winner.",
+      "obligations": [
+        "S17-RACEWITH-EARLY-ERROR"
+      ]
+    },
+    {
+      "id": "S17-RACEWITH-WINNER-COMPLETE",
+      "from": "Winner",
+      "event": "input.complete",
+      "to": "Closed",
+      "guard": "selected winner completes",
+      "actions": [
+        "complete downstream",
+        "release winning source"
+      ],
+      "explanation": "Completion from the selected winner terminates the result.",
+      "nextState": "Closed successfully, original winner remains recorded.",
+      "obligations": [
+        "S17-RACEWITH-WINNER-COMPLETE"
+      ]
+    },
+    {
+      "id": "S17-RACEWITH-WINNER-ERROR",
+      "from": "Winner",
+      "event": "input.error",
+      "to": "Closed",
+      "guard": "selected winner errors",
+      "actions": [
+        "forward exact error",
+        "release winning source"
+      ],
+      "explanation": "The winner is not protected from subsequent errors.",
+      "nextState": "Closed with original winner recorded.",
+      "obligations": [
+        "S17-RACEWITH-WINNER-ERROR"
+      ]
+    },
+    {
+      "id": "S17-RACEWITH-CANCEL-RACE",
+      "from": "Racing",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancels before a winner",
+      "actions": [
+        "unsubscribe every candidate without notifying downstream"
+      ],
+      "explanation": "Downstream owns the subscriptions and may cancel them all.",
+      "nextState": "Closed by cancellation.",
+      "obligations": [
+        "S17-RACEWITH-CANCEL-RACE"
+      ]
+    },
+    {
+      "id": "S17-RACEWITH-CANCEL-WINNER",
+      "from": "Winner",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancels selected source",
+      "actions": [
+        "unsubscribe winner without downstream terminal notification"
+      ],
+      "explanation": "Cancellation is distinct from successful or failed termination.",
+      "nextState": "Closed by cancellation.",
+      "obligations": [
+        "S17-RACEWITH-CANCEL-WINNER"
+      ]
+    }
+  ]
+}

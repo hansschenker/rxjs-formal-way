@@ -1,0 +1,203 @@
+{
+  "status": "finished-input",
+  "consumed": 4,
+  "state": {
+    "phase": "Closed",
+    "live": [],
+    "winner": 1,
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "raceWith-fixed-observables-atomic-subscription",
+      "executionId": "raceWith-session17-example",
+      "ruleId": "S17-RACEWITH-SUBSCRIBE",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed",
+        "live": [],
+        "winner": null,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Racing",
+        "live": [
+          0,
+          1,
+          2
+        ],
+        "winner": null,
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 1
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input",
+            "generation": 2
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 2,
+      "modelId": "raceWith-fixed-observables-atomic-subscription",
+      "executionId": "raceWith-session17-example",
+      "ruleId": "S17-RACEWITH-FIRST-NEXT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        },
+        "value": 10
+      },
+      "before": {
+        "phase": "Racing",
+        "live": [
+          0,
+          1,
+          2
+        ],
+        "winner": null,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Winner",
+        "live": [
+          1
+        ],
+        "winner": 1,
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 0
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 2
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 10
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 3,
+      "modelId": "raceWith-fixed-observables-atomic-subscription",
+      "executionId": "raceWith-session17-example",
+      "ruleId": "S17-RACEWITH-WINNER-NEXT",
+      "event": {
+        "type": "input.next",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        },
+        "value": 11
+      },
+      "before": {
+        "phase": "Winner",
+        "live": [
+          1
+        ],
+        "winner": 1,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Winner",
+        "live": [
+          1
+        ],
+        "winner": 1,
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 11
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 4,
+      "modelId": "raceWith-fixed-observables-atomic-subscription",
+      "executionId": "raceWith-session17-example",
+      "ruleId": "S17-RACEWITH-WINNER-COMPLETE",
+      "event": {
+        "type": "input.complete",
+        "resource": {
+          "id": "input",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Winner",
+        "live": [
+          1
+        ],
+        "winner": 1,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Closed",
+        "live": [],
+        "winner": 1,
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input",
+            "generation": 1
+          }
+        }
+      ]
+    }
+  ]
+}

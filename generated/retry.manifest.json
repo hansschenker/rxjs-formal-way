@@ -1,0 +1,232 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "retry-bounded-restart-2",
+    "operator": "retry",
+    "purpose": "Retry failed source subscriptions up to a bounded additional-attempt budget.",
+    "cardinality": {
+      "signature": "retry(count,resetOnSuccess) : Cω(count,reset) -> T* -> T*",
+      "conditions": [
+        "A source error is retried at most count times in addition to the first attempt.",
+        "All next values across failed and successful attempts are retained in delivery order.",
+        "resetOnSuccess clears the retry counter after a next value, not the total attempt count."
+      ]
+    },
+    "scope": {
+      "parameters": "Finite safe-integer bound in 0..8. Both resetOnSuccess=false/true are modeled.",
+      "callbacks": "No notifier callback or delay selector in this profile.",
+      "time": "Resubscription is immediate following source terminal delivery. Time of later notifications belongs to each new producer.",
+      "reentrancy": "Nonreentrant, post-setup notifications; only bounded finite runs.",
+      "exclusions": [
+        "Unbounded (Infinity), fractional/negative counts, numeric or notifier-function delays and scheduler-driven resubscription.",
+        "Synchronous terminal notifications during subscription setup, reentrant observers and teardown exceptions."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire one source generation 0 at first downstream subscription."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "None: each result subscription independently executes and restarts source.",
+      "reset": "New result subscription resets generation, attempts and error counter.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current attempt; generation increments on restart"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Terminal source event may dispose the current generation then subscribe the next; actions are ordered within a transition.",
+      "cancellationCheckpoints": [
+        "Between source notifications and after every restarted source acquisition."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "connect a result"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "value from current source generation"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "successful source completion"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source failed"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "downstream cancellation"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no producer connection",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "one active source generation with restart counters",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "complete, error or cancel",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/retry.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 restart, completion/error and resource lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 restart, completion/error and resource lifecycle"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 restart, completion/error and resource lifecycle"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session17-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session17-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-17.md"
+    }
+  },
+  "parameters": {
+    "operator": "retry",
+    "count": 2,
+    "resetOnSuccess": false,
+    "delays": "none"
+  },
+  "rules": [
+    {
+      "id": "S17-RETRY-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first downstream subscription",
+      "actions": [
+        "subscribe source generation 0"
+      ],
+      "explanation": "The output subscribes to the producer lazily; a fresh source execution begins.",
+      "nextState": "Active with attempt=1 and failure counter=0.",
+      "obligations": [
+        "S17-RETRY-START"
+      ]
+    },
+    {
+      "id": "S17-RETRY-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "matching live source generation",
+      "actions": [
+        "forward value unchanged"
+      ],
+      "explanation": "Every source value is delivered even when later source completion/error causes another subscription.",
+      "nextState": "Remain Active with the current generation and updated failure counter.",
+      "obligations": [
+        "S17-RETRY-NEXT"
+      ]
+    },
+    {
+      "id": "S17-RETRY-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "successful source completion",
+      "actions": [
+        "complete downstream and release source"
+      ],
+      "explanation": "Retry responds to errors, not successful completion.",
+      "nextState": "Closed complete.",
+      "obligations": [
+        "S17-RETRY-COMPLETE"
+      ]
+    },
+    {
+      "id": "S17-RETRY-RETRY",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Active",
+      "guard": "matching source and failureCount<count",
+      "actions": [
+        "release failed source",
+        "subscribe next source execution"
+      ],
+      "explanation": "A source failure is suppressed while the configured retry budget remains; the old subscription is disposed before the next.",
+      "nextState": "New generation active; failure counter and attempt incremented.",
+      "obligations": [
+        "S17-RETRY-RETRY"
+      ]
+    },
+    {
+      "id": "S17-RETRY-RETRY-EXHAUSTED",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "matching error and retry budget exhausted",
+      "actions": [
+        "emit original error unchanged",
+        "dispose final source"
+      ],
+      "explanation": "Count is the maximum number of retry attempts after the first subscription. The final error is not converted to complete.",
+      "nextState": "Closed in error.",
+      "obligations": [
+        "S17-RETRY-RETRY-EXHAUSTED"
+      ]
+    },
+    {
+      "id": "S17-RETRY-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancels active subscription",
+      "actions": [
+        "release current source without an output notification"
+      ],
+      "explanation": "Cancellation ends the current attempt and prevents later restarts; no result completion is synthesized.",
+      "nextState": "Closed cancel.",
+      "obligations": [
+        "S17-RETRY-CANCEL"
+      ]
+    }
+  ]
+}

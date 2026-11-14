@@ -1,0 +1,374 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "repeatWhen-persistent-notifier-post-setup",
+    "operator": "repeatWhen",
+    "purpose": "Repeat on source completion, controlled by a single persistent notifier and completion Subject.",
+    "cardinality": {
+      "signature": "repeatWhen(completions$ -> notifier$) : Cω(Signal) -> T* -> T*",
+      "conditions": [
+        "Each source next forwards once; a source completion emits one void notification on the completion Subject.",
+        "Notifier next while waiting starts one new source; notifier completion ends repetition after any active source completes.",
+        "Source or notifier error terminates immediately. Cancellation silently releases both subscriptions."
+      ]
+    },
+    "scope": {
+      "parameters": "One notifier function returning a non-synchronously-emitting Observable; selector called exactly once after first source completion.",
+      "callbacks": "Notifier selector is represented by its successful Observable result; callback throws/invalid inputs are excluded.",
+      "time": "Source notifications and notifier next/complete/error carry their own times; no new clock is introduced.",
+      "reentrancy": "Atomic post-subscription notifications; notifier next is only admitted while waiting after a source completion.",
+      "exclusions": [
+        "Synchronous notifier next or complete during its original subscription, source subscription setup recursion and syncResub flag mechanics.",
+        "Notifier next while a source is already active (can start overlapping source executions), Promise inputs and arbitrary reentrancy.",
+        "Notifier selector throws, teardown throws and notifier emissions following terminal notification."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "One initial source; lazily create completion Subject and one notifier subscription at first successful completion."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "The completion Subject is internal to one result subscription; it is not multicast among downstream subscribers.",
+      "reset": "New downstream subscription creates a new notifier selector/Subject when first needed.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current source generation"
+        },
+        {
+          "id": "notifier",
+          "kind": "subscription",
+          "owner": "persistent notifier created on first source completion"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Completion signals go to internal Subject, not the downstream. Notifier next triggers a new source subscription; no value is invented.",
+      "cancellationCheckpoints": [
+        "After each notification, before new source acquisition and while awaiting notifier next."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start source"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "source value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "completed source generation"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source failure"
+      },
+      {
+        "type": "notifier.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "notifier trigger"
+      },
+      {
+        "type": "notifier.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "notifier terminal completion"
+      },
+      {
+        "type": "notifier.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "notifier failure"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "consumer cancelled"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no source connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source running, notifier may be absent/open/completed",
+        "terminal": false
+      },
+      {
+        "id": "Waiting",
+        "description": "source completed; persistent notifier awaiting next or terminal",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "complete, failure or silent cancellation",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/repeatWhen.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned repeatWhen Subject/notifier subscription ownership"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subject.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned repeatWhen Subject/notifier subscription ownership"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned repeatWhen Subject/notifier subscription ownership"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session17-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session17-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-17.md"
+    }
+  },
+  "parameters": {
+    "notifier": "one-persistent-Observable",
+    "completionSignals": "void"
+  },
+  "rules": [
+    {
+      "id": "S17-REPEATWHEN-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first downstream connection",
+      "actions": [
+        "subscribe source generation 0"
+      ],
+      "explanation": "Notifier selector has not yet been invoked: it is lazy until the first successful source completion.",
+      "nextState": "Active with no notifier.",
+      "obligations": [
+        "S17-REPEATWHEN-START"
+      ]
+    },
+    {
+      "id": "S17-REPEATWHEN-VALUE",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source generation is current",
+      "actions": [
+        "forward source value unchanged"
+      ],
+      "explanation": "The notifier only governs repetition; values from every successful attempt reach the downstream observer.",
+      "nextState": "Current generation and notifier state unchanged.",
+      "obligations": [
+        "S17-REPEATWHEN-VALUE"
+      ]
+    },
+    {
+      "id": "S17-REPEATWHEN-FIRST-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Waiting",
+      "guard": "current source completes, and notifier has never been constructed",
+      "actions": [
+        "unsubscribe the completed source",
+        "subscribe to single notifier",
+        "emit void to completion Subject"
+      ],
+      "explanation": "On first completion allocate the Subject, invoke the user notifier exactly once and subscribe its result; notify it of the completion.",
+      "nextState": "Waiting for first notifier next or terminal notification.",
+      "obligations": [
+        "S17-REPEATWHEN-FIRST-SOURCE-COMPLETE"
+      ]
+    },
+    {
+      "id": "S17-REPEATWHEN-SOURCE-COMPLETE-WAIT",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Waiting",
+      "guard": "current source completes and notifier is still open",
+      "actions": [
+        "unsubscribe source",
+        "emit one void completion Subject signal"
+      ],
+      "explanation": "Subsequent completions reuse the same Subject and notifier subscription, not a fresh notifier selector call.",
+      "nextState": "Waiting with the notifier still open.",
+      "obligations": [
+        "S17-REPEATWHEN-SOURCE-COMPLETE-WAIT"
+      ]
+    },
+    {
+      "id": "S17-REPEATWHEN-SOURCE-COMPLETE-STOP",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "current source completes after notifier has completed",
+      "actions": [
+        "unsubscribe final source",
+        "complete downstream"
+      ],
+      "explanation": "If the notifier has already completed, downstream completes when the current source finally completes.",
+      "nextState": "Closed successfully; no source or notifier connection.",
+      "obligations": [
+        "S17-REPEATWHEN-SOURCE-COMPLETE-STOP"
+      ]
+    },
+    {
+      "id": "S17-REPEATWHEN-RESTART",
+      "from": "Waiting",
+      "event": "notifier.next",
+      "to": "Active",
+      "guard": "notifier is open and source has completed",
+      "actions": [
+        "subscribe one new source generation"
+      ],
+      "explanation": "Every notifier next while waiting restarts exactly one new producer execution; notifier connection is retained.",
+      "nextState": "Active at next source generation.",
+      "obligations": [
+        "S17-REPEATWHEN-RESTART"
+      ]
+    },
+    {
+      "id": "S17-REPEATWHEN-NOTIFIER-COMPLETE-WAIT",
+      "from": "Waiting",
+      "event": "notifier.complete",
+      "to": "Closed",
+      "guard": "notifier completes with main source finished",
+      "actions": [
+        "unsubscribe notifier",
+        "complete downstream"
+      ],
+      "explanation": "An empty/finished notifier ends the repetition while waiting; it does not subscribe a new source.",
+      "nextState": "Closed successfully.",
+      "obligations": [
+        "S17-REPEATWHEN-NOTIFIER-COMPLETE-WAIT"
+      ]
+    },
+    {
+      "id": "S17-REPEATWHEN-NOTIFIER-COMPLETE-ACTIVE",
+      "from": "Active",
+      "event": "notifier.complete",
+      "to": "Active",
+      "guard": "notifier completes while restarted source is still active",
+      "actions": [
+        "release notifier without terminating current source"
+      ],
+      "explanation": "Notifier completion is recorded. Do not interrupt the current source: completion awaits its own successful termination.",
+      "nextState": "Active with notifier completed.",
+      "obligations": [
+        "S17-REPEATWHEN-NOTIFIER-COMPLETE-ACTIVE"
+      ]
+    },
+    {
+      "id": "S17-REPEATWHEN-NOTIFIER-ERROR-ACTIVE",
+      "from": "Active",
+      "event": "notifier.error",
+      "to": "Closed",
+      "guard": "notifier is open",
+      "actions": [
+        "forward exact notifier error",
+        "release all live resources"
+      ],
+      "explanation": "Notifier error terminates the result whether waiting or inside a restarted source execution.",
+      "nextState": "Closed in error.",
+      "obligations": [
+        "S17-REPEATWHEN-NOTIFIER-ERROR-ACTIVE"
+      ]
+    },
+    {
+      "id": "S17-REPEATWHEN-CANCEL-ACTIVE",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancellation",
+      "actions": [
+        "dispose current source if active",
+        "dispose notifier if open",
+        "no terminal notification"
+      ],
+      "explanation": "Cancellation never sends a synthetic complete or error.",
+      "nextState": "Closed by cancellation.",
+      "obligations": [
+        "S17-REPEATWHEN-CANCEL-ACTIVE"
+      ]
+    },
+    {
+      "id": "S17-REPEATWHEN-NOTIFIER-ERROR-WAITING",
+      "from": "Waiting",
+      "event": "notifier.error",
+      "to": "Closed",
+      "guard": "notifier is open",
+      "actions": [
+        "forward exact notifier error",
+        "release all live resources"
+      ],
+      "explanation": "Notifier error terminates the result whether waiting or inside a restarted source execution.",
+      "nextState": "Closed in error.",
+      "obligations": [
+        "S17-REPEATWHEN-NOTIFIER-ERROR-WAITING"
+      ]
+    },
+    {
+      "id": "S17-REPEATWHEN-CANCEL-WAITING",
+      "from": "Waiting",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "downstream cancellation",
+      "actions": [
+        "dispose current source if active",
+        "dispose notifier if open",
+        "no terminal notification"
+      ],
+      "explanation": "Cancellation never sends a synthetic complete or error.",
+      "nextState": "Closed by cancellation.",
+      "obligations": [
+        "S17-REPEATWHEN-CANCEL-WAITING"
+      ]
+    },
+    {
+      "id": "S17-REPEATWHEN-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "current source generation fails",
+      "actions": [
+        "error downstream immediately",
+        "release source and existing notifier"
+      ],
+      "explanation": "repeatWhen observes successful completion only; a source error never triggers its notifier.",
+      "nextState": "Closed in error.",
+      "obligations": [
+        "S17-REPEATWHEN-SOURCE-ERROR"
+      ]
+    }
+  ]
+}

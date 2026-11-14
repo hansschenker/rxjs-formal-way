@@ -1,0 +1,212 @@
+{
+  "status": "finished-input",
+  "consumed": 5,
+  "state": {
+    "phase": "Closed",
+    "generation": 1,
+    "attempts": 2,
+    "failures": 0,
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "repeat-bounded-restart-2",
+      "executionId": "repeat-session17-example",
+      "ruleId": "S17-REPEAT-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed",
+        "generation": 0,
+        "attempts": 0,
+        "failures": 0,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "generation": 0,
+        "attempts": 1,
+        "failures": 0,
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "repeat-bounded-restart-2",
+      "executionId": "repeat-session17-example",
+      "ruleId": "S17-REPEAT-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": "cycle-1"
+      },
+      "before": {
+        "phase": "Active",
+        "generation": 0,
+        "attempts": 1,
+        "failures": 0,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "generation": 0,
+        "attempts": 1,
+        "failures": 0,
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "cycle-1"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "repeat-bounded-restart-2",
+      "executionId": "repeat-session17-example",
+      "ruleId": "S17-REPEAT-RESTART",
+      "event": {
+        "type": "source.complete",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "generation": 0,
+        "attempts": 1,
+        "failures": 0,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "generation": 1,
+        "attempts": 2,
+        "failures": 0,
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "repeat-bounded-restart-2",
+      "executionId": "repeat-session17-example",
+      "ruleId": "S17-REPEAT-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 1
+        },
+        "value": "cycle-2"
+      },
+      "before": {
+        "phase": "Active",
+        "generation": 1,
+        "attempts": 2,
+        "failures": 0,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "generation": 1,
+        "attempts": 2,
+        "failures": 0,
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "cycle-2"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "repeat-bounded-restart-2",
+      "executionId": "repeat-session17-example",
+      "ruleId": "S17-REPEAT-FINAL-COMPLETE",
+      "event": {
+        "type": "source.complete",
+        "resource": {
+          "id": "source",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "generation": 1,
+        "attempts": 2,
+        "failures": 0,
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Closed",
+        "generation": 1,
+        "attempts": 2,
+        "failures": 0,
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 1
+          }
+        }
+      ]
+    }
+  ]
+}
