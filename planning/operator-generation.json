@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "race",
-    "raceWith",
-    "repeat",
-    "repeatWhen",
-    "retry",
     "retryWhen",
     "refCount",
     "sample",
@@ -1030,14 +1025,34 @@
       "readOnlyTree": "167d0c949615d3417de2311000510c6b9a93ed3c"
     },
     "race": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-14",
+      "profiles": [
+        "deprecated pipeable alias of raceWith",
+        "0..32 others, post-setup racing, first-next winner and early terminal"
+      ],
+      "evidence": "evidence/SESSION-17.md",
+      "testedCommit": "83c4ff3b02973f03c7f91db0e2a7a133c67b0188",
+      "implementationRun": 43574059211,
+      "verificationRun": 43574318538,
+      "readOnlyHeadCommit": "0b1ddf37f35d124976fd6f995c4c462a78d70745",
+      "readOnlyCheckout": "380f17209f1c9a958d429901057b17d9fb4b19e6",
+      "readOnlyTree": "3e37b412487f25d67ab0c16c9017f5492b4ff3d8"
     },
     "raceWith": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-14",
+      "profiles": [
+        "0..32 others, no-others identity",
+        "winner stays active; cancel losing sources; errors and completion"
+      ],
+      "evidence": "evidence/SESSION-17.md",
+      "testedCommit": "83c4ff3b02973f03c7f91db0e2a7a133c67b0188",
+      "implementationRun": 43574059211,
+      "verificationRun": 43574318538,
+      "readOnlyHeadCommit": "0b1ddf37f35d124976fd6f995c4c462a78d70745",
+      "readOnlyCheckout": "380f17209f1c9a958d429901057b17d9fb4b19e6",
+      "readOnlyTree": "3e37b412487f25d67ab0c16c9017f5492b4ff3d8"
     },
     "reduce": {
       "status": "accepted",
@@ -1054,19 +1069,50 @@
       "readOnlyCheckout": "693325757bea224f27a3b945cb193d9b07fb402e"
     },
     "repeat": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-14",
+      "profiles": [
+        "finite total source subscriptions 0..8",
+        "successful completion causes immediate restart; errors terminate"
+      ],
+      "evidence": "evidence/SESSION-17.md",
+      "testedCommit": "83c4ff3b02973f03c7f91db0e2a7a133c67b0188",
+      "implementationRun": 43574059211,
+      "verificationRun": 43574318538,
+      "readOnlyHeadCommit": "0b1ddf37f35d124976fd6f995c4c462a78d70745",
+      "readOnlyCheckout": "380f17209f1c9a958d429901057b17d9fb4b19e6",
+      "readOnlyTree": "3e37b412487f25d67ab0c16c9017f5492b4ff3d8"
     },
     "repeatWhen": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-14",
+      "profiles": [
+        "persistent notifier selected at first source completion",
+        "waiting restart on notifier next; terminal completion and error"
+      ],
+      "evidence": "evidence/SESSION-17.md",
+      "testedCommit": "83c4ff3b02973f03c7f91db0e2a7a133c67b0188",
+      "implementationRun": 43574059211,
+      "verificationRun": 43574318538,
+      "readOnlyHeadCommit": "0b1ddf37f35d124976fd6f995c4c462a78d70745",
+      "readOnlyCheckout": "380f17209f1c9a958d429901057b17d9fb4b19e6",
+      "readOnlyTree": "3e37b412487f25d67ab0c16c9017f5492b4ff3d8"
     },
     "retry": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-14",
+      "profiles": [
+        "finite additional retry count 0..8",
+        "immediate error-driven restart",
+        "resetOnSuccess true/false"
+      ],
+      "evidence": "evidence/SESSION-17.md",
+      "testedCommit": "83c4ff3b02973f03c7f91db0e2a7a133c67b0188",
+      "implementationRun": 43574059211,
+      "verificationRun": 43574318538,
+      "readOnlyHeadCommit": "0b1ddf37f35d124976fd6f995c4c462a78d70745",
+      "readOnlyCheckout": "380f17209f1c9a958d429901057b17d9fb4b19e6",
+      "readOnlyTree": "3e37b412487f25d67ab0c16c9017f5492b4ff3d8"
     },
     "retryWhen": {
       "status": "pending",

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-14",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-14T08:47:48+01:00",
   "startingCommit": "cf1722262de5061050270206a5d595f212ae389a",
   "selectedNames": [
@@ -12,28 +12,40 @@
     "repeatWhen",
     "retry"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
+  "workedNames": [
     "race",
     "raceWith",
     "repeat",
     "repeatWhen",
     "retry"
   ],
+  "completedNames": [
+    "race",
+    "raceWith",
+    "repeat",
+    "repeatWhen",
+    "retry"
+  ],
+  "carryovers": [],
   "checks": {
-    "syntax": "not run",
-    "types": "not run",
-    "model": "not run",
-    "runtime": "not run",
-    "generated": "not run",
-    "ci": "not run"
+    "syntax": "passed in main push CI 43574059211 and independent read-only CI 43574318538",
+    "types": "strict TS passed in both, with 21 new negative @ts-expect-error assertions",
+    "model": "29 new pure model tests; entire suite 1186 named tests passed, 0 failures in both",
+    "runtime": "28 new independent actual RxJS 7.8.2 tests; entire suite 1186 passed, 0 failures in both",
+    "generated": "797 deterministic ordinary projections plus 3 mergeWith scenario projections drift-verified; 45 new session17 artifacts, five inspection indexes",
+    "ci": "main push run 43574059211 job 132384343859 success; read-only PR run 43574318538 job 132385116372 success; generation and publication skipped in independent run"
   },
   "blockers": [],
   "notes": [
-    "Live main, dated log absence, daily plan, roadmap and export tracker read before reserving one Europe/Zurich session.",
-    "Five export names reserved; no accepted 2026-10-28 baseline name selected.",
-    "Model acceptance requires pinned-source inspection, guarded Mealy rules, actual RxJS tests, generated artifacts and retrieved CI; no checks claimed passed yet."
+    "Read live main/plan/tracker/roadmap and found no 2026-11-14 session log before reserving the one daily session.",
+    "Pinned RxJS 7.8.2 revision e5351d02e225e275ac0e497c7b66eaa5f0c88791 inspected for all five exports and shared raceInit/Subject internals.",
+    "Exactly five distinct exported names. race is the pipeable deprecated alias imported from rxjs/operators; root rxjs race is a different creation API.",
+    "Initial PR failed strict phase union typing; repaired without weakening checks. Intermediate CI exposed two native race import mistakes; repaired with correct pipeable import.",
+    "Final pre-generation PR 43573996080 passed 1186 tests and strict types but failed expected drift because 45 generated artifacts were not yet committed.",
+    "Main push CI generated and committed 45 projections including five export-level inspection indexes; all checks then passed.",
+    "Independent read-only PR CI passed full suite and drift check with generation and commit steps skipped.",
+    "Native tests include one synchronous race winner scenario explicitly beyond atomic post-setup model scope, to clarify limits; no universal equivalence claim.",
+    "Five accepted within explicit finite nonreentrant Observable profiles, 85/113 total; no carryovers, sixth export or second daily session."
   ],
   "nextQueue": [
     "retryWhen",
@@ -41,5 +53,57 @@
     "sample",
     "sampleTime",
     "sequenceEqual"
+  ],
+  "closedAt": "2026-11-14T09:11:31.104+01:00",
+  "nextSessionNotBefore": "2026-11-15",
+  "commits": [
+    "ee59a5831a27bb9c81c149b98d1c039bfddc6a24",
+    "672cfd68b5fc7a85b8afb92383034081fbf2b559",
+    "83c4ff3b02973f03c7f91db0e2a7a133c67b0188",
+    "78251f5565c38a1de9dc7ee8ad886ee49ac03003",
+    "0b1ddf37f35d124976fd6f995c4c462a78d70745",
+    "d3bdd4b1176627e8bb9b67eea89f8695d92a57d3"
+  ],
+  "evidence": "evidence/SESSION-17.md",
+  "verification": {
+    "implementationPr": 32,
+    "implementationPrHead": "672cfd68b5fc7a85b8afb92383034081fbf2b559",
+    "implementationMerge": "83c4ff3b02973f03c7f91db0e2a7a133c67b0188",
+    "testedCommit": "83c4ff3b02973f03c7f91db0e2a7a133c67b0188",
+    "generatedCommit": "78251f5565c38a1de9dc7ee8ad886ee49ac03003",
+    "preGenerationPrRun": 43573996080,
+    "preGenerationPrConclusion": "failed only generation drift; syntax strict types and 1186 tests passed",
+    "mainPushRun": 43574059211,
+    "mainPushJob": 132384343859,
+    "mainPushConclusion": "success",
+    "readOnlyPr": 33,
+    "readOnlyRun": 43574318538,
+    "readOnlyJob": 132385116372,
+    "readOnlyConclusion": "success",
+    "readOnlyHeadCommit": "0b1ddf37f35d124976fd6f995c4c462a78d70745",
+    "readOnlyMerge": "d3bdd4b1176627e8bb9b67eea89f8695d92a57d3",
+    "readOnlyBaseCommit": "78251f5565c38a1de9dc7ee8ad886ee49ac03003",
+    "readOnlyCheckout": "380f17209f1c9a958d429901057b17d9fb4b19e6",
+    "readOnlyHeadTree": "3e37b412487f25d67ab0c16c9017f5492b4ff3d8",
+    "readOnlyCheckoutTree": "3e37b412487f25d67ab0c16c9017f5492b4ff3d8",
+    "namedTestsPassed": 1186,
+    "namedTestFailures": 0,
+    "newNamedTests": 57,
+    "newModelTests": 29,
+    "newNativeTests": 28,
+    "newNegativeTypeAssertions": 21,
+    "generatedViews": 797,
+    "mergeWithScenarioViews": 3,
+    "newGeneratedViews": 45,
+    "newInspectionIndices": 5,
+    "inspectionIndicesDriftVerified": true,
+    "newBoundedModelRxjsScenarios": 0,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  },
+  "provenanceLimitations": [
+    "Read-only CI checkout was synthetic PR merge, not PR head SHA; matching independently retrieved Git tree confirms checked content identity.",
+    "No arbitrary reentrancy, synchronous subscription setup, infinite counts, delay selectors or unrestricted ObservableInput conversions accepted.",
+    "Model traces are predictions; finite tests do not prove universal equivalence. Documentation closure is not the main implementation revision."
   ]
 }
