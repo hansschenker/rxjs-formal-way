@@ -126,3 +126,10 @@ export { createPluckModel, pluckPath, pluckExample, createPublishModel,
   publishLastExample, publishReplayExample } from './models/session16.js';
 export type { PluckParameters, PluckState, PluckEvent, PluckModel,
   PublishOperator, PublishParameters, PublishState, PublishEvent, PublishModel } from './models/session16.js';
+
+export { createRaceModel, createRaceLegacyModel, createRaceWithModel, raceExample, raceWithExample } from './models/session17-race.js';
+export type { RaceOperator, RaceParameters, RaceState, RaceEvent, RaceModel } from './models/session17-race.js';
+export { createRestartModel, createRepeatModel, createRetryModel, repeatExample, retryExample } from './models/session17-restart.js';
+export type { RestartOperator, RestartParameters, RestartState, RestartEvent, RestartModel } from './models/session17-restart.js';
+export { createRepeatWhenModel, repeatWhenExample } from './models/session17-repeatWhen.js';
+export type { RepeatWhenParameters, RepeatWhenState, RepeatWhenEvent, RepeatWhenModel } from './models/session17-repeatWhen.js';
