@@ -71,16 +71,18 @@ export function createRepeatWhenModel<T>():RepeatWhenModel<T>{
     'On first completion allocate the Subject, invoke the user notifier exactly once and subscribe its result; notify it of the completion.',
     'Waiting for first notifier next or terminal notification.',
     (s,e)=>active(s,e)&&s.phase==='Active'&&s.notifier==='absent',
-    s=>({state:{...s,phase:'Waiting',notifier:'open'},
-      actions:[release(src(s.generation)),acquire(notifier),completionSignal]}));
+     s=>{if(s.phase!=='Active')throw Error('expected active source completion');
+      return {state:{phase:'Waiting',generation:s.generation,notifier:'open',reason:'none'},
+        actions:[release(src(s.generation)),acquire(notifier),completionSignal]};});
   add('SOURCE-COMPLETE-WAIT','Active','source.complete','Waiting',
     'current source completes and notifier is still open',
     ['unsubscribe source','emit one void completion Subject signal'],
     'Subsequent completions reuse the same Subject and notifier subscription, not a fresh notifier selector call.',
     'Waiting with the notifier still open.',
     (s,e)=>active(s,e)&&s.phase==='Active'&&s.notifier==='open',
-    s=>({state:{...s,phase:'Waiting'},
-      actions:[release(src(s.generation)),completionSignal]}));
+     s=>{if(s.phase!=='Active')throw Error('expected active source completion');
+      return {state:{phase:'Waiting',generation:s.generation,notifier:'open',reason:'none'},
+        actions:[release(src(s.generation)),completionSignal]};});
   add('SOURCE-COMPLETE-STOP','Active','source.complete','Closed',
     'current source completes after notifier has completed',
     ['unsubscribe final source','complete downstream'],
@@ -94,7 +96,9 @@ export function createRepeatWhenModel<T>():RepeatWhenModel<T>{
     'Every notifier next while waiting restarts exactly one new producer execution; notifier connection is retained.',
     'Active at next source generation.',
     s=>s.phase==='Waiting'&&s.notifier==='open',
-    s=>({state:{...s,phase:'Active',generation:s.generation+1},actions:[acquire(src(s.generation+1))]}));
+     s=>{if(s.phase!=='Waiting')throw Error('expected waiting notifier next');
+      return {state:{phase:'Active',generation:s.generation+1,notifier:'open',reason:'none'},
+        actions:[acquire(src(s.generation+1))]};});
   add('NOTIFIER-COMPLETE-WAIT','Waiting','notifier.complete','Closed',
     'notifier completes with main source finished',
     ['unsubscribe notifier','complete downstream'],
@@ -108,7 +112,9 @@ export function createRepeatWhenModel<T>():RepeatWhenModel<T>{
     'Notifier completion is recorded. Do not interrupt the current source: completion awaits its own successful termination.',
     'Active with notifier completed.',
     s=>s.phase==='Active'&&s.notifier==='open',
-    s=>({state:{...s,notifier:'completed'},actions:[release(notifier)]}));
+     s=>{if(s.phase!=='Active')throw Error('expected active notifier completion');
+      return {state:{phase:'Active',generation:s.generation,notifier:'completed',reason:'none'},
+        actions:[release(notifier)]};});
   for(const phase of ['Active','Waiting'] as const){
     add('NOTIFIER-ERROR-'+phase.toUpperCase(),phase,'notifier.error','Closed',
       'notifier is open',
@@ -221,7 +227,7 @@ export function createRepeatWhenModel<T>():RepeatWhenModel<T>{
       if(s.phase==='Waiting'&&s.notifier!=='open')errors.push('waiting must retain open notifier');
       if((s.phase==='Active'||s.phase==='Waiting')&&s.reason!=='none')
         errors.push('live cannot have terminal reason');
-      if(s.phase==='Closed'&&s.reason==='none')errors.push('closed without terminal cause');
+      if(s.phase==='Closed'&&!['complete','error','cancel'].includes(s.reason))errors.push('closed without terminal cause');
       return errors;
     },
     validateReaction:(_s,e,r)=>[
