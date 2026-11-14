@@ -196,7 +196,7 @@ export function createRaceModel<T>(operator: RaceOperator, others = 2): RaceMode
         errors.push('racing must retain all candidates and no winner');
       if(s.phase==='Winner'&&(s.live.length!==1||s.winner!==s.live[0]||s.reason!=='none'))
         errors.push('winner must be only live source');
-      if(s.phase==='Closed'&&(s.live.length!==0||s.reason==='none'))
+      if(s.phase==='Closed'&&(s.live.length!==0||!['complete','error','cancel'].includes(s.reason)))
         errors.push('closed must have no source and one terminal reason');
       return errors;
     },
