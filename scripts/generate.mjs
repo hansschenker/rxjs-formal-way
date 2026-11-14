@@ -81,6 +81,12 @@ import { createPluckModel, pluckExample, createPublishPlainModel, publishExample
   createPublishBehaviorModel, publishBehaviorExample, createPublishLastModel, publishLastExample,
   createPublishReplayModel, publishReplayExample } from '../dist/index.js';
 
+import {
+  createRaceLegacyModel, createRaceWithModel, raceExample, raceWithExample,
+  createRepeatModel, repeatExample, createRepeatWhenModel, repeatWhenExample,
+  createRetryModel, retryExample
+} from '../dist/index.js';
+
 const canonicalModelPaths = {
   take:'src/models/take.ts', map:'src/models/map.ts', filter:'src/models/filter.ts', scan:'src/models/scan.ts',
   debounceTime:'src/models/debounceTime.ts', switchMap:'src/models/flatten.ts', mergeMap:'src/models/flatten.ts',
@@ -115,6 +121,9 @@ const canonicalModelPaths = {
   pluck:'src/models/session16.ts', publish:'src/models/session16.ts',
   publishBehavior:'src/models/session16.ts', publishLast:'src/models/session16.ts',
   publishReplay:'src/models/session16.ts',
+  race:'src/models/session17-race.ts', raceWith:'src/models/session17-race.ts',
+  repeat:'src/models/session17-restart.ts', retry:'src/models/session17-restart.ts',
+  repeatWhen:'src/models/session17-repeatWhen.ts',
 };
 
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
@@ -204,6 +213,11 @@ const examples = [
   ['publishBehavior', createPublishBehaviorModel(0), publishBehaviorExample, 'publishBehavior-session16-example'],
   ['publishLast', createPublishLastModel(), publishLastExample, 'publishLast-session16-example'],
   ['publishReplay', createPublishReplayModel(2), publishReplayExample, 'publishReplay-session16-example'],
+  ['race', createRaceLegacyModel(2), raceExample, 'race-session17-example'],
+  ['raceWith', createRaceWithModel(2), raceWithExample, 'raceWith-session17-example'],
+  ['repeat', createRepeatModel(2), repeatExample, 'repeat-session17-example'],
+  ['repeatWhen', createRepeatWhenModel(), repeatWhenExample, 'repeatWhen-session17-example'],
+  ['retry', createRetryModel(2), retryExample, 'retry-session17-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
