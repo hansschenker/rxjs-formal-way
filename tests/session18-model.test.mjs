@@ -151,9 +151,10 @@ test('S18 refCount: fixed publish Subject retains error and completion terminal 
   assert.equal(x.state.phase,'Errored');
   assert.equal(counts(x,'subscribe','source'),1);
   const errorNotes=actions(x).filter(a=>a.type==='notify');
-  assert.equal(errorNotes.length,2);
+  assert.equal(errorNotes.length,3);
   assert.equal(errorNotes[0].notification.error,e);
   assert.equal(errorNotes[1].notification.error,e);
+  assert.equal(errorNotes[2].notification.error,e);
   const c=evaluate(m,[
     {type:'subscriber.subscribe',subscriber:'A'},
     {type:'source.complete',resource:src(0)}
