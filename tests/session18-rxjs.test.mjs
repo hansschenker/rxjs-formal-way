@@ -169,6 +169,15 @@ test('S18 RXJS refCount: source failure broadcasts exact error and releases prod
   assert.equal(b.events[0].error,e);
   assert.deepEqual(t.teardowns,[0]);
 });
+test('S18 RXJS refCount: fixed published Subject replays terminal error (not values) to late subscriber',()=>{
+  const t=tracked(),shared=t.source.pipe(publish(),refCount());
+  const a=observed(shared);
+  const e={terminal:'retained'};t.subjects[0].error(e);
+  assert.equal(a.events[0].error,e);
+  const late=observed(shared);
+  assert.deepEqual(t.subscriptions,[0]);
+  assert.deepEqual(late.events,[{kind:'E',error:e}]);
+});
 test('S18 RXJS refCount: independent subscription lifetimes are silent on cancel',()=>{
   const t=tracked(),shared=t.source.pipe(publish(),refCount());
   const a=observed(shared),b=observed(shared);
