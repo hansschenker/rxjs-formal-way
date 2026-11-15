@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "retryWhen",
-    "refCount",
-    "sample",
-    "sampleTime",
-    "sequenceEqual",
     "single",
     "skipLast",
     "subscribeOn",
@@ -1115,24 +1110,68 @@
       "readOnlyTree": "3e37b412487f25d67ab0c16c9017f5492b4ff3d8"
     },
     "retryWhen": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-15",
+      "profiles": [
+        "persistent error Subject, single lazy notifier subscription",
+        "notifier next resumes; notifier complete/error and cancellation terminate",
+        "post-subscription notifier events, no synchronous reentrancy"
+      ],
+      "evidence": "evidence/SESSION-18.md",
+      "testedCommit": "01188f29b9933bb5b9c046703fa686eca045487c",
+      "implementationRun": 43689996403,
+      "verificationRun": 43690173511,
+      "readOnlyHeadCommit": "82b7675c26f1914d08bf3c45b3345582ff8f3e8c",
+      "readOnlyCheckout": "b6a556ef179046300001a2a5e6841420449af663",
+      "readOnlyTree": "94ffbd5d9ef0b0a68c1a6d12c9908c31bb884d41"
     },
     "refCount": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-15",
+      "profiles": [
+        "legacy publish() fixed Subject ConnectableObservable",
+        "first join connects; last leave disconnects",
+        "completion/error cached by fixed Subject for late subscriber; no new connection"
+      ],
+      "evidence": "evidence/SESSION-18.md",
+      "testedCommit": "01188f29b9933bb5b9c046703fa686eca045487c",
+      "implementationRun": 43689996403,
+      "verificationRun": 43690173511,
+      "readOnlyHeadCommit": "82b7675c26f1914d08bf3c45b3345582ff8f3e8c",
+      "readOnlyCheckout": "b6a556ef179046300001a2a5e6841420449af663",
+      "readOnlyTree": "94ffbd5d9ef0b0a68c1a6d12c9908c31bb884d41"
     },
     "sample": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-15",
+      "profiles": [
+        "Observable notifier next triggers latest-unsampled-value emission",
+        "notifier completion noop; no value flush on source terminal",
+        "opaque undefined and null payloads retained by presence bit"
+      ],
+      "evidence": "evidence/SESSION-18.md",
+      "testedCommit": "01188f29b9933bb5b9c046703fa686eca045487c",
+      "implementationRun": 43689996403,
+      "verificationRun": 43690173511,
+      "readOnlyHeadCommit": "82b7675c26f1914d08bf3c45b3345582ff8f3e8c",
+      "readOnlyCheckout": "b6a556ef179046300001a2a5e6841420449af663",
+      "readOnlyTree": "94ffbd5d9ef0b0a68c1a6d12c9908c31bb884d41"
     },
     "sampleTime": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-15",
+      "profiles": [
+        "virtual periodic scheduler ticks at positive integral period 1..1000",
+        "latest unsampled value emitted at most once per tick",
+        "source terminates immediately; no flush; scheduler actions cancelled"
+      ],
+      "evidence": "evidence/SESSION-18.md",
+      "testedCommit": "01188f29b9933bb5b9c046703fa686eca045487c",
+      "implementationRun": 43689996403,
+      "verificationRun": 43690173511,
+      "readOnlyHeadCommit": "82b7675c26f1914d08bf3c45b3345582ff8f3e8c",
+      "readOnlyCheckout": "b6a556ef179046300001a2a5e6841420449af663",
+      "readOnlyTree": "94ffbd5d9ef0b0a68c1a6d12c9908c31bb884d41"
     },
     "scan": {
       "status": "accepted",
@@ -1143,9 +1182,20 @@
       ]
     },
     "sequenceEqual": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-15",
+      "profiles": [
+        "two bounded FIFO buffers, default strict === comparator",
+        "early false on mismatch/excess, true only when both complete equally",
+        "no custom comparator callback, arbitrary reentrancy or unbounded FIFO"
+      ],
+      "evidence": "evidence/SESSION-18.md",
+      "testedCommit": "01188f29b9933bb5b9c046703fa686eca045487c",
+      "implementationRun": 43689996403,
+      "verificationRun": 43690173511,
+      "readOnlyHeadCommit": "82b7675c26f1914d08bf3c45b3345582ff8f3e8c",
+      "readOnlyCheckout": "b6a556ef179046300001a2a5e6841420449af663",
+      "readOnlyTree": "94ffbd5d9ef0b0a68c1a6d12c9908c31bb884d41"
     },
     "share": {
       "status": "accepted",
