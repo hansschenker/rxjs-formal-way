@@ -139,7 +139,7 @@ test('S18 refCount: one unsubscribe never tears down a still-shared source',()=>
   assert.deepEqual(output(x),[]);
   assert.deepEqual(actions(x).filter(a=>a.type==='notify').map(a=>a.target),['A']);
 });
-test('S18 refCount: error and completion broadcast and reset the connection',()=>{
+test('S18 refCount: fixed publish Subject retains error and completion terminal states',()=>{
   const e={issue:1};
   const m=createRefCountModel();
   const x=evaluate(m,[
@@ -148,8 +148,8 @@ test('S18 refCount: error and completion broadcast and reset the connection',()=
     {type:'source.error',resource:src(0),error:e},
     {type:'subscriber.subscribe',subscriber:'C'}
   ]);
-  assert.equal(x.state.phase,'Connected');
-  assert.equal(x.state.connection.generation,1);
+  assert.equal(x.state.phase,'Errored');
+  assert.equal(counts(x,'subscribe','source'),1);
   const errorNotes=actions(x).filter(a=>a.type==='notify');
   assert.equal(errorNotes.length,2);
   assert.equal(errorNotes[0].notification.error,e);
@@ -158,7 +158,7 @@ test('S18 refCount: error and completion broadcast and reset the connection',()=
     {type:'subscriber.subscribe',subscriber:'A'},
     {type:'source.complete',resource:src(0)}
   ]);
-  assert.equal(c.state.phase,'Disconnected');
+  assert.equal(c.state.phase,'Completed');
   assert.deepEqual(actions(c).filter(a=>a.type==='notify').map(a=>a.notification.kind),['C']);
 });
 test('S18 refCount: duplicate subscriber IDs and stale connection notifications are rejected',()=>{
