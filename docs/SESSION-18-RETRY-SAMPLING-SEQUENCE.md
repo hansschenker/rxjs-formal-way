@@ -11,7 +11,7 @@ Each public name receives one inspection index. Scope profiles and scheduler set
 | Export | Source values | Control and outcome |
 |---|---|---|
 | `retryWhen` | Every successful `next` is forwarded | Source errors are *control signals* published to a persistent errors Subject. Notifier `next` restarts, `complete` finishes, `error` fails |
-| `refCount` | A single published producer multicasts to the current observers | First subscriber connects; other subscribers join; last departure disconnects; completion/error resets the connection generation |
+| `refCount` | A single published producer multicasts to the current observers | First subscriber connects; other subscribers join; last departure disconnects; completion/error terminates the fixed published Subject and is retained for late subscribers |
 | `sample` | Only the most recent *unsampled* source value is retained | Notifier `next` releases the retained value once; notifier completion is a no-op; source termination does not flush |
 | `sampleTime` | Same sampled-value policy as `sample` | A virtual scheduled interval supplies ticks at periods `p,2p,3p,…`; a tick without a new value emits nothing |
 | `sequenceEqual` | Two streams of opaque values compared in ordinal positions | Buffer unmatched arrivals in FIFO queues; inequality is decided immediately on a mismatch, excess value, or final length mismatch; equal streams finish with `true` |
@@ -39,9 +39,9 @@ The following `(S,S₀,Z,A,T,G)` contracts describe the finite declared profiles
 - **`S₀`**: disconnected, no subscribers, generation 0.
 - **`Z`**: subscriber join/leave and source next/complete/error on the **current generation**.
 - **`A`**: connect/disconnect source; send individual notification to each registered observer.
-- **`T/G`**: first join connects; another join does not duplicate the source subscription; one leave with other observers does not disconnect; last leave disconnects silently; source terminal broadcasts to current subscribers and resets its connection. Old connection generations cannot continue producing values.
+- **`T/G`**: first join connects; another join does not duplicate the source subscription; one leave with other observers does not disconnect; last leave disconnects silently; source terminal broadcasts to current subscribers and retains its terminal Subject for late subscribers (no reconnect on published fixed Subject). Old connection generations cannot continue producing values.
 - **Cω-style shape**: `refCount() : Cω(Connection) → Connectable(T*) → Shared(T*)`. `Shared` is teaching notation for a shared execution, not a native RxJS type.
-- **Scope**: legacy `publish()`/`ConnectableObservable` with the default Subject and no external manual connection. Reuse the previously reviewed **share with three immediate boolean resets** guarded algebra, but with independent refCount metadata/source provenance. Do **not** generalize this equivalence to arbitrary connectable types, manual `connect()`, different Subjects, or synchronous connection-time reentrancy.
+- **Scope**: legacy `publish()`/`ConnectableObservable` with the default Subject and no external manual connection. Reuse the previously reviewed **share with refcount-zero reset and retained terminal states** guarded algebra, but with independent refCount metadata/source provenance. Do **not** generalize this equivalence to arbitrary connectable types, manual `connect()`, different Subjects, or synchronous connection-time reentrancy.
 - **Pinned sources**: [refCount.ts](https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/refCount.ts), [ConnectableObservable.ts](https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/ConnectableObservable.ts).
 
 ### sample and sampleTime — one retention algebra, two trigger policies
