@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-15",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-15T08:09:31+01:00",
   "startingCommit": "5c05170db1d3fca16b658a2036049004d4cd223e",
   "selectedNames": [
@@ -12,26 +12,103 @@
     "sampleTime",
     "sequenceEqual"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
+  "workedNames": [
     "retryWhen",
     "refCount",
     "sample",
     "sampleTime",
     "sequenceEqual"
   ],
-  "checks": {},
+  "completedNames": [
+    "retryWhen",
+    "refCount",
+    "sample",
+    "sampleTime",
+    "sequenceEqual"
+  ],
+  "carryovers": [],
+  "checks": {
+    "syntax": "passed in main push CI 43689996403 and independent read-only CI 43690173511",
+    "types": "strict TypeScript passed in both; 21 new negative @ts-expect-error assertions; no checks relaxed",
+    "model": "26 new guarded canonical model tests; complete suite 1246 passed, 0 failed in both",
+    "runtime": "34 new independent native RxJS 7.8.2 tests, including virtual sampleTime scheduler and fixed publish/refCount Subject terminal behavior; complete suite 1246 passed",
+    "generated": "842 ordinary deterministic projections plus 3 specialized mergeWith scenario projections drift-verified; 45 new files, five export-level eleven-step inspection indexes",
+    "ci": "main push run 43689996403 job 132738442692 success; read-only PR #35 run 43690173511 job 132738988344 success; generation and publication skipped in independent verification"
+  },
   "blockers": [],
   "notes": [
-    "Live main, daily plan, roadmap, tracker, and 2026-11-14 closed log inspected before session reservation.",
-    "Exactly five export names reserved; acceptance requires independent source inspection and executed verification."
+    "Read the live main plan, operator tracker, roadmap and prior Zurich session log; reserved exactly one dated session, five names, before work.",
+    "Version-pinned RxJS 7.8.2 revision e5351d02e225e275ac0e497c7b66eaa5f0c88791 inspected for all five exports including fixed Subject/ConnectableObservable internals.",
+    "Exactly five names: retryWhen, refCount, sample, sampleTime, sequenceEqual; profiles and overloads counted under their export.",
+    "Initial PR strict TypeScript failed on nullable period and generated event-literal unions; fixed source typing without weakening validation.",
+    "Native refCount test revealed fixed publish Subject retains terminal complete/error for late subscribers. Updated guarded model and independent tests rather than deleting or weakening failing assertions.",
+    "Latest pre-generation PR CI 43689929052 passed all 1246 named tests, syntax and strict TypeScript, but failed expected missing new generated artifacts; not labeled passed.",
+    "Main push CI 43689996403 generated and committed 45 projections and passed 1246 tests and 845 projection drift checks.",
+    "Independent read-only PR #35 CI 43690173511 passed the unchanged full suite and all committed views with generation and commit steps skipped. Synthetic checkout and PR head have identical independently retrieved Git trees.",
+    "Five operators accepted within declared bounded, nonreentrant scopes; 90/113 total; zero carryovers, no sixth export or second daily session.",
+    "Model traces are predicted canonical behavior; finite tests are not universal equivalence proofs."
   ],
   "nextQueue": [
-    "retryWhen",
-    "refCount",
-    "sample",
-    "sampleTime",
-    "sequenceEqual"
+    "single",
+    "skipLast",
+    "subscribeOn",
+    "switchMapTo",
+    "switchScan"
+  ],
+  "closedAt": "2026-11-15T08:32:56+01:00",
+  "nextSessionNotBefore": "2026-11-16",
+  "commits": [
+    "90395a9d4e203cc54cd2189f1148f37de0e353d8",
+    "778ae36e9c683ea712391c429599648b709cbc5f",
+    "01188f29b9933bb5b9c046703fa686eca045487c",
+    "e32c5a29bc6b6f26e3a57875386c7297802b514c",
+    "82b7675c26f1914d08bf3c45b3345582ff8f3e8c",
+    "a24d2c2cd1b92cf35c134cce9b69d718cec6a9a5",
+    "9764e1f2737ae23f0c3f4ad9a56d0d22a6ed41e7",
+    "b2da2c112ffdd5ada793f5fa779acf100dec1202",
+    "baa8a93edafec1fa3fb06150f14950e014bcb0e6"
+  ],
+  "evidence": "evidence/SESSION-18.md",
+  "verification": {
+    "implementationPr": 34,
+    "implementationPrHead": "778ae36e9c683ea712391c429599648b709cbc5f",
+    "implementationMerge": "01188f29b9933bb5b9c046703fa686eca045487c",
+    "testedCommit": "01188f29b9933bb5b9c046703fa686eca045487c",
+    "generatedCommit": "e32c5a29bc6b6f26e3a57875386c7297802b514c",
+    "preGenerationPrRun": 43689929052,
+    "preGenerationPrConclusion": "failed only generation drift; syntax, strict types and 1246 tests passed",
+    "mainPushRun": 43689996403,
+    "mainPushJob": 132738442692,
+    "mainPushConclusion": "success",
+    "readOnlyPr": 35,
+    "readOnlyRun": 43690173511,
+    "readOnlyJob": 132738988344,
+    "readOnlyConclusion": "success",
+    "readOnlyHeadCommit": "82b7675c26f1914d08bf3c45b3345582ff8f3e8c",
+    "readOnlyMerge": "a24d2c2cd1b92cf35c134cce9b69d718cec6a9a5",
+    "readOnlyBaseCommit": "e32c5a29bc6b6f26e3a57875386c7297802b514c",
+    "readOnlyCheckout": "b6a556ef179046300001a2a5e6841420449af663",
+    "readOnlyHeadTree": "94ffbd5d9ef0b0a68c1a6d12c9908c31bb884d41",
+    "readOnlyCheckoutTree": "94ffbd5d9ef0b0a68c1a6d12c9908c31bb884d41",
+    "namedTestsPassed": 1246,
+    "namedTestFailures": 0,
+    "newNamedTests": 60,
+    "newModelTests": 26,
+    "newNativeTests": 34,
+    "newNegativeTypeAssertions": 21,
+    "generatedViews": 842,
+    "mergeWithScenarioViews": 3,
+    "newGeneratedViews": 45,
+    "newInspectionIndices": 5,
+    "inspectionIndicesDriftVerified": true,
+    "newBoundedModelRxjsScenarios": 0,
+    "generationSkippedInReadOnlyRun": true,
+    "publicationSkippedInReadOnlyRun": true
+  },
+  "provenanceLimitations": [
+    "Read-only CI checkout is synthetic PR merge; independently retrieved Git tree equal to PR head proves checked-content identity.",
+    "Fixed publish() Subject retains terminal state; scope is not generic auto-reset share() or arbitrary connectables.",
+    "Retry notifier synchronous/reentrant mechanics, custom comparators, custom scheduler/Subject forms and unbounded queues are excluded.",
+    "Finite tests do not establish universal equivalence; docs/tracker/log closure is not the original CI-tested implementation commit."
   ]
 }
