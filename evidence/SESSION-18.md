@@ -37,7 +37,7 @@ One native `refCount` test exposed a semantic scope mistake in the initial model
 | Exact tested implementation | `01188f29b9933bb5b9c046703fa686eca045487c` |
 | Main push CI | [run 43689996403](https://github.com/hansschenker/rxjs-formal-way/actions/runs/43689996403), job `132738442692`: **succeeded**; generated new artifacts, syntax, strict types and all **1246 named tests** passed, 0 failures; **842 ordinary deterministic projections plus 3 specialized mergeWith scenario projections** verified |
 | Generated artifacts commit | [`e32c5a29bc6b6f26e3a57875386c7297802b514c`](https://github.com/hansschenker/rxjs-formal-way/commit/e32c5a29bc6b6f26e3a57875386c7297802b514c): **45 generated files**, eight views plus one inspection index per five exports |
-| Independent read-only PR verification | **Awaiting result and exact tested checkout.** Final acceptance remains gated; do not treat the main push CI as an independently verified artifact set |
+| Independent read-only PR verification | [PR #35](https://github.com/hansschenker/rxjs-formal-way/pull/35); [run 43690173511](https://github.com/hansschenker/rxjs-formal-way/actions/runs/43690173511), job `132738988344`, **succeeded**: syntax, strict types, all **1246 tests** and **842+3 committed projections** verified, generation/publication both **skipped** |
 
 From the prior accepted baseline of 1186 tests, this session added **60 named tests**. Total tracked projections rose from 800 to **845** (842 ordinary and three specialized). No new exhaustive bounded-equivalence count or general proof is claimed.
 
@@ -49,4 +49,12 @@ From the prior accepted baseline of 1186 tests, this session added **60 named te
 - `sampleTime`: positive integral virtual periods (1..1000), FIFO externally scheduled ticks; arbitrary scheduler behavior, invalid periods and same-instant setup races excluded.
 - `sequenceEqual`: strict `===` comparator only, finite unmatched FIFO cap, post-setup notification order; custom callback comparator, unbounded queue and infinite-input liveness excluded.
 
-The acceptance record must be completed **only after** independently retrieved read-only CI against the committed generated views, with generation and publication skipped. One daily batch; unaccepted names remain carryovers rather than being regenerated in a second batch.
+## Independent checkout identity and acceptance
+
+- Independent PR head **`82b7675c26f1914d08bf3c45b3345582ff8f3e8c`**.
+- Actual CI synthetic merge checkout **`b6a556ef179046300001a2a5e6841420449af663`**; retrieved from workflow job log.
+- GitHub commit objects independently report **identical Git tree `94ffbd5d9ef0b0a68c1a6d12c9908c31bb884d41`** for the PR head and synthetic checkout. Checked content is therefore identical at the tree level despite different commit SHAs.
+- Read-only evidence PR [#35](https://github.com/hansschenker/rxjs-formal-way/pull/35) merged as [`a24d2c2cd1b92cf35c134cce9b69d718cec6a9a5`](https://github.com/hansschenker/rxjs-formal-way/commit/a24d2c2cd1b92cf35c134cce9b69d718cec6a9a5).
+- Both **Generate projections on main before checking** and **Commit validated generated projections** steps were **skipped** on the independent pull-request run. All 45 generated session views were therefore checked as committed, not regenerated.
+- **Accepted within declared scopes:** all five; **90/113 accepted, 23 pending, no carryovers**. Metadata/roadmap/session-log closure commits follow the tested implementation and are not represented as the exact implementation-tested revision.
+- No sixth export and no second session on 2026-11-15. Next untouched five: `single`, `skipLast`, `subscribeOn`, `switchMapTo`, `switchScan` (not before the next Europe/Zurich local date).
