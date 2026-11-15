@@ -75,14 +75,14 @@ export function createSequenceEqualModel<T>(maxPending=32):SequenceEqualModel<T>
     const mayReceive=(s:S):boolean=>live(s)&&sourceLive(s,side);
     const mayQueue=(s:S):boolean=>live(s)&&mayReceive(s)&&buffer(s,other).length===0
       &&!completed(s,other)&&buffer(s,side).length<maxPending;
-    add(side.toUpperCase()+'-QUEUE','Comparing',side+'.next','Comparing',
+    add(side.toUpperCase()+'-QUEUE','Comparing',(side+'.next') as E['type'],'Comparing',
       'current side live, opposite FIFO empty and incomplete; buffer below cap',
       ['append exact payload to unmatched FIFO'],
       'No output until an opposite value arrives, or comparison becomes decided. Values remain opaque.',
       'Append one unmatched payload to current side FIFO.',
       mayQueue,(s,e)=>{if(!live(s)||!('value'in e))throw Error('expected value');
         return {state:{...s,[side]:[...buffer(s,side),e.value]},actions:[]};});
-    add(side.toUpperCase()+'-EXTRA','Comparing',side+'.next','Closed',
+    add(side.toUpperCase()+'-EXTRA','Comparing',(side+'.next') as E['type'],'Closed',
       'opposite stream already completed and has no unmatched value',
       ['emit false, complete and release remaining subscriptions'],
       'A new value after an exhausted, completed opposite stream proves unequal lengths.',
@@ -90,7 +90,7 @@ export function createSequenceEqualModel<T>(maxPending=32):SequenceEqualModel<T>
       s=>live(s)&&mayReceive(s)&&completed(s,other)&&buffer(s,other).length===0,
       s=>{if(!live(s))throw Error('expected comparing');
         return terminate(false,s);});
-    add(side.toUpperCase()+'-MATCH','Comparing',side+'.next','Comparing',
+    add(side.toUpperCase()+'-MATCH','Comparing',(side+'.next') as E['type'],'Comparing',
       'opposite FIFO nonempty and strict equality holds against its oldest value',
       ['discard one oldest opposite FIFO entry; no output'],
       'Default comparator is strict JavaScript ===, including NaN mismatch and object identity.',
@@ -99,7 +99,7 @@ export function createSequenceEqualModel<T>(maxPending=32):SequenceEqualModel<T>
         &&e.value===buffer(s,other)[0],
       s=>{if(!live(s))throw Error('expected comparison');
         return {state:{...s,[other]:buffer(s,other).slice(1)},actions:[]};});
-    add(side.toUpperCase()+'-DIFFER','Comparing',side+'.next','Closed',
+    add(side.toUpperCase()+'-DIFFER','Comparing',(side+'.next') as E['type'],'Closed',
       'opposite FIFO nonempty and strict equality fails',
       ['emit false then complete; release all live sources'],
       'One unequal aligned pair is sufficient: no need to wait for either source to finish.',
@@ -108,7 +108,7 @@ export function createSequenceEqualModel<T>(maxPending=32):SequenceEqualModel<T>
         &&!(e.value===buffer(s,other)[0]),
       s=>{if(!live(s))throw Error('expected comparison');
         return terminate(false,s);});
-    add(side.toUpperCase()+'-FIRST-COMPLETE','Comparing',side+'.complete','Comparing',
+    add(side.toUpperCase()+'-FIRST-COMPLETE','Comparing',(side+'.complete') as E['type'],'Comparing',
       'current side is live and the other side is not yet completed',
       ['release completed source subscription; retain unmatched FIFO'],
       'Completion alone is insufficient while the opposite source might still produce matching values.',
@@ -117,7 +117,7 @@ export function createSequenceEqualModel<T>(maxPending=32):SequenceEqualModel<T>
       s=>{if(!live(s))throw Error('expected completion');
         return {state:{...s,[side+'Done']:true},actions:[release(side)]};});
     for(const result of [true,false]){
-      add(side.toUpperCase()+'-FINAL-'+(result?'EQUAL':'UNEVEN'),'Comparing',side+'.complete','Closed',
+      add(side.toUpperCase()+'-FINAL-'+(result?'EQUAL':'UNEVEN'),'Comparing',(side+'.complete') as E['type'],'Closed',
         'opposite stream already completed; unmatched buffers '+(result?'both empty':'not empty'),
         [result?'emit true and complete':'emit false and complete','release final subscription'],
         'Only both completed streams with no unmatched FIFO values are equal.',
@@ -127,7 +127,7 @@ export function createSequenceEqualModel<T>(maxPending=32):SequenceEqualModel<T>
         s=>{if(!live(s))throw Error('expected final comparison');
           return terminate(result,s);});
     }
-    add(side.toUpperCase()+'-ERROR','Comparing',side+'.error','Closed',
+    add(side.toUpperCase()+'-ERROR','Comparing',(side+'.error') as E['type'],'Closed',
       'current side is live',
       ['forward exact error identity','release all live subscriptions'],
       'An error is a terminal failure, never converted to a false equality result.',
