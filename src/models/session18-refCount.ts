@@ -15,7 +15,7 @@ export type RefCountModel<T> = ShareModel<T>;
 
 export function createRefCountModel<T>(): RefCountModel<T> {
   const shared = createShareModel<T>({
-    resetOnError:true,resetOnComplete:true,resetOnRefCountZero:true
+    resetOnError:false,resetOnComplete:false,resetOnRefCountZero:true
   });
   const rules = shared.rules.map(rule=>({
     ...rule,
@@ -35,11 +35,11 @@ export function createRefCountModel<T>(): RefCountModel<T> {
       conditions:[
         'At most one connection is live while the registry contains subscribers.',
         'The last unsubscribe disconnects the producer; an overlapping join does not reconnect or replay.',
-        'An upstream terminal notification is broadcast to current subscribers and resets the connection generation.'
+        'An upstream terminal notification is broadcast to current subscribers; the fixed publish Subject retains completion/error for late subscribers.'
       ]
     },
     scope:{
-      parameters:'Legacy pipeable refCount() following publish() / ConnectableObservable with default Subject, immediate reset when count reaches zero.',
+      parameters:'Legacy pipeable refCount() following publish() / ConnectableObservable with one fixed Subject, immediate disconnect when count reaches zero; terminal Subject is retained.',
       callbacks:'No custom Subject factory, selection callback or user callback evaluation.',
       time:'No clock: connection lifetime is determined by ordered subscribe/unsubscribe and producer notifications.',
       reentrancy:'Atomic post-setup subscriber registration; each subscription occurrence has a unique ID.',
@@ -56,12 +56,12 @@ export function createRefCountModel<T>(): RefCountModel<T> {
     ownership:{
       state:'external-instance',
       sharing:'All refCount subscribers of this published ConnectableObservable share one source connection.',
-      reset:'Last departing observer closes the connection; source termination resets internal connection and Subject.',
+      reset:'Last departing observer closes the connection. Terminal completion/error is retained on the fixed Subject, preventing reconnection after terminal.',
       resources:[{id:'source',kind:'subscription',owner:'legacy ConnectableObservable connection per generation'}]
     },
     dispatch:{
       policy:'atomic-non-reentrant',
-      actionSemantics:'The wrapper decrements the source refcount on finalization. The same guarded source-connection transitions as share with immediate resets apply within this profile.',
+      actionSemantics:'The wrapper decrements the source refcount on finalization. The same guarded transitions as share with refcount-zero reset but retained terminal states apply within this profile.',
       cancellationCheckpoints:['A non-last observer leave does not close the producer.','Last leave disconnects silently; late joins start a new connection.']
     },
     sources:[
