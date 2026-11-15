@@ -151,16 +151,15 @@ test('S18 RXJS refCount: last departure disconnects and next subscriber reconnec
   b.subscription.unsubscribe();
   assert.deepEqual(t.teardowns,[0,1]);
 });
-test('S18 RXJS refCount: upstream complete notifies all and later subscribe gets new Subject',()=>{
+test('S18 RXJS refCount: fixed publish Subject retains completion for late subscribers',()=>{
   const t=tracked(),shared=t.source.pipe(publish(),refCount());
   const a=observed(shared),b=observed(shared);
   t.subjects[0].next(1);t.subjects[0].complete();
   assert.deepEqual(a.events,[{kind:'N',value:1},{kind:'C'}]);
   assert.deepEqual(b.events,[{kind:'N',value:1},{kind:'C'}]);
   const c=observed(shared);
-  assert.deepEqual(t.subscriptions,[0,1]);
-  t.subjects[1].next(2);t.subjects[1].complete();
-  assert.deepEqual(c.events,[{kind:'N',value:2},{kind:'C'}]);
+  assert.deepEqual(t.subscriptions,[0]);
+  assert.deepEqual(c.events,[{kind:'C'}]);
 });
 test('S18 RXJS refCount: source failure broadcasts exact error and releases producer',()=>{
   const t=tracked(),shared=t.source.pipe(publish(),refCount());
