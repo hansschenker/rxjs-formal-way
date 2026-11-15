@@ -133,3 +133,12 @@ export { createRestartModel, createRepeatModel, createRetryModel, repeatExample,
 export type { RestartOperator, RestartParameters, RestartState, RestartEvent, RestartModel } from './models/session17-restart.js';
 export { createRepeatWhenModel, repeatWhenExample } from './models/session17-repeatWhen.js';
 export type { RepeatWhenParameters, RepeatWhenState, RepeatWhenEvent, RepeatWhenModel } from './models/session17-repeatWhen.js';
+
+export { createRetryWhenModel, retryWhenExample } from './models/session18-retryWhen.js';
+export type { RetryWhenParameters, RetryWhenState, RetryWhenEvent, RetryWhenModel } from './models/session18-retryWhen.js';
+export { createRefCountModel, refCountExample } from './models/session18-refCount.js';
+export type { RefCountState, RefCountEvent, RefCountModel } from './models/session18-refCount.js';
+export { createSamplingModel, createSampleModel, createSampleTimeModel, sampleExample, sampleTimeExample } from './models/session18-sampling.js';
+export type { SamplingMode, SamplingParameters, SamplingState, SamplingEvent, SamplingModel } from './models/session18-sampling.js';
+export { createSequenceEqualModel, sequenceEqualExample } from './models/session18-sequenceEqual.js';
+export type { SequenceEqualParameters, SequenceEqualState, SequenceEqualEvent, SequenceEqualModel } from './models/session18-sequenceEqual.js';
