@@ -44,7 +44,7 @@ const input = (type: string, origin: 'source' | 'inner' | 'timer' | 'downstream'
   ({ type, origin, category, description });
 
 export function createSamplingModel<T>(mode: SamplingMode, period: number | null = null): SamplingModel<T> {
-  if (mode === 'sampleTime' && (!natural(period) || period === 0 || period > 1000))
+  if (mode === 'sampleTime' && (period === null || !natural(period) || period === 0 || period > 1000))
     throw new RangeError('sampleTime virtual period must be a positive safe integer in 1..1000');
   if (mode === 'sample' && period !== null) throw new TypeError('sample does not take a timer period');
   const p: SamplingParameters = { mode, period };
