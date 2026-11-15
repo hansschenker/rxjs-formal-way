@@ -87,6 +87,10 @@ import {
   createRetryModel, retryExample
 } from '../dist/index.js';
 
+import { createRetryWhenModel, retryWhenExample, createRefCountModel, refCountExample,
+  createSampleModel, sampleExample, createSampleTimeModel, sampleTimeExample,
+  createSequenceEqualModel, sequenceEqualExample } from '../dist/index.js';
+
 const canonicalModelPaths = {
   take:'src/models/take.ts', map:'src/models/map.ts', filter:'src/models/filter.ts', scan:'src/models/scan.ts',
   debounceTime:'src/models/debounceTime.ts', switchMap:'src/models/flatten.ts', mergeMap:'src/models/flatten.ts',
@@ -124,6 +128,9 @@ const canonicalModelPaths = {
   race:'src/models/session17-race.ts', raceWith:'src/models/session17-race.ts',
   repeat:'src/models/session17-restart.ts', retry:'src/models/session17-restart.ts',
   repeatWhen:'src/models/session17-repeatWhen.ts',
+  retryWhen:'src/models/session18-retryWhen.ts',refCount:'src/models/session18-refCount.ts',
+  sample:'src/models/session18-sampling.ts',sampleTime:'src/models/session18-sampling.ts',
+  sequenceEqual:'src/models/session18-sequenceEqual.ts',
 };
 
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
@@ -218,6 +225,11 @@ const examples = [
   ['repeat', createRepeatModel(2), repeatExample, 'repeat-session17-example'],
   ['repeatWhen', createRepeatWhenModel(), repeatWhenExample, 'repeatWhen-session17-example'],
   ['retry', createRetryModel(2), retryExample, 'retry-session17-example'],
+  ['retryWhen', createRetryWhenModel(), retryWhenExample, 'retryWhen-session18-example'],
+  ['refCount', createRefCountModel(), refCountExample, 'refCount-session18-example'],
+  ['sample', createSampleModel(), sampleExample, 'sample-session18-example'],
+  ['sampleTime', createSampleTimeModel(3), sampleTimeExample, 'sampleTime-session18-example'],
+  ['sequenceEqual', createSequenceEqualModel(), sequenceEqualExample, 'sequenceEqual-session18-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
