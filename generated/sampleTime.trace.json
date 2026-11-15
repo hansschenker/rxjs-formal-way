@@ -1,0 +1,247 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "sampleTime-source-first-3",
+      "executionId": "sampleTime-session18-example",
+      "ruleId": "S18-SAMPLETIME-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": false,
+        "lastValue": null,
+        "notifier": "open",
+        "tick": 0,
+        "due": 3
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "periodic",
+            "generation": 0
+          },
+          "delay": 3
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "sampleTime-source-first-3",
+      "executionId": "sampleTime-session18-example",
+      "ruleId": "S18-SAMPLETIME-REMEMBER",
+      "event": {
+        "type": "source.next",
+        "value": "before tick"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": false,
+        "lastValue": null,
+        "notifier": "open",
+        "tick": 0,
+        "due": 3
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": true,
+        "lastValue": "before tick",
+        "notifier": "open",
+        "tick": 0,
+        "due": 3
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 3,
+      "modelId": "sampleTime-source-first-3",
+      "executionId": "sampleTime-session18-example",
+      "ruleId": "S18-SAMPLETIME-TICK-EMIT",
+      "event": {
+        "type": "timer.fire",
+        "resource": {
+          "id": "periodic",
+          "generation": 0
+        },
+        "now": 3
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": true,
+        "lastValue": "before tick",
+        "notifier": "open",
+        "tick": 0,
+        "due": 3
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": false,
+        "lastValue": null,
+        "notifier": "open",
+        "tick": 1,
+        "due": 6
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "before tick"
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "periodic",
+            "generation": 1
+          },
+          "delay": 3
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 4,
+      "modelId": "sampleTime-source-first-3",
+      "executionId": "sampleTime-session18-example",
+      "ruleId": "S18-SAMPLETIME-REMEMBER",
+      "event": {
+        "type": "source.next",
+        "value": "after tick"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": false,
+        "lastValue": null,
+        "notifier": "open",
+        "tick": 1,
+        "due": 6
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": true,
+        "lastValue": "after tick",
+        "notifier": "open",
+        "tick": 1,
+        "due": 6
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 6,
+      "modelId": "sampleTime-source-first-3",
+      "executionId": "sampleTime-session18-example",
+      "ruleId": "S18-SAMPLETIME-TICK-EMIT",
+      "event": {
+        "type": "timer.fire",
+        "resource": {
+          "id": "periodic",
+          "generation": 1
+        },
+        "now": 6
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": true,
+        "lastValue": "after tick",
+        "notifier": "open",
+        "tick": 1,
+        "due": 6
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": false,
+        "lastValue": null,
+        "notifier": "open",
+        "tick": 2,
+        "due": 9
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "after tick"
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "periodic",
+            "generation": 2
+          },
+          "delay": 3
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 7,
+      "modelId": "sampleTime-source-first-3",
+      "executionId": "sampleTime-session18-example",
+      "ruleId": "S18-SAMPLETIME-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": false,
+        "lastValue": null,
+        "notifier": "open",
+        "tick": 2,
+        "due": 9
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "periodic",
+            "generation": 2
+          }
+        }
+      ]
+    }
+  ]
+}

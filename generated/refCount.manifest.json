@@ -1,0 +1,284 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "refCount-publish-Subject-legacy",
+    "operator": "refCount",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Automate one shared legacy ConnectableObservable connection while the subscriber count is nonzero.",
+    "cardinality": {
+      "signature": "refCount() : Cω(Connection) → Connectable(T*) → Shared(T*)",
+      "conditions": [
+        "At most one connection is live while the registry contains subscribers.",
+        "The last unsubscribe disconnects the producer; an overlapping join does not reconnect or replay.",
+        "An upstream terminal notification is broadcast to current subscribers; the fixed publish Subject retains completion/error for late subscribers."
+      ]
+    },
+    "scope": {
+      "parameters": "Legacy pipeable refCount() following publish() / ConnectableObservable with one fixed Subject, immediate disconnect when count reaches zero; terminal Subject is retained.",
+      "callbacks": "No custom Subject factory, selection callback or user callback evaluation.",
+      "time": "No clock: connection lifetime is determined by ordered subscribe/unsubscribe and producer notifications.",
+      "reentrancy": "Atomic post-setup subscriber registration; each subscription occurrence has a unique ID.",
+      "exclusions": [
+        "Calling refCount on an ordinary non-Connectable Observable or custom ConnectableObservable implementations.",
+        "Synchronous source completion/next during connect() and the local connection-identity teardown race.",
+        "Custom Subject variants, manual external connect/disconnect during refCount, reentrant observers and throwing teardown."
+      ]
+    },
+    "initialization": {
+      "control": "Disconnected",
+      "event": "subscriber.subscribe",
+      "sourceSubscription": "Subscribe observer to ConnectableObservable Subject before connecting the producer on first use."
+    },
+    "ownership": {
+      "state": "external-instance",
+      "sharing": "All refCount subscribers of this published ConnectableObservable share one source connection.",
+      "reset": "Last departing observer closes the connection. Terminal completion/error is retained on the fixed Subject, preventing reconnection after terminal.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "legacy ConnectableObservable connection per generation"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "The wrapper decrements the source refcount on finalization. The same guarded transitions as share with refcount-zero reset but retained terminal states apply within this profile.",
+      "cancellationCheckpoints": [
+        "A non-last observer leave does not close the producer.",
+        "Last leave disconnects silently; late joins start a new connection."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscriber.subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a fresh subscriber joins"
+      },
+      {
+        "type": "subscriber.unsubscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "a registered subscriber leaves"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "the current connection delivers a value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "the current connection completes"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "the current connection errors"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Disconnected",
+        "description": "no current source connection",
+        "terminal": false
+      },
+      {
+        "id": "Connected",
+        "description": "one live source; zero or more observers according to reset policy",
+        "terminal": false
+      },
+      {
+        "id": "Completed",
+        "description": "retained completed Subject; late subscription remains legal",
+        "terminal": false
+      },
+      {
+        "id": "Errored",
+        "description": "retained errored Subject; late subscription remains legal",
+        "terminal": false
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/refCount.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned refcount, connection-reference and subject reset semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/ConnectableObservable.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned refcount, connection-reference and subject reset semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/multicast.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned refcount, connection-reference and subject reset semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/share.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned refcount, connection-reference and subject reset semantics"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session18-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session18-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-18.md"
+    }
+  },
+  "parameters": {
+    "resetOnError": false,
+    "resetOnComplete": false,
+    "resetOnRefCountZero": true
+  },
+  "rules": [
+    {
+      "id": "S18-REFCOUNT-CONNECT",
+      "from": "Disconnected",
+      "event": "subscriber.subscribe",
+      "guard": "fresh subscription ID and available connection generation",
+      "to": "Connected",
+      "actions": [
+        "subscribe to the source under a fresh connection generation"
+      ],
+      "nextState": "one registered subscriber and one connection",
+      "explanation": "Constructing the shared Observable starts nothing. Its first subscriber creates a Subject-backed connection to the source; that connection is shared by overlapping subscribers.",
+      "obligations": [
+        "S18-REFCOUNT-01"
+      ]
+    },
+    {
+      "id": "S18-REFCOUNT-JOIN",
+      "from": "Connected",
+      "event": "subscriber.subscribe",
+      "guard": "fresh subscription ID",
+      "to": "Connected",
+      "actions": [],
+      "nextState": "append subscriber to the existing connection, without replay",
+      "explanation": "A subscriber joining a live connection receives future values, not past values. It does not create another source subscription. Sharing is not replay.",
+      "obligations": [
+        "S18-REFCOUNT-02"
+      ]
+    },
+    {
+      "id": "S18-REFCOUNT-NEXT",
+      "from": "Connected",
+      "event": "source.next",
+      "guard": "current source generation",
+      "to": "Connected",
+      "actions": [
+        "forward the value to each currently registered subscriber in registration order"
+      ],
+      "nextState": "retain the connection and registry",
+      "explanation": "A source value is forwarded unchanged to each currently subscribed observer. With no observers, a retained connection can still receive values, but share stores none of them.",
+      "obligations": [
+        "S18-REFCOUNT-03"
+      ]
+    },
+    {
+      "id": "S18-REFCOUNT-LEAVE",
+      "from": "Connected",
+      "event": "subscriber.unsubscribe",
+      "guard": "registered subscriber and at least one other remains",
+      "to": "Connected",
+      "actions": [],
+      "nextState": "remove only this subscriber",
+      "explanation": "When one subscriber leaves while others remain, remove only that subscriber. The shared source continues and no completion is sent to the departing observer.",
+      "obligations": [
+        "S18-REFCOUNT-04"
+      ]
+    },
+    {
+      "id": "S18-REFCOUNT-LAST-RESET",
+      "from": "Connected",
+      "event": "subscriber.unsubscribe",
+      "guard": "the last registered subscriber leaves; resetOnRefCountZero=true",
+      "to": "Disconnected",
+      "actions": [
+        "unsubscribe the source"
+      ],
+      "nextState": "reset the connection with no live subscribers",
+      "explanation": "When the last subscriber leaves a nonterminated connection, resetOnRefCountZero=true disconnects and resets it. A future subscriber starts a new source execution. No completion notification is synthesized.",
+      "obligations": [
+        "S18-REFCOUNT-05"
+      ]
+    },
+    {
+      "id": "S18-REFCOUNT-COMPLETE-RETAIN",
+      "from": "Connected",
+      "event": "source.complete",
+      "guard": "current generation; resetOnComplete=false",
+      "to": "Completed",
+      "actions": [
+        "send complete to each current subscriber",
+        "release the source connection"
+      ],
+      "nextState": "retain terminal status with no live connection or registered subscribers",
+      "explanation": "On source complete, notify current subscribers and release that source connection. The retained Subject remains terminated; future subscribers receive only that terminal notification and do not reconnect.",
+      "obligations": [
+        "S18-REFCOUNT-07"
+      ]
+    },
+    {
+      "id": "S18-REFCOUNT-LATE-COMPLETE",
+      "from": "Completed",
+      "event": "subscriber.subscribe",
+      "guard": "fresh subscription ID; retained terminal Subject",
+      "to": "Completed",
+      "actions": [
+        "send the cached complete to this subscriber only"
+      ],
+      "nextState": "remain terminated without connecting or retaining the new subscriber",
+      "explanation": "A subscriber arriving after retained complete immediately receives that complete, with no replayed value and no new source connection.",
+      "obligations": [
+        "S18-REFCOUNT-09"
+      ]
+    },
+    {
+      "id": "S18-REFCOUNT-ERROR-RETAIN",
+      "from": "Connected",
+      "event": "source.error",
+      "guard": "current generation; resetOnError=false",
+      "to": "Errored",
+      "actions": [
+        "send error to each current subscriber",
+        "release the source connection"
+      ],
+      "nextState": "retain terminal status with no live connection or registered subscribers",
+      "explanation": "On source error, notify current subscribers and release that source connection. The retained Subject remains terminated; future subscribers receive only that terminal notification and do not reconnect.",
+      "obligations": [
+        "S18-REFCOUNT-08"
+      ]
+    },
+    {
+      "id": "S18-REFCOUNT-LATE-ERROR",
+      "from": "Errored",
+      "event": "subscriber.subscribe",
+      "guard": "fresh subscription ID; retained terminal Subject",
+      "to": "Errored",
+      "actions": [
+        "send the cached error to this subscriber only"
+      ],
+      "nextState": "remain terminated without connecting or retaining the new subscriber",
+      "explanation": "A subscriber arriving after retained error immediately receives that error, with no replayed value and no new source connection.",
+      "obligations": [
+        "S18-REFCOUNT-09"
+      ]
+    }
+  ]
+}

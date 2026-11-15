@@ -1,0 +1,242 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "reason": "equal"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "sequenceEqual-strict-FIFO-32",
+      "executionId": "sequenceEqual-session18-example",
+      "ruleId": "S18-SEQUENCEEQUAL-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Comparing",
+        "left": [],
+        "right": [],
+        "leftDone": false,
+        "rightDone": false
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "left",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "right",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "sequenceEqual-strict-FIFO-32",
+      "executionId": "sequenceEqual-session18-example",
+      "ruleId": "S18-SEQUENCEEQUAL-LEFT-QUEUE",
+      "event": {
+        "type": "left.next",
+        "value": "a"
+      },
+      "before": {
+        "phase": "Comparing",
+        "left": [],
+        "right": [],
+        "leftDone": false,
+        "rightDone": false
+      },
+      "after": {
+        "phase": "Comparing",
+        "left": [
+          "a"
+        ],
+        "right": [],
+        "leftDone": false,
+        "rightDone": false
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "sequenceEqual-strict-FIFO-32",
+      "executionId": "sequenceEqual-session18-example",
+      "ruleId": "S18-SEQUENCEEQUAL-LEFT-QUEUE",
+      "event": {
+        "type": "left.next",
+        "value": "b"
+      },
+      "before": {
+        "phase": "Comparing",
+        "left": [
+          "a"
+        ],
+        "right": [],
+        "leftDone": false,
+        "rightDone": false
+      },
+      "after": {
+        "phase": "Comparing",
+        "left": [
+          "a",
+          "b"
+        ],
+        "right": [],
+        "leftDone": false,
+        "rightDone": false
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "sequenceEqual-strict-FIFO-32",
+      "executionId": "sequenceEqual-session18-example",
+      "ruleId": "S18-SEQUENCEEQUAL-RIGHT-MATCH",
+      "event": {
+        "type": "right.next",
+        "value": "a"
+      },
+      "before": {
+        "phase": "Comparing",
+        "left": [
+          "a",
+          "b"
+        ],
+        "right": [],
+        "leftDone": false,
+        "rightDone": false
+      },
+      "after": {
+        "phase": "Comparing",
+        "left": [
+          "b"
+        ],
+        "right": [],
+        "leftDone": false,
+        "rightDone": false
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "sequenceEqual-strict-FIFO-32",
+      "executionId": "sequenceEqual-session18-example",
+      "ruleId": "S18-SEQUENCEEQUAL-RIGHT-MATCH",
+      "event": {
+        "type": "right.next",
+        "value": "b"
+      },
+      "before": {
+        "phase": "Comparing",
+        "left": [
+          "b"
+        ],
+        "right": [],
+        "leftDone": false,
+        "rightDone": false
+      },
+      "after": {
+        "phase": "Comparing",
+        "left": [],
+        "right": [],
+        "leftDone": false,
+        "rightDone": false
+      },
+      "actions": []
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "sequenceEqual-strict-FIFO-32",
+      "executionId": "sequenceEqual-session18-example",
+      "ruleId": "S18-SEQUENCEEQUAL-LEFT-FIRST-COMPLETE",
+      "event": {
+        "type": "left.complete"
+      },
+      "before": {
+        "phase": "Comparing",
+        "left": [],
+        "right": [],
+        "leftDone": false,
+        "rightDone": false
+      },
+      "after": {
+        "phase": "Comparing",
+        "left": [],
+        "right": [],
+        "leftDone": true,
+        "rightDone": false
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "left",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "sequenceEqual-strict-FIFO-32",
+      "executionId": "sequenceEqual-session18-example",
+      "ruleId": "S18-SEQUENCEEQUAL-RIGHT-FINAL-EQUAL",
+      "event": {
+        "type": "right.complete"
+      },
+      "before": {
+        "phase": "Comparing",
+        "left": [],
+        "right": [],
+        "leftDone": true,
+        "rightDone": false
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "equal"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": true
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "right",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

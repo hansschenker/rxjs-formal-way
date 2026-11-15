@@ -1,0 +1,248 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "generation": 1,
+    "notifier": "open",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "retryWhen-persistent-errors-notifier",
+      "executionId": "retryWhen-session18-example",
+      "ruleId": "S18-RETRYWHEN-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed",
+        "generation": 0,
+        "notifier": "absent",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "generation": 0,
+        "notifier": "absent",
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "retryWhen-persistent-errors-notifier",
+      "executionId": "retryWhen-session18-example",
+      "ruleId": "S18-RETRYWHEN-FORWARD",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": "first"
+      },
+      "before": {
+        "phase": "Active",
+        "generation": 0,
+        "notifier": "absent",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "generation": 0,
+        "notifier": "absent",
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "first"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "retryWhen-persistent-errors-notifier",
+      "executionId": "retryWhen-session18-example",
+      "ruleId": "S18-RETRYWHEN-FIRST-ERROR",
+      "event": {
+        "type": "source.error",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "error": "transient"
+      },
+      "before": {
+        "phase": "Active",
+        "generation": 0,
+        "notifier": "absent",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Waiting",
+        "generation": 0,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "notifier",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "errorsSubject",
+          "notification": {
+            "kind": "N",
+            "value": "transient"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 5,
+      "modelId": "retryWhen-persistent-errors-notifier",
+      "executionId": "retryWhen-session18-example",
+      "ruleId": "S18-RETRYWHEN-RETRY",
+      "event": {
+        "type": "notifier.next"
+      },
+      "before": {
+        "phase": "Waiting",
+        "generation": 0,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "generation": 1,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 6,
+      "modelId": "retryWhen-persistent-errors-notifier",
+      "executionId": "retryWhen-session18-example",
+      "ruleId": "S18-RETRYWHEN-FORWARD",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 1
+        },
+        "value": "recovered"
+      },
+      "before": {
+        "phase": "Active",
+        "generation": 1,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Active",
+        "generation": 1,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "recovered"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 7,
+      "modelId": "retryWhen-persistent-errors-notifier",
+      "executionId": "retryWhen-session18-example",
+      "ruleId": "S18-RETRYWHEN-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete",
+        "resource": {
+          "id": "source",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "generation": 1,
+        "notifier": "open",
+        "reason": "none"
+      },
+      "after": {
+        "phase": "Closed",
+        "generation": 1,
+        "notifier": "open",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 1
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "notifier",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

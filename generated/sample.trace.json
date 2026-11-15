@@ -1,0 +1,267 @@
+{
+  "status": "finished-input",
+  "consumed": 8,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "sample-source-first-notifier",
+      "executionId": "sample-session18-example",
+      "ruleId": "S18-SAMPLE-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": false,
+        "lastValue": null,
+        "notifier": "open",
+        "tick": 0,
+        "due": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "notifier",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "sample-source-first-notifier",
+      "executionId": "sample-session18-example",
+      "ruleId": "S18-SAMPLE-REMEMBER",
+      "event": {
+        "type": "source.next",
+        "value": "old"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": false,
+        "lastValue": null,
+        "notifier": "open",
+        "tick": 0,
+        "due": 0
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": true,
+        "lastValue": "old",
+        "notifier": "open",
+        "tick": 0,
+        "due": 0
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "sample-source-first-notifier",
+      "executionId": "sample-session18-example",
+      "ruleId": "S18-SAMPLE-REMEMBER",
+      "event": {
+        "type": "source.next",
+        "value": "latest"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": true,
+        "lastValue": "old",
+        "notifier": "open",
+        "tick": 0,
+        "due": 0
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": true,
+        "lastValue": "latest",
+        "notifier": "open",
+        "tick": 0,
+        "due": 0
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "sample-source-first-notifier",
+      "executionId": "sample-session18-example",
+      "ruleId": "S18-SAMPLE-NOTIFIER-EMIT",
+      "event": {
+        "type": "notifier.next"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": true,
+        "lastValue": "latest",
+        "notifier": "open",
+        "tick": 0,
+        "due": 0
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": false,
+        "lastValue": null,
+        "notifier": "open",
+        "tick": 0,
+        "due": 0
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "latest"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "sample-source-first-notifier",
+      "executionId": "sample-session18-example",
+      "ruleId": "S18-SAMPLE-NOTIFIER-EMPTY",
+      "event": {
+        "type": "notifier.next"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": false,
+        "lastValue": null,
+        "notifier": "open",
+        "tick": 0,
+        "due": 0
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": false,
+        "lastValue": null,
+        "notifier": "open",
+        "tick": 0,
+        "due": 0
+      },
+      "actions": []
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "sample-source-first-notifier",
+      "executionId": "sample-session18-example",
+      "ruleId": "S18-SAMPLE-REMEMBER",
+      "event": {
+        "type": "source.next",
+        "value": "discarded"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": false,
+        "lastValue": null,
+        "notifier": "open",
+        "tick": 0,
+        "due": 0
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": true,
+        "lastValue": "discarded",
+        "notifier": "open",
+        "tick": 0,
+        "due": 0
+      },
+      "actions": []
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "sample-source-first-notifier",
+      "executionId": "sample-session18-example",
+      "ruleId": "S18-SAMPLE-NOTIFIER-COMPLETE",
+      "event": {
+        "type": "notifier.complete"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": true,
+        "lastValue": "discarded",
+        "notifier": "open",
+        "tick": 0,
+        "due": 0
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": true,
+        "lastValue": "discarded",
+        "notifier": "completed",
+        "tick": 0,
+        "due": 0
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "notifier",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 7,
+      "modelId": "sample-source-first-notifier",
+      "executionId": "sample-session18-example",
+      "ruleId": "S18-SAMPLE-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": true,
+        "lastValue": "discarded",
+        "notifier": "completed",
+        "tick": 0,
+        "due": 0
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

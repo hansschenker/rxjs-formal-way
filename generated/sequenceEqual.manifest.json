@@ -1,0 +1,439 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "rxjsVersion": "7.8.2",
+    "id": "sequenceEqual-strict-FIFO-32",
+    "operator": "sequenceEqual",
+    "purpose": "Compare two Observable value sequences in arrival-independent FIFO order with strict default equality.",
+    "cardinality": {
+      "signature": "sequenceEqual(compareTo, ===) : Cω(Comparison) → T* → Bool?",
+      "conditions": [
+        "Exactly one boolean next followed by complete when unequal pair or unequal length is proven, or both complete equally.",
+        "Both completed and both unmatched FIFO buffers empty implies true, including two empty sources.",
+        "A nonterminating source can prevent any output. Errors forward without a boolean."
+      ]
+    },
+    "scope": {
+      "parameters": "Two nonreentrant Observable sources and default strict === comparator, unmatched FIFO length up to 32.",
+      "callbacks": "Default comparator === computed purely. Custom user comparators and their throws require a separate callback-invocation model.",
+      "time": "No new time source: arrival order determines FIFO alignment, equal-time notifications use caller order.",
+      "reentrancy": "Source-first atomic setup and post-subscription external notifications only.",
+      "exclusions": [
+        "Custom comparator callbacks, errors thrown by comparators, and arbitrary ObservableInput conversion.",
+        "Buffer overflow beyond the declared maximum, synchronous subscription-time source notifications and reentrant observers.",
+        "Infinite traces do not establish liveness; nonterminating or silent sources may leave comparison unresolved."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Subscribe to source, then compareTo, with independent FIFO buffers."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "None; every downstream subscription performs its own independent comparison.",
+      "reset": "New comparison begins with empty queues and false completion flags.",
+      "resources": [
+        {
+          "id": "left",
+          "kind": "subscription",
+          "owner": "source Observable"
+        },
+        {
+          "id": "right",
+          "kind": "subscription",
+          "owner": "compareTo Observable"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "On every next, compare against oldest opposite buffered value or enqueue locally; notification and teardown are ordered.",
+      "cancellationCheckpoints": [
+        "After each pair comparison and on either source terminal event."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start comparison"
+      },
+      {
+        "type": "left.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "source value"
+      },
+      {
+        "type": "right.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "compareTo value"
+      },
+      {
+        "type": "left.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "source completed"
+      },
+      {
+        "type": "right.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "compareTo completed"
+      },
+      {
+        "type": "left.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "source error"
+      },
+      {
+        "type": "right.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "compareTo error"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "consumer cancels"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "no subscriptions",
+        "terminal": false
+      },
+      {
+        "id": "Comparing",
+        "description": "two FIFO buffers, independent completion bits",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "one equality result, error or cancellation",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/sequenceEqual.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned FIFO comparison, completion and source subscription behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned FIFO comparison, completion and source subscription behavior"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/innerFrom.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned FIFO comparison, completion and source subscription behavior"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session18-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session18-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-18.md"
+    }
+  },
+  "parameters": {
+    "comparator": "strict ===",
+    "maxPending": 32
+  },
+  "rules": [
+    {
+      "id": "S18-SEQUENCEEQUAL-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Comparing",
+      "guard": "first downstream subscription",
+      "actions": [
+        "subscribe source first",
+        "subscribe compareTo second"
+      ],
+      "explanation": "Both streams are subscribed for one independent comparison; each has a FIFO queue and completion bit.",
+      "nextState": "Comparing with empty queues and two live source subscriptions.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-START"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-LEFT-QUEUE",
+      "from": "Comparing",
+      "event": "left.next",
+      "to": "Comparing",
+      "guard": "current side live, opposite FIFO empty and incomplete; buffer below cap",
+      "actions": [
+        "append exact payload to unmatched FIFO"
+      ],
+      "explanation": "No output until an opposite value arrives, or comparison becomes decided. Values remain opaque.",
+      "nextState": "Append one unmatched payload to current side FIFO.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-LEFT-QUEUE"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-LEFT-EXTRA",
+      "from": "Comparing",
+      "event": "left.next",
+      "to": "Closed",
+      "guard": "opposite stream already completed and has no unmatched value",
+      "actions": [
+        "emit false, complete and release remaining subscriptions"
+      ],
+      "explanation": "A new value after an exhausted, completed opposite stream proves unequal lengths.",
+      "nextState": "Closed unequal immediately.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-LEFT-EXTRA"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-LEFT-MATCH",
+      "from": "Comparing",
+      "event": "left.next",
+      "to": "Comparing",
+      "guard": "opposite FIFO nonempty and strict equality holds against its oldest value",
+      "actions": [
+        "discard one oldest opposite FIFO entry; no output"
+      ],
+      "explanation": "Default comparator is strict JavaScript ===, including NaN mismatch and object identity.",
+      "nextState": "Opposite FIFO shrinks by one while both completion flags remain unchanged.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-LEFT-MATCH"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-LEFT-DIFFER",
+      "from": "Comparing",
+      "event": "left.next",
+      "to": "Closed",
+      "guard": "opposite FIFO nonempty and strict equality fails",
+      "actions": [
+        "emit false then complete; release all live sources"
+      ],
+      "explanation": "One unequal aligned pair is sufficient: no need to wait for either source to finish.",
+      "nextState": "Closed unequal immediately.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-LEFT-DIFFER"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-LEFT-FIRST-COMPLETE",
+      "from": "Comparing",
+      "event": "left.complete",
+      "to": "Comparing",
+      "guard": "current side is live and the other side is not yet completed",
+      "actions": [
+        "release completed source subscription; retain unmatched FIFO"
+      ],
+      "explanation": "Completion alone is insufficient while the opposite source might still produce matching values.",
+      "nextState": "Mark side completed and await the other stream.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-LEFT-FIRST-COMPLETE"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-LEFT-FINAL-EQUAL",
+      "from": "Comparing",
+      "event": "left.complete",
+      "to": "Closed",
+      "guard": "opposite stream already completed; unmatched buffers both empty",
+      "actions": [
+        "emit true and complete",
+        "release final subscription"
+      ],
+      "explanation": "Only both completed streams with no unmatched FIFO values are equal.",
+      "nextState": "Closed equal.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-LEFT-FINAL-EQUAL"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-LEFT-FINAL-UNEVEN",
+      "from": "Comparing",
+      "event": "left.complete",
+      "to": "Closed",
+      "guard": "opposite stream already completed; unmatched buffers not empty",
+      "actions": [
+        "emit false and complete",
+        "release final subscription"
+      ],
+      "explanation": "Only both completed streams with no unmatched FIFO values are equal.",
+      "nextState": "Closed unequal.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-LEFT-FINAL-UNEVEN"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-LEFT-ERROR",
+      "from": "Comparing",
+      "event": "left.error",
+      "to": "Closed",
+      "guard": "current side is live",
+      "actions": [
+        "forward exact error identity",
+        "release all live subscriptions"
+      ],
+      "explanation": "An error is a terminal failure, never converted to a false equality result.",
+      "nextState": "Closed error.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-LEFT-ERROR"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-RIGHT-QUEUE",
+      "from": "Comparing",
+      "event": "right.next",
+      "to": "Comparing",
+      "guard": "current side live, opposite FIFO empty and incomplete; buffer below cap",
+      "actions": [
+        "append exact payload to unmatched FIFO"
+      ],
+      "explanation": "No output until an opposite value arrives, or comparison becomes decided. Values remain opaque.",
+      "nextState": "Append one unmatched payload to current side FIFO.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-RIGHT-QUEUE"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-RIGHT-EXTRA",
+      "from": "Comparing",
+      "event": "right.next",
+      "to": "Closed",
+      "guard": "opposite stream already completed and has no unmatched value",
+      "actions": [
+        "emit false, complete and release remaining subscriptions"
+      ],
+      "explanation": "A new value after an exhausted, completed opposite stream proves unequal lengths.",
+      "nextState": "Closed unequal immediately.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-RIGHT-EXTRA"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-RIGHT-MATCH",
+      "from": "Comparing",
+      "event": "right.next",
+      "to": "Comparing",
+      "guard": "opposite FIFO nonempty and strict equality holds against its oldest value",
+      "actions": [
+        "discard one oldest opposite FIFO entry; no output"
+      ],
+      "explanation": "Default comparator is strict JavaScript ===, including NaN mismatch and object identity.",
+      "nextState": "Opposite FIFO shrinks by one while both completion flags remain unchanged.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-RIGHT-MATCH"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-RIGHT-DIFFER",
+      "from": "Comparing",
+      "event": "right.next",
+      "to": "Closed",
+      "guard": "opposite FIFO nonempty and strict equality fails",
+      "actions": [
+        "emit false then complete; release all live sources"
+      ],
+      "explanation": "One unequal aligned pair is sufficient: no need to wait for either source to finish.",
+      "nextState": "Closed unequal immediately.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-RIGHT-DIFFER"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-RIGHT-FIRST-COMPLETE",
+      "from": "Comparing",
+      "event": "right.complete",
+      "to": "Comparing",
+      "guard": "current side is live and the other side is not yet completed",
+      "actions": [
+        "release completed source subscription; retain unmatched FIFO"
+      ],
+      "explanation": "Completion alone is insufficient while the opposite source might still produce matching values.",
+      "nextState": "Mark side completed and await the other stream.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-RIGHT-FIRST-COMPLETE"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-RIGHT-FINAL-EQUAL",
+      "from": "Comparing",
+      "event": "right.complete",
+      "to": "Closed",
+      "guard": "opposite stream already completed; unmatched buffers both empty",
+      "actions": [
+        "emit true and complete",
+        "release final subscription"
+      ],
+      "explanation": "Only both completed streams with no unmatched FIFO values are equal.",
+      "nextState": "Closed equal.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-RIGHT-FINAL-EQUAL"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-RIGHT-FINAL-UNEVEN",
+      "from": "Comparing",
+      "event": "right.complete",
+      "to": "Closed",
+      "guard": "opposite stream already completed; unmatched buffers not empty",
+      "actions": [
+        "emit false and complete",
+        "release final subscription"
+      ],
+      "explanation": "Only both completed streams with no unmatched FIFO values are equal.",
+      "nextState": "Closed unequal.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-RIGHT-FINAL-UNEVEN"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-RIGHT-ERROR",
+      "from": "Comparing",
+      "event": "right.error",
+      "to": "Closed",
+      "guard": "current side is live",
+      "actions": [
+        "forward exact error identity",
+        "release all live subscriptions"
+      ],
+      "explanation": "An error is a terminal failure, never converted to a false equality result.",
+      "nextState": "Closed error.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-RIGHT-ERROR"
+      ]
+    },
+    {
+      "id": "S18-SEQUENCEEQUAL-CANCEL",
+      "from": "Comparing",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer cancels",
+      "actions": [
+        "release each still-live source without a boolean or completion"
+      ],
+      "explanation": "Cancellation is not inequality. Pending buffers are discarded without output.",
+      "nextState": "Closed cancel.",
+      "obligations": [
+        "S18-SEQUENCEEQUAL-CANCEL"
+      ]
+    }
+  ]
+}

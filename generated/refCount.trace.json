@@ -1,0 +1,458 @@
+{
+  "status": "finished-input",
+  "consumed": 9,
+  "state": {
+    "phase": "Completed",
+    "nextConnection": 2,
+    "used": [
+      "A",
+      "B",
+      "C"
+    ]
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "refCount-publish-Subject-legacy",
+      "executionId": "refCount-session18-example",
+      "ruleId": "S18-REFCOUNT-CONNECT",
+      "event": {
+        "type": "subscriber.subscribe",
+        "subscriber": "A"
+      },
+      "before": {
+        "phase": "Disconnected",
+        "nextConnection": 0,
+        "used": []
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "A"
+        ],
+        "used": [
+          "A"
+        ],
+        "nextConnection": 1
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "refCount-publish-Subject-legacy",
+      "executionId": "refCount-session18-example",
+      "ruleId": "S18-REFCOUNT-JOIN",
+      "event": {
+        "type": "subscriber.subscribe",
+        "subscriber": "B"
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "A"
+        ],
+        "used": [
+          "A"
+        ],
+        "nextConnection": 1
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "A",
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "refCount-publish-Subject-legacy",
+      "executionId": "refCount-session18-example",
+      "ruleId": "S18-REFCOUNT-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": "shared"
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "A",
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "A",
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "A",
+          "notification": {
+            "kind": "N",
+            "value": "shared"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "B",
+          "notification": {
+            "kind": "N",
+            "value": "shared"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "refCount-publish-Subject-legacy",
+      "executionId": "refCount-session18-example",
+      "ruleId": "S18-REFCOUNT-LEAVE",
+      "event": {
+        "type": "subscriber.unsubscribe",
+        "subscriber": "A"
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "A",
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "refCount-publish-Subject-legacy",
+      "executionId": "refCount-session18-example",
+      "ruleId": "S18-REFCOUNT-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 0
+        },
+        "value": "B-only"
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "B",
+          "notification": {
+            "kind": "N",
+            "value": "B-only"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "refCount-publish-Subject-legacy",
+      "executionId": "refCount-session18-example",
+      "ruleId": "S18-REFCOUNT-LAST-RESET",
+      "event": {
+        "type": "subscriber.unsubscribe",
+        "subscriber": "B"
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 0
+        },
+        "subscribers": [
+          "B"
+        ],
+        "used": [
+          "A",
+          "B"
+        ],
+        "nextConnection": 1
+      },
+      "after": {
+        "phase": "Disconnected",
+        "nextConnection": 1,
+        "used": [
+          "A",
+          "B"
+        ]
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "refCount-publish-Subject-legacy",
+      "executionId": "refCount-session18-example",
+      "ruleId": "S18-REFCOUNT-CONNECT",
+      "event": {
+        "type": "subscriber.subscribe",
+        "subscriber": "C"
+      },
+      "before": {
+        "phase": "Disconnected",
+        "nextConnection": 1,
+        "used": [
+          "A",
+          "B"
+        ]
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 1
+        },
+        "subscribers": [
+          "C"
+        ],
+        "used": [
+          "A",
+          "B",
+          "C"
+        ],
+        "nextConnection": 2
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 7,
+      "modelId": "refCount-publish-Subject-legacy",
+      "executionId": "refCount-session18-example",
+      "ruleId": "S18-REFCOUNT-NEXT",
+      "event": {
+        "type": "source.next",
+        "resource": {
+          "id": "source",
+          "generation": 1
+        },
+        "value": "new connection"
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 1
+        },
+        "subscribers": [
+          "C"
+        ],
+        "used": [
+          "A",
+          "B",
+          "C"
+        ],
+        "nextConnection": 2
+      },
+      "after": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 1
+        },
+        "subscribers": [
+          "C"
+        ],
+        "used": [
+          "A",
+          "B",
+          "C"
+        ],
+        "nextConnection": 2
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "C",
+          "notification": {
+            "kind": "N",
+            "value": "new connection"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 8,
+      "modelId": "refCount-publish-Subject-legacy",
+      "executionId": "refCount-session18-example",
+      "ruleId": "S18-REFCOUNT-COMPLETE-RETAIN",
+      "event": {
+        "type": "source.complete",
+        "resource": {
+          "id": "source",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Connected",
+        "connection": {
+          "id": "source",
+          "generation": 1
+        },
+        "subscribers": [
+          "C"
+        ],
+        "used": [
+          "A",
+          "B",
+          "C"
+        ],
+        "nextConnection": 2
+      },
+      "after": {
+        "phase": "Completed",
+        "nextConnection": 2,
+        "used": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "C",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 1
+          }
+        }
+      ]
+    }
+  ]
+}

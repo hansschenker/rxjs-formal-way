@@ -1,0 +1,261 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "sampleTime-source-first-3",
+    "operator": "sampleTime",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Sample a remembered source value at fixed virtual scheduler ticks.",
+    "cardinality": {
+      "signature": "sampleTime(period,scheduler) : Cω(Time) → T* → T*",
+      "conditions": [
+        "Each output corresponds to one distinct source value observed since the preceding sampling event.",
+        "A sampling event without a pending value emits nothing. Intermediate overwritten values are dropped.",
+        "Source completes/errors immediately; pending values do not flush on source termination."
+      ]
+    },
+    "scope": {
+      "parameters": "Positive safe-integer period 1..1000 with a virtual FIFO scheduler and non-overlapping ticks.",
+      "callbacks": "No user predicate or projection; notifier payloads are ignored.",
+      "time": "Ticks at period, 2×period, ... beginning at the subscription instant, using a supplied virtual scheduler.",
+      "reentrancy": "Atomic post-setup notifications, no simultaneous/torn-down scheduler action execution.",
+      "exclusions": [
+        "Synchronous notifier activity while initial source/notifier subscriptions are being constructed.",
+        "Non-Observable notifier inputs, source/observer reentrancy, throwing teardown and scheduler errors.",
+        "Negative, zero, fractional or unbounded periods and custom scheduler implementations."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Connect source first and schedule the first periodic virtual tick."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "None; one independent memory and clock/notifier per result subscription.",
+      "reset": "New subscription starts with hasValue=false and a new notifier or timer.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result"
+        },
+        {
+          "id": "periodic",
+          "kind": "timer",
+          "owner": "result tick generation"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "scheduled",
+      "actionSemantics": "Value presence and clock generation are committed before downstream delivery. Tick resources are scheduler-owned.",
+      "cancellationCheckpoints": [
+        "Before each notifier/timer notification and on consumer cancellation."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "start the result"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "record latest value"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "complete result immediately"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "fail result immediately"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "cancel result"
+      },
+      {
+        "type": "timer.fire",
+        "origin": "timer",
+        "category": "time",
+        "description": "virtual scheduled sampling tick"
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify",
+      "schedule",
+      "cancel-timer"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "cold description; no subscriptions or timers",
+        "terminal": false
+      },
+      {
+        "id": "Listening",
+        "description": "live source and newest unsampled value, if any",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "complete/error/cancel; no further events admitted",
+        "terminal": true
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/sampleTime.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 sampling policy, scheduler and ownership"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/interval.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 sampling policy, scheduler and ownership"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Pinned RxJS 7.8.2 sampling policy, scheduler and ownership"
+      }
+    ],
+    "evidence": {
+      "modelTests": [
+        "tests/session18-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session18-rxjs.test.mjs"
+      ],
+      "status": "source-inspected",
+      "record": "evidence/SESSION-18.md"
+    }
+  },
+  "parameters": {
+    "mode": "sampleTime",
+    "period": 3
+  },
+  "rules": [
+    {
+      "id": "S18-SAMPLETIME-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Listening",
+      "guard": "first result subscription",
+      "actions": [
+        "subscribe source",
+        "schedule first virtual tick"
+      ],
+      "explanation": "Sampling does nothing until a consumer subscribes. Subscription to the source precedes clock/notifier setup.",
+      "nextState": "Listening with no remembered value and one sampling mechanism.",
+      "obligations": [
+        "S18-SAMPLETIME-START"
+      ]
+    },
+    {
+      "id": "S18-SAMPLETIME-REMEMBER",
+      "from": "Listening",
+      "event": "source.next",
+      "to": "Listening",
+      "guard": "live source emission (any payload)",
+      "actions": [
+        "replace remembered value with exact payload; no downstream notification"
+      ],
+      "explanation": "A new source value overwrites the previous value. No callbacks, timing or output occur on source.next.",
+      "nextState": "hasValue=true; lastValue replaced.",
+      "obligations": [
+        "S18-SAMPLETIME-REMEMBER"
+      ]
+    },
+    {
+      "id": "S18-SAMPLETIME-TICK-EMIT",
+      "from": "Listening",
+      "event": "timer.fire",
+      "to": "Listening",
+      "guard": "current scheduled tick reaches due time; hasValue=true",
+      "actions": [
+        "emit latest unsampled value",
+        "schedule following tick"
+      ],
+      "explanation": "sampleTime delegates to sample(interval(period,scheduler)); each tick samples at most one latest payload.",
+      "nextState": "No pending value and next periodic tick advances.",
+      "obligations": [
+        "S18-SAMPLETIME-TICK-EMIT"
+      ]
+    },
+    {
+      "id": "S18-SAMPLETIME-TICK-EMPTY",
+      "from": "Listening",
+      "event": "timer.fire",
+      "to": "Listening",
+      "guard": "current scheduled tick reaches due time; hasValue=false",
+      "actions": [
+        "schedule following tick without output"
+      ],
+      "explanation": "sampleTime delegates to sample(interval(period,scheduler)); each tick samples at most one latest payload.",
+      "nextState": "No pending value and next periodic tick advances.",
+      "obligations": [
+        "S18-SAMPLETIME-TICK-EMPTY"
+      ]
+    },
+    {
+      "id": "S18-SAMPLETIME-COMPLETE",
+      "from": "Listening",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes",
+      "actions": [
+        "complete immediately, without flushing pending value",
+        "release source and sampling mechanism"
+      ],
+      "explanation": "Source completion is not a sampling tick. Unobserved last values are discarded.",
+      "nextState": "Closed complete.",
+      "obligations": [
+        "S18-SAMPLETIME-COMPLETE"
+      ]
+    },
+    {
+      "id": "S18-SAMPLETIME-ERROR",
+      "from": "Listening",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source fails",
+      "actions": [
+        "forward exact error immediately",
+        "release source and sampling mechanism"
+      ],
+      "explanation": "Source errors terminate without flushing the pending value.",
+      "nextState": "Closed error.",
+      "obligations": [
+        "S18-SAMPLETIME-ERROR"
+      ]
+    },
+    {
+      "id": "S18-SAMPLETIME-CANCEL",
+      "from": "Listening",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer cancels",
+      "actions": [
+        "release subscriptions or timer; never notify"
+      ],
+      "explanation": "Cancellation ends source and sampling ownership silently.",
+      "nextState": "Closed cancel.",
+      "obligations": [
+        "S18-SAMPLETIME-CANCEL"
+      ]
+    }
+  ]
+}
