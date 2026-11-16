@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-16",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-16T08:31:13+01:00",
+  "startingCommit": "486a8086e43679974b9719c306d11870086329d4",
+  "selectedNames": [
+    "single",
+    "skipLast",
+    "subscribeOn",
+    "switchMapTo",
+    "switchScan"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "single",
+    "skipLast",
+    "subscribeOn",
+    "switchMapTo",
+    "switchScan"
+  ],
+  "checks": {
+    "syntax": "not run",
+    "types": "not run",
+    "model": "not run",
+    "runtime": "not run",
+    "generated": "not run",
+    "ci": "not run"
+  },
+  "blockers": [],
+  "notes": [
+    "Selected from live 90/113 accepted tracker, including carryover-first rule; no prior Zurich session log for this date."
+  ],
+  "nextQueue": [
+    "takeLast",
+    "tap",
+    "throttle",
+    "throttleTime",
+    "throwIfEmpty"
+  ]
+}
