@@ -1,0 +1,257 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "subscribeOn-virtualFIFO-delay-2",
+    "operator": "subscribeOn",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Defer subscription to the producer using a scheduled action; preserve source notification ordering and cancellation.",
+    "cardinality": {
+      "signature": "subscribeOn(scheduler,delay) : Cω(Scheduler,Duration) × T* → T*",
+      "conditions": [
+        "One scheduled subscription action precedes any source acquisition.",
+        "Cancelling before the scheduler fires prevents producer subscription entirely.",
+        "Once connected, next/error/complete are not separately scheduled."
+      ]
+    },
+    "scope": {
+      "parameters": "One FIFO virtual scheduler with a safe integer 0..8 delay, including deferred delay=0.",
+      "callbacks": "The scheduler executes a source-subscription thunk; no user projection callback.",
+      "time": "Scheduler determines connection time. Source itself determines notification times after connection.",
+      "reentrancy": "Deferred scheduler action (TestScheduler-like) and non-reentrant subsequent source delivery.",
+      "exclusions": [
+        "queueScheduler synchronous zero-delay execution, arbitrary scheduler implementations/throws.",
+        "Actual wall-clock drift, source delivery during the atomic scheduling reaction, reentrant observers."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Schedule source acquisition; subscribe to source only on the selected scheduler action."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No sharing; each downstream subscription independently schedules its own source acquisition.",
+      "reset": "One new scheduler action per subscription, with its cancellation ownership.",
+      "resources": [
+        {
+          "id": "subscription-action",
+          "kind": "timer",
+          "owner": "one pending downstream subscription"
+        },
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "downstream after timer fired"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "scheduled",
+      "actionSemantics": "schedule on subscribe; subscribe producer only on timer.fire; cancellation cancels timer or source based on state.",
+      "cancellationCheckpoints": [
+        "Between reactions, on source termination and on downstream cancellation."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "fresh subscription"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "value from producer"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "producer completed"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "producer failed"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "consumer cancellation"
+      },
+      {
+        "type": "timer.fire",
+        "origin": "timer",
+        "category": "time",
+        "description": "scheduled source acquisition fires"
+      }
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "lazy execution not connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source is live with subscription-local state",
+        "terminal": false
+      },
+      {
+        "id": "Pending",
+        "description": "scheduler owns one queued source subscription action",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal or cancelled; no further source notifications legal",
+        "terminal": true
+      }
+    ],
+    "actionTypes": [
+      "schedule",
+      "cancel-timer",
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/subscribeOn.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Exact RxJS 7.8.2 operator and subscription semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/util/lift.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Exact RxJS 7.8.2 operator and subscription semantics"
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "record": "evidence/SESSION-19.md",
+      "modelTests": [
+        "tests/session19-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session19-rxjs.test.mjs"
+      ]
+    }
+  },
+  "parameters": {
+    "delay": 2,
+    "scheduler": "virtual FIFO deferred"
+  },
+  "rules": [
+    {
+      "id": "S19-SUBSCRIBEON-SCHEDULE",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Pending",
+      "guard": "downstream starts",
+      "actions": [
+        "schedule subscription action with delay",
+        "do not acquire source yet"
+      ],
+      "nextState": "Retain precisely the state memory and resource ownership described by this rule.",
+      "obligations": [
+        "S19-SUBSCRIBEON-SCHEDULE"
+      ],
+      "explanation": "subscribeOn defers producer connection, not each source notification."
+    },
+    {
+      "id": "S19-SUBSCRIBEON-CONNECT",
+      "from": "Pending",
+      "event": "timer.fire",
+      "to": "Active",
+      "guard": "matching scheduler action at/after due time",
+      "actions": [
+        "subscribe source inside scheduled action"
+      ],
+      "nextState": "Retain precisely the state memory and resource ownership described by this rule.",
+      "obligations": [
+        "S19-SUBSCRIBEON-CONNECT"
+      ],
+      "explanation": "Scheduler executes acquisition once; the connected source can emit synchronously."
+    },
+    {
+      "id": "S19-SUBSCRIBEON-PENDING-CANCEL",
+      "from": "Pending",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "unsubscribe before scheduled action runs",
+      "actions": [
+        "cancel scheduler action; never subscribe source"
+      ],
+      "nextState": "Final terminal reason; state is no longer admissible for input.",
+      "obligations": [
+        "S19-SUBSCRIBEON-PENDING-CANCEL"
+      ],
+      "explanation": "Early unsubscribe is sufficient to stop pending subscription without ever touching producer."
+    },
+    {
+      "id": "S19-SUBSCRIBEON-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "scheduled source subscription is now live",
+      "actions": [
+        "forward source value immediately"
+      ],
+      "nextState": "Retain precisely the state memory and resource ownership described by this rule.",
+      "obligations": [
+        "S19-SUBSCRIBEON-NEXT"
+      ],
+      "explanation": "subscribeOn changes connection timing, not downstream next delivery timing."
+    },
+    {
+      "id": "S19-SUBSCRIBEON-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "live source completes",
+      "actions": [
+        "complete and release source"
+      ],
+      "nextState": "Final terminal reason; state is no longer admissible for input.",
+      "obligations": [
+        "S19-SUBSCRIBEON-COMPLETE"
+      ],
+      "explanation": "Source completion is not scheduled a second time."
+    },
+    {
+      "id": "S19-SUBSCRIBEON-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "live source fails",
+      "actions": [
+        "propagate original error and release source"
+      ],
+      "nextState": "Final terminal reason; state is no longer admissible for input.",
+      "obligations": [
+        "S19-SUBSCRIBEON-ERROR"
+      ],
+      "explanation": "Errors are not deferred beyond source delivery."
+    },
+    {
+      "id": "S19-SUBSCRIBEON-ACTIVE-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer unsubscribes after source acquisition",
+      "actions": [
+        "unsubscribe source silently"
+      ],
+      "nextState": "Final terminal reason; state is no longer admissible for input.",
+      "obligations": [
+        "S19-SUBSCRIBEON-ACTIVE-CANCEL"
+      ],
+      "explanation": "No delayed subscription is retained after cancellation."
+    }
+  ]
+}

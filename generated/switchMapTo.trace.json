@@ -1,0 +1,422 @@
+{
+  "status": "finished-input",
+  "consumed": 9,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "switchMapTo-constant",
+      "executionId": "switchMapTo-session19-example",
+      "ruleId": "SWITCHMAPTO-INIT",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "index": 0,
+        "active": [],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "switchMapTo-constant",
+      "executionId": "switchMapTo-session19-example",
+      "ruleId": "SWITCHMAPTO-ADMIT",
+      "event": {
+        "type": "outer.next",
+        "value": 1
+      },
+      "before": {
+        "phase": "Active",
+        "index": 0,
+        "active": [],
+        "queue": []
+      },
+      "after": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 1,
+        "active": [],
+        "queue": [],
+        "callId": 0,
+        "input": 1
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "constant",
+            "generation": 0
+          },
+          "value": 1,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "switchMapTo-constant",
+      "executionId": "switchMapTo-session19-example",
+      "ruleId": "SWITCHMAPTO-RETURN-ACTIVE",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "constant",
+          "generation": 0
+        },
+        "value": "shared"
+      },
+      "before": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 1,
+        "active": [],
+        "queue": [],
+        "callId": 0,
+        "input": 1
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "switchMapTo-constant",
+      "executionId": "switchMapTo-session19-example",
+      "ruleId": "SWITCHMAPTO-NEXT-ACTIVE",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 0
+        },
+        "value": "old"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "old"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 3,
+      "modelId": "switchMapTo-constant",
+      "executionId": "switchMapTo-session19-example",
+      "ruleId": "SWITCHMAPTO-REPLACE",
+      "event": {
+        "type": "outer.next",
+        "value": 2
+      },
+      "before": {
+        "phase": "Active",
+        "index": 1,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 0
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 2,
+        "active": [],
+        "queue": [],
+        "callId": 1,
+        "input": 2
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        },
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "constant",
+            "generation": 1
+          },
+          "value": 2,
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "switchMapTo-constant",
+      "executionId": "switchMapTo-session19-example",
+      "ruleId": "SWITCHMAPTO-RETURN-ACTIVE",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "constant",
+          "generation": 1
+        },
+        "value": "shared"
+      },
+      "before": {
+        "phase": "Calling",
+        "resume": "Active",
+        "index": 2,
+        "active": [],
+        "queue": [],
+        "callId": 1,
+        "input": 2
+      },
+      "after": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 4,
+      "modelId": "switchMapTo-constant",
+      "executionId": "switchMapTo-session19-example",
+      "ruleId": "SWITCHMAPTO-OUTER-WAIT",
+      "event": {
+        "type": "outer.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 5,
+      "modelId": "switchMapTo-constant",
+      "executionId": "switchMapTo-session19-example",
+      "ruleId": "SWITCHMAPTO-NEXT-DRAINING",
+      "event": {
+        "type": "inner.next",
+        "resource": {
+          "id": "inner",
+          "generation": 1
+        },
+        "value": "new"
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "new"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 6,
+      "modelId": "switchMapTo-constant",
+      "executionId": "switchMapTo-session19-example",
+      "ruleId": "SWITCHMAPTO-LAST-INNER",
+      "event": {
+        "type": "inner.complete",
+        "resource": {
+          "id": "inner",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Draining",
+        "index": 2,
+        "active": [
+          {
+            "resource": {
+              "id": "inner",
+              "generation": 1
+            },
+            "source": "shared"
+          }
+        ],
+        "queue": []
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        }
+      ]
+    }
+  ]
+}

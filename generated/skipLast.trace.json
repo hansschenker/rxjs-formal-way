@@ -1,0 +1,163 @@
+{
+  "status": "finished-input",
+  "consumed": 5,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "skipLast-FIFO-2",
+      "executionId": "skipLast-session19-example",
+      "ruleId": "S19-SKIPLAST-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "pending": [],
+        "seen": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "skipLast-FIFO-2",
+      "executionId": "skipLast-session19-example",
+      "ruleId": "S19-SKIPLAST-BUFFER",
+      "event": {
+        "type": "source.next",
+        "value": "a"
+      },
+      "before": {
+        "phase": "Active",
+        "pending": [],
+        "seen": 0
+      },
+      "after": {
+        "phase": "Active",
+        "pending": [
+          "a"
+        ],
+        "seen": 1
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "skipLast-FIFO-2",
+      "executionId": "skipLast-session19-example",
+      "ruleId": "S19-SKIPLAST-BUFFER",
+      "event": {
+        "type": "source.next",
+        "value": "b"
+      },
+      "before": {
+        "phase": "Active",
+        "pending": [
+          "a"
+        ],
+        "seen": 1
+      },
+      "after": {
+        "phase": "Active",
+        "pending": [
+          "a",
+          "b"
+        ],
+        "seen": 2
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "skipLast-FIFO-2",
+      "executionId": "skipLast-session19-example",
+      "ruleId": "S19-SKIPLAST-RELEASE-OLDEST",
+      "event": {
+        "type": "source.next",
+        "value": "c"
+      },
+      "before": {
+        "phase": "Active",
+        "pending": [
+          "a",
+          "b"
+        ],
+        "seen": 2
+      },
+      "after": {
+        "phase": "Active",
+        "pending": [
+          "b",
+          "c"
+        ],
+        "seen": 3
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "a"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "skipLast-FIFO-2",
+      "executionId": "skipLast-session19-example",
+      "ruleId": "S19-SKIPLAST-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "pending": [
+          "b",
+          "c"
+        ],
+        "seen": 3
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

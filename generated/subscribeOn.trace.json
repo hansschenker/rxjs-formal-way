@@ -1,0 +1,128 @@
+{
+  "status": "finished-input",
+  "consumed": 4,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "subscribeOn-virtualFIFO-delay-2",
+      "executionId": "subscribeOn-session19-example",
+      "ruleId": "S19-SUBSCRIBEON-SCHEDULE",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Pending",
+        "deadline": 2
+      },
+      "actions": [
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "subscription-action",
+            "generation": 0
+          },
+          "delay": 2
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 2,
+      "modelId": "subscribeOn-virtualFIFO-delay-2",
+      "executionId": "subscribeOn-session19-example",
+      "ruleId": "S19-SUBSCRIBEON-CONNECT",
+      "event": {
+        "type": "timer.fire",
+        "resource": {
+          "id": "subscription-action",
+          "generation": 0
+        },
+        "now": 2
+      },
+      "before": {
+        "phase": "Pending",
+        "deadline": 2
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "subscribeOn-virtualFIFO-delay-2",
+      "executionId": "subscribeOn-session19-example",
+      "ruleId": "S19-SUBSCRIBEON-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": 4
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 4
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "subscribeOn-virtualFIFO-delay-2",
+      "executionId": "subscribeOn-session19-example",
+      "ruleId": "S19-SUBSCRIBEON-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

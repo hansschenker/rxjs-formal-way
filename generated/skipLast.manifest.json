@@ -1,0 +1,240 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "skipLast-FIFO-2",
+    "operator": "skipLast",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Retain a bounded trailing suffix while immediately forwarding any value forced out by newer arrivals.",
+    "cardinality": {
+      "signature": "skipLast(n) : Cω(Count) × T* → T*",
+      "conditions": [
+        "For a finite successful source of N values output the first max(0,N-n) in order.",
+        "A value is forwarded on arrival of the n-th subsequent source value, without a clock.",
+        "Completion and cancellation never flush the retained suffix."
+      ]
+    },
+    "scope": {
+      "parameters": "Finite nonnegative safe integer count in 0..8; zero represents the identity fast path.",
+      "callbacks": "No selector or user callback; FIFO logic only.",
+      "time": "Emission occurs on the n-th later source next; no timer is created.",
+      "reentrancy": "State replacement precedes notification; nested source emissions are outside this bounded model.",
+      "exclusions": [
+        "Negative, fractional, infinite and huge allocation counts; arbitrary reentrant sources or observers."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Subscribe to the source lazily on downstream subscription."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No Subject or sharing. Each result subscription owns its FIFO and source subscription.",
+      "reset": "New FIFO and seen counter per subscription; release memory on terminal/cancel.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "current output subscription"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "On overflow, swap FIFO head before forwarding it downstream; never emit the trailing suffix.",
+      "cancellationCheckpoints": [
+        "Between reactions, on source termination and on downstream cancellation."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "fresh subscription"
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "value from producer"
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "producer completed"
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "producer failed"
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "consumer cancellation"
+      }
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "description": "lazy execution not connected",
+        "terminal": false
+      },
+      {
+        "id": "Active",
+        "description": "source is live with subscription-local state",
+        "terminal": false
+      },
+      {
+        "id": "Closed",
+        "description": "terminal or cancelled; no further source notifications legal",
+        "terminal": true
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/skipLast.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Exact RxJS 7.8.2 operator and subscription semantics"
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Exact RxJS 7.8.2 operator and subscription semantics"
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "record": "evidence/SESSION-19.md",
+      "modelTests": [
+        "tests/session19-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session19-rxjs.test.mjs"
+      ]
+    }
+  },
+  "parameters": {
+    "count": 2,
+    "policy": "bounded FIFO"
+  },
+  "rules": [
+    {
+      "id": "S19-SKIPLAST-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first subscription",
+      "actions": [
+        "subscribe source with empty FIFO"
+      ],
+      "nextState": "Retain precisely the state memory and resource ownership described by this rule.",
+      "obligations": [
+        "S19-SKIPLAST-START"
+      ],
+      "explanation": "No values are buffered before subscription."
+    },
+    {
+      "id": "S19-SKIPLAST-IDENTITY",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "count is zero",
+      "actions": [
+        "forward value immediately"
+      ],
+      "nextState": "Retain precisely the state memory and resource ownership described by this rule.",
+      "obligations": [
+        "S19-SKIPLAST-IDENTITY"
+      ],
+      "explanation": "skipLast(0) uses identity and does not retain payloads."
+    },
+    {
+      "id": "S19-SKIPLAST-BUFFER",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "nonzero count and FIFO is not full",
+      "actions": [
+        "enqueue source value silently"
+      ],
+      "nextState": "Retain precisely the state memory and resource ownership described by this rule.",
+      "obligations": [
+        "S19-SKIPLAST-BUFFER"
+      ],
+      "explanation": "No value can be emitted before at least count subsequent values arrive."
+    },
+    {
+      "id": "S19-SKIPLAST-RELEASE-OLDEST",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "positive count and FIFO already full",
+      "actions": [
+        "replace oldest buffered value with new source value",
+        "then emit previous oldest"
+      ],
+      "nextState": "Retain precisely the state memory and resource ownership described by this rule.",
+      "obligations": [
+        "S19-SKIPLAST-RELEASE-OLDEST"
+      ],
+      "explanation": "Replacing the ring slot before notifying preserves correct state for synchronous observers."
+    },
+    {
+      "id": "S19-SKIPLAST-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes successfully",
+      "actions": [
+        "drop still-buffered suffix",
+        "complete without flushing"
+      ],
+      "nextState": "Final terminal reason; state is no longer admissible for input.",
+      "obligations": [
+        "S19-SKIPLAST-COMPLETE"
+      ],
+      "explanation": "The last count values are never emitted, even on completion."
+    },
+    {
+      "id": "S19-SKIPLAST-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source fails",
+      "actions": [
+        "drop FIFO and propagate exact error",
+        "release source"
+      ],
+      "nextState": "Final terminal reason; state is no longer admissible for input.",
+      "obligations": [
+        "S19-SKIPLAST-ERROR"
+      ],
+      "explanation": "Buffered prefix and suffix are discarded; no completion is synthesized."
+    },
+    {
+      "id": "S19-SKIPLAST-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer cancels",
+      "actions": [
+        "drop FIFO and unsubscribe silently"
+      ],
+      "nextState": "Final terminal reason; state is no longer admissible for input.",
+      "obligations": [
+        "S19-SKIPLAST-CANCEL"
+      ],
+      "explanation": "Cancellation never flushes buffered values."
+    }
+  ]
+}

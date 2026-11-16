@@ -1,0 +1,212 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "single-indexed-predicate",
+      "executionId": "single-session19-example",
+      "ruleId": "S19-SINGLE-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "seen": false,
+        "hasValue": false,
+        "index": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "single-indexed-predicate",
+      "executionId": "single-session19-example",
+      "ruleId": "S19-SINGLE-PREDICATE",
+      "event": {
+        "type": "source.next",
+        "value": 3
+      },
+      "before": {
+        "phase": "Active",
+        "seen": false,
+        "hasValue": false,
+        "index": 0
+      },
+      "after": {
+        "phase": "Calling",
+        "seen": true,
+        "hasValue": false,
+        "index": 0,
+        "candidate": 3
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate",
+            "generation": 0
+          },
+          "value": 3,
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "single-indexed-predicate",
+      "executionId": "single-session19-example",
+      "ruleId": "S19-SINGLE-REJECT",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "predicate",
+          "generation": 0
+        },
+        "value": false
+      },
+      "before": {
+        "phase": "Calling",
+        "seen": true,
+        "hasValue": false,
+        "index": 0,
+        "candidate": 3
+      },
+      "after": {
+        "phase": "Active",
+        "seen": true,
+        "hasValue": false,
+        "index": 1
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "single-indexed-predicate",
+      "executionId": "single-session19-example",
+      "ruleId": "S19-SINGLE-PREDICATE",
+      "event": {
+        "type": "source.next",
+        "value": 4
+      },
+      "before": {
+        "phase": "Active",
+        "seen": true,
+        "hasValue": false,
+        "index": 1
+      },
+      "after": {
+        "phase": "Calling",
+        "seen": true,
+        "hasValue": false,
+        "index": 1,
+        "candidate": 4
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "predicate",
+            "generation": 1
+          },
+          "value": 4,
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "single-indexed-predicate",
+      "executionId": "single-session19-example",
+      "ruleId": "S19-SINGLE-FIRST-MATCH",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "predicate",
+          "generation": 1
+        },
+        "value": true
+      },
+      "before": {
+        "phase": "Calling",
+        "seen": true,
+        "hasValue": false,
+        "index": 1,
+        "candidate": 4
+      },
+      "after": {
+        "phase": "Active",
+        "seen": true,
+        "hasValue": true,
+        "value": 4,
+        "index": 2
+      },
+      "actions": []
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "single-indexed-predicate",
+      "executionId": "single-session19-example",
+      "ruleId": "S19-SINGLE-FOUND",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "seen": true,
+        "hasValue": true,
+        "value": 4,
+        "index": 2
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": 4
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}
