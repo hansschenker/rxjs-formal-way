@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "single",
-    "skipLast",
-    "subscribeOn",
-    "switchMapTo",
-    "switchScan",
     "takeLast",
     "tap",
     "throttle",
@@ -1221,9 +1216,19 @@
       "verificationRun": 41182614115
     },
     "single": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-16",
+      "profiles": [
+        "direct and indexed-predicate selection",
+        "exactly-one match at successful completion, SequenceError on second match",
+        "EmptyError versus NotFoundError; callback index, error and teardown"
+      ],
+      "evidence": "evidence/SESSION-19.md",
+      "testedCommit": "ef4e64e9dba045fa1c66cfe9622b82a3619b5776",
+      "implementationRun": 43826821532,
+      "verificationRun": 43827248217,
+      "readOnlyHeadCommit": "2a728b0b34c741fba0e956de20d0b6a38b49a0a4",
+      "readOnlyCheckout": "8213563a5a4d12b1e36b8db0d489e3432e5159f0"
     },
     "skip": {
       "status": "accepted",
@@ -1238,9 +1243,19 @@
       "readOnlyHeadCommit": "6ee5b66163e46c0dbeee6679b161c9654cbe7fe8"
     },
     "skipLast": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-16",
+      "profiles": [
+        "bounded trailing FIFO memory, counts 0–8",
+        "emit only values with sufficient subsequent source arrivals",
+        "completion does not flush held suffix; zero is identity"
+      ],
+      "evidence": "evidence/SESSION-19.md",
+      "testedCommit": "ef4e64e9dba045fa1c66cfe9622b82a3619b5776",
+      "implementationRun": 43826821532,
+      "verificationRun": 43827248217,
+      "readOnlyHeadCommit": "2a728b0b34c741fba0e956de20d0b6a38b49a0a4",
+      "readOnlyCheckout": "8213563a5a4d12b1e36b8db0d489e3432e5159f0"
     },
     "skipUntil": {
       "status": "accepted",
@@ -1280,9 +1295,19 @@
       "verificationRun": 41286526038
     },
     "subscribeOn": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-16",
+      "profiles": [
+        "virtual FIFO scheduling with deferred source connection, delays 0–8",
+        "unsubscribe before scheduled action prevents source acquisition",
+        "source notifications are not independently rescheduled"
+      ],
+      "evidence": "evidence/SESSION-19.md",
+      "testedCommit": "ef4e64e9dba045fa1c66cfe9622b82a3619b5776",
+      "implementationRun": 43826821532,
+      "verificationRun": 43827248217,
+      "readOnlyHeadCommit": "2a728b0b34c741fba0e956de20d0b6a38b49a0a4",
+      "readOnlyCheckout": "8213563a5a4d12b1e36b8db0d489e3432e5159f0"
     },
     "switchAll": {
       "status": "accepted",
@@ -1305,14 +1330,34 @@
       "verificationRun": 40853083582
     },
     "switchMapTo": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-16",
+      "profiles": [
+        "repeated subscriptions to the same configured Observable instance",
+        "cancel preceding inner on new outer value; wait for live current inner at completion",
+        "deprecated result selector excluded"
+      ],
+      "evidence": "evidence/SESSION-19.md",
+      "testedCommit": "ef4e64e9dba045fa1c66cfe9622b82a3619b5776",
+      "implementationRun": 43826821532,
+      "verificationRun": 43827248217,
+      "readOnlyHeadCommit": "2a728b0b34c741fba0e956de20d0b6a38b49a0a4",
+      "readOnlyCheckout": "8213563a5a4d12b1e36b8db0d489e3432e5159f0"
     },
     "switchScan": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-16",
+      "profiles": [
+        "switch-to-latest guarded model plus accumulator memory",
+        "accumulator starts from seed and changes only on admitted inner results",
+        "cancelled/stale inner cannot mutate memory; outer completion waits"
+      ],
+      "evidence": "evidence/SESSION-19.md",
+      "testedCommit": "ef4e64e9dba045fa1c66cfe9622b82a3619b5776",
+      "implementationRun": 43826821532,
+      "verificationRun": 43827248217,
+      "readOnlyHeadCommit": "2a728b0b34c741fba0e956de20d0b6a38b49a0a4",
+      "readOnlyCheckout": "8213563a5a4d12b1e36b8db0d489e3432e5159f0"
     },
     "take": {
       "status": "accepted",
