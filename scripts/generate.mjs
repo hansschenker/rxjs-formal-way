@@ -91,6 +91,12 @@ import { createRetryWhenModel, retryWhenExample, createRefCountModel, refCountEx
   createSampleModel, sampleExample, createSampleTimeModel, sampleTimeExample,
   createSequenceEqualModel, sequenceEqualExample } from '../dist/index.js';
 
+import {
+  createSingleModel, singleExample, createSkipLastModel, skipLastExample,
+  createSubscribeOnModel, subscribeOnExample, createSwitchMapToModel, switchMapToExample,
+  createSwitchScanModel, switchScanExample
+} from '../dist/index.js';
+
 const canonicalModelPaths = {
   take:'src/models/take.ts', map:'src/models/map.ts', filter:'src/models/filter.ts', scan:'src/models/scan.ts',
   debounceTime:'src/models/debounceTime.ts', switchMap:'src/models/flatten.ts', mergeMap:'src/models/flatten.ts',
@@ -131,6 +137,9 @@ const canonicalModelPaths = {
   retryWhen:'src/models/session18-retryWhen.ts',refCount:'src/models/session18-refCount.ts',
   sample:'src/models/session18-sampling.ts',sampleTime:'src/models/session18-sampling.ts',
   sequenceEqual:'src/models/session18-sequenceEqual.ts',
+  single:'src/models/session19.ts', skipLast:'src/models/session19.ts',
+  subscribeOn:'src/models/session19.ts', switchMapTo:'src/models/session19.ts',
+  switchScan:'src/models/session19.ts',
 };
 
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
@@ -230,6 +239,11 @@ const examples = [
   ['sample', createSampleModel(), sampleExample, 'sample-session18-example'],
   ['sampleTime', createSampleTimeModel(3), sampleTimeExample, 'sampleTime-session18-example'],
   ['sequenceEqual', createSequenceEqualModel(), sequenceEqualExample, 'sequenceEqual-session18-example'],
+  ['single', createSingleModel(true), singleExample, 'single-session19-example'],
+  ['skipLast', createSkipLastModel(2), skipLastExample, 'skipLast-session19-example'],
+  ['subscribeOn', createSubscribeOnModel(2), subscribeOnExample, 'subscribeOn-session19-example'],
+  ['switchMapTo', createSwitchMapToModel('shared'), switchMapToExample, 'switchMapTo-session19-example'],
+  ['switchScan', createSwitchScanModel(0), switchScanExample, 'switchScan-session19-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
