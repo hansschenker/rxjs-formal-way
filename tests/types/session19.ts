@@ -57,18 +57,14 @@ const constantEvent:SwitchMapToEvent<number,string,string>={
   type:'callback.return',resource:{id:'constant',generation:0},value:'same'
 };
 // @ts-expect-error switchMapTo output from inner is a string
-const badConstantOutput:SwitchMapToEvent<number,string,string>={
-  type:'inner.next',resource:{id:'inner',generation:0},value:123
-};
+const badConstantOutput:SwitchMapToEvent<number,string,string>={type:'inner.next',resource:{id:'inner',generation:0},value:123};
 // @ts-expect-error outer input type is number
 const badConstantOuter:SwitchMapToEvent<number,string,string>={type:'outer.next',value:'bad'};
 const scanEvent:SwitchScanEvent<number,number,string>={
   type:'inner.next',resource:{id:'inner',generation:0},value:5
 };
 // @ts-expect-error accumulator inner result type is number
-const badScanEvent:SwitchScanEvent<number,number,string>={
-  type:'inner.next',resource:{id:'inner',generation:0},value:'wrong'
-};
+const badScanEvent:SwitchScanEvent<number,number,string>={type:'inner.next',resource:{id:'inner',generation:0},value:'wrong'};
 const accumulatorInput:SwitchScanCallback<number,number>={accumulator:0,value:5};
 // @ts-expect-error callback must include accumulator snapshot
 const badAccumulatorInput:SwitchScanCallback<number,number>={value:5};
