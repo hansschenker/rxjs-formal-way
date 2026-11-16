@@ -142,3 +142,12 @@ export { createSamplingModel, createSampleModel, createSampleTimeModel, sampleEx
 export type { SamplingMode, SamplingParameters, SamplingState, SamplingEvent, SamplingModel } from './models/session18-sampling.js';
 export { createSequenceEqualModel, sequenceEqualExample } from './models/session18-sequenceEqual.js';
 export type { SequenceEqualParameters, SequenceEqualState, SequenceEqualEvent, SequenceEqualModel } from './models/session18-sequenceEqual.js';
+
+export { createSingleModel, singleExample, createSkipLastModel, skipLastExample,
+  createSubscribeOnModel, subscribeOnExample, createSwitchMapToModel, switchMapToExample,
+  createSwitchScanModel, switchScanExample } from './models/session19.js';
+export type { SingleParameters, SingleState, SingleEvent, SingleModel,
+  SkipLastParameters, SkipLastState, SkipLastEvent, SkipLastModel,
+  SubscribeOnParameters, SubscribeOnState, SubscribeOnEvent, SubscribeOnModel,
+  SwitchMapToModel, SwitchMapToEvent, SwitchScanParameters, SwitchScanState,
+  SwitchScanEvent, SwitchScanCallback, SwitchScanModel } from './models/session19.js';
