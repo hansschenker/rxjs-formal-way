@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-16",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-16T08:31:13+01:00",
   "startingCommit": "486a8086e43679974b9719c306d11870086329d4",
   "selectedNames": [
@@ -12,26 +12,40 @@
     "switchMapTo",
     "switchScan"
   ],
-  "workedNames": [],
-  "completedNames": [],
-  "carryovers": [
+  "workedNames": [
     "single",
     "skipLast",
     "subscribeOn",
     "switchMapTo",
     "switchScan"
   ],
+  "completedNames": [
+    "single",
+    "skipLast",
+    "subscribeOn",
+    "switchMapTo",
+    "switchScan"
+  ],
+  "carryovers": [],
   "checks": {
-    "syntax": "not run",
-    "types": "not run",
-    "model": "not run",
-    "runtime": "not run",
-    "generated": "not run",
-    "ci": "not run"
+    "syntax": "passed in main push CI 43826821532 and read-only PR #37 CI 43827248217",
+    "types": "strict TypeScript passed in both; 19 new negative TypeScript assertions; no checks relaxed",
+    "model": "guarded canonical models exercised; full named suite 1308 passed, 0 failed in both",
+    "runtime": "independent actual RxJS 7.8.2 tests included; full named suite 1308 passed, 0 failed",
+    "generated": "887 ordinary deterministic projections plus 3 specialized mergeWith projections drift-verified; 45 new files including five eleven-step inspection indexes",
+    "ci": "main push CI 43826821532 job 133162520191 success; independent read-only PR #37 CI 43827248217 job 133163895316 success; generation and publication both skipped in independent verification"
   },
   "blockers": [],
   "notes": [
-    "Selected from live 90/113 accepted tracker, including carryover-first rule; no prior Zurich session log for this date."
+    "Selected from live 90/113 accepted tracker, including carryover-first rule; no prior Zurich session log for this date.",
+    "Version-pinned RxJS 7.8.2 source revision e5351d02e225e275ac0e497c7b66eaa5f0c88791 inspected for all five exports; named guarded Mealy rules and state-dependent time, cancellation and subscription ownership documented.",
+    "One existing reserved session continued to closure: no second session or sixth export was initiated.",
+    "Pre-generation PR runs 43826372515 and 43826692362 failed overall only for missing generated projections; no failed run labeled passed.",
+    "Main push run 43826821532 tested implementation ef4e64e9dba045fa1c66cfe9622b82a3619b5776 and generated 45 artifacts at 7766b83be771ec644ad710659737743cae22e887; full suite 1308 pass / 0 fail.",
+    "Independent read-only PR #37 run 43827248217 job 133163895316 passed all 1308 tests and 887+3 committed projection drift checks, with generation/commit steps skipped; PR head and synthetic merge checkout compare with zero changed files.",
+    "62 new named tests, 19 negative strict TypeScript assertions; no new exhaustive bounded-enumeration comparison count claimed.",
+    "All five accepted within declared bounded, nonreentrant profiles; 95/113 total accepted, 18 pending and no carryovers.",
+    "Finite native tests do not prove unrestricted equivalence; excluded cases remain in evidence/SESSION-19.md."
   ],
   "nextQueue": [
     "takeLast",
@@ -39,5 +53,14 @@
     "throttle",
     "throttleTime",
     "throwIfEmpty"
+  ],
+  "closedAt": "2026-11-16T09:47:32+01:00",
+  "nextSessionNotBefore": "2026-11-17",
+  "commits": [
+    "8ec12e698bf7ac7c37e5d5e4d6d3ed419a45532e",
+    "ef4e64e9dba045fa1c66cfe9622b82a3619b5776",
+    "7766b83be771ec644ad710659737743cae22e887",
+    "2a728b0b34c741fba0e956de20d0b6a38b49a0a4",
+    "807aea1aebe47b9cf957e62785c4270c4871bc51"
   ]
 }
