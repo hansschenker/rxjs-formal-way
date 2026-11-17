@@ -10,7 +10,7 @@ const release = (): Action<unknown> => ({ type: 'unsubscribe', resource: source 
 const emit = (value: unknown): Action<unknown> => ({ type: 'notify', target: 'downstream', notification: { kind: 'N', value } });
 const done: Action<unknown> = { type: 'notify', target: 'downstream', notification: { kind: 'C' } };
 const fail = (reason: unknown): Action<unknown> => ({ type: 'notify', target: 'downstream', notification: { kind: 'E', error: reason } });
-const closed = (reason: 'complete' | 'error' | 'cancel' | 'callback-error') => ({ phase: 'Closed' as const, reason });
+const closed = <R extends 'complete' | 'error' | 'cancel' | 'callback-error'>(reason: R): Readonly<{phase:'Closed';reason:R}> => ({ phase: 'Closed', reason });
 const event = (type: string, origin: InputDescriptor['origin'], category: InputDescriptor['category'], description: string): InputDescriptor =>
   ({ type, origin, category, description });
 const baseInputs: InputDescriptor[] = [
