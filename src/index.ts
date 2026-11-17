@@ -151,3 +151,12 @@ export type { SingleParameters, SingleState, SingleEvent, SingleModel,
   SubscribeOnParameters, SubscribeOnState, SubscribeOnEvent, SubscribeOnModel,
   SwitchMapToModel, SwitchMapToEvent, SwitchScanParameters, SwitchScanState,
   SwitchScanEvent, SwitchScanCallback, SwitchScanModel } from './models/session19.js';
+
+export { createTakeLastModel, takeLastExample, createTapModel, tapExample,
+  createThrowIfEmptyModel, throwIfEmptyExample } from './models/session20-simple.js';
+export type { TakeLastParameters, TakeLastState, TakeLastEvent, TakeLastModel,
+  TapParameters, TapState, TapEvent, TapModel,
+  ThrowIfEmptyParameters, ThrowIfEmptyState, ThrowIfEmptyEvent, ThrowIfEmptyModel } from './models/session20-simple.js';
+export { createThrottleModel, createThrottleSignalModel, createThrottleTimeModel,
+  throttleExample, throttleTimeExample } from './models/session20-throttle.js';
+export type { ThrottleMode, ThrottleParameters, ThrottleState, ThrottleEvent, ThrottleModel } from './models/session20-throttle.js';
