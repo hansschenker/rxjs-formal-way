@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-17",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-17T07:59:28+01:00",
+  "startingCommit": "0abbabc32b6621e01ee2330efe12f80e039065d0",
+  "selectedNames": ["takeLast", "tap", "throttle", "throttleTime", "throwIfEmpty"],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [],
+  "checks": {"syntax": "not run", "types": "not run", "model": "not run", "runtime": "not run", "generated": "not run", "ci": "not run"},
+  "blockers": [],
+  "notes": [
+    "Read live main, daily plan, roadmap, tracker and previous Zurich session log before selecting; no 17 November session log existed.",
+    "Previous session has no carryovers. Exactly the first five pending export names selected; no sixth name permitted.",
+    "Operator indexes are required in this session. Acceptance remains pending until executed checks, committed generation drift verification and exact CI provenance are recorded.",
+    "Local container cannot resolve github.com; connected GitHub actions remain available and repository CI will supply executed validation. No local check is claimed."
+  ],
+  "nextQueue": ["timeInterval", "timeout", "timeoutWith", "timestamp", "window"]
+}
