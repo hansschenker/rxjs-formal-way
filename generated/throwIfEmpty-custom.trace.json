@@ -1,0 +1,102 @@
+{
+  "status": "finished-input",
+  "consumed": 3,
+  "state": {
+    "phase": "Closed",
+    "reason": "error"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "throwIfEmpty-custom",
+      "executionId": "throwIfEmpty-custom-session20-example",
+      "ruleId": "S20-THROWIFEMPTY-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": false
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 4,
+      "modelId": "throwIfEmpty-custom",
+      "executionId": "throwIfEmpty-custom-session20-example",
+      "ruleId": "S20-THROWIFEMPTY-COMPLETE-EMPTY",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": false
+      },
+      "after": {
+        "phase": "CreatingError"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "errorFactory",
+            "generation": 0
+          },
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 4,
+      "modelId": "throwIfEmpty-custom",
+      "executionId": "throwIfEmpty-custom-session20-example",
+      "ruleId": "S20-THROWIFEMPTY-FACTORY-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "errorFactory",
+          "generation": 0
+        },
+        "value": "empty-source"
+      },
+      "before": {
+        "phase": "CreatingError"
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "error"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "E",
+            "error": "empty-source"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

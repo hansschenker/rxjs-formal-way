@@ -1,0 +1,99 @@
+{
+  "status": "finished-input",
+  "consumed": 3,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "throwIfEmpty-default",
+      "executionId": "throwIfEmpty-session20-example",
+      "ruleId": "S20-THROWIFEMPTY-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": false
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 2,
+      "modelId": "throwIfEmpty-default",
+      "executionId": "throwIfEmpty-session20-example",
+      "ruleId": "S20-THROWIFEMPTY-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": "A"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": false
+      },
+      "after": {
+        "phase": "Listening",
+        "hasValue": true
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "A"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 4,
+      "modelId": "throwIfEmpty-default",
+      "executionId": "throwIfEmpty-session20-example",
+      "ruleId": "S20-THROWIFEMPTY-COMPLETE-NONEMPTY",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Listening",
+        "hasValue": true
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

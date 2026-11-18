@@ -1,0 +1,292 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "throwIfEmpty-custom",
+    "operator": "throwIfEmpty",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Mirror source values, but turn successful empty completion into a lazily created error.",
+    "cardinality": {
+      "signature": "throwIfEmpty : Cω(() → unknown) → T* → T*",
+      "conditions": [
+        "Every source next is forwarded unchanged.",
+        "Successful completion without next invokes one factory and errors; cancellation invokes none."
+      ]
+    },
+    "scope": {
+      "parameters": "Default EmptyError factory binding or a custom synchronous error factory.",
+      "callbacks": "One explicit invocation at empty completion. Its return/throw is supplied as a correlated outcome; the canonical model never calls it.",
+      "time": "No clock is introduced. Source events supply time; input order breaks equal-time ties. Callers must supply synchronous callback outcomes at the invocation time; generic runTrace does not enforce that envelope-time precondition.",
+      "reentrancy": "Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.",
+      "exclusions": [
+        "Concrete EmptyError prototype construction is checked natively; the model treats the valid default-factory outcome as an opaque object.",
+        "An outcome attributed to the default binding is assumed to come from that pinned constructor, not an arbitrary substituted factory.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "No connection during construction. The first result subscription applies the profile-specific acquisition rule."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No implicit sharing or replay. Each result subscription owns its memory and resource generations; supplied producers may themselves be shared.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result execution"
+        },
+        {
+          "id": "errorFactory",
+          "kind": "callback",
+          "owner": "empty-completion reaction"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Ordered action words are model predictions, not executed effects. Callback invocation IDs correlate outcomes; they are not subscription IDs.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to this result execution."
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "A value from the currently owned source subscription."
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "Successful source termination."
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "Source failure with an opaque error value."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Consumer closes the result connection silently."
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "Return from the currently pending, correlated synchronous callback."
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "Throw from the currently pending, correlated synchronous callback."
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "Listening",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Listening."
+      },
+      {
+        "id": "CreatingError",
+        "terminal": false,
+        "description": "See the typed state and named transitions for CreatingError."
+      },
+      {
+        "id": "Closed",
+        "terminal": true,
+        "description": "Terminated; no owned subscriptions or retained values."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/throwIfEmpty.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/throwIfEmpty-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/util/EmptyError.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session20-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session20-rxjs.test.mjs",
+        "tests/session20-differential.test.mjs"
+      ],
+      "record": "evidence/SESSION-20.md",
+      "scenarios": "docs/SESSION-20-SCENARIOS.md",
+      "coverage": "docs/SESSION-20-SCENARIOS.md"
+    }
+  },
+  "parameters": {
+    "factory": "custom"
+  },
+  "rules": [
+    {
+      "id": "S20-THROWIFEMPTY-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Listening",
+      "guard": "first consumer connection",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "Listening with hasValue=false.",
+      "explanation": "Emptiness is assessed separately for each subscription.",
+      "obligations": [
+        "S20-THROWIFEMPTY-START"
+      ]
+    },
+    {
+      "id": "S20-THROWIFEMPTY-NEXT",
+      "from": "Listening",
+      "event": "source.next",
+      "to": "Listening",
+      "guard": "source subscription is live",
+      "actions": [
+        "forward exact source value"
+      ],
+      "nextState": "Listening with hasValue=true, including when the value is undefined.",
+      "explanation": "The presence bit, not the payload, establishes nonemptiness.",
+      "obligations": [
+        "S20-THROWIFEMPTY-NEXT"
+      ]
+    },
+    {
+      "id": "S20-THROWIFEMPTY-COMPLETE-NONEMPTY",
+      "from": "Listening",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "at least one value has arrived",
+      "actions": [
+        "complete result",
+        "release source"
+      ],
+      "nextState": "Closed complete; never invoke the factory.",
+      "explanation": "A nonempty source is mirrored without manufacturing an extra value.",
+      "obligations": [
+        "S20-THROWIFEMPTY-COMPLETE-NONEMPTY"
+      ]
+    },
+    {
+      "id": "S20-THROWIFEMPTY-COMPLETE-EMPTY",
+      "from": "Listening",
+      "event": "source.complete",
+      "to": "CreatingError",
+      "guard": "no value has arrived",
+      "actions": [
+        "invoke the selected error factory once"
+      ],
+      "nextState": "CreatingError; waiting only for its correlated synchronous outcome.",
+      "explanation": "The factory is called at empty completion, not at construction, source failure, or cancellation.",
+      "obligations": [
+        "S20-THROWIFEMPTY-COMPLETE-EMPTY"
+      ]
+    },
+    {
+      "id": "S20-THROWIFEMPTY-FACTORY-RETURN",
+      "from": "CreatingError",
+      "event": "callback.return",
+      "to": "Closed",
+      "guard": "outcome belongs to errorFactory invocation zero",
+      "actions": [
+        "error with the exact returned value",
+        "release source"
+      ],
+      "nextState": "Closed error; no completion notification.",
+      "explanation": "Returned values are error-channel payloads, not next values. The default binding supplies a fresh EmptyError instance.",
+      "obligations": [
+        "S20-THROWIFEMPTY-FACTORY-RETURN"
+      ]
+    },
+    {
+      "id": "S20-THROWIFEMPTY-FACTORY-THROW",
+      "from": "CreatingError",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "outcome belongs to errorFactory invocation zero",
+      "actions": [
+        "forward the exact thrown value as error",
+        "release source"
+      ],
+      "nextState": "Closed error; no completion notification.",
+      "explanation": "A throwing custom factory is intercepted by the operator subscriber.",
+      "obligations": [
+        "S20-THROWIFEMPTY-FACTORY-THROW"
+      ]
+    },
+    {
+      "id": "S20-THROWIFEMPTY-SOURCE-ERROR",
+      "from": "Listening",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source fails, regardless of value presence",
+      "actions": [
+        "forward exact source error",
+        "release source"
+      ],
+      "nextState": "Closed error; factory never invoked.",
+      "explanation": "Source failure is not empty successful completion.",
+      "obligations": [
+        "S20-THROWIFEMPTY-SOURCE-ERROR"
+      ]
+    },
+    {
+      "id": "S20-THROWIFEMPTY-CANCEL",
+      "from": "Listening",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer cancels before source termination",
+      "actions": [
+        "release source silently"
+      ],
+      "nextState": "Closed cancel; factory never invoked.",
+      "explanation": "A cancelled empty subscription is not an EmptyError.",
+      "obligations": [
+        "S20-THROWIFEMPTY-CANCEL"
+      ]
+    }
+  ]
+}

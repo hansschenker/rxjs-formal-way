@@ -1,0 +1,162 @@
+{
+  "status": "finished-input",
+  "consumed": 5,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "takeLast-2",
+      "executionId": "takeLast-session20-example",
+      "ruleId": "S20-TAKELAST-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Collecting",
+        "buffer": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "takeLast-2",
+      "executionId": "takeLast-session20-example",
+      "ruleId": "S20-TAKELAST-APPEND",
+      "event": {
+        "type": "source.next",
+        "value": "A"
+      },
+      "before": {
+        "phase": "Collecting",
+        "buffer": []
+      },
+      "after": {
+        "phase": "Collecting",
+        "buffer": [
+          "A"
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "takeLast-2",
+      "executionId": "takeLast-session20-example",
+      "ruleId": "S20-TAKELAST-APPEND",
+      "event": {
+        "type": "source.next",
+        "value": "B"
+      },
+      "before": {
+        "phase": "Collecting",
+        "buffer": [
+          "A"
+        ]
+      },
+      "after": {
+        "phase": "Collecting",
+        "buffer": [
+          "A",
+          "B"
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 4,
+      "modelId": "takeLast-2",
+      "executionId": "takeLast-session20-example",
+      "ruleId": "S20-TAKELAST-REPLACE-OLDEST",
+      "event": {
+        "type": "source.next",
+        "value": "C"
+      },
+      "before": {
+        "phase": "Collecting",
+        "buffer": [
+          "A",
+          "B"
+        ]
+      },
+      "after": {
+        "phase": "Collecting",
+        "buffer": [
+          "B",
+          "C"
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 6,
+      "modelId": "takeLast-2",
+      "executionId": "takeLast-session20-example",
+      "ruleId": "S20-TAKELAST-COMPLETE-FLUSH",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Collecting",
+        "buffer": [
+          "B",
+          "C"
+        ]
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "B"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "C"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

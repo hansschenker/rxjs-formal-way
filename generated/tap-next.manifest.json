@@ -1,0 +1,275 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "tap-next",
+    "operator": "tap",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Observe source notifications and connection lifecycle without replacing successful values.",
+    "cardinality": {
+      "signature": "tap : Cω(ObserverHooks) → T* → T*",
+      "conditions": [
+        "Successful notification hooks preserve original payload identity and notification order.",
+        "A thrown notification-hook value replaces that notification with an error.",
+        "unsubscribe hooks run on cancellation or next-handler failure, not normal source error/complete; finalize runs on all acquired-source termination paths."
+      ]
+    },
+    "scope": {
+      "parameters": "A subset of the six named observer hooks; next-function form is the next-only profile.",
+      "callbacks": "next/error/complete invocation outcomes are explicit correlated events. subscribe/unsubscribe/finalize are nonthrowing observation actions; their return values have no effect.",
+      "time": "No clock is introduced. Source events supply time; input order breaks equal-time ties. Callers must supply synchronous callback outcomes at the invocation time; generic runTrace does not enforce that envelope-time precondition.",
+      "reentrancy": "Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.",
+      "exclusions": [
+        "Throwing lifecycle hooks (subscribe/unsubscribe/finalize), deprecated positional overload parsing and JavaScript receiver binding.",
+        "Payload mutation is not simulated: reference identity is preserved, not a deep snapshot.",
+        "Source delivery during acquisition and observer-triggered cancellation during a pending callback.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "No connection during construction. The first result subscription applies the profile-specific acquisition rule."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No implicit sharing or replay. Each result subscription owns its memory and resource generations; supplied producers may themselves be shared.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result execution"
+        },
+        {
+          "id": "tap.next",
+          "kind": "callback",
+          "owner": "result execution"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Ordered action words are model predictions, not executed effects. Callback invocation IDs correlate outcomes; they are not subscription IDs.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to this result execution."
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "A value from the currently owned source subscription."
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "Successful source termination."
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "Source failure with an opaque error value."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Consumer closes the result connection silently."
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "Return from the currently pending, correlated synchronous callback."
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "Throw from the currently pending, correlated synchronous callback."
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "Listening",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Listening."
+      },
+      {
+        "id": "Calling",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Calling."
+      },
+      {
+        "id": "Closed",
+        "terminal": true,
+        "description": "Terminated; no owned subscriptions or retained values."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/tap.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/tap-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session20-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session20-rxjs.test.mjs",
+        "tests/session20-differential.test.mjs"
+      ],
+      "record": "evidence/SESSION-20.md",
+      "scenarios": "docs/SESSION-20-SCENARIOS.md",
+      "coverage": "docs/SESSION-20-SCENARIOS.md"
+    }
+  },
+  "parameters": {
+    "hooks": [
+      "next"
+    ]
+  },
+  "rules": [
+    {
+      "id": "S20-TAP-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Listening",
+      "guard": "first consumer connection",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "Listening with next notification invocation index zero.",
+      "explanation": "The lifecycle hook runs before source acquisition. Neither runs during operator construction.",
+      "obligations": [
+        "S20-TAP-START"
+      ]
+    },
+    {
+      "id": "S20-TAP-NEXT-CALL",
+      "from": "Listening",
+      "event": "source.next",
+      "to": "Calling",
+      "guard": "source is live; matching hook is configured",
+      "actions": [
+        "invoke the matching hook with the source notification payload"
+      ],
+      "nextState": "Calling next with the original notification retained; only its correlated outcome is legal.",
+      "explanation": "The source notification is not forwarded until its handler returns successfully.",
+      "obligations": [
+        "S20-TAP-NEXT-CALL"
+      ]
+    },
+    {
+      "id": "S20-TAP-NEXT-RETURN",
+      "from": "Calling",
+      "event": "callback.return",
+      "to": "Listening",
+      "guard": "return matches the pending next invocation",
+      "actions": [
+        "forward the exact original value"
+      ],
+      "nextState": "Listening; advance invocation index and clear pending notification.",
+      "explanation": "Handler return values are ignored: tap is not map. Terminal callbacks clear the internal unsubscription flag before being called.",
+      "obligations": [
+        "S20-TAP-NEXT-RETURN"
+      ]
+    },
+    {
+      "id": "S20-TAP-NEXT-THROW",
+      "from": "Calling",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "throw matches the pending next invocation",
+      "actions": [
+        "error with the exact thrown value instead of the pending notification",
+        "release source"
+      ],
+      "nextState": "Closed error; discard pending notification.",
+      "explanation": "A next-handler throw terminates by unsubscription, so unsubscribe precedes finalize.",
+      "obligations": [
+        "S20-TAP-NEXT-THROW"
+      ]
+    },
+    {
+      "id": "S20-TAP-ERROR-PASS",
+      "from": "Listening",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source is live; matching hook is absent",
+      "actions": [
+        "forward the unchanged notification",
+        "release source and invoke configured finalize hook"
+      ],
+      "nextState": "Closed after source termination.",
+      "explanation": "Missing hooks are bypassed; no implicit callback or timing policy is introduced.",
+      "obligations": [
+        "S20-TAP-ERROR-PASS"
+      ]
+    },
+    {
+      "id": "S20-TAP-COMPLETE-PASS",
+      "from": "Listening",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source is live; matching hook is absent",
+      "actions": [
+        "forward the unchanged notification",
+        "release source and invoke configured finalize hook"
+      ],
+      "nextState": "Closed after source termination.",
+      "explanation": "Missing hooks are bypassed; no implicit callback or timing policy is introduced.",
+      "obligations": [
+        "S20-TAP-COMPLETE-PASS"
+      ]
+    },
+    {
+      "id": "S20-TAP-CANCEL",
+      "from": "Listening",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer cancels between source notifications",
+      "actions": [
+        "release source"
+      ],
+      "nextState": "Closed cancel; no downstream terminal notification.",
+      "explanation": "Cancellation and normal source termination have different lifecycle hook policies.",
+      "obligations": [
+        "S20-TAP-CANCEL"
+      ]
+    }
+  ]
+}

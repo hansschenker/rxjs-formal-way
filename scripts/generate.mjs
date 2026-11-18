@@ -97,6 +97,13 @@ import {
   createSwitchScanModel, switchScanExample
 } from '../dist/index.js';
 
+import {
+  createTakeLastModel, takeLastExample, takeLastZeroExample,
+  createTapModel, tapExample, tapNextExample,
+  createThrowIfEmptyModel, throwIfEmptyExample, throwIfEmptyDefaultExample,
+  createThrottleModel, createThrottleTimeModel, throttleExample, runThrottleTrace
+} from '../dist/index.js';
+
 const canonicalModelPaths = {
   take:'src/models/take.ts', map:'src/models/map.ts', filter:'src/models/filter.ts', scan:'src/models/scan.ts',
   debounceTime:'src/models/debounceTime.ts', switchMap:'src/models/flatten.ts', mergeMap:'src/models/flatten.ts',
@@ -140,6 +147,9 @@ const canonicalModelPaths = {
   single:'src/models/session19.ts', skipLast:'src/models/session19.ts',
   subscribeOn:'src/models/session19.ts', switchMapTo:'src/models/session19.ts',
   switchScan:'src/models/session19.ts',
+  takeLast:'src/models/session20-terminal.ts', throwIfEmpty:'src/models/session20-terminal.ts',
+  tap:'src/models/session20-tap.ts', throttle:'src/models/session20-throttle.ts',
+  throttleTime:'src/models/session20-throttle.ts',
 };
 
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
@@ -244,6 +254,21 @@ const examples = [
   ['subscribeOn', createSubscribeOnModel(2), subscribeOnExample, 'subscribeOn-session19-example'],
   ['switchMapTo', createSwitchMapToModel('shared'), switchMapToExample, 'switchMapTo-session19-example'],
   ['switchScan', createSwitchScanModel(0), switchScanExample, 'switchScan-session19-example'],
+  ['takeLast', createTakeLastModel(2), takeLastExample, 'takeLast-session20-example'],
+  ['takeLast-zero', createTakeLastModel(0), takeLastZeroExample, 'takeLast-zero-session20-example'],
+  ['tap', createTapModel(), tapExample, 'tap-session20-example'],
+  ['tap-next', createTapModel(['next']), tapNextExample, 'tap-next-session20-example'],
+  ['throwIfEmpty', createThrowIfEmptyModel(), throwIfEmptyDefaultExample, 'throwIfEmpty-session20-example'],
+  ['throwIfEmpty-custom', createThrowIfEmptyModel('custom'), throwIfEmptyExample, 'throwIfEmpty-custom-session20-example'],
+  ...[
+    ['', { leading: true, trailing: false }],
+    ['-leading-trailing', { leading: true, trailing: true }],
+    ['-trailing', { leading: false, trailing: true }],
+    ['-silent', { leading: false, trailing: false }],
+  ].flatMap(([suffix, options]) => [
+    ['throttle' + suffix, createThrottleModel(options), throttleExample('throttle', options), 'throttle' + suffix + '-session20-example', runThrottleTrace],
+    ['throttleTime' + suffix, createThrottleTimeModel(4, options), throttleExample('throttleTime', options), 'throttleTime' + suffix + '-session20-example', runThrottleTrace],
+  ]),
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();

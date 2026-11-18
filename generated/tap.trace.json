@@ -1,0 +1,198 @@
+{
+  "status": "finished-input",
+  "consumed": 5,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "tap-subscribe-next-error-complete-unsubscribe-finalize",
+      "executionId": "tap-session20-example",
+      "ruleId": "S20-TAP-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Listening",
+        "invocation": 0
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "tap.subscribe",
+            "generation": 0
+          },
+          "index": 0
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "tap-subscribe-next-error-complete-unsubscribe-finalize",
+      "executionId": "tap-session20-example",
+      "ruleId": "S20-TAP-NEXT-CALL",
+      "event": {
+        "type": "source.next",
+        "value": "A"
+      },
+      "before": {
+        "phase": "Listening",
+        "invocation": 0
+      },
+      "after": {
+        "phase": "Calling",
+        "hook": "next",
+        "pending": {
+          "kind": "N",
+          "value": "A"
+        },
+        "invocation": 0
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "tap.next",
+            "generation": 0
+          },
+          "index": 0,
+          "value": "A"
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "tap-subscribe-next-error-complete-unsubscribe-finalize",
+      "executionId": "tap-session20-example",
+      "ruleId": "S20-TAP-NEXT-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "tap.next",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Calling",
+        "hook": "next",
+        "pending": {
+          "kind": "N",
+          "value": "A"
+        },
+        "invocation": 0
+      },
+      "after": {
+        "phase": "Listening",
+        "invocation": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "A"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "tap-subscribe-next-error-complete-unsubscribe-finalize",
+      "executionId": "tap-session20-example",
+      "ruleId": "S20-TAP-COMPLETE-CALL",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Listening",
+        "invocation": 1
+      },
+      "after": {
+        "phase": "Calling",
+        "hook": "complete",
+        "pending": {
+          "kind": "C"
+        },
+        "invocation": 1
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "tap.complete",
+            "generation": 1
+          },
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 3,
+      "modelId": "tap-subscribe-next-error-complete-unsubscribe-finalize",
+      "executionId": "tap-session20-example",
+      "ruleId": "S20-TAP-COMPLETE-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "tap.complete",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Calling",
+        "hook": "complete",
+        "pending": {
+          "kind": "C"
+        },
+        "invocation": 1
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "tap.finalize",
+            "generation": 0
+          },
+          "index": 0
+        }
+      ]
+    }
+  ]
+}

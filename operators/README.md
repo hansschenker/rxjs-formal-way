@@ -8,6 +8,20 @@ The repository-wide method is documented in [RxJS Operator Inspection Workflow](
 
 Each configured profile has one canonical TypeScript rule set and eight generated views. Read the plain-language page first; use the milestone guide for assumptions and verification.
 
+## Session 20 inspection pages
+
+| Export | Profiles | Inspection index |
+|---|---|---|
+| takeLast | Positive count and zero/no-source | [takeLast](takeLast-index.md) |
+| tap | All lifecycle/notification hooks and next-only | [tap](tap-index.md) |
+| throttle | All four leading/trailing combinations | [throttle](throttle-index.md) |
+| throttleTime | All four combinations with positive deferred duration | [throttleTime](throttleTime-index.md) |
+| throwIfEmpty | Default and custom factory bindings | [throwIfEmpty](throwIfEmpty-index.md) |
+
+The [Session 20 guide](../docs/SESSION-20-TERMINAL-TAP-THROTTLE.md), [scenario map](../docs/SESSION-20-SCENARIOS.md) and [evidence ledger](../evidence/SESSION-20.md) distinguish the predicted traces from independent RxJS observations and record the acceptance status. These fourteen profiles count as five public exports.
+
+## Earlier reference profiles
+
 | Operator | Canonical model | Readable page | Evidence |
 |---|---|---|---|
 | take | [take.ts](../src/models/take.ts) | [Behavior](take.md) | [M01](../evidence/M01.md) |
@@ -53,7 +67,7 @@ Map/filter share their lifecycle specification in [value.ts](../src/models/value
 
 [Session 6](../docs/SESSION-06-AGGREGATION.md) adds completion-only aggregation and extrema, with per-subscription memory and separate callback outcomes.
 
-**Fifty-nine configured examples produce 472 deterministic views across fifty-five accepted export names.** These are scoped profiles, not a complete operator catalogue. Acceptance and executed checks live in the evidence records; the [roadmap](../docs/ROADMAP.md) and daily JSON tracker govern further work.
+**At Session 11, fifty-nine configured examples produced 472 deterministic views across fifty-five accepted export names.** These are scoped profiles, not a complete operator catalogue. Current acceptance and executed checks live in the evidence records; the [roadmap](../docs/ROADMAP.md) and daily JSON tracker govern further work.
 
 ## Session 11 — new operator pages
 

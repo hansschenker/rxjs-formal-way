@@ -1,0 +1,397 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "throttleTime-01-4",
+    "operator": "throttleTime",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Select leading and/or latest trailing source values using one active scheduled duration.",
+    "cardinality": {
+      "signature": "throttleTime : Cω(Duration,Scheduler,Leading,Trailing) → T* → T*",
+      "conditions": [
+        "Source values only are forwarded; duration payloads are ignored.",
+        "Busy values do not extend a duration. A trailing output starts another duration while the source is live.",
+        "Source completion waits only when trailing output is enabled, a value is pending and a duration is active.",
+        "With both flags false, no next notification is emitted."
+      ]
+    },
+    "scope": {
+      "parameters": "leading=false, trailing=true. Positive integer duration 1..1000 with a deferred FIFO virtual scheduler.",
+      "callbacks": "No user callback. A scheduled duration is a source of timer.fire inputs.",
+      "time": "All event times are supplied nonnegative safe integers. Equal-time order is input order. timer.fire must name the current generation and occur at or after its deadline; lateness does not backdate output. No progress occurs merely because a deadline exists.",
+      "reentrancy": "Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.",
+      "exclusions": [
+        "Zero/negative/fractional durations, synchronous queueScheduler, custom scheduler exceptions and platform timing precision.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "No connection during construction. The first result subscription applies the profile-specific acquisition rule."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No implicit sharing or replay. Each result subscription owns its memory and resource generations; supplied producers may themselves be shared.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result execution"
+        },
+        {
+          "id": "throttleTimer",
+          "kind": "timer",
+          "owner": "current duration generation"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Ordered action words are model predictions, not executed effects. Callback invocation IDs correlate outcomes; they are not subscription IDs.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to this result execution."
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "A value from the currently owned source subscription."
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "Successful source termination."
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "Source failure with an opaque error value."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Consumer closes the result connection silently."
+      },
+      {
+        "type": "timer.fire",
+        "origin": "timer",
+        "category": "time",
+        "description": "Current scheduled duration action executes at supplied now."
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify",
+      "schedule",
+      "cancel-timer"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "Open",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Open."
+      },
+      {
+        "id": "Throttled",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Throttled."
+      },
+      {
+        "id": "Waiting",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Waiting."
+      },
+      {
+        "id": "Closed",
+        "terminal": true,
+        "description": "Terminated; no owned subscriptions or retained values."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/throttleTime.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/throttleTime-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/throttle.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/timer.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session20-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session20-rxjs.test.mjs",
+        "tests/session20-differential.test.mjs"
+      ],
+      "record": "evidence/SESSION-20.md",
+      "scenarios": "docs/SESSION-20-SCENARIOS.md",
+      "coverage": "docs/SESSION-20-SCENARIOS.md"
+    }
+  },
+  "parameters": {
+    "mode": "throttleTime",
+    "leading": false,
+    "trailing": true,
+    "duration": 4
+  },
+  "rules": [
+    {
+      "id": "S20-THROTTLETIME-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Open",
+      "guard": "first result connection; valid nondecreasing supplied time",
+      "actions": [
+        "subscribe source; create no duration yet"
+      ],
+      "nextState": "Open with empty pending memory and next duration generation zero.",
+      "explanation": "The first value, not subscription itself, starts throttling.",
+      "obligations": [
+        "S20-THROTTLETIME-START"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-OPEN-NEXT",
+      "from": "Open",
+      "event": "source.next",
+      "to": "Throttled",
+      "guard": "no active duration; leading=false; valid nondecreasing supplied time",
+      "actions": [
+        "remember incoming value without output",
+        "schedule the next duration action"
+      ],
+      "nextState": "Duration generation advances; this value is pending for a possible trailing output.",
+      "explanation": "A leading emission precedes duration selection/acquisition. With leading=false the same source value still starts a duration.",
+      "obligations": [
+        "S20-THROTTLETIME-OPEN-NEXT"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-REMEMBER",
+      "from": "Throttled",
+      "event": "source.next",
+      "to": "Throttled",
+      "guard": "a duration is active; valid nondecreasing supplied time",
+      "actions": [
+        "replace pending value without restarting duration or emitting"
+      ],
+      "nextState": "Same duration generation/deadline; pending presence=true with newest payload.",
+      "explanation": "Busy source values update latest memory. They do not call the selector or postpone the current timer.",
+      "obligations": [
+        "S20-THROTTLETIME-REMEMBER"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-END-EMIT-RESTART",
+      "from": "Throttled",
+      "event": "timer.fire",
+      "to": "Throttled",
+      "guard": "current duration ends with a pending value and trailing=true; valid nondecreasing supplied time",
+      "actions": [
+        "release current duration",
+        "clear pending presence and emit latest value",
+        "schedule a fresh duration"
+      ],
+      "nextState": "Pending memory is empty; a new duration generation starts while source remains live.",
+      "explanation": "A trailing output starts another throttle duration. It is not merely an audit-style return to idle.",
+      "obligations": [
+        "S20-THROTTLETIME-END-EMIT-RESTART"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-END-OPEN",
+      "from": "Throttled",
+      "event": "timer.fire",
+      "to": "Open",
+      "guard": "current duration ends without a pending value; valid nondecreasing supplied time",
+      "actions": [
+        "release current duration; emit nothing"
+      ],
+      "nextState": "Open with no active duration; preserve any un-emitted internal memory until replaced.",
+      "explanation": "No trailing emission means no automatic new duration. A later source value starts the next duration.",
+      "obligations": [
+        "S20-THROTTLETIME-END-OPEN"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-COMPLETE-OPEN",
+      "from": "Open",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes with no active duration; valid nondecreasing supplied time",
+      "actions": [
+        "complete result without flushing retained value",
+        "release source"
+      ],
+      "nextState": "Closed complete; all pending memory discarded.",
+      "explanation": "There is no active duration to justify waiting, even if an empty duration previously left internal pending memory.",
+      "obligations": [
+        "S20-THROTTLETIME-COMPLETE-OPEN"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-COMPLETE-WAIT",
+      "from": "Throttled",
+      "event": "source.complete",
+      "to": "Waiting",
+      "guard": "trailing=true and a value is pending behind a live duration; valid nondecreasing supplied time",
+      "actions": [
+        "release completed source; keep duration live"
+      ],
+      "nextState": "Waiting with source closed, one duration owned and latest value retained.",
+      "explanation": "Source completion is not an immediate flush. The pending trailing value still waits for the duration signal.",
+      "obligations": [
+        "S20-THROTTLETIME-COMPLETE-WAIT"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-WAIT-END",
+      "from": "Waiting",
+      "event": "timer.fire",
+      "to": "Closed",
+      "guard": "current duration ends after source completion; valid nondecreasing supplied time",
+      "actions": [
+        "release current duration",
+        "emit the retained trailing value",
+        "complete result; do not start another duration"
+      ],
+      "nextState": "Closed complete; source was already released, duration and memory are now gone.",
+      "explanation": "The trailing value precedes final completion, but source termination prevents restarting a duration.",
+      "obligations": [
+        "S20-THROTTLETIME-WAIT-END"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-COMPLETE-NOW",
+      "from": "Throttled",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "there is no pending value; valid nondecreasing supplied time",
+      "actions": [
+        "complete result immediately",
+        "release source",
+        "release active duration"
+      ],
+      "nextState": "Closed complete; no pending value is emitted.",
+      "explanation": "A lone leading value does not require waiting for its duration to expire.",
+      "obligations": [
+        "S20-THROTTLETIME-COMPLETE-NOW"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-SOURCE-ERROR-OPEN",
+      "from": "Open",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source fails; valid nondecreasing supplied time",
+      "actions": [
+        "forward exact source error",
+        "release source and any active duration without flushing"
+      ],
+      "nextState": "Closed error; pending value discarded.",
+      "explanation": "Failure is never delayed until a duration ends.",
+      "obligations": [
+        "S20-THROTTLETIME-SOURCE-ERROR-OPEN"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-SOURCE-ERROR-THROTTLED",
+      "from": "Throttled",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source fails; valid nondecreasing supplied time",
+      "actions": [
+        "forward exact source error",
+        "release source and any active duration without flushing"
+      ],
+      "nextState": "Closed error; pending value discarded.",
+      "explanation": "Failure is never delayed until a duration ends.",
+      "obligations": [
+        "S20-THROTTLETIME-SOURCE-ERROR-THROTTLED"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-CANCEL-OPEN",
+      "from": "Open",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer cancels this execution; valid nondecreasing supplied time",
+      "actions": [
+        "release only still-owned source/duration resources; emit nothing"
+      ],
+      "nextState": "Closed cancel; clear all memory.",
+      "explanation": "Cancellation during completion-waiting releases only the duration; the source has already ended.",
+      "obligations": [
+        "S20-THROTTLETIME-CANCEL-OPEN"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-CANCEL-THROTTLED",
+      "from": "Throttled",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer cancels this execution; valid nondecreasing supplied time",
+      "actions": [
+        "release only still-owned source/duration resources; emit nothing"
+      ],
+      "nextState": "Closed cancel; clear all memory.",
+      "explanation": "Cancellation during completion-waiting releases only the duration; the source has already ended.",
+      "obligations": [
+        "S20-THROTTLETIME-CANCEL-THROTTLED"
+      ]
+    },
+    {
+      "id": "S20-THROTTLETIME-CANCEL-WAITING",
+      "from": "Waiting",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer cancels this execution; valid nondecreasing supplied time",
+      "actions": [
+        "release only still-owned source/duration resources; emit nothing"
+      ],
+      "nextState": "Closed cancel; clear all memory.",
+      "explanation": "Cancellation during completion-waiting releases only the duration; the source has already ended.",
+      "obligations": [
+        "S20-THROTTLETIME-CANCEL-WAITING"
+      ]
+    }
+  ]
+}

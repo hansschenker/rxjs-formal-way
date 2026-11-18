@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "selectedNames": [
+    "takeLast",
+    "tap",
+    "throttle",
+    "throttleTime",
+    "throwIfEmpty"
+  ],
+  "workedNames": [
+    "takeLast",
+    "tap",
+    "throttle",
+    "throttleTime",
+    "throwIfEmpty"
+  ],
+  "completedNames": [],
+  "carryovers": [],
+  "checks": {
+    "syntax": "passed complete local npm run check on 18 November; committed CI pending",
+    "types": "strict TypeScript passed locally, including 23 negative assertions; committed CI pending",
+    "model": "full local suite 1416 passed, zero failed, including 56 Session20 model tests; committed CI pending",
+    "runtime": "47 independent native tests and three differential tests, 1062 comparison executions passed locally; committed CI pending",
+    "generated": "1004 ordinary + 3 specialized projections generated and exactly drift-checked locally; includes 117 new Session 20 artifacts and five indexes; committed CI pending.",
+    "ci": "Preliminary PR #39 CI 44038936671 passed 1414 tests but omitted new artifacts; complete integration CI pending."
+  },
+  "blockers": [],
+  "nextQueue": [
+    "timeInterval",
+    "timeout",
+    "timeoutWith",
+    "timestamp",
+    "window"
+  ],
+  "date": "2026-11-18",
+  "sessionNumber": 20,
+  "continuationOf": "2026-11-17",
+  "startedAt": "2026-11-18T06:22:54+01:00",
+  "startingCommit": "0b5fc0229c9ecd84d858686ffb1870a0cf007f29",
+  "notes": [
+    "Continuation of the already-reserved Session20, not a new batch. No sixth export was selected.",
+    "This dated continuation occupies the 18 November session slot; no additional batch may start today.",
+    "Final acceptance awaits committed generation drift verification and exact CI evidence.",
+    "Complete local integration passed npm run generate and npm run check: 1416 tests, 1062 Session 20 comparisons, and 1004+3 projections. First local attempt had one missing-document link failure before the guide was written; complete rerun passed."
+  ]
+}
