@@ -8,6 +8,18 @@ The repository-wide method is documented in [RxJS Operator Inspection Workflow](
 
 Each configured profile has one canonical TypeScript rule set and eight generated views. Read the plain-language page first; use the milestone guide for assumptions and verification.
 
+## Session 21 inspection pages
+
+| Export | Behavior to inspect | Inspection index |
+|---|---|---|
+| timeInterval | Connection baseline and differences between supplied clock readings | [timeInterval](timeInterval-index.md) |
+| timeout | First/gap deadlines, default error and factory-selected replacement | [timeout](timeout-index.md) |
+| timeoutWith | Numeric/date compatibility profiles with a configured replacement | [timeoutWith](timeoutWith-index.md) |
+| timestamp | Supplied clock reading attached to each source value | [timestamp](timestamp-index.md) |
+| window | Live multicast windows, boundary rotation and independent consumer lifetimes | [window](window-index.md) |
+
+The [Session 21 guide](../docs/SESSION-21-TIME-AND-WINDOWS.md), [scenario map](../docs/SESSION-21-SCENARIOS.md) and [evidence ledger](../evidence/SESSION-21.md) record the declared profiles and actual verification status. Eleven configured examples represent these five exports; the three window examples are different histories of one semantic profile.
+
 ## Session 20 inspection pages
 
 | Export | Profiles | Inspection index |

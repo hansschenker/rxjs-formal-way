@@ -1,0 +1,284 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "clock": 7,
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "timeout-first-relative-6-each-3-factory",
+      "executionId": "timeout-first-each-session21-example",
+      "ruleId": "S21-TIMEOUT-START",
+      "event": {
+        "type": "subscribe",
+        "now": 0
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Source",
+        "clock": 0,
+        "seen": 0,
+        "lastValue": null,
+        "nextGeneration": 1,
+        "timer": {
+          "generation": 0,
+          "due": 6
+        }
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 0
+          },
+          "delay": 6
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "timeout-first-relative-6-each-3-factory",
+      "executionId": "timeout-first-each-session21-example",
+      "ruleId": "S21-TIMEOUT-NEXT-CANCEL-TIMER",
+      "event": {
+        "type": "source.next",
+        "now": 1,
+        "value": "A"
+      },
+      "before": {
+        "phase": "Source",
+        "clock": 0,
+        "seen": 0,
+        "lastValue": null,
+        "nextGeneration": 1,
+        "timer": {
+          "generation": 0,
+          "due": 6
+        }
+      },
+      "after": {
+        "phase": "Source",
+        "clock": 1,
+        "seen": 1,
+        "lastValue": "A",
+        "nextGeneration": 2,
+        "timer": {
+          "generation": 1,
+          "due": 4
+        }
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "A"
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 1
+          },
+          "delay": 3
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 4,
+      "modelId": "timeout-first-relative-6-each-3-factory",
+      "executionId": "timeout-first-each-session21-example",
+      "ruleId": "S21-TIMEOUT-EXPIRE",
+      "event": {
+        "type": "timer.fire",
+        "now": 4,
+        "resource": {
+          "id": "timeoutTimer",
+          "generation": 1
+        }
+      },
+      "before": {
+        "phase": "Source",
+        "clock": 1,
+        "seen": 1,
+        "lastValue": "A",
+        "nextGeneration": 2,
+        "timer": {
+          "generation": 1,
+          "due": 4
+        }
+      },
+      "after": {
+        "phase": "Choosing",
+        "clock": 4,
+        "seen": 1
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 1
+          }
+        },
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "timeoutFactory",
+            "generation": 0
+          },
+          "index": 0,
+          "value": {
+            "meta": null,
+            "seen": 1,
+            "lastValue": null
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 4,
+      "modelId": "timeout-first-relative-6-each-3-factory",
+      "executionId": "timeout-first-each-session21-example",
+      "ruleId": "S21-TIMEOUT-FACTORY-RETURN",
+      "event": {
+        "type": "callback.return",
+        "now": 4,
+        "resource": {
+          "id": "timeoutFactory",
+          "generation": 0
+        },
+        "token": "fallback"
+      },
+      "before": {
+        "phase": "Choosing",
+        "clock": 4,
+        "seen": 1
+      },
+      "after": {
+        "phase": "Fallback",
+        "clock": 4,
+        "token": "fallback"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "fallback",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 5,
+      "modelId": "timeout-first-relative-6-each-3-factory",
+      "executionId": "timeout-first-each-session21-example",
+      "ruleId": "S21-TIMEOUT-FALLBACK-NEXT",
+      "event": {
+        "type": "fallback.next",
+        "now": 5,
+        "resource": {
+          "id": "fallback",
+          "generation": 0
+        },
+        "value": "R"
+      },
+      "before": {
+        "phase": "Fallback",
+        "clock": 4,
+        "token": "fallback"
+      },
+      "after": {
+        "phase": "Fallback",
+        "clock": 5,
+        "token": "fallback"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "R"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 7,
+      "modelId": "timeout-first-relative-6-each-3-factory",
+      "executionId": "timeout-first-each-session21-example",
+      "ruleId": "S21-TIMEOUT-FALLBACK-COMPLETE",
+      "event": {
+        "type": "fallback.complete",
+        "now": 7,
+        "resource": {
+          "id": "fallback",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Fallback",
+        "clock": 5,
+        "token": "fallback"
+      },
+      "after": {
+        "phase": "Closed",
+        "clock": 7,
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "fallback",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

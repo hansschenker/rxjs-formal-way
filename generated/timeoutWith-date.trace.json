@@ -1,0 +1,184 @@
+{
+  "status": "finished-input",
+  "consumed": 4,
+  "state": {
+    "phase": "Closed",
+    "clock": 8,
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 2,
+      "modelId": "timeoutWith-first-absolute-5-each-none-constant",
+      "executionId": "timeoutWith-date-session21-example",
+      "ruleId": "S21-TIMEOUTWITH-START",
+      "event": {
+        "type": "subscribe",
+        "now": 2
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Source",
+        "clock": 2,
+        "seen": 0,
+        "lastValue": null,
+        "nextGeneration": 1,
+        "timer": {
+          "generation": 0,
+          "due": 5
+        }
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 0
+          },
+          "delay": 3
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 5,
+      "modelId": "timeoutWith-first-absolute-5-each-none-constant",
+      "executionId": "timeoutWith-date-session21-example",
+      "ruleId": "S21-TIMEOUTWITH-EXPIRE",
+      "event": {
+        "type": "timer.fire",
+        "now": 5,
+        "resource": {
+          "id": "timeoutTimer",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Source",
+        "clock": 2,
+        "seen": 0,
+        "lastValue": null,
+        "nextGeneration": 1,
+        "timer": {
+          "generation": 0,
+          "due": 5
+        }
+      },
+      "after": {
+        "phase": "Fallback",
+        "clock": 5,
+        "token": "fallback"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "fallback",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 6,
+      "modelId": "timeoutWith-first-absolute-5-each-none-constant",
+      "executionId": "timeoutWith-date-session21-example",
+      "ruleId": "S21-TIMEOUTWITH-FALLBACK-NEXT",
+      "event": {
+        "type": "fallback.next",
+        "now": 6,
+        "resource": {
+          "id": "fallback",
+          "generation": 0
+        },
+        "value": "R"
+      },
+      "before": {
+        "phase": "Fallback",
+        "clock": 5,
+        "token": "fallback"
+      },
+      "after": {
+        "phase": "Fallback",
+        "clock": 6,
+        "token": "fallback"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "R"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 8,
+      "modelId": "timeoutWith-first-absolute-5-each-none-constant",
+      "executionId": "timeoutWith-date-session21-example",
+      "ruleId": "S21-TIMEOUTWITH-FALLBACK-COMPLETE",
+      "event": {
+        "type": "fallback.complete",
+        "now": 8,
+        "resource": {
+          "id": "fallback",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Fallback",
+        "clock": 6,
+        "token": "fallback"
+      },
+      "after": {
+        "phase": "Closed",
+        "clock": 8,
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "fallback",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

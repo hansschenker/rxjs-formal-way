@@ -6,9 +6,15 @@ A coherent method for describing, analyzing, documenting, visualizing, and testi
 
 The project grew from stateful transducers, through six-component Mealy analysis, to transition tables, diagrams, BDD and test obligations. Formal machinery supports the explanation; an RxJS user should not need automata theory to understand the final operator description.
 
-## Current checkpoint: Session 20 — terminal buffering, tap lifecycle and throttle policies
+## Current checkpoint: Session 21 — clock readings, deadlines and live windows
 
-Session 20 accepted **takeLast, tap, throttle, throttleTime and throwIfEmpty** within their declared scopes, with 14 configured profiles and five public inspection indexes. The original 17 November 2026 Europe/Zurich session was continued and closed on 18 November. **100/113 exports are accepted, 13 remain pending, and there are no carryovers.** Main CI and independent read-only verification passed **1,416 named tests**, **1,062 Session 20 comparison executions**, and **1,004 ordinary + 3 specialized committed projections**. Exact tested revisions and scope limits are recorded in the [Session 20 evidence ledger](evidence/SESSION-20.md), [closed continuation](planning/sessions/2026-11-18.json), [current inventory](planning/operator-generation.json) and [roadmap](docs/ROADMAP.md).
+Session 21 covers **timeInterval, timeout, timeoutWith, timestamp and window**, following the user's explicit request to run it on **18 November 2026 Europe/Zurich** after Session 20 closed. The [separate reservation](planning/sessions/2026-11-18-session-21.json) records this specific date exception. Implementation and final acceptance are tracked in the [Session 21 evidence ledger](evidence/SESSION-21.md); the [inventory](planning/operator-generation.json) remains authoritative for accepted status.
+
+Read the [teaching guide](docs/SESSION-21-TIME-AND-WINDOWS.md), [scenario map](docs/SESSION-21-SCENARIOS.md), or the five inspection indexes: [timeInterval](operators/timeInterval-index.md), [timeout](operators/timeout-index.md), [timeoutWith](operators/timeoutWith-index.md), [timestamp](operators/timestamp-index.md), and [window](operators/window-index.md).
+
+## Previous checkpoint: Session 20 — terminal buffering, tap lifecycle and throttle policies
+
+Session 20 accepted **takeLast, tap, throttle, throttleTime and throwIfEmpty** within their declared scopes, with 14 configured profiles and five public inspection indexes. The original 17 November 2026 Europe/Zurich session was continued and closed on 18 November. **At that checkpoint, 100/113 exports were accepted, 13 remained pending, and there were no carryovers.** Main CI and independent read-only verification passed **1,416 named tests**, **1,062 Session 20 comparison executions**, and **1,004 ordinary + 3 specialized committed projections**. Exact tested revisions and scope limits are recorded in the [Session 20 evidence ledger](evidence/SESSION-20.md), [closed continuation](planning/sessions/2026-11-18.json), [current inventory](planning/operator-generation.json) and [roadmap](docs/ROADMAP.md).
 
 Start with the [technical guide](docs/SESSION-20-TERMINAL-TAP-THROTTLE.md) and [scenario-to-test map](docs/SESSION-20-SCENARIOS.md), or inspect [takeLast](operators/takeLast-index.md), [tap](operators/tap-index.md), [throttle](operators/throttle-index.md), [throttleTime](operators/throttleTime-index.md) and [throwIfEmpty](operators/throwIfEmpty-index.md).
 

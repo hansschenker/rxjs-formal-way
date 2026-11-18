@@ -13,16 +13,22 @@
     "timestamp",
     "window"
   ],
-  "workedNames": [],
+  "workedNames": [
+    "timeInterval",
+    "timeout",
+    "timeoutWith",
+    "timestamp",
+    "window"
+  ],
   "completedNames": [],
   "carryovers": [],
   "checks": {
-    "syntax": "not run",
-    "types": "not run",
-    "model": "not run",
-    "runtime": "not run",
-    "generated": "not run",
-    "ci": "not run"
+    "syntax": "Passed complete local npm run check; committed CI pending.",
+    "types": "Strict TypeScript passed locally, including 40 new negative assertions; committed CI pending.",
+    "model": "63 new model tests and two artifact navigation tests; full suite 1544 passed, zero failed locally; committed CI pending.",
+    "runtime": "58 new native tests and five differential tests; 2724 Session 21 comparison executions passed locally; committed CI pending.",
+    "generated": "93 new files include all five eleven-step indexes. Normal generator and drift check passed locally for 1097 ordinary + 3 specialized projections; committed read-only CI pending.",
+    "ci": "Not yet run on complete implementation; no passing CI acceptance claimed."
   },
   "blockers": [],
   "authorization": {
@@ -33,7 +39,10 @@
   "notes": [
     "Read live main, daily plan, roadmap and accepted inventory before selection. Exactly the first five pending exports are selected; no carryovers remain from Session 20.",
     "Preserve the already closed Session 20 log. This separate dated, numbered log records the explicitly requested Session 21 without overwriting prior evidence.",
-    "Reuse schema, runner, renderers and tests; require all five public inspection indexes, independent actual RxJS checks and committed read-only drift verification."
+    "Reuse schema, runner, renderers and tests; require all five public inspection indexes, independent actual RxJS checks and committed read-only drift verification.",
+    "Complete local generation/check passed on Node v24.22.3: 1544 tests, zero failures, 2724 Session 21 comparisons, 1097+3 deterministic projections.",
+    "128 new named tests (63 model, 58 native, five differential, two navigation) and 40 negative type assertions; finite comparison counts are executions rather than unique histories.",
+    "Early timeout event-union typing was corrected; peer review tightened first-only state legality and timer-counter/deadline invariants without changing reachable policies."
   ],
   "nextQueue": [
     "windowCount",

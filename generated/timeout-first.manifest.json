@@ -1,0 +1,318 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "timeout-first-relative-4-each-none-default",
+    "operator": "timeout",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Watch the original source for missing timely values, then release it and fail or connect to a replacement.",
+    "cardinality": {
+      "signature": "timeout : Cω(First,Each,Scheduler,With,Meta) → T* → (T ∪ R)*",
+      "conditions": [
+        "Source values are forwarded unchanged before timeout.",
+        "First controls only the first value; positive each restarts after every source value.",
+        "The source is released before factory/fallback handoff; replacement values are not subject to another watchdog."
+      ]
+    },
+    "scope": {
+      "parameters": "first=relative-4, each=none, binding=default. Relative durations are integers 1..1000; absolute first time must be a future safe integer at subscription.",
+      "callbacks": "One explicit same-time timeout factory outcome. Default binding must supply a genuine pinned TimeoutError; custom binding returns a valid Observable token or throws.",
+      "time": "Supplied nonnegative safe integer now; deferred FIFO scheduler; current generation fires at or after due. Event/envelope times agree. Equal-time input order controls races; source arrival after a deadline can still win if timer delivery is late.",
+      "reentrancy": "Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.",
+      "exclusions": [
+        "Synchronous source or fallback notification during subscription acquisition; source setup advancing the clock.",
+        "Nonpositive/fractional/nonfinite relative durations, expired absolute dates, synchronous queueScheduler, scheduler exceptions and platform timing precision.",
+        "Promise/Iterable conversions, invalid fallback inputs, factory reentrancy and throwing producer teardown.",
+        "Default TimeoutError prototype construction is assumed for the supplied factory outcome and checked independently natively.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "No connection during construction. The first result subscription applies the profile-specific acquisition rule."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No implicit sharing or replay. Each result subscription owns its memory and resource generations; supplied producers may themselves be shared.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result execution"
+        },
+        {
+          "id": "timeoutTimer",
+          "kind": "timer",
+          "owner": "original-source watchdog generation"
+        },
+        {
+          "id": "timeoutFactory",
+          "kind": "callback",
+          "owner": "one expiry reaction"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Ordered action words are model predictions, not executed effects. Callback invocation IDs correlate outcomes; they are not subscription IDs.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to this result execution."
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "A value from the currently owned source subscription."
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "Successful source termination."
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "Source failure with an opaque error value."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Consumer closes the result connection silently."
+      },
+      {
+        "type": "timer.fire",
+        "origin": "timer",
+        "category": "time",
+        "description": "Current watchdog action executes at supplied now."
+      },
+      {
+        "type": "callback.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "Return from the currently pending, correlated synchronous callback."
+      },
+      {
+        "type": "callback.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "Throw from the currently pending, correlated synchronous callback."
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify",
+      "schedule",
+      "cancel-timer",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "Source",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Source."
+      },
+      {
+        "id": "Choosing",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Choosing."
+      },
+      {
+        "id": "Closed",
+        "terminal": true,
+        "description": "Terminated; no owned subscriptions or retained values."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/timeout.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/timeout-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/util/executeSchedule.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session21-timeout-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session21-timeout-rxjs.test.mjs",
+        "tests/session21-timeout-differential.test.mjs"
+      ],
+      "record": "evidence/SESSION-21.md",
+      "scenarios": "docs/SESSION-21-SCENARIOS.md",
+      "coverage": "docs/SESSION-21-SCENARIOS.md"
+    }
+  },
+  "parameters": {
+    "operator": "timeout",
+    "first": 4,
+    "each": null,
+    "withMode": "default",
+    "fallbackToken": null,
+    "meta": null
+  },
+  "rules": [
+    {
+      "id": "S21-TIMEOUT-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Source",
+      "guard": "first connection; initial deadline remains future and representable; supplied time is a nondecreasing safe integer",
+      "actions": [
+        "subscribe source",
+        "schedule initial watchdog"
+      ],
+      "nextState": "Source with seen=0, lastValue=null and timer generation zero.",
+      "explanation": "The source is acquired before initial scheduling. This profile requires nonemitting, non-time-advancing source setup.",
+      "obligations": [
+        "S21-TIMEOUT-START"
+      ]
+    },
+    {
+      "id": "S21-TIMEOUT-NEXT-CANCEL-TIMER",
+      "from": "Source",
+      "event": "source.next",
+      "to": "Source",
+      "guard": "a current timer is active; supplied time is a nondecreasing safe integer",
+      "actions": [
+        "cancel current timer before delivery",
+        "forward exact source value"
+      ],
+      "nextState": "Seen advances and no watchdog remains after the first value.",
+      "explanation": "A first-only deadline is removed by the first next. Relative each deadlines restart after each accepted value; source values do not inherit an absolute first deadline.",
+      "obligations": [
+        "S21-TIMEOUT-NEXT-CANCEL-TIMER"
+      ]
+    },
+    {
+      "id": "S21-TIMEOUT-NEXT-UNARMED",
+      "from": "Source",
+      "event": "source.next",
+      "to": "Source",
+      "guard": "first-only watchdog was already satisfied; supplied time is a nondecreasing safe integer",
+      "actions": [
+        "forward exact source value"
+      ],
+      "nextState": "Seen advances and no watchdog remains after the first value.",
+      "explanation": "A first-only deadline is removed by the first next. Relative each deadlines restart after each accepted value; source values do not inherit an absolute first deadline.",
+      "obligations": [
+        "S21-TIMEOUT-NEXT-UNARMED"
+      ]
+    },
+    {
+      "id": "S21-TIMEOUT-SOURCE-COMPLETE",
+      "from": "Source",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes before watchdog delivery; supplied time is a nondecreasing safe integer",
+      "actions": [
+        "complete result",
+        "release source",
+        "cancel any current timer"
+      ],
+      "nextState": "Closed complete; no fallback acquisition.",
+      "explanation": "Successful empty completion is not a timeout. A deadline alone is not a delivered event.",
+      "obligations": [
+        "S21-TIMEOUT-SOURCE-COMPLETE"
+      ]
+    },
+    {
+      "id": "S21-TIMEOUT-SOURCE-ERROR",
+      "from": "Source",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source fails before watchdog delivery; supplied time is a nondecreasing safe integer",
+      "actions": [
+        "forward exact source error",
+        "release source",
+        "cancel any current timer"
+      ],
+      "nextState": "Closed error; no factory or fallback.",
+      "explanation": "Source errors preserve their payload and are not replaced by TimeoutError.",
+      "obligations": [
+        "S21-TIMEOUT-SOURCE-ERROR"
+      ]
+    },
+    {
+      "id": "S21-TIMEOUT-CANCEL-SOURCE",
+      "from": "Source",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer closes while source owns the connection; supplied time is a nondecreasing safe integer",
+      "actions": [
+        "release source",
+        "cancel any current timer; emit nothing"
+      ],
+      "nextState": "Closed cancel; no timeout factory or fallback.",
+      "explanation": "Cancellation owns teardown, not a terminal notification.",
+      "obligations": [
+        "S21-TIMEOUT-CANCEL-SOURCE"
+      ]
+    },
+    {
+      "id": "S21-TIMEOUT-EXPIRE",
+      "from": "Source",
+      "event": "timer.fire",
+      "to": "Choosing",
+      "guard": "current timer generation fires at or after its deadline; supplied time is a nondecreasing safe integer",
+      "actions": [
+        "release original source",
+        "cancel current timer during source finalization",
+        "invoke timeout factory with meta, seen and cleared lastValue"
+      ],
+      "nextState": "Choosing awaits one same-time correlated factory outcome; no source/timer remains.",
+      "explanation": "RxJS 7.8.2 finalizes the source before building factory info: lastValue is null even after source values, while seen and meta survive.",
+      "obligations": [
+        "S21-TIMEOUT-EXPIRE"
+      ]
+    },
+    {
+      "id": "S21-TIMEOUT-FACTORY-THROW",
+      "from": "Choosing",
+      "event": "callback.throw",
+      "to": "Closed",
+      "guard": "matching factory throws at invocation time; supplied time is a nondecreasing safe integer",
+      "actions": [
+        "forward exact thrown error"
+      ],
+      "nextState": "Closed error; original source and timer were already released.",
+      "explanation": "The external default binding supplies a fresh pinned TimeoutError; the pure model does not construct its prototype.",
+      "obligations": [
+        "S21-TIMEOUT-FACTORY-THROW"
+      ]
+    }
+  ]
+}
