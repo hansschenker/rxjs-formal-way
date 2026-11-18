@@ -3,7 +3,7 @@
   "sessionNumber": 21,
   "date": "2026-11-18",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-18T06:41:24+01:00",
   "startingCommit": "4de938c4df06148c4d3fc037ea9d5b89987a426f",
   "selectedNames": [
@@ -20,15 +20,21 @@
     "timestamp",
     "window"
   ],
-  "completedNames": [],
+  "completedNames": [
+    "timeInterval",
+    "timeout",
+    "timeoutWith",
+    "timestamp",
+    "window"
+  ],
   "carryovers": [],
   "checks": {
-    "syntax": "Passed complete local npm run check; committed CI pending.",
-    "types": "Strict TypeScript passed locally, including 40 new negative assertions; committed CI pending.",
-    "model": "63 new model tests and two artifact navigation tests; full suite 1544 passed, zero failed locally; committed CI pending.",
-    "runtime": "58 new native tests and five differential tests; 2724 Session 21 comparison executions passed locally; committed CI pending.",
-    "generated": "93 new files include all five eleven-step indexes. Normal generator and drift check passed locally for 1097 ordinary + 3 specialized projections; committed read-only CI pending.",
-    "ci": "Not yet run on complete implementation; no passing CI acceptance claimed."
+    "syntax": "Passed local full check, implementation PR CI 44248539312, main push CI 44248935292 and independent read-only PR CI 44249151096.",
+    "types": "Strict TypeScript passed in all complete checks, including 40 new negative assertions; no checks relaxed.",
+    "model": "63 new model tests and two artifact navigation tests; full suite 1544 passed, zero failed and zero skipped in main and independent read-only CI.",
+    "runtime": "58 new native RxJS tests and five differential tests; 288+288+432+216+1500=2724 finite comparison executions with time, notifications, provider/factory outcomes and resource lifetimes observed.",
+    "generated": "93 new committed files from eleven configured examples include all five required eleven-step indexes. 1097 ordinary + 3 specialized projections generated on main and independently drift-verified without regeneration.",
+    "ci": "Main push run 44248935292 job 134614579068 success; independent read-only PR43 run 44249151096 job 134615286680 success. Generation/publication skipped in the read-only run; independently retrieved PR head and actual synthetic checkout have identical Git trees."
   },
   "blockers": [],
   "authorization": {
@@ -42,7 +48,12 @@
     "Reuse schema, runner, renderers and tests; require all five public inspection indexes, independent actual RxJS checks and committed read-only drift verification.",
     "Complete local generation/check passed on Node v24.22.3: 1544 tests, zero failures, 2724 Session 21 comparisons, 1097+3 deterministic projections.",
     "128 new named tests (63 model, 58 native, five differential, two navigation) and 40 negative type assertions; finite comparison counts are executions rather than unique histories.",
-    "Early timeout event-union typing was corrected; peer review tightened first-only state legality and timer-counter/deadline invariants without changing reachable policies."
+    "Early timeout event-union typing was corrected; peer review tightened first-only state legality and timer-counter/deadline invariants without changing reachable policies.",
+    "PR42 implementation CI 44248539312 and main push CI 44248935292 passed all 1544 tests and 1097+3 projection checks. Artifacts were committed with implementation at ff2568b979f584ae54e0505cce0b9932fd323c69; unchanged main regeneration produced no extra artifact commit.",
+    "Independent read-only PR43 CI 44249151096 passed with generation/publication skipped. Head 9a172b6780d1135a0095156a96e589067f5417d1 and actual checkout b933a428bed513c76f1ab16d92f30e28cf977a9f share independently retrieved tree 3802d110c12b58987ef1156ff88d816bee99600f.",
+    "All five exports are accepted within documented scopes: 105/113 accepted, 8 pending and zero carryovers. All required public inspection indexes are committed and independently drift-verified.",
+    "Pinned source/spec bodies inspected; upstream RxJS suite not executed. Finite executions and rule witnesses are not unrestricted equivalence proofs. Clock prototypes, synchronous setup and unsupported parameter cases remain distinguished from canonical profiles.",
+    "The date exception applies to this specifically requested Session21 only. Preserve the closed Session20 records and the ordinary next eligible date of 19 November; no sixth export was selected."
   ],
   "nextQueue": [
     "windowCount",
@@ -50,5 +61,36 @@
     "windowToggle",
     "windowWhen",
     "withLatestFrom"
-  ]
+  ],
+  "closedAt": "2026-11-18T07:11:10+01:00",
+  "nextSessionNotBefore": "2026-11-19",
+  "commits": [
+    "9889e30d2fef018e4ebf54d989170039466f6d98",
+    "ff2568b979f584ae54e0505cce0b9932fd323c69",
+    "fa4579468c231b531585a0473c1a0c934fbb55d4",
+    "9a172b6780d1135a0095156a96e589067f5417d1",
+    "e8b7c48235d490858cbafb1913b99d322e03b508"
+  ],
+  "verification": {
+    "implementationPR": 42,
+    "implementationPRRun": 44248539312,
+    "implementationPRJob": 134613289797,
+    "implementationPRCheckout": "130ef45e666f084f4876cbeb195eaef9c2911f9f",
+    "implementationTree": "458f9f5931a9cc4c2606bfeca054fefee4dc2aa9",
+    "mainRun": 44248935292,
+    "mainJob": 134614579068,
+    "mainCheckout": "fa4579468c231b531585a0473c1a0c934fbb55d4",
+    "generatedCommit": "ff2568b979f584ae54e0505cce0b9932fd323c69",
+    "readOnlyPR": 43,
+    "readOnlyRun": 44249151096,
+    "readOnlyJob": 134615286680,
+    "readOnlyHeadCommit": "9a172b6780d1135a0095156a96e589067f5417d1",
+    "readOnlyCheckout": "b933a428bed513c76f1ab16d92f30e28cf977a9f",
+    "readOnlyTree": "3802d110c12b58987ef1156ff88d816bee99600f"
+  },
+  "inventoryAfterClosure": {
+    "accepted": 105,
+    "pending": 8,
+    "carryovers": 0
+  }
 }

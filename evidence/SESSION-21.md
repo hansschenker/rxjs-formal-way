@@ -1,6 +1,6 @@
 # Session 21 — Clock readings, deadlines and live windows
 
-**Date:** 18 November 2026, Europe/Zurich. **Status:** local, implementation PR and main CI passed; independent read-only verification and final acceptance pending. Exactly five exports are selected: `timeInterval`, `timeout`, `timeoutWith`, `timestamp`, and `window`.
+**Date:** 18 November 2026, Europe/Zurich. **Status:** closed; all five selected exports accepted within their documented scopes. Local checks, implementation PR CI, main CI and independent read-only verification passed. The exports are `timeInterval`, `timeout`, `timeoutWith`, `timestamp`, and `window`.
 
 The user explicitly instructed: **“lets do Session 21 today 18.11.2026”**, after Session 20 was closed that day. This is a specific exception to the ordinary daily-session limit. It does not relax the five-export limit or any verification gate. The [numbered reservation](../planning/sessions/2026-11-18-session-21.json) preserves the [closed Session 20 record](../planning/sessions/2026-11-18.json). The accepted starting inventory is **100/113**, with **13 pending** and no carryovers.
 
@@ -61,7 +61,11 @@ Both main-only generation and publication steps succeeded. Regeneration found no
 
 ## Independent read-only verification
 
-This evidence-only follow-up changes no canonical model, test, generated projection, workflow or dependency. The unchanged pull-request path will check the complete committed tree with both generation and publication skipped. Final acceptance remains pending until that separate run, its actual checkout, and its tree identity have been retrieved and recorded.
+The evidence-only [PR #43](https://github.com/hansschenker/rxjs-formal-way/pull/43) changed only this ledger. Its [CI run 44249151096](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44249151096), job `134615286680`, succeeded on Node v22.16.0. Retrieved logs report **1,544 tests passed, zero failed, zero skipped**, syntax and strict TypeScript success, the same **2,724** Session 21 comparisons, and all **1,097 ordinary + 3 specialized committed projections** verified. Generation and publication were both explicitly **skipped**.
+
+The PR head was `9a172b6780d1135a0095156a96e589067f5417d1`; the actual synthetic checkout was `b933a428bed513c76f1ab16d92f30e28cf977a9f`. Independently retrieved Git commit objects for both have identical tree **`3802d110c12b58987ef1156ff88d816bee99600f`**. Thus the read-only check exercised the committed content without regeneration concealing drift. PR #43 merged as [`e8b7c48235d490858cbafb1913b99d322e03b508`](https://github.com/hansschenker/rxjs-formal-way/commit/e8b7c48235d490858cbafb1913b99d322e03b508).
+
+The final closure changes documentation and planning records only. It preserves the exact tested attribution: `fa4579468c231b531585a0473c1a0c934fbb55d4` is the main implementation checkout; `ff2568b979f584ae54e0505cce0b9932fd323c69` committed the generated artifacts; and the independent checkout above verified those committed files.
 
 ## Evidence limits
 
@@ -71,4 +75,6 @@ Default error construction, prototype exposure, synchronous setup and unsupporte
 
 ## Closure
 
-Acceptance and inventory updates remain pending. The next untouched five after successful acceptance are `windowCount`, `windowTime`, `windowToggle`, `windowWhen`, and `withLatestFrom`. No sixth export belongs to Session 21.
+**Accepted: 5/5 selected exports; inventory 105/113 accepted, 8 pending, zero carryovers and no unresolved in-scope blockers.** All five required public inspection indexes were committed and independently drift-verified. The [Session 21 record](../planning/sessions/2026-11-18-session-21.json) is closed on **18 November 2026 Europe/Zurich**, under the explicit date exception recorded before implementation. The original Session 20 completion records remain historical evidence; their date restriction was superseded only for this specifically requested Session 21.
+
+**Next untouched five:** `windowCount`, `windowTime`, `windowToggle`, `windowWhen`, and `withLatestFrom`. The final three pending exports are `zip`, `zipAll`, and `zipWith`. The ordinary next eligible date is **19 November 2026 Europe/Zurich** unless the user explicitly authorizes another exception. No sixth export belongs to Session 21.

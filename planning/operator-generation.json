@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "timeInterval",
-    "timeout",
-    "timeoutWith",
-    "timestamp",
-    "window",
     "windowCount",
     "windowTime",
     "windowToggle",
@@ -1477,24 +1472,88 @@
       "readOnlyCheckout": "af240c43d931eab6a652a42b35739d946f18ac1f"
     },
     "timeInterval": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-18",
+      "sessionNumber": 21,
+      "completedOn": "2026-11-18",
+      "profiles": [
+        "finite external provider readings; initial baseline before source acquisition",
+        "per-value differences and remembered prior reading; synchronous correlated outcomes",
+        "provider failures preserve exact error; no scheduled timers or implicit sharing"
+      ],
+      "evidence": "evidence/SESSION-21.md",
+      "inspectionIndex": "operators/timeInterval-index.md",
+      "testedCommit": "fa4579468c231b531585a0473c1a0c934fbb55d4",
+      "generatedCommit": "ff2568b979f584ae54e0505cce0b9932fd323c69",
+      "implementationRun": 44248935292,
+      "verificationRun": 44249151096,
+      "readOnlyHeadCommit": "9a172b6780d1135a0095156a96e589067f5417d1",
+      "readOnlyCheckout": "b933a428bed513c76f1ab16d92f30e28cf977a9f",
+      "readOnlyTree": "3802d110c12b58987ef1156ff88d816bee99600f",
+      "sessionRecord": "planning/sessions/2026-11-18-session-21.json"
     },
     "timeout": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-18",
+      "sessionNumber": 21,
+      "completedOn": "2026-11-18",
+      "profiles": [
+        "positive bounded relative first/each deadlines and future absolute first deadline",
+        "deferred FIFO scheduler delivery, current timer generation and explicit factory outcome",
+        "source teardown before default error or replacement; fallback is not timed again"
+      ],
+      "evidence": "evidence/SESSION-21.md",
+      "inspectionIndex": "operators/timeout-index.md",
+      "testedCommit": "fa4579468c231b531585a0473c1a0c934fbb55d4",
+      "generatedCommit": "ff2568b979f584ae54e0505cce0b9932fd323c69",
+      "implementationRun": 44248935292,
+      "verificationRun": 44249151096,
+      "readOnlyHeadCommit": "9a172b6780d1135a0095156a96e589067f5417d1",
+      "readOnlyCheckout": "b933a428bed513c76f1ab16d92f30e28cf977a9f",
+      "readOnlyTree": "3802d110c12b58987ef1156ff88d816bee99600f",
+      "sessionRecord": "planning/sessions/2026-11-18-session-21.json"
     },
     "timeoutWith": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-18",
+      "sessionNumber": 21,
+      "completedOn": "2026-11-18",
+      "profiles": [
+        "same guarded timeout kernel with fixed Observable replacement",
+        "numeric due configures repeated gap deadlines; future Date configures first-value deadline",
+        "original-source teardown precedes fallback acquisition and independent fallback lifetime"
+      ],
+      "evidence": "evidence/SESSION-21.md",
+      "inspectionIndex": "operators/timeoutWith-index.md",
+      "testedCommit": "fa4579468c231b531585a0473c1a0c934fbb55d4",
+      "generatedCommit": "ff2568b979f584ae54e0505cce0b9932fd323c69",
+      "implementationRun": 44248935292,
+      "verificationRun": 44249151096,
+      "readOnlyHeadCommit": "9a172b6780d1135a0095156a96e589067f5417d1",
+      "readOnlyCheckout": "b933a428bed513c76f1ab16d92f30e28cf977a9f",
+      "readOnlyTree": "3802d110c12b58987ef1156ff88d816bee99600f",
+      "sessionRecord": "planning/sessions/2026-11-18-session-21.json"
     },
     "timestamp": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-18",
+      "sessionNumber": 21,
+      "completedOn": "2026-11-18",
+      "profiles": [
+        "finite external provider reading on each source value; no subscription-time read",
+        "same payload reference annotated with provider reading; synchronous correlated outcomes",
+        "provider failures preserve exact error; no scheduled timers or implicit sharing"
+      ],
+      "evidence": "evidence/SESSION-21.md",
+      "inspectionIndex": "operators/timestamp-index.md",
+      "testedCommit": "fa4579468c231b531585a0473c1a0c934fbb55d4",
+      "generatedCommit": "ff2568b979f584ae54e0505cce0b9932fd323c69",
+      "implementationRun": 44248935292,
+      "verificationRun": 44249151096,
+      "readOnlyHeadCommit": "9a172b6780d1135a0095156a96e589067f5417d1",
+      "readOnlyCheckout": "b933a428bed513c76f1ab16d92f30e28cf977a9f",
+      "readOnlyTree": "3802d110c12b58987ef1156ff88d816bee99600f",
+      "sessionRecord": "planning/sessions/2026-11-18-session-21.json"
     },
     "toArray": {
       "status": "accepted",
@@ -1510,9 +1569,25 @@
       "readOnlyCheckout": "693325757bea224f27a3b945cb193d9b07fb402e"
     },
     "window": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-18",
+      "sessionNumber": 21,
+      "completedOn": "2026-11-18",
+      "profiles": [
+        "one semantic live-window profile; initial window then boundary-driven rotation",
+        "live multicast without replay; boundary completion leaves current window and source active",
+        "outer cleanup, retained completed handles and independent inner-consumer cancellation"
+      ],
+      "evidence": "evidence/SESSION-21.md",
+      "inspectionIndex": "operators/window-index.md",
+      "testedCommit": "fa4579468c231b531585a0473c1a0c934fbb55d4",
+      "generatedCommit": "ff2568b979f584ae54e0505cce0b9932fd323c69",
+      "implementationRun": 44248935292,
+      "verificationRun": 44249151096,
+      "readOnlyHeadCommit": "9a172b6780d1135a0095156a96e589067f5417d1",
+      "readOnlyCheckout": "b933a428bed513c76f1ab16d92f30e28cf977a9f",
+      "readOnlyTree": "3802d110c12b58987ef1156ff88d816bee99600f",
+      "sessionRecord": "planning/sessions/2026-11-18-session-21.json"
     },
     "windowCount": {
       "status": "pending",

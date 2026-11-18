@@ -48,7 +48,10 @@ This is the current implementation tracker. The migration map preserves the orig
 | M19-B | switchMapTo and switchScan: configured inner switching, accumulator memory and cancellation ownership | Accepted within scope; [Session 19 evidence](../evidence/SESSION-19.md) |
 | M20-A | takeLast, tap and throwIfEmpty: terminal suffix, notification/lifecycle hooks and empty-source error policy | Accepted within scope; [Session 20 guide](SESSION-20-TERMINAL-TAP-THROTTLE.md) |
 | M20-B | throttle and throttleTime: four leading/trailing policies, duration generations, completion waiting and cleanup | Accepted within scope; [Session 20 evidence](../evidence/SESSION-20.md) |
-| M20+ | Remaining catalogue | 13 exports pending; no universal interpreter or unmodeled overload equivalence |
+| M21-A | timeInterval and timestamp: external provider readings, interval memory and synchronous read failures | Accepted within scope; [clock guide](SESSION-21-CLOCKS.md) |
+| M21-B | timeout and timeoutWith: first/gap deadlines, timer generations, source cleanup and replacement lifetime | Accepted within scope; [timeout guide](SESSION-21-TIMEOUTS.md) |
+| M21-C | window: live multicast windows, boundary rotation and independent consumer lifetimes | Accepted within scope; [window guide](SESSION-21-WINDOW.md) and [Session 21 evidence](../evidence/SESSION-21.md) |
+| M21+ | Remaining catalogue | 8 exports pending; no universal interpreter or unmodeled overload equivalence |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -265,3 +268,15 @@ Implementation [PR #39](https://github.com/hansschenker/rxjs-formal-way/pull/39)
 Independent read-only [PR #41](https://github.com/hansschenker/rxjs-formal-way/pull/41), [CI 44244947929](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44244947929), job `134601533648`, passed the same complete checks with generation and publication skipped. Its head `ab99e17b164931ce6021f3f2a16b746ea2192263` and actual synthetic checkout `af240c43d931eab6a652a42b35739d946f18ac1f` have independently retrieved identical tree `262bd694a5ba9b5345f1fb08c778b9aaf57ccb8b`. Exact provenance, the earlier incomplete integration, the corrected missing-document check, and bounded-evidence limits remain in [Session 20 evidence](../evidence/SESSION-20.md).
 
 **100/113 exports accepted; 13 pending; zero carryovers and no unresolved in-scope blockers.** Both dated records close the same Session 20; the 18 November continuation did not start an additional batch. Next eligible session is **19 November 2026 Europe/Zurich**, beginning with `timeInterval`, `timeout`, `timeoutWith`, `timestamp`, and `window`.
+
+## Session 21 closed: 18 November 2026 (explicit date exception)
+
+The user explicitly requested **“lets do Session 21 today 18.11.2026”** after Session 20 closed. The [separate numbered record](../planning/sessions/2026-11-18-session-21.json), reserved at `9889e30d2fef018e4ebf54d989170039466f6d98`, preserves that specific exception without changing the five-export limit or verification gates. Session 20's closure above remains a historical checkpoint; its next-date restriction was superseded for this requested session only.
+
+Exactly five previously pending exports are accepted within documented scopes: **timeInterval, timeout, timeoutWith, timestamp and window**. The [session guide](SESSION-21-TIME-AND-WINDOWS.md) links all five six-tuples, Cω shapes, guarded pure TypeScript definitions and scenario-to-test evidence. Eleven configured examples produce **93 new committed projections**, including the five required eleven-step inspection indexes. The three window examples are histories of one semantic profile.
+
+Implementation [PR #42](https://github.com/hansschenker/rxjs-formal-way/pull/42) committed implementation and artifacts at `ff2568b979f584ae54e0505cce0b9932fd323c69` and merged as `fa4579468c231b531585a0473c1a0c934fbb55d4`. [Main CI 44248935292](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44248935292), job `134614579068`, passed **1,544 named tests, zero failures**, strict types and syntax, **2,724 Session 21 comparison executions**, and **1,097 ordinary + 3 specialized projections** generated and drift-verified. Main regeneration produced no extra artifact commit. The batch adds **128 named tests** and **40 negative TypeScript assertions**.
+
+Independent read-only [PR #43](https://github.com/hansschenker/rxjs-formal-way/pull/43), [CI 44249151096](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44249151096), job `134615286680`, passed the same complete checks with generation and publication skipped. Its head `9a172b6780d1135a0095156a96e589067f5417d1` and actual synthetic checkout `b933a428bed513c76f1ab16d92f30e28cf977a9f` have independently retrieved identical tree `3802d110c12b58987ef1156ff88d816bee99600f`. PR #43 merged as `e8b7c48235d490858cbafb1913b99d322e03b508`. Exact provenance, corrections and bounded-evidence limits remain in [Session 21 evidence](../evidence/SESSION-21.md).
+
+**105/113 exports accepted; 8 pending; zero carryovers and no unresolved in-scope blockers.** The next five are **windowCount, windowTime, windowToggle, windowWhen and withLatestFrom**, ordinarily eligible on **19 November 2026 Europe/Zurich**. The final three pending exports are **zip, zipAll and zipWith**. No sixth export was included in Session 21.

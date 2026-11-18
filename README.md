@@ -8,7 +8,7 @@ The project grew from stateful transducers, through six-component Mealy analysis
 
 ## Current checkpoint: Session 21 — clock readings, deadlines and live windows
 
-Session 21 covers **timeInterval, timeout, timeoutWith, timestamp and window**, following the user's explicit request to run it on **18 November 2026 Europe/Zurich** after Session 20 closed. The [separate reservation](planning/sessions/2026-11-18-session-21.json) records this specific date exception. Implementation and final acceptance are tracked in the [Session 21 evidence ledger](evidence/SESSION-21.md); the [inventory](planning/operator-generation.json) remains authoritative for accepted status.
+Session 21 accepted **timeInterval, timeout, timeoutWith, timestamp and window** within their documented scopes on **18 November 2026 Europe/Zurich**. The [closed session record](planning/sessions/2026-11-18-session-21.json) preserves the user's explicit date exception after Session 20 closed. **105/113 exports are accepted, 8 remain pending, and there are no carryovers.** Main CI and independent read-only verification passed **1,544 named tests**, **2,724 Session 21 comparison executions**, and **1,097 ordinary + 3 specialized committed projections**. The batch adds 128 named tests, 40 negative TypeScript assertions and 93 projections from eleven configured examples. Exact tested revisions, evidence limits and all five required inspection indexes are recorded in the [Session 21 evidence ledger](evidence/SESSION-21.md); the [inventory](planning/operator-generation.json) tracks accepted status.
 
 Read the [teaching guide](docs/SESSION-21-TIME-AND-WINDOWS.md), [scenario map](docs/SESSION-21-SCENARIOS.md), or the five inspection indexes: [timeInterval](operators/timeInterval-index.md), [timeout](operators/timeout-index.md), [timeoutWith](operators/timeoutWith-index.md), [timestamp](operators/timestamp-index.md), and [window](operators/window-index.md).
 
@@ -236,7 +236,7 @@ Keep terminal exclusivity, post-terminal silence, cancellation distinct from com
 
 Earlier repositories remain provenance, not material to delete: rxjs-mealy-analysis, rxjs-operator-mealy-analysis, rxjs-operator-mealy-tuples, rxjs-mealy-to-testcase, bdd-to-mealy, rxjs-comega-type-notation-and-mealy-machine-tuples, and the Mealy-to-documentation experiments.
 
-Continue only according to the live queue and dated session log. Unfinished names carry first; at most five distinct names are worked on per local-date session. The next pending batch is distinctUntilChanged, distinctUntilKeyChanged, distinct, pairwise and startWith. Full catalogue migration, a general effect interpreter, dependent proofs and interactive visualization remain later work. The migration map preserves the original broader plan.
+Continue according to the live queue and dated session log. Unfinished names carry first; the ordinary plan permits one session per local date and at most five distinct names per session. Session 21's specific user-authorized date exception is recorded above. The next pending batch is **windowCount, windowTime, windowToggle, windowWhen and withLatestFrom**, ordinarily eligible on **19 November 2026 Europe/Zurich**. After those, **zip, zipAll and zipWith** remain. Full catalogue migration, a general effect interpreter, dependent proofs and interactive visualization remain later work. The migration map preserves the original broader plan.
 
 ## Collaboration
 
