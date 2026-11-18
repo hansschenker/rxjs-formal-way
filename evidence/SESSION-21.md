@@ -1,6 +1,6 @@
 # Session 21 — Clock readings, deadlines and live windows
 
-**Date:** 18 November 2026, Europe/Zurich. **Status:** complete local integration passed; committed CI and final acceptance pending. Exactly five exports are selected: `timeInterval`, `timeout`, `timeoutWith`, `timestamp`, and `window`.
+**Date:** 18 November 2026, Europe/Zurich. **Status:** local, implementation PR and main CI passed; independent read-only verification and final acceptance pending. Exactly five exports are selected: `timeInterval`, `timeout`, `timeoutWith`, `timestamp`, and `window`.
 
 The user explicitly instructed: **“lets do Session 21 today 18.11.2026”**, after Session 20 was closed that day. This is a specific exception to the ordinary daily-session limit. It does not relax the five-export limit or any verification gate. The [numbered reservation](../planning/sessions/2026-11-18-session-21.json) preserves the [closed Session 20 record](../planning/sessions/2026-11-18.json). The accepted starting inventory is **100/113**, with **13 pending** and no carryovers.
 
@@ -51,7 +51,17 @@ An early parallel build reported a TypeScript error from a concatenated timeout 
 
 Focused source review and tests also pin the RxJS 7.8.2 detail that original-source finalization clears `lastValue` before timeout factory info is constructed: `meta` and `seen` survive, while `lastValue` is null. Window disposal is distinguished from inner completion; a disposed current handle throws on late subscription, whereas an older rotated completed handle still completes late observers. These are actual native observations under the documented scope, not assumptions inferred from the generated pages.
 
-Final acceptance still requires successful committed CI and independently retrieved checkout provenance; the local working-tree result is not represented as a GitHub-tested commit.
+## Committed CI and projection provenance
+
+Implementation [PR #42](https://github.com/hansschenker/rxjs-formal-way/pull/42) committed all models, tests, guides and **93 new generated files** at [`ff2568b979f584ae54e0505cce0b9932fd323c69`](https://github.com/hansschenker/rxjs-formal-way/commit/ff2568b979f584ae54e0505cce0b9932fd323c69). Its [CI run 44248539312](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44248539312), job `134613289797`, succeeded. The actual synthetic checkout was `130ef45e666f084f4876cbeb195eaef9c2911f9f`; independently retrieved commit objects for that checkout and the PR head have identical tree `458f9f5931a9cc4c2606bfeca054fefee4dc2aa9`.
+
+The implementation merged as [`fa4579468c231b531585a0473c1a0c934fbb55d4`](https://github.com/hansschenker/rxjs-formal-way/commit/fa4579468c231b531585a0473c1a0c934fbb55d4). [Main push CI 44248935292](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44248935292), job `134614579068`, checked out exactly that SHA and passed on **Node v22.16.0**. Retrieved logs report **1,544 tests passed, zero failed, zero skipped**, strict types and syntax success, Session 21 comparison counts **288 + 288 + 432 + 216 + 1,500 = 2,724**, and **1,097 ordinary + 3 specialized projections** regenerated and drift-verified.
+
+Both main-only generation and publication steps succeeded. Regeneration found no artifact changes, so no additional generated-file commit was made; independently retrieved live `main` remained `fa4579468c231b531585a0473c1a0c934fbb55d4`. The original implementation commit is therefore also the generated-artifact commit. No workflow, dependency, schema or renderer was changed.
+
+## Independent read-only verification
+
+This evidence-only follow-up changes no canonical model, test, generated projection, workflow or dependency. The unchanged pull-request path will check the complete committed tree with both generation and publication skipped. Final acceptance remains pending until that separate run, its actual checkout, and its tree identity have been retrieved and recorded.
 
 ## Evidence limits
 
