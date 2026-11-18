@@ -1,0 +1,413 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "window-observable-boundaries",
+    "operator": "window",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Emit an initial live window and rotate it on boundary next; route source values into the current multicast window.",
+    "cardinality": {
+      "signature": "window : Cω(BoundarySignal) → T* → Observable<T>*",
+      "conditions": [
+        "One initial handle is emitted on result connection, followed by one handle for every accepted boundary next.",
+        "Each window exposes only source values observed while it is current and that consumer is attached.",
+        "Boundary complete does not complete the result; outer cancellation does not complete its current window consumers."
+      ]
+    },
+    "scope": {
+      "parameters": "Valid Observable boundary input; observers use only the Observable-facing interface of emitted handles.",
+      "callbacks": "No user callback; payloads and boundary notification values are opaque.",
+      "time": "Source, boundary and consumer events supply trace time. Equal-time order is explicit input order; no clock, buffer or scheduler is introduced.",
+      "reentrancy": "Atomic non-reentrant reactions after source/boundary setup returns. Consumer attachment is an explicit event between reactions; synchronous setup and callback-driven reentry are characterized separately.",
+      "exclusions": [
+        "Promise/Iterable or invalid boundary conversion.",
+        "Synchronous source/boundary notifications during setup and consumer attachment/cancellation inside an action word.",
+        "Imperative next/error/complete access on the later Subject objects; the model specifies their Observable-facing behavior.",
+        "Subscription to the invalidated final current handle is outside the modeled legal alphabet; native tests separately verify ObjectUnsubscribedError.",
+        "Physical Subject/Observable prototype identity and observer-thrown errors.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Emit window zero, subscribe source, then subscribe boundary. Model inputs after subscribe assume both setup calls returned without synchronous delivery."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "Each result subscription owns its own source/boundary subscriptions and windows. Each emitted window is live multicast without replay; its consumers never retain the original source after outer cancellation.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result execution"
+        },
+        {
+          "id": "boundary",
+          "kind": "subscription",
+          "owner": "outer result execution"
+        },
+        {
+          "id": "windowObserver:*",
+          "kind": "subscription",
+          "owner": "independent window consumer"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Notifications are addressed to outer downstream or explicit window observers. Tokens identify emitted handles; initial/later prototype differences are normalized. Subject invalidation is state, not a fabricated consumer-unsubscribe action.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to this result execution."
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "A value from the currently owned source subscription."
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "Successful source termination."
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "Source failure with an opaque error value."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Consumer closes the result connection silently."
+      },
+      {
+        "type": "boundary.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "Current boundary subscription emits; payload is ignored."
+      },
+      {
+        "type": "boundary.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "Boundary stops without closing the current window."
+      },
+      {
+        "type": "boundary.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "Boundary fails with an opaque error payload."
+      },
+      {
+        "type": "window.subscribe",
+        "origin": "inner",
+        "category": "lifecycle",
+        "description": "A fresh addressed consumer attaches to a known open or previously rotated completed window."
+      },
+      {
+        "type": "window.unsubscribe",
+        "origin": "inner",
+        "category": "lifecycle",
+        "description": "An attached or orphaned consumer closes its own subscription."
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "Active",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Active."
+      },
+      {
+        "id": "Stopped",
+        "terminal": false,
+        "description": "Outer/source execution ended; retained completed handles and orphaned consumer subscriptions remain observable through their own lifecycle events."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/window.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/window-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subject.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Observable.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/util/ObjectUnsubscribedError.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session21-window-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session21-window-rxjs.test.mjs",
+        "tests/session21-window-differential.test.mjs"
+      ],
+      "record": "evidence/SESSION-21.md",
+      "scenarios": "docs/SESSION-21-SCENARIOS.md",
+      "coverage": "docs/SESSION-21-SCENARIOS.md"
+    }
+  },
+  "parameters": {
+    "boundaries": "Observable",
+    "consumerAccess": "Observable-only",
+    "sourceSetup": "post-setup"
+  },
+  "rules": [
+    {
+      "id": "S21-WINDOW-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first result connection",
+      "actions": [
+        "emit initial window handle",
+        "acquire source",
+        "acquire boundary Observable"
+      ],
+      "nextState": "Window zero is open; both inputs are owned; no window consumer is attached yet.",
+      "explanation": "The initial window precedes either input subscription. Subsequent modeled events begin after setup returns.",
+      "obligations": [
+        "S21-WINDOW-START"
+      ]
+    },
+    {
+      "id": "S21-WINDOW-SOURCE-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source is live",
+      "actions": [
+        "deliver original value to current window consumers in attachment order"
+      ],
+      "nextState": "The same window remains open; values are not buffered or retained for late consumers.",
+      "explanation": "A window is a live multicast stream. Source values sent before an observer attaches are not replayed.",
+      "obligations": [
+        "S21-WINDOW-SOURCE-NEXT"
+      ]
+    },
+    {
+      "id": "S21-WINDOW-BOUNDARY-NEXT",
+      "from": "Active",
+      "event": "boundary.next",
+      "to": "Active",
+      "guard": "boundary is live and next window identity is a safe integer",
+      "actions": [
+        "complete each current consumer and release its subscription",
+        "emit next window handle"
+      ],
+      "nextState": "Previous window remains a completed historical handle; a new empty current window has no consumers.",
+      "explanation": "Every boundary next rotates the window, even if no source value arrived. Boundary payloads are ignored.",
+      "obligations": [
+        "S21-WINDOW-BOUNDARY-NEXT"
+      ]
+    },
+    {
+      "id": "S21-WINDOW-BOUNDARY-COMPLETE",
+      "from": "Active",
+      "event": "boundary.complete",
+      "to": "Active",
+      "guard": "boundary is live",
+      "actions": [
+        "release boundary input only"
+      ],
+      "nextState": "Current window and source remain live; no further boundary events are legal.",
+      "explanation": "Boundary completion is a no-op for window/result notifications. It does not close the current window.",
+      "obligations": [
+        "S21-WINDOW-BOUNDARY-COMPLETE"
+      ]
+    },
+    {
+      "id": "S21-WINDOW-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Stopped",
+      "guard": "source completes successfully",
+      "actions": [
+        "complete current consumers and release their subscriptions",
+        "complete outer result",
+        "release source and any live boundary",
+        "invalidate current handle during operator teardown"
+      ],
+      "nextState": "Outer execution stopped; older rotated handles remain completed; current handle is invalidated.",
+      "explanation": "Current-window completion precedes outer completion. Final operator teardown unsubscribes the current Subject itself.",
+      "obligations": [
+        "S21-WINDOW-SOURCE-COMPLETE"
+      ]
+    },
+    {
+      "id": "S21-WINDOW-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Stopped",
+      "guard": "source is live",
+      "actions": [
+        "error current consumers and release their subscriptions",
+        "error outer result with identical payload",
+        "release source and any live boundary",
+        "invalidate current handle"
+      ],
+      "nextState": "Outer execution stopped with error; older completed handles are unchanged.",
+      "explanation": "Both input failures reach current-window consumers before the outer observer. The error payload is never replaced.",
+      "obligations": [
+        "S21-WINDOW-SOURCE-ERROR"
+      ]
+    },
+    {
+      "id": "S21-WINDOW-BOUNDARY-ERROR",
+      "from": "Active",
+      "event": "boundary.error",
+      "to": "Stopped",
+      "guard": "boundary is live",
+      "actions": [
+        "error current consumers and release their subscriptions",
+        "error outer result with identical payload",
+        "release source and any live boundary",
+        "invalidate current handle"
+      ],
+      "nextState": "Outer execution stopped with error; older completed handles are unchanged.",
+      "explanation": "Both input failures reach current-window consumers before the outer observer. The error payload is never replaced.",
+      "obligations": [
+        "S21-WINDOW-BOUNDARY-ERROR"
+      ]
+    },
+    {
+      "id": "S21-WINDOW-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Stopped",
+      "guard": "outer consumer cancels the result",
+      "actions": [
+        "release source and any live boundary",
+        "invalidate current handle without notifying or closing existing consumer subscriptions"
+      ],
+      "nextState": "Outer execution stopped; its current consumers are orphaned until they unsubscribe themselves.",
+      "explanation": "Subject.unsubscribe is not Subject.complete. Window consumers do not hold a lease that preserves the original source.",
+      "obligations": [
+        "S21-WINDOW-CANCEL"
+      ]
+    },
+    {
+      "id": "S21-WINDOW-OBSERVER-LIVE",
+      "from": "Active",
+      "event": "window.subscribe",
+      "to": "Active",
+      "guard": "fresh observer identity names the current open window",
+      "actions": [
+        "acquire addressed window-consumer subscription; replay nothing"
+      ],
+      "nextState": "Observer joins the current multicast window after existing consumers.",
+      "explanation": "Attaching a window observer does not acquire another source or boundary subscription.",
+      "obligations": [
+        "S21-WINDOW-OBSERVER-LIVE"
+      ]
+    },
+    {
+      "id": "S21-WINDOW-OBSERVER-COMPLETE-ACTIVE",
+      "from": "Active",
+      "event": "window.subscribe",
+      "to": "Active",
+      "guard": "fresh observer identity names a previously rotated completed handle",
+      "actions": [
+        "attempt addressed window subscription",
+        "complete observer immediately",
+        "release its subscription"
+      ],
+      "nextState": "No active consumer or source lease is added; observer identity is recorded as used.",
+      "explanation": "Retired completed windows remember completion but never replay values. The final current handle is separately invalidated and excluded from this legal event.",
+      "obligations": [
+        "S21-WINDOW-OBSERVER-COMPLETE-ACTIVE"
+      ]
+    },
+    {
+      "id": "S21-WINDOW-OBSERVER-UNSUBSCRIBE-ACTIVE",
+      "from": "Active",
+      "event": "window.unsubscribe",
+      "to": "Active",
+      "guard": "addressed consumer subscription remains open",
+      "actions": [
+        "release only that consumer subscription"
+      ],
+      "nextState": "Consumer is removed; source/boundary ownership and the current window do not change.",
+      "explanation": "Consumer cancellation is local to that window observer; it never closes the shared window or outer source.",
+      "obligations": [
+        "S21-WINDOW-OBSERVER-UNSUBSCRIBE-ACTIVE"
+      ]
+    },
+    {
+      "id": "S21-WINDOW-OBSERVER-COMPLETE-STOPPED",
+      "from": "Stopped",
+      "event": "window.subscribe",
+      "to": "Stopped",
+      "guard": "fresh observer identity names a previously rotated completed handle",
+      "actions": [
+        "attempt addressed window subscription",
+        "complete observer immediately",
+        "release its subscription"
+      ],
+      "nextState": "No active consumer or source lease is added; observer identity is recorded as used.",
+      "explanation": "Retired completed windows remember completion but never replay values. The final current handle is separately invalidated and excluded from this legal event.",
+      "obligations": [
+        "S21-WINDOW-OBSERVER-COMPLETE-STOPPED"
+      ]
+    },
+    {
+      "id": "S21-WINDOW-OBSERVER-UNSUBSCRIBE-STOPPED",
+      "from": "Stopped",
+      "event": "window.unsubscribe",
+      "to": "Stopped",
+      "guard": "addressed consumer subscription remains open",
+      "actions": [
+        "release only that consumer subscription"
+      ],
+      "nextState": "Consumer is removed; source/boundary ownership and the current window do not change.",
+      "explanation": "An outer-cancelled Subject leaves already attached Subscription objects open until consumers close them.",
+      "obligations": [
+        "S21-WINDOW-OBSERVER-UNSUBSCRIBE-STOPPED"
+      ]
+    }
+  ]
+}

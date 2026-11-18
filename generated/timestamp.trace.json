@@ -1,0 +1,214 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "timestamp-external-clock",
+      "executionId": "timestamp-session21-example",
+      "ruleId": "S21-TIMESTAMP-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Listening",
+        "previous": null,
+        "nextRead": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 2,
+      "modelId": "timestamp-external-clock",
+      "executionId": "timestamp-session21-example",
+      "ruleId": "S21-TIMESTAMP-NEXT-READ",
+      "event": {
+        "type": "source.next",
+        "value": "A"
+      },
+      "before": {
+        "phase": "Listening",
+        "previous": null,
+        "nextRead": 0
+      },
+      "after": {
+        "phase": "ReadingNext",
+        "previous": null,
+        "read": 0,
+        "value": "A"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "timestamp.now",
+            "generation": 0
+          },
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "timestamp-external-clock",
+      "executionId": "timestamp-session21-example",
+      "ruleId": "S21-TIMESTAMP-NEXT-RETURN",
+      "event": {
+        "type": "clock.return",
+        "resource": {
+          "id": "timestamp.now",
+          "generation": 0
+        },
+        "reading": 103
+      },
+      "before": {
+        "phase": "ReadingNext",
+        "previous": null,
+        "read": 0,
+        "value": "A"
+      },
+      "after": {
+        "phase": "Listening",
+        "previous": null,
+        "nextRead": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "value": "A",
+              "timestamp": 103
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 5,
+      "modelId": "timestamp-external-clock",
+      "executionId": "timestamp-session21-example",
+      "ruleId": "S21-TIMESTAMP-NEXT-READ",
+      "event": {
+        "type": "source.next",
+        "value": "B"
+      },
+      "before": {
+        "phase": "Listening",
+        "previous": null,
+        "nextRead": 1
+      },
+      "after": {
+        "phase": "ReadingNext",
+        "previous": null,
+        "read": 1,
+        "value": "B"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "timestamp.now",
+            "generation": 1
+          },
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 5,
+      "modelId": "timestamp-external-clock",
+      "executionId": "timestamp-session21-example",
+      "ruleId": "S21-TIMESTAMP-NEXT-RETURN",
+      "event": {
+        "type": "clock.return",
+        "resource": {
+          "id": "timestamp.now",
+          "generation": 1
+        },
+        "reading": 101
+      },
+      "before": {
+        "phase": "ReadingNext",
+        "previous": null,
+        "read": 1,
+        "value": "B"
+      },
+      "after": {
+        "phase": "Listening",
+        "previous": null,
+        "nextRead": 2
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "value": "B",
+              "timestamp": 101
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 6,
+      "modelId": "timestamp-external-clock",
+      "executionId": "timestamp-session21-example",
+      "ruleId": "S21-TIMESTAMP-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Listening",
+        "previous": null,
+        "nextRead": 2
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

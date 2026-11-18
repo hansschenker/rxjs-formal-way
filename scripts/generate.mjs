@@ -104,6 +104,14 @@ import {
   createThrottleModel, createThrottleTimeModel, throttleExample, runThrottleTrace
 } from '../dist/index.js';
 
+import {
+  createTimeIntervalModel, createTimestampModel, timeIntervalExample, timestampExample, runClockTrace,
+  createTimeoutModel, createTimeoutWithModel, runTimeoutTrace,
+  timeoutExample, timeoutFirstExample, timeoutFirstEachExample, timeoutAbsoluteExample,
+  timeoutWithExample, timeoutWithDateExample,
+  createWindowModel, windowExample, windowBoundaryCompleteExample, windowCancelExample
+} from '../dist/index.js';
+
 const canonicalModelPaths = {
   take:'src/models/take.ts', map:'src/models/map.ts', filter:'src/models/filter.ts', scan:'src/models/scan.ts',
   debounceTime:'src/models/debounceTime.ts', switchMap:'src/models/flatten.ts', mergeMap:'src/models/flatten.ts',
@@ -150,6 +158,9 @@ const canonicalModelPaths = {
   takeLast:'src/models/session20-terminal.ts', throwIfEmpty:'src/models/session20-terminal.ts',
   tap:'src/models/session20-tap.ts', throttle:'src/models/session20-throttle.ts',
   throttleTime:'src/models/session20-throttle.ts',
+  timeInterval:'src/models/session21-clock.ts', timestamp:'src/models/session21-clock.ts',
+  timeout:'src/models/session21-timeout.ts', timeoutWith:'src/models/session21-timeout.ts',
+  window:'src/models/session21-window.ts',
 };
 
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
@@ -269,6 +280,17 @@ const examples = [
     ['throttle' + suffix, createThrottleModel(options), throttleExample('throttle', options), 'throttle' + suffix + '-session20-example', runThrottleTrace],
     ['throttleTime' + suffix, createThrottleTimeModel(4, options), throttleExample('throttleTime', options), 'throttleTime' + suffix + '-session20-example', runThrottleTrace],
   ]),
+  ['timeInterval', createTimeIntervalModel(), timeIntervalExample, 'timeInterval-session21-example', runClockTrace],
+  ['timestamp', createTimestampModel(), timestampExample, 'timestamp-session21-example', runClockTrace],
+  ['timeout', createTimeoutModel({ each: 4 }), timeoutExample, 'timeout-session21-example', runTimeoutTrace],
+  ['timeout-first', createTimeoutModel({ first: 4 }), timeoutFirstExample, 'timeout-first-session21-example', runTimeoutTrace],
+  ['timeout-first-each', createTimeoutModel({ first: 6, each: 3, withMode: 'factory' }), timeoutFirstEachExample, 'timeout-first-each-session21-example', runTimeoutTrace],
+  ['timeout-absolute-fallback', createTimeoutModel({ first: { at: 5 }, withMode: 'factory' }), timeoutAbsoluteExample, 'timeout-absolute-fallback-session21-example', runTimeoutTrace],
+  ['timeoutWith', createTimeoutWithModel(4), timeoutWithExample, 'timeoutWith-session21-example', runTimeoutTrace],
+  ['timeoutWith-date', createTimeoutWithModel({ at: 5 }), timeoutWithDateExample, 'timeoutWith-date-session21-example', runTimeoutTrace],
+  ['window', createWindowModel(), windowExample, 'window-session21-example'],
+  ['window-boundary-complete', createWindowModel(), windowBoundaryCompleteExample, 'window-boundary-complete-session21-example'],
+  ['window-cancel', createWindowModel(), windowCancelExample, 'window-cancel-session21-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();

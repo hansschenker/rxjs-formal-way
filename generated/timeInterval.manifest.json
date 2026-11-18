@@ -1,0 +1,315 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "timeInterval-external-clock",
+    "operator": "timeInterval",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Pair each source value with the supplied-clock difference since connection or the preceding value.",
+    "cardinality": {
+      "signature": "timeInterval : Cω(SchedulerClock) → T* → {value:T,interval:number}*",
+      "conditions": [
+        "Each successful read produces one fresh wrapper around the unchanged source payload.",
+        "Provider failure replaces the pending value with its exact error; source terminals and cancellation do not read time.",
+        "Neither operator schedules work or delays notifications."
+      ]
+    },
+    "scope": {
+      "parameters": "One valid, synchronous external now provider. Finite numeric readings; finite differences for timeInterval. Provider readings may be negative, fractional, repeated or decreasing.",
+      "callbacks": "Each provider.now request is an explicit invocation with no arguments. A correlated return or throw is supplied; the pure machine never calls a provider.",
+      "time": "Trace-envelope time is finite, nonnegative and nondecreasing. Provider readings are separate data and may move backwards. runClockTrace enforces same-envelope-time provider outcomes; no timer is introduced.",
+      "reentrancy": "Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.",
+      "exclusions": [
+        "Nonfinite provider readings and numeric-overflow differences.",
+        "Clock-provider receiver/getter mutations, reentrant provider/observer actions, and consumer cancellation during a pending read.",
+        "Source delivery during acquisition is characterized natively; action ordering here assumes setup has returned.",
+        "TimeInterval class/prototype identity: the model exposes its value/interval structural projection; native tests separately inspect actual constructor identity.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "First result connection requests a baseline reading, then acquires source only if that read succeeds."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No implicit sharing or replay. Each result subscription owns its memory and resource generations; supplied producers may themselves be shared.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result execution"
+        },
+        {
+          "id": "timeInterval.now",
+          "kind": "callback",
+          "owner": "synchronous result-reaction read"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Ordered action words are model predictions, not executed effects. Callback invocation IDs correlate outcomes; they are not subscription IDs.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to this result execution."
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "A value from the currently owned source subscription."
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "Successful source termination."
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "Source failure with an opaque error value."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Consumer closes the result connection silently."
+      },
+      {
+        "type": "clock.return",
+        "origin": "environment",
+        "category": "time",
+        "description": "Finite value returned by the currently pending synchronous provider read."
+      },
+      {
+        "type": "clock.throw",
+        "origin": "environment",
+        "category": "time",
+        "description": "Opaque error thrown by the currently pending synchronous provider read."
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "ReadingStart",
+        "terminal": false,
+        "description": "See the typed state and named transitions for ReadingStart."
+      },
+      {
+        "id": "Listening",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Listening."
+      },
+      {
+        "id": "ReadingNext",
+        "terminal": false,
+        "description": "See the typed state and named transitions for ReadingNext."
+      },
+      {
+        "id": "Closed",
+        "terminal": true,
+        "description": "Terminated; no owned subscriptions or retained values."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/timeInterval.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/timeInterval-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/util/lift.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session21-clock-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session21-clock-rxjs.test.mjs",
+        "tests/session21-clock-differential.test.mjs"
+      ],
+      "record": "evidence/SESSION-21.md",
+      "scenarios": "docs/SESSION-21-SCENARIOS.md",
+      "coverage": "docs/SESSION-21-SCENARIOS.md"
+    }
+  },
+  "parameters": {
+    "operator": "timeInterval",
+    "clock": "supplied-finite-now"
+  },
+  "rules": [
+    {
+      "id": "S21-TIMEINTERVAL-START-READ",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "ReadingStart",
+      "guard": "first result connection",
+      "actions": [
+        "request scheduler.now before source acquisition"
+      ],
+      "nextState": "ReadingStart for read zero; no source subscription exists yet.",
+      "explanation": "The first interval starts at this connection, so a baseline reading is required before acquiring the source.",
+      "obligations": [
+        "S21-TIMEINTERVAL-START-READ"
+      ]
+    },
+    {
+      "id": "S21-TIMEINTERVAL-START-RETURN",
+      "from": "ReadingStart",
+      "event": "clock.return",
+      "to": "Listening",
+      "guard": "matching initial read returns a finite number",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "Listening with previous=reading and nextRead=1.",
+      "explanation": "A baseline does not itself produce a value; it belongs to this result subscription.",
+      "obligations": [
+        "S21-TIMEINTERVAL-START-RETURN"
+      ]
+    },
+    {
+      "id": "S21-TIMEINTERVAL-START-THROW",
+      "from": "ReadingStart",
+      "event": "clock.throw",
+      "to": "Closed",
+      "guard": "matching initial read throws",
+      "actions": [
+        "forward exact provider error without acquiring source"
+      ],
+      "nextState": "Closed error; no source resource requires release.",
+      "explanation": "The operate setup catches a failed baseline reading before source.subscribe is reached.",
+      "obligations": [
+        "S21-TIMEINTERVAL-START-THROW"
+      ]
+    },
+    {
+      "id": "S21-TIMEINTERVAL-NEXT-READ",
+      "from": "Listening",
+      "event": "source.next",
+      "to": "ReadingNext",
+      "guard": "source is live and next read index can advance safely",
+      "actions": [
+        "retain exact value and request provider.now"
+      ],
+      "nextState": "ReadingNext with the source value and correlated read index retained.",
+      "explanation": "No scheduler task is created. The read is part of the synchronous reaction to this value.",
+      "obligations": [
+        "S21-TIMEINTERVAL-NEXT-READ"
+      ]
+    },
+    {
+      "id": "S21-TIMEINTERVAL-NEXT-RETURN",
+      "from": "ReadingNext",
+      "event": "clock.return",
+      "to": "Listening",
+      "guard": "matching read is finite and reading minus previous remains finite",
+      "actions": [
+        "emit a fresh record containing the same value and reading minus previous"
+      ],
+      "nextState": "Listening with previous replaced by this reading and nextRead advanced.",
+      "explanation": "A decreasing provider produces a negative interval; no elapsed-time monotonicity is invented.",
+      "obligations": [
+        "S21-TIMEINTERVAL-NEXT-RETURN"
+      ]
+    },
+    {
+      "id": "S21-TIMEINTERVAL-NEXT-THROW",
+      "from": "ReadingNext",
+      "event": "clock.throw",
+      "to": "Closed",
+      "guard": "matching next-value read throws",
+      "actions": [
+        "forward exact provider error",
+        "release source without forwarding pending value"
+      ],
+      "nextState": "Closed error; pending value and baseline are discarded.",
+      "explanation": "The OperatorSubscriber catches a provider failure inside next and closes the existing source connection.",
+      "obligations": [
+        "S21-TIMEINTERVAL-NEXT-THROW"
+      ]
+    },
+    {
+      "id": "S21-TIMEINTERVAL-COMPLETE",
+      "from": "Listening",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes while no read is pending",
+      "actions": [
+        "complete downstream",
+        "release source; perform no clock read"
+      ],
+      "nextState": "Closed complete with no retained memory.",
+      "explanation": "Terminal notifications are forwarded without time decoration.",
+      "obligations": [
+        "S21-TIMEINTERVAL-COMPLETE"
+      ]
+    },
+    {
+      "id": "S21-TIMEINTERVAL-ERROR",
+      "from": "Listening",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source fails while no read is pending",
+      "actions": [
+        "forward exact source error",
+        "release source; perform no clock read"
+      ],
+      "nextState": "Closed error with no retained memory.",
+      "explanation": "A source error does not request the clock or wrap the error payload.",
+      "obligations": [
+        "S21-TIMEINTERVAL-ERROR"
+      ]
+    },
+    {
+      "id": "S21-TIMEINTERVAL-CANCEL",
+      "from": "Listening",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer cancels between source reactions",
+      "actions": [
+        "release source silently; perform no clock read"
+      ],
+      "nextState": "Closed cancel; memory discarded.",
+      "explanation": "Closing a connection is neither a decorated value nor a terminal notification.",
+      "obligations": [
+        "S21-TIMEINTERVAL-CANCEL"
+      ]
+    }
+  ]
+}

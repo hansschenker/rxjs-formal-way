@@ -1,0 +1,179 @@
+{
+  "status": "finished-input",
+  "consumed": 4,
+  "state": {
+    "phase": "Closed",
+    "clock": 10,
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "timeout-first-relative-4-each-none-default",
+      "executionId": "timeout-first-session21-example",
+      "ruleId": "S21-TIMEOUT-START",
+      "event": {
+        "type": "subscribe",
+        "now": 0
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Source",
+        "clock": 0,
+        "seen": 0,
+        "lastValue": null,
+        "nextGeneration": 1,
+        "timer": {
+          "generation": 0,
+          "due": 4
+        }
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 0
+          },
+          "delay": 4
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "timeout-first-relative-4-each-none-default",
+      "executionId": "timeout-first-session21-example",
+      "ruleId": "S21-TIMEOUT-NEXT-CANCEL-TIMER",
+      "event": {
+        "type": "source.next",
+        "now": 1,
+        "value": "A"
+      },
+      "before": {
+        "phase": "Source",
+        "clock": 0,
+        "seen": 0,
+        "lastValue": null,
+        "nextGeneration": 1,
+        "timer": {
+          "generation": 0,
+          "due": 4
+        }
+      },
+      "after": {
+        "phase": "Source",
+        "clock": 1,
+        "seen": 1,
+        "lastValue": "A",
+        "nextGeneration": 1,
+        "timer": null
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "A"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 9,
+      "modelId": "timeout-first-relative-4-each-none-default",
+      "executionId": "timeout-first-session21-example",
+      "ruleId": "S21-TIMEOUT-NEXT-UNARMED",
+      "event": {
+        "type": "source.next",
+        "now": 9,
+        "value": "B"
+      },
+      "before": {
+        "phase": "Source",
+        "clock": 1,
+        "seen": 1,
+        "lastValue": "A",
+        "nextGeneration": 1,
+        "timer": null
+      },
+      "after": {
+        "phase": "Source",
+        "clock": 9,
+        "seen": 2,
+        "lastValue": "B",
+        "nextGeneration": 1,
+        "timer": null
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "B"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 10,
+      "modelId": "timeout-first-relative-4-each-none-default",
+      "executionId": "timeout-first-session21-example",
+      "ruleId": "S21-TIMEOUT-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete",
+        "now": 10
+      },
+      "before": {
+        "phase": "Source",
+        "clock": 9,
+        "seen": 2,
+        "lastValue": "B",
+        "nextGeneration": 1,
+        "timer": null
+      },
+      "after": {
+        "phase": "Closed",
+        "clock": 10,
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

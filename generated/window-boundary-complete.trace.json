@@ -1,0 +1,324 @@
+{
+  "status": "finished-input",
+  "consumed": 5,
+  "state": {
+    "phase": "Stopped",
+    "current": 0,
+    "boundaryLive": false,
+    "windows": [
+      {
+        "windowId": 0,
+        "status": "invalid"
+      }
+    ],
+    "consumers": [],
+    "usedObservers": [
+      "A"
+    ],
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "window-observable-boundaries",
+      "executionId": "window-boundary-complete-session21-example",
+      "ruleId": "S21-WINDOW-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "boundaryLive": true,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": []
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "windowId": 0
+            }
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "boundary",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "window-observable-boundaries",
+      "executionId": "window-boundary-complete-session21-example",
+      "ruleId": "S21-WINDOW-OBSERVER-LIVE",
+      "event": {
+        "type": "window.subscribe",
+        "windowId": 0,
+        "observerId": "A"
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "boundaryLive": true,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": []
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "boundaryLive": true,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ]
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "windowObserver:A",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "window-observable-boundaries",
+      "executionId": "window-boundary-complete-session21-example",
+      "ruleId": "S21-WINDOW-BOUNDARY-COMPLETE",
+      "event": {
+        "type": "boundary.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "boundaryLive": true,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "boundaryLive": false,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ]
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "boundary",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "window-observable-boundaries",
+      "executionId": "window-boundary-complete-session21-example",
+      "ruleId": "S21-WINDOW-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": "still-live"
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "boundaryLive": false,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "boundaryLive": false,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "windowObserver:A",
+          "notification": {
+            "kind": "N",
+            "value": "still-live"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "window-observable-boundaries",
+      "executionId": "window-boundary-complete-session21-example",
+      "ruleId": "S21-WINDOW-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "boundaryLive": false,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ]
+      },
+      "after": {
+        "phase": "Stopped",
+        "current": 0,
+        "boundaryLive": false,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "invalid"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [
+          "A"
+        ],
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "windowObserver:A",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "windowObserver:A",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

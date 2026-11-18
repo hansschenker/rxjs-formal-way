@@ -1,0 +1,247 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "timeInterval-external-clock",
+      "executionId": "timeInterval-session21-example",
+      "ruleId": "S21-TIMEINTERVAL-START-READ",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "ReadingStart",
+        "read": 0
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "timeInterval.now",
+            "generation": 0
+          },
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 0,
+      "modelId": "timeInterval-external-clock",
+      "executionId": "timeInterval-session21-example",
+      "ruleId": "S21-TIMEINTERVAL-START-RETURN",
+      "event": {
+        "type": "clock.return",
+        "resource": {
+          "id": "timeInterval.now",
+          "generation": 0
+        },
+        "reading": 100
+      },
+      "before": {
+        "phase": "ReadingStart",
+        "read": 0
+      },
+      "after": {
+        "phase": "Listening",
+        "previous": 100,
+        "nextRead": 1
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "timeInterval-external-clock",
+      "executionId": "timeInterval-session21-example",
+      "ruleId": "S21-TIMEINTERVAL-NEXT-READ",
+      "event": {
+        "type": "source.next",
+        "value": "A"
+      },
+      "before": {
+        "phase": "Listening",
+        "previous": 100,
+        "nextRead": 1
+      },
+      "after": {
+        "phase": "ReadingNext",
+        "previous": 100,
+        "read": 1,
+        "value": "A"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "timeInterval.now",
+            "generation": 1
+          },
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "timeInterval-external-clock",
+      "executionId": "timeInterval-session21-example",
+      "ruleId": "S21-TIMEINTERVAL-NEXT-RETURN",
+      "event": {
+        "type": "clock.return",
+        "resource": {
+          "id": "timeInterval.now",
+          "generation": 1
+        },
+        "reading": 103
+      },
+      "before": {
+        "phase": "ReadingNext",
+        "previous": 100,
+        "read": 1,
+        "value": "A"
+      },
+      "after": {
+        "phase": "Listening",
+        "previous": 103,
+        "nextRead": 2
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "value": "A",
+              "interval": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 5,
+      "modelId": "timeInterval-external-clock",
+      "executionId": "timeInterval-session21-example",
+      "ruleId": "S21-TIMEINTERVAL-NEXT-READ",
+      "event": {
+        "type": "source.next",
+        "value": "B"
+      },
+      "before": {
+        "phase": "Listening",
+        "previous": 103,
+        "nextRead": 2
+      },
+      "after": {
+        "phase": "ReadingNext",
+        "previous": 103,
+        "read": 2,
+        "value": "B"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "timeInterval.now",
+            "generation": 2
+          },
+          "index": 2
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "timeInterval-external-clock",
+      "executionId": "timeInterval-session21-example",
+      "ruleId": "S21-TIMEINTERVAL-NEXT-RETURN",
+      "event": {
+        "type": "clock.return",
+        "resource": {
+          "id": "timeInterval.now",
+          "generation": 2
+        },
+        "reading": 101
+      },
+      "before": {
+        "phase": "ReadingNext",
+        "previous": 103,
+        "read": 2,
+        "value": "B"
+      },
+      "after": {
+        "phase": "Listening",
+        "previous": 101,
+        "nextRead": 3
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "value": "B",
+              "interval": -2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "timeInterval-external-clock",
+      "executionId": "timeInterval-session21-example",
+      "ruleId": "S21-TIMEINTERVAL-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Listening",
+        "previous": 101,
+        "nextRead": 3
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

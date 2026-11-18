@@ -162,3 +162,15 @@ export { createThrottlePolicyModel, createThrottleModel, createThrottleTimeModel
   throttleExample, runThrottleTrace } from './models/session20-throttle.js';
 export type { ThrottleMode, ThrottleOptions, ThrottleParameters, ThrottleMemory,
   ThrottleState, ThrottleEvent, ThrottleModel } from './models/session20-throttle.js';
+
+export { createClockModel, createTimeIntervalModel, createTimestampModel,
+  timeIntervalExample, timestampExample, runClockTrace } from './models/session21-clock.js';
+export type { ClockOperator, ClockParameters, ClockState, ClockEvent, ClockOutput, ClockModel } from './models/session21-clock.js';
+export { createTimeoutModel, createTimeoutWithModel, runTimeoutTrace,
+  timeoutExample, timeoutFirstExample, timeoutFirstEachExample, timeoutAbsoluteExample,
+  timeoutWithExample, timeoutWithDateExample } from './models/session21-timeout.js';
+export type { TimeoutFirst, TimeoutOptions, TimeoutParameters, TimeoutTimer,
+  TimeoutInfo, TimeoutState, TimeoutEvent, TimeoutModel } from './models/session21-timeout.js';
+export { createWindowModel, windowExample, windowBoundaryCompleteExample, windowCancelExample } from './models/session21-window.js';
+export type { WindowToken, WindowRecord, WindowConsumer, WindowParameters,
+  WindowMemory, WindowState, WindowEvent, WindowModel } from './models/session21-window.js';

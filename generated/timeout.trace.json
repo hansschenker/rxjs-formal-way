@@ -1,0 +1,221 @@
+{
+  "status": "finished-input",
+  "consumed": 4,
+  "state": {
+    "phase": "Closed",
+    "clock": 4,
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "timeout-first-none-each-4-default",
+      "executionId": "timeout-session21-example",
+      "ruleId": "S21-TIMEOUT-START",
+      "event": {
+        "type": "subscribe",
+        "now": 0
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Source",
+        "clock": 0,
+        "seen": 0,
+        "lastValue": null,
+        "nextGeneration": 1,
+        "timer": {
+          "generation": 0,
+          "due": 4
+        }
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 0
+          },
+          "delay": 4
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "timeout-first-none-each-4-default",
+      "executionId": "timeout-session21-example",
+      "ruleId": "S21-TIMEOUT-NEXT-CANCEL-TIMER",
+      "event": {
+        "type": "source.next",
+        "now": 1,
+        "value": "A"
+      },
+      "before": {
+        "phase": "Source",
+        "clock": 0,
+        "seen": 0,
+        "lastValue": null,
+        "nextGeneration": 1,
+        "timer": {
+          "generation": 0,
+          "due": 4
+        }
+      },
+      "after": {
+        "phase": "Source",
+        "clock": 1,
+        "seen": 1,
+        "lastValue": "A",
+        "nextGeneration": 2,
+        "timer": {
+          "generation": 1,
+          "due": 5
+        }
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "A"
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 1
+          },
+          "delay": 4
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 3,
+      "modelId": "timeout-first-none-each-4-default",
+      "executionId": "timeout-session21-example",
+      "ruleId": "S21-TIMEOUT-NEXT-CANCEL-TIMER",
+      "event": {
+        "type": "source.next",
+        "now": 3,
+        "value": "B"
+      },
+      "before": {
+        "phase": "Source",
+        "clock": 1,
+        "seen": 1,
+        "lastValue": "A",
+        "nextGeneration": 2,
+        "timer": {
+          "generation": 1,
+          "due": 5
+        }
+      },
+      "after": {
+        "phase": "Source",
+        "clock": 3,
+        "seen": 2,
+        "lastValue": "B",
+        "nextGeneration": 3,
+        "timer": {
+          "generation": 2,
+          "due": 7
+        }
+      },
+      "actions": [
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "B"
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 2
+          },
+          "delay": 4
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 4,
+      "modelId": "timeout-first-none-each-4-default",
+      "executionId": "timeout-session21-example",
+      "ruleId": "S21-TIMEOUT-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete",
+        "now": 4
+      },
+      "before": {
+        "phase": "Source",
+        "clock": 3,
+        "seen": 2,
+        "lastValue": "B",
+        "nextGeneration": 3,
+        "timer": {
+          "generation": 2,
+          "due": 7
+        }
+      },
+      "after": {
+        "phase": "Closed",
+        "clock": 4,
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "timeoutTimer",
+            "generation": 2
+          }
+        }
+      ]
+    }
+  ]
+}
