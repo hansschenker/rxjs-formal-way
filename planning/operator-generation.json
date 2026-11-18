@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "takeLast",
-    "tap",
-    "throttle",
-    "throttleTime",
-    "throwIfEmpty",
     "timeInterval",
     "timeout",
     "timeoutWith",
@@ -1246,7 +1241,7 @@
       "status": "accepted",
       "session": "2026-11-16",
       "profiles": [
-        "bounded trailing FIFO memory, counts 0–8",
+        "bounded trailing FIFO memory, counts 0\u20138",
         "emit only values with sufficient subsequent source arrivals",
         "completion does not flush held suffix; zero is identity"
       ],
@@ -1298,7 +1293,7 @@
       "status": "accepted",
       "session": "2026-11-16",
       "profiles": [
-        "virtual FIFO scheduling with deferred source connection, delays 0–8",
+        "virtual FIFO scheduling with deferred source connection, delays 0\u20138",
         "unsubscribe before scheduled action prevents source acquisition",
         "source notifications are not independently rescheduled"
       ],
@@ -1365,9 +1360,22 @@
       "profiles": []
     },
     "takeLast": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-17",
+      "completedOn": "2026-11-18",
+      "profiles": [
+        "safe integer count -8..8; bounded FIFO",
+        "suffix flush only at successful completion",
+        "nonpositive count completes without acquiring source"
+      ],
+      "evidence": "evidence/SESSION-20.md",
+      "inspectionIndex": "operators/takeLast-index.md",
+      "testedCommit": "a621f8b16f3d5294445524bbba9d0eba96bc8c93",
+      "generatedCommit": "3aca059ce5218b77f435cb4d91b526fdd47674cd",
+      "implementationRun": 44244766057,
+      "verificationRun": 44244947929,
+      "readOnlyHeadCommit": "ab99e17b164931ce6021f3f2a16b746ea2192263",
+      "readOnlyCheckout": "af240c43d931eab6a652a42b35739d946f18ac1f"
     },
     "takeUntil": {
       "status": "accepted",
@@ -1397,24 +1405,76 @@
       "readOnlyHeadCommit": "6ee5b66163e46c0dbeee6679b161c9654cbe7fe8"
     },
     "tap": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-17",
+      "completedOn": "2026-11-18",
+      "profiles": [
+        "configured notification and lifecycle hooks",
+        "explicit synchronous notification-hook outcomes; nonthrowing lifecycle hooks",
+        "distinct next-hook-error, source-terminal and cancellation cleanup"
+      ],
+      "evidence": "evidence/SESSION-20.md",
+      "inspectionIndex": "operators/tap-index.md",
+      "testedCommit": "a621f8b16f3d5294445524bbba9d0eba96bc8c93",
+      "generatedCommit": "3aca059ce5218b77f435cb4d91b526fdd47674cd",
+      "implementationRun": 44244766057,
+      "verificationRun": 44244947929,
+      "readOnlyHeadCommit": "ab99e17b164931ce6021f3f2a16b746ea2192263",
+      "readOnlyCheckout": "af240c43d931eab6a652a42b35739d946f18ac1f"
     },
     "throttle": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-17",
+      "completedOn": "2026-11-18",
+      "profiles": [
+        "valid Observable-returning duration selector",
+        "all four leading/trailing boolean combinations",
+        "duration next versus empty completion; completion waiting and resource generations"
+      ],
+      "evidence": "evidence/SESSION-20.md",
+      "inspectionIndex": "operators/throttle-index.md",
+      "testedCommit": "a621f8b16f3d5294445524bbba9d0eba96bc8c93",
+      "generatedCommit": "3aca059ce5218b77f435cb4d91b526fdd47674cd",
+      "implementationRun": 44244766057,
+      "verificationRun": 44244947929,
+      "readOnlyHeadCommit": "ab99e17b164931ce6021f3f2a16b746ea2192263",
+      "readOnlyCheckout": "af240c43d931eab6a652a42b35739d946f18ac1f"
     },
     "throttleTime": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-17",
+      "completedOn": "2026-11-18",
+      "profiles": [
+        "positive safe integer duration 1..1000",
+        "deferred FIFO virtual scheduler; supplied clock, deadline and generation",
+        "all four leading/trailing boolean combinations"
+      ],
+      "evidence": "evidence/SESSION-20.md",
+      "inspectionIndex": "operators/throttleTime-index.md",
+      "testedCommit": "a621f8b16f3d5294445524bbba9d0eba96bc8c93",
+      "generatedCommit": "3aca059ce5218b77f435cb4d91b526fdd47674cd",
+      "implementationRun": 44244766057,
+      "verificationRun": 44244947929,
+      "readOnlyHeadCommit": "ab99e17b164931ce6021f3f2a16b746ea2192263",
+      "readOnlyCheckout": "af240c43d931eab6a652a42b35739d946f18ac1f"
     },
     "throwIfEmpty": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-17",
+      "completedOn": "2026-11-18",
+      "profiles": [
+        "default EmptyError binding and custom synchronous factory",
+        "presence independent of payload including undefined/null",
+        "exact returned or thrown error payload and factory bypass on failure/cancellation"
+      ],
+      "evidence": "evidence/SESSION-20.md",
+      "inspectionIndex": "operators/throwIfEmpty-index.md",
+      "testedCommit": "a621f8b16f3d5294445524bbba9d0eba96bc8c93",
+      "generatedCommit": "3aca059ce5218b77f435cb4d91b526fdd47674cd",
+      "implementationRun": 44244766057,
+      "verificationRun": 44244947929,
+      "readOnlyHeadCommit": "ab99e17b164931ce6021f3f2a16b746ea2192263",
+      "readOnlyCheckout": "af240c43d931eab6a652a42b35739d946f18ac1f"
     },
     "timeInterval": {
       "status": "pending",

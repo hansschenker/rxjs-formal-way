@@ -46,7 +46,9 @@ This is the current implementation tracker. The migration map preserves the orig
 | M16-B | publish/publishBehavior/publishLast/publishReplay: fixed-Subject manual connection, memory, completion, replay and per-observer ownership | Accepted within selector-less scopes; [Session 16 evidence](../evidence/SESSION-16.md) |
 | M19-A | single, skipLast and subscribeOn: exact-one selection, bounded trailing FIFO, deferred source acquisition | Accepted within scope; [Session 19 guide](SESSION-19-SELECTION-TRAILING-AND-SWITCHING.md) |
 | M19-B | switchMapTo and switchScan: configured inner switching, accumulator memory and cancellation ownership | Accepted within scope; [Session 19 evidence](../evidence/SESSION-19.md) |
-| M19+ | Remaining catalogue | 18 exports pending; no universal interpreter or unmodeled overload equivalence |
+| M20-A | takeLast, tap and throwIfEmpty: terminal suffix, notification/lifecycle hooks and empty-source error policy | Accepted within scope; [Session 20 guide](SESSION-20-TERMINAL-TAP-THROTTLE.md) |
+| M20-B | throttle and throttleTime: four leading/trailing policies, duration generations, completion waiting and cleanup | Accepted within scope; [Session 20 evidence](../evidence/SESSION-20.md) |
+| M20+ | Remaining catalogue | 13 exports pending; no universal interpreter or unmodeled overload equivalence |
 
 The M02 reference set is now accepted within its explicitly documented profiles. This does not mean all parameter forms, reentrant executions or the full RxJS catalogue have been proved equivalent.
 
@@ -252,3 +254,14 @@ The [main push CI 43826821532](https://github.com/hansschenker/rxjs-formal-way/a
 Independent [read-only verification PR #37](https://github.com/hansschenker/rxjs-formal-way/pull/37), [CI 43827248217](https://github.com/hansschenker/rxjs-formal-way/actions/runs/43827248217), job `133163895316`, succeeded with all **1,308 tests and 887 + 3 committed projections** verified, while generation and publication remained skipped. A GitHub comparison of the CI synthetic checkout `8213563a5a4d12b1e36b8db0d489e3432e5159f0` against PR head `2a728b0b34c741fba0e956de20d0b6a38b49a0a4` returned zero changed files. Earlier pre-generation drift failures were not represented as passes. Details and unsupported profiles remain in [the evidence ledger](../evidence/SESSION-19.md).
 
 **95/113 exports accepted within declared scopes; 18 pending, no carryovers, and no second 16 November session.** Next eligible batch on 17 November: `takeLast`, `tap`, `throttle`, `throttleTime`, `throwIfEmpty`.
+
+
+## Session 20 closed: 18 November 2026 (continuation of 17 November)
+
+The original five-name session—**takeLast, tap, throttle, throttleTime, throwIfEmpty**—was resumed and accepted within its documented scopes. Fourteen configured profiles provide guarded canonical models, all five six-tuples, Cω shapes, scenario-to-test mapping, and **117 new committed projections**, including the five required eleven-step inspection indexes. Source/scheduler time, synchronous callback boundaries, cancellation and subscription-local ownership remain explicit in the [technical guide](SESSION-20-TERMINAL-TAP-THROTTLE.md).
+
+Implementation [PR #39](https://github.com/hansschenker/rxjs-formal-way/pull/39) merged as `a621f8b16f3d5294445524bbba9d0eba96bc8c93`. [Main CI 44244766057](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44244766057), job `134600945696`, succeeded with **1,416 named tests, zero failures**, strict types and syntax, **1,062 Session 20 comparison executions**, and **1,004 ordinary + 3 specialized projections** generated and drift-verified. The artifacts were already committed at `3aca059ce5218b77f435cb4d91b526fdd47674cd`; main regeneration produced no additional artifact commit. The batch adds **108 named tests** and **23 negative TypeScript assertions**.
+
+Independent read-only [PR #41](https://github.com/hansschenker/rxjs-formal-way/pull/41), [CI 44244947929](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44244947929), job `134601533648`, passed the same complete checks with generation and publication skipped. Its head `ab99e17b164931ce6021f3f2a16b746ea2192263` and actual synthetic checkout `af240c43d931eab6a652a42b35739d946f18ac1f` have independently retrieved identical tree `262bd694a5ba9b5345f1fb08c778b9aaf57ccb8b`. Exact provenance, the earlier incomplete integration, the corrected missing-document check, and bounded-evidence limits remain in [Session 20 evidence](../evidence/SESSION-20.md).
+
+**100/113 exports accepted; 13 pending; zero carryovers and no unresolved in-scope blockers.** Both dated records close the same Session 20; the 18 November continuation did not start an additional batch. Next eligible session is **19 November 2026 Europe/Zurich**, beginning with `timeInterval`, `timeout`, `timeoutWith`, `timestamp`, and `window`.

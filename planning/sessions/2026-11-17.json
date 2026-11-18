@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "date": "2026-11-17",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-17T07:59:28+01:00",
   "startingCommit": "0abbabc32b6621e01ee2330efe12f80e039065d0",
   "selectedNames": [
@@ -19,15 +19,21 @@
     "throttleTime",
     "throwIfEmpty"
   ],
-  "completedNames": [],
+  "completedNames": [
+    "takeLast",
+    "tap",
+    "throttle",
+    "throttleTime",
+    "throwIfEmpty"
+  ],
   "carryovers": [],
   "checks": {
-    "syntax": "passed complete local npm run check on 18 November; committed CI pending",
-    "types": "strict TypeScript passed locally, including 23 negative assertions; committed CI pending",
-    "model": "full local suite 1416 passed, zero failed, including 56 Session20 model tests; committed CI pending",
-    "runtime": "47 independent native tests and three differential tests, 1062 comparison executions passed locally; committed CI pending",
-    "generated": "1004 ordinary + 3 specialized projections generated and exactly drift-checked locally; includes 117 new Session 20 artifacts and five indexes; committed CI pending.",
-    "ci": "Preliminary PR #39 CI 44038936671 passed 1414 tests but omitted new artifacts; complete integration CI pending."
+    "syntax": "Passed local full check, implementation PR CI 44244575089, main push CI 44244766057, and independent read-only PR CI 44244947929.",
+    "types": "Strict TypeScript passed in all complete checks, including 23 new negative assertions; no checks relaxed.",
+    "model": "56 new model tests plus two artifact tests; full suite 1416 passed, zero failed in main and independent read-only CI. Finite witnesses cover every retained rule in 14 configured profiles.",
+    "runtime": "47 independent native tests and three differential tests; 198+720+144=1062 finite comparison executions, with ordered outputs, callback events, time and resource lifetimes checked.",
+    "generated": "117 new artifacts include five required eleven-step indexes and eight projections for each of 14 profiles. 1004 ordinary + 3 specialized projections committed and drift-verified in independent read-only CI.",
+    "ci": "Main push run 44244766057 job 134600945696 success; independent read-only PR41 run 44244947929 job 134601533648 success. Generation/publication skipped in read-only run; PR head and actual synthetic checkout have identical Git trees."
   },
   "blockers": [],
   "notes": [
@@ -36,7 +42,12 @@
     "Operator indexes are required in this session. Acceptance remains pending until executed checks, committed generation drift verification and exact CI provenance are recorded.",
     "Local container cannot resolve github.com; connected GitHub actions remain available and repository CI will supply executed validation. No local check is claimed.",
     "18 November continuation resumed the original PR39 and the same five names; npm installation and generation now work locally. Earlier network limitation is historical. Acceptance remains pending.",
-    "Complete local integration passed npm run generate and npm run check: 1416 tests, 1062 Session 20 comparisons, and 1004+3 projections. First local attempt had one missing-document link failure before the guide was written; complete rerun passed."
+    "Complete local integration passed npm run generate and npm run check: 1416 tests, 1062 Session 20 comparisons, and 1004+3 projections. First local attempt had one missing-document link failure before the guide was written; complete rerun passed.",
+    "The original Session 20, reserved on 17 November, continued to closure on 18 November with exactly the same five names. The continuation occupies the 18 November slot; no sixth export or second batch was selected.",
+    "PR39 integration CI 44244575089 and main push CI 44244766057 passed all 1416 tests and 1004+3 projection checks. Generated artifacts were already committed at 3aca059; unchanged main regeneration produced no extra artifact commit.",
+    "Independent read-only PR41 CI 44244947929 passed with generation/publication skipped. Head ab99e17b164931ce6021f3f2a16b746ea2192263 and checkout af240c43d931eab6a652a42b35739d946f18ac1f share tree 262bd694a5ba9b5345f1fb08c778b9aaf57ccb8b.",
+    "All five exports are accepted within documented scopes: 100/113 inventory accepted, 13 pending and zero carryovers. The 1062 comparisons are finite executions, not unique histories or unrestricted equivalence.",
+    "Pinned upstream source/spec bodies inspected; upstream RxJS suite not executed. Same-time callback outcomes for tap and throwIfEmpty remain an explicit caller precondition."
   ],
   "nextQueue": [
     "timeInterval",
@@ -44,5 +55,15 @@
     "timeoutWith",
     "timestamp",
     "window"
+  ],
+  "closedAt": "2026-11-18T06:34:55+01:00",
+  "nextSessionNotBefore": "2026-11-19",
+  "commits": [
+    "99e234962b625b43221b4ef9598c56111f804912",
+    "0b5fc0229c9ecd84d858686ffb1870a0cf007f29",
+    "3aca059ce5218b77f435cb4d91b526fdd47674cd",
+    "a621f8b16f3d5294445524bbba9d0eba96bc8c93",
+    "ab99e17b164931ce6021f3f2a16b746ea2192263",
+    "8cfeee8e387d927dda4c270a2654d50a463cb3ed"
   ]
 }

@@ -2,7 +2,7 @@
 
 **Session reserved:** 17 November 2026, 07:59:28 Europe/Zurich. **Continuation:** 18 November 2026, for the same five names. No additional batch or sixth export was selected. The accepted starting inventory was 95/113, with 18 pending.
 
-**Acceptance status at integration:** pending final committed-artifact verification and closure. Earlier model/native CI passed, but the original generator omitted these operators. This ledger distinguishes that earlier result from the complete integration checks below.
+**Final acceptance:** all five exports accepted within their documented scopes on **18 November 2026**. Complete implementation/main CI and independent read-only committed-artifact verification passed; the dated records are closed with no carryovers. Earlier model/native CI had passed while the generator still omitted these operators; that partial result is distinguished from final verification below.
 
 ## Scope and artifacts
 
@@ -16,7 +16,7 @@ The five exports are `takeLast`, `tap`, `throttle`, `throttleTime`, and `throwIf
 | `throttleTime` | all four combinations, positive duration 4 | [throttleTime](../operators/throttleTime-index.md) |
 | `throwIfEmpty` | default and custom factory bindings | [throwIfEmpty](../operators/throwIfEmpty-index.md) |
 
-Fourteen profiles produce 112 ordinary views plus five export indexes: **117 new committed projections**. The full expected registry is **1,004 ordinary projections + 3 specialized mergeWith projections**. Profile variants do not count as additional exports. The existing schema, runner, renderers, validation workflow and dependency pins are retained.
+Fourteen profiles produce 112 ordinary views plus five export indexes: **117 new committed projections**. The full verified registry is **1,004 ordinary projections + 3 specialized mergeWith projections**. Profile variants do not count as additional exports. The existing schema, runner, renderers, validation workflow and dependency pins are retained.
 
 ## Source and independent runtime evidence
 
@@ -28,7 +28,7 @@ RxJS is pinned to **7.8.2**, with source links at revision [`e5351d02e225e275ac0
 - [Artifact integration tests](../tests/session20-artifacts.test.mjs): two named checks of all five eleven-step indexes, exact profile grouping, associations and resolvable local links.
 - [Strict type assertions](../tests/types/session20.ts): 23 negative assertions checked by the existing strict TypeScript configuration.
 
-This integration adds 108 named tests to the 1,308-test baseline, for an expected **1,416**. Expected counts are not a substitute for an executed result.
+This integration adds 108 named tests to the 1,308-test baseline, for **1,416 passing named tests**. The exact retrieved execution results are recorded below.
 
 ## Earlier CI: partial integration, accurately retained
 
@@ -61,6 +61,14 @@ The completed integration and all 117 Session 20 projections were committed toge
 
 PR #39 was merged without force after its completed CI passed. The unchanged main workflow regenerated and verified the already committed files; it produced no additional artifact commit, and the independently fetched main ref remained `a621f8b16f3d5294445524bbba9d0eba96bc8c93`. The generated-artifact commit is therefore the integration commit `3aca059`, not a fabricated later bot commit.
 
-This evidence-only revision requests a separate read-only PR check against those committed artifacts. Final acceptance, inventory and dated-session closure remain pending that independent check and its exact checkout provenance.
+### Independent read-only verification and closure
+
+The evidence-only [PR #41](https://github.com/hansschenker/rxjs-formal-way/pull/41) passed [run 44244947929](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44244947929), job `134601533648`. Retrieved logs report syntax and strict types success, **1,416 tests passed / zero failed**, the **198/720/144** comparison counts, and **1,004 ordinary + 3 specialized committed projections verified**. Both generation and publication steps were explicitly **skipped**.
+
+The PR head was `ab99e17b164931ce6021f3f2a16b746ea2192263`. The actual synthetic checkout was `af240c43d931eab6a652a42b35739d946f18ac1f`. Independently retrieved Git commit objects for both revisions have the identical tree **`262bd694a5ba9b5345f1fb08c778b9aaf57ccb8b`**. Thus the read-only check exercised exactly the committed file content, with no regeneration concealing drift. PR #41 merged as [`8cfeee8e387d927dda4c270a2654d50a463cb3ed`](https://github.com/hansschenker/rxjs-formal-way/commit/8cfeee8e387d927dda4c270a2654d50a463cb3ed).
+
+The final closure changes only documentation and planning records. It does not replace the exact CI-tested implementation attribution: **`a621f8b16f3d5294445524bbba9d0eba96bc8c93`** is the main implementation checkout, **`3aca059ce5218b77f435cb4d91b526fdd47674cd`** committed the new generated artifacts, and the read-only checkout above independently verified them.
+
+**Accepted: 5/5 selected exports; inventory 100/113 accepted, 13 pending, zero carryovers and no unresolved in-scope blockers.** The original 17 November record and its 18 November continuation are closed as one Session 20. The continuation occupies the 18 November slot. The next session may start **no earlier than 19 November 2026 Europe/Zurich**; no sixth export or new batch was started during this continuation.
 
 **Next untouched queue after acceptance:** `timeInterval`, `timeout`, `timeoutWith`, `timestamp`, `window`.
