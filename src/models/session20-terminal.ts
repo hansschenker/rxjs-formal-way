@@ -132,7 +132,7 @@ export function createThrowIfEmptyModel<T>(factory: 'default' | 'custom' = 'defa
   return {
     metadata: sessionMetadata({ operator: 'throwIfEmpty', id: 'throwIfEmpty-' + factory,
       purpose: 'Mirror source values, but turn successful empty completion into a lazily created error.',
-      signature: 'throwIfEmpty : Cω(() → Error) → T* → T*',
+      signature: 'throwIfEmpty : Cω(() → unknown) → T* → T*',
       conditions: ['Every source next is forwarded unchanged.', 'Successful completion without next invokes one factory and errors; cancellation invokes none.'],
       parameters: 'Default EmptyError factory binding or a custom synchronous error factory.',
       callbacks: 'One explicit invocation at empty completion. Its return/throw is supplied as a correlated outcome; the canonical model never calls it.',
@@ -161,4 +161,10 @@ export const throwIfEmptyExample: readonly TimedEvent<ThrowIfEmptyEvent<string>>
   { time: 0, event: { type: 'subscribe' } },
   { time: 4, event: { type: 'source.complete' } },
   { time: 4, event: { type: 'callback.return', resource: factoryRef, value: 'empty-source' } },
+];
+/** A nonempty trace avoids substituting a serialized token for the native default EmptyError instance. */
+export const throwIfEmptyDefaultExample: readonly TimedEvent<ThrowIfEmptyEvent<string>>[] = [
+  { time: 0, event: { type: 'subscribe' } },
+  { time: 2, event: { type: 'source.next', value: 'A' } },
+  { time: 4, event: { type: 'source.complete' } },
 ];

@@ -1,0 +1,251 @@
+{
+  "status": "finished-input",
+  "consumed": 6,
+  "state": {
+    "phase": "Closed",
+    "clock": 5,
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "throttle-01",
+      "executionId": "throttle-trailing-session20-example",
+      "ruleId": "S20-THROTTLE-START",
+      "event": {
+        "type": "subscribe",
+        "now": 0
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Open",
+        "clock": 0,
+        "nextGeneration": 0,
+        "hasValue": false,
+        "value": null
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "throttle-01",
+      "executionId": "throttle-trailing-session20-example",
+      "ruleId": "S20-THROTTLE-OPEN-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": "A",
+        "now": 1
+      },
+      "before": {
+        "phase": "Open",
+        "clock": 0,
+        "nextGeneration": 0,
+        "hasValue": false,
+        "value": null
+      },
+      "after": {
+        "clock": 1,
+        "nextGeneration": 1,
+        "hasValue": true,
+        "value": "A",
+        "phase": "Selecting",
+        "generation": 0,
+        "argument": "A"
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "durationSelector",
+            "generation": 0
+          },
+          "index": 0,
+          "value": "A"
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "throttle-01",
+      "executionId": "throttle-trailing-session20-example",
+      "ruleId": "S20-THROTTLE-SELECTOR-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "durationSelector",
+          "generation": 0
+        },
+        "token": "duration-A",
+        "now": 1
+      },
+      "before": {
+        "clock": 1,
+        "nextGeneration": 1,
+        "hasValue": true,
+        "value": "A",
+        "phase": "Selecting",
+        "generation": 0,
+        "argument": "A"
+      },
+      "after": {
+        "clock": 1,
+        "nextGeneration": 1,
+        "hasValue": true,
+        "value": "A",
+        "phase": "Throttled",
+        "generation": 0,
+        "due": null,
+        "token": "duration-A"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "throttle-01",
+      "executionId": "throttle-trailing-session20-example",
+      "ruleId": "S20-THROTTLE-REMEMBER",
+      "event": {
+        "type": "source.next",
+        "value": "B",
+        "now": 2
+      },
+      "before": {
+        "clock": 1,
+        "nextGeneration": 1,
+        "hasValue": true,
+        "value": "A",
+        "phase": "Throttled",
+        "generation": 0,
+        "due": null,
+        "token": "duration-A"
+      },
+      "after": {
+        "clock": 2,
+        "nextGeneration": 1,
+        "hasValue": true,
+        "value": "B",
+        "phase": "Throttled",
+        "generation": 0,
+        "due": null,
+        "token": "duration-A"
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 3,
+      "modelId": "throttle-01",
+      "executionId": "throttle-trailing-session20-example",
+      "ruleId": "S20-THROTTLE-COMPLETE-WAIT",
+      "event": {
+        "type": "source.complete",
+        "now": 3
+      },
+      "before": {
+        "clock": 2,
+        "nextGeneration": 1,
+        "hasValue": true,
+        "value": "B",
+        "phase": "Throttled",
+        "generation": 0,
+        "due": null,
+        "token": "duration-A"
+      },
+      "after": {
+        "clock": 3,
+        "nextGeneration": 1,
+        "hasValue": true,
+        "value": "B",
+        "phase": "Waiting",
+        "generation": 0,
+        "due": null,
+        "token": "duration-A"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "throttle-01",
+      "executionId": "throttle-trailing-session20-example",
+      "ruleId": "S20-THROTTLE-WAIT-END",
+      "event": {
+        "type": "duration.next",
+        "resource": {
+          "id": "duration",
+          "generation": 0
+        },
+        "now": 5
+      },
+      "before": {
+        "clock": 3,
+        "nextGeneration": 1,
+        "hasValue": true,
+        "value": "B",
+        "phase": "Waiting",
+        "generation": 0,
+        "due": null,
+        "token": "duration-A"
+      },
+      "after": {
+        "phase": "Closed",
+        "clock": 5,
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "duration",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "B"
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}

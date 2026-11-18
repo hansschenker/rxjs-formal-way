@@ -1,0 +1,135 @@
+{
+  "status": "finished-input",
+  "consumed": 4,
+  "state": {
+    "phase": "Closed",
+    "reason": "cancel"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "tap-next",
+      "executionId": "tap-next-session20-example",
+      "ruleId": "S20-TAP-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Listening",
+        "invocation": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "tap-next",
+      "executionId": "tap-next-session20-example",
+      "ruleId": "S20-TAP-NEXT-CALL",
+      "event": {
+        "type": "source.next",
+        "value": "A"
+      },
+      "before": {
+        "phase": "Listening",
+        "invocation": 0
+      },
+      "after": {
+        "phase": "Calling",
+        "hook": "next",
+        "pending": {
+          "kind": "N",
+          "value": "A"
+        },
+        "invocation": 0
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "tap.next",
+            "generation": 0
+          },
+          "index": 0,
+          "value": "A"
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "tap-next",
+      "executionId": "tap-next-session20-example",
+      "ruleId": "S20-TAP-NEXT-RETURN",
+      "event": {
+        "type": "callback.return",
+        "resource": {
+          "id": "tap.next",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Calling",
+        "hook": "next",
+        "pending": {
+          "kind": "N",
+          "value": "A"
+        },
+        "invocation": 0
+      },
+      "after": {
+        "phase": "Listening",
+        "invocation": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": "A"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "tap-next",
+      "executionId": "tap-next-session20-example",
+      "ruleId": "S20-TAP-CANCEL",
+      "event": {
+        "type": "cancel"
+      },
+      "before": {
+        "phase": "Listening",
+        "invocation": 1
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "cancel"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

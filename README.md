@@ -6,11 +6,17 @@ A coherent method for describing, analyzing, documenting, visualizing, and testi
 
 The project grew from stateful transducers, through six-component Mealy analysis, to transition tables, diagrams, BDD and test obligations. Formal machinery supports the explanation; an RxJS user should not need automata theory to understand the final operator description.
 
-## Current checkpoint: Session 4 — equality, memory, pairs and prefix delivery
+## Current checkpoint: Session 20 — terminal buffering, tap lifecycle and throttle policies
+
+Session 20 covers **takeLast, tap, throttle, throttleTime and throwIfEmpty**, with 14 configured profiles and five public inspection indexes. The original 17 November 2026 Europe/Zurich session is being continued on 18 November; final acceptance is recorded in the [Session 20 evidence ledger](evidence/SESSION-20.md), [dated continuation](planning/sessions/2026-11-18.json), [current inventory](planning/operator-generation.json) and [roadmap](docs/ROADMAP.md).
+
+Start with the [technical guide](docs/SESSION-20-TERMINAL-TAP-THROTTLE.md) and [scenario-to-test map](docs/SESSION-20-SCENARIOS.md), or inspect [takeLast](operators/takeLast-index.md), [tap](operators/tap-index.md), [throttle](operators/throttle-index.md), [throttleTime](operators/throttleTime-index.md) and [throwIfEmpty](operators/throwIfEmpty-index.md).
+
+## Historical reference set: Session 4 — equality, memory, pairs and prefix delivery
 
 The **1 November 2026 Europe/Zurich** session accepted **distinctUntilChanged, distinctUntilKeyChanged, distinct, pairwise and startWith** within their explicit reference scopes. All five have canonical guarded TypeScript state machines, eight generated views apiece and independent actual RxJS tests. The successful push and independent **read-only** PR checks passed **561 named tests**, verified **168 committed deterministic projections** and compared **2,004 additional bounded model/RxJS traces**.
 
-Read [Session 4 evidence](evidence/SESSION-04.md), [the teaching and formal guide](docs/SESSION-04-MEMORY-AND-ADJACENCY.md), [daily plan](docs/DAILY-GENERATION-PLAN.md), [current queue](planning/operator-generation.json), [1 November session log](planning/sessions/2026-11-01.json), and [roadmap](docs/ROADMAP.md). **20 of 113 exports accepted; 93 pending.** No later batch has been started.
+Read [Session 4 evidence](evidence/SESSION-04.md), [the teaching and formal guide](docs/SESSION-04-MEMORY-AND-ADJACENCY.md), [daily plan](docs/DAILY-GENERATION-PLAN.md), and [1 November session log](planning/sessions/2026-11-01.json). **At the close of Session 4, 20 of 113 exports were accepted and 93 were pending.** The following table preserves that early reference set; current acceptance is tracked above.
 
 
 | Operator/profile | Readable behavior | BDD | Transition table | State diagram | Four lanes |
@@ -37,7 +43,7 @@ Read [Session 4 evidence](evidence/SESSION-04.md), [the teaching and formal guid
 | pairwise | [Page](operators/pairwise.md) | [BDD](generated/pairwise.bdd.md) | [STT](generated/pairwise.stt.md) | [STD](generated/pairwise.diagram.md) | [Trace](generated/pairwise.trace.md) |
 | startWith | [Page](operators/startWith.md) | [BDD](generated/startWith.bdd.md) | [STT](generated/startWith.stt.md) | [STD](generated/startWith.diagram.md) | [Trace](generated/startWith.trace.md) |
 
-Each configured example has eight generated projections: the five linked above, a JSON manifest, JSON trace and test-obligation document. The registry produces **168** views across twenty-one examples and twenty distinct operator names. Test configurations additionally cover mergeMap concurrency 1/unbounded and all eight boolean share reset combinations. These are scoped reference models, not replacement RxJS operators.
+Each configured example has eight generated projections: the five linked above, a JSON manifest, JSON trace and test-obligation document. This Session 4 reference set produced **168** views across twenty-one examples and twenty distinct operator names. Test configurations additionally cover mergeMap concurrency 1/unbounded and all eight boolean share reset combinations. These are scoped reference models, not replacement RxJS operators.
 
 ## Start here
 

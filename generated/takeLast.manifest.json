@@ -1,0 +1,233 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "takeLast-2",
+    "operator": "takeLast",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Retain a bounded suffix and emit it only after successful source completion.",
+    "cardinality": {
+      "signature": "takeLast : Cω(Count) → T* → T≤max(0,Count)",
+      "conditions": [
+        "For positive count, every output occurs at successful source completion.",
+        "Error and cancellation discard the retained suffix; nonpositive count never subscribes."
+      ]
+    },
+    "scope": {
+      "parameters": "Safe integer count in -8..8; positive counts bound retained FIFO memory.",
+      "callbacks": "No user callback.",
+      "time": "No clock is introduced. Source events supply time; input order breaks equal-time ties. Callers must supply synchronous callback outcomes at the invocation time; generic runTrace does not enforce that envelope-time precondition.",
+      "reentrancy": "Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.",
+      "exclusions": [
+        "Counts outside -8..8, fractional counts, Infinity and NaN.",
+        "Consumer cancellation or reentry during the synchronous completion-flush word.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "No connection during construction. The first result subscription applies the profile-specific acquisition rule."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No implicit sharing or replay. Each result subscription owns its memory and resource generations; supplied producers may themselves be shared.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result execution"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Ordered action words are model predictions, not executed effects. Callback invocation IDs correlate outcomes; they are not subscription IDs.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to this result execution."
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "A value from the currently owned source subscription."
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "Successful source termination."
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "Source failure with an opaque error value."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Consumer closes the result connection silently."
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "Collecting",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Collecting."
+      },
+      {
+        "id": "Closed",
+        "terminal": true,
+        "description": "Terminated; no owned subscriptions or retained values."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/takeLast.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/takeLast-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session20-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session20-rxjs.test.mjs",
+        "tests/session20-differential.test.mjs"
+      ],
+      "record": "evidence/SESSION-20.md",
+      "scenarios": "docs/SESSION-20-SCENARIOS.md",
+      "coverage": "docs/SESSION-20-SCENARIOS.md"
+    }
+  },
+  "parameters": {
+    "count": 2
+  },
+  "rules": [
+    {
+      "id": "S20-TAKELAST-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Collecting",
+      "guard": "first consumer connection and count > 0",
+      "actions": [
+        "subscribe source"
+      ],
+      "nextState": "Collecting with an empty FIFO buffer.",
+      "explanation": "The buffer belongs to this connection and is created lazily.",
+      "obligations": [
+        "S20-TAKELAST-START"
+      ]
+    },
+    {
+      "id": "S20-TAKELAST-APPEND",
+      "from": "Collecting",
+      "event": "source.next",
+      "to": "Collecting",
+      "guard": "buffer has fewer than count values",
+      "actions": [
+        "append the new value; emit nothing"
+      ],
+      "nextState": "FIFO grows by one and retains arrival order.",
+      "explanation": "Only subsequent values establish which values are last; no item is emitted before successful completion.",
+      "obligations": [
+        "S20-TAKELAST-APPEND"
+      ]
+    },
+    {
+      "id": "S20-TAKELAST-REPLACE-OLDEST",
+      "from": "Collecting",
+      "event": "source.next",
+      "to": "Collecting",
+      "guard": "buffer has count values",
+      "actions": [
+        "drop oldest buffered reference and append the new value; emit nothing"
+      ],
+      "nextState": "FIFO contains exactly the newest count references.",
+      "explanation": "Only subsequent values establish which values are last; no item is emitted before successful completion.",
+      "obligations": [
+        "S20-TAKELAST-REPLACE-OLDEST"
+      ]
+    },
+    {
+      "id": "S20-TAKELAST-COMPLETE-FLUSH",
+      "from": "Collecting",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes successfully",
+      "actions": [
+        "emit retained references in FIFO order",
+        "complete result",
+        "release source"
+      ],
+      "nextState": "Closed complete; the retained buffer is discarded after its output word.",
+      "explanation": "A short source emits all retained values; an empty source only completes. No new clock is introduced.",
+      "obligations": [
+        "S20-TAKELAST-COMPLETE-FLUSH"
+      ]
+    },
+    {
+      "id": "S20-TAKELAST-ERROR",
+      "from": "Collecting",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source fails",
+      "actions": [
+        "forward the exact error",
+        "release source without flushing"
+      ],
+      "nextState": "Closed error; buffered values are discarded.",
+      "explanation": "Failure does not certify a successful final suffix.",
+      "obligations": [
+        "S20-TAKELAST-ERROR"
+      ]
+    },
+    {
+      "id": "S20-TAKELAST-CANCEL",
+      "from": "Collecting",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "consumer closes the connection",
+      "actions": [
+        "release source without output"
+      ],
+      "nextState": "Closed cancel; buffered values are discarded.",
+      "explanation": "Cancellation is not source completion and cannot flush a suffix.",
+      "obligations": [
+        "S20-TAKELAST-CANCEL"
+      ]
+    }
+  ]
+}

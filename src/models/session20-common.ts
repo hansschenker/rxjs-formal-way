@@ -52,7 +52,7 @@ export function sessionMetadata(o: MetadataOptions): ModelMetadata {
     cardinality: { signature: o.signature, conditions: o.conditions },
     scope: {
       parameters: o.parameters, callbacks: o.callbacks,
-      time: o.time ?? 'No clock is introduced. Source events supply time; input order breaks equal-time ties.',
+      time: o.time ?? 'No clock is introduced. Source events supply time; input order breaks equal-time ties. Callers must supply synchronous callback outcomes at the invocation time; generic runTrace does not enforce that envelope-time precondition.',
       reentrancy: 'Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.',
       exclusions: [...o.exclusions, 'Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled.'],
     },

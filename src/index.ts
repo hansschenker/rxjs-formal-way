@@ -151,3 +151,14 @@ export type { SingleParameters, SingleState, SingleEvent, SingleModel,
   SubscribeOnParameters, SubscribeOnState, SubscribeOnEvent, SubscribeOnModel,
   SwitchMapToModel, SwitchMapToEvent, SwitchScanParameters, SwitchScanState,
   SwitchScanEvent, SwitchScanCallback, SwitchScanModel } from './models/session19.js';
+
+export { createTakeLastModel, takeLastExample, takeLastZeroExample,
+  createThrowIfEmptyModel, throwIfEmptyExample, throwIfEmptyDefaultExample } from './models/session20-terminal.js';
+export type { TakeLastParameters, TakeLastState, TakeLastEvent, TakeLastModel,
+  ThrowIfEmptyParameters, ThrowIfEmptyState, ThrowIfEmptyEvent, ThrowIfEmptyModel } from './models/session20-terminal.js';
+export { createTapModel, allTapHooks, tapExample, tapNextExample } from './models/session20-tap.js';
+export type { TapHook, TapNotificationHook, TapParameters, TapState, TapEvent, TapModel } from './models/session20-tap.js';
+export { createThrottlePolicyModel, createThrottleModel, createThrottleTimeModel,
+  throttleExample, runThrottleTrace } from './models/session20-throttle.js';
+export type { ThrottleMode, ThrottleOptions, ThrottleParameters, ThrottleMemory,
+  ThrottleState, ThrottleEvent, ThrottleModel } from './models/session20-throttle.js';

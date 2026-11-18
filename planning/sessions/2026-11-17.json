@@ -5,17 +5,44 @@
   "status": "started",
   "startedAt": "2026-11-17T07:59:28+01:00",
   "startingCommit": "0abbabc32b6621e01ee2330efe12f80e039065d0",
-  "selectedNames": ["takeLast", "tap", "throttle", "throttleTime", "throwIfEmpty"],
-  "workedNames": [],
+  "selectedNames": [
+    "takeLast",
+    "tap",
+    "throttle",
+    "throttleTime",
+    "throwIfEmpty"
+  ],
+  "workedNames": [
+    "takeLast",
+    "tap",
+    "throttle",
+    "throttleTime",
+    "throwIfEmpty"
+  ],
   "completedNames": [],
   "carryovers": [],
-  "checks": {"syntax": "not run", "types": "not run", "model": "not run", "runtime": "not run", "generated": "not run", "ci": "not run"},
+  "checks": {
+    "syntax": "passed complete local npm run check on 18 November; committed CI pending",
+    "types": "strict TypeScript passed locally, including 23 negative assertions; committed CI pending",
+    "model": "full local suite 1416 passed, zero failed, including 56 Session20 model tests; committed CI pending",
+    "runtime": "47 independent native tests and three differential tests, 1062 comparison executions passed locally; committed CI pending",
+    "generated": "1004 ordinary + 3 specialized projections generated and exactly drift-checked locally; includes 117 new Session 20 artifacts and five indexes; committed CI pending.",
+    "ci": "Preliminary PR #39 CI 44038936671 passed 1414 tests but omitted new artifacts; complete integration CI pending."
+  },
   "blockers": [],
   "notes": [
     "Read live main, daily plan, roadmap, tracker and previous Zurich session log before selecting; no 17 November session log existed.",
     "Previous session has no carryovers. Exactly the first five pending export names selected; no sixth name permitted.",
     "Operator indexes are required in this session. Acceptance remains pending until executed checks, committed generation drift verification and exact CI provenance are recorded.",
-    "Local container cannot resolve github.com; connected GitHub actions remain available and repository CI will supply executed validation. No local check is claimed."
+    "Local container cannot resolve github.com; connected GitHub actions remain available and repository CI will supply executed validation. No local check is claimed.",
+    "18 November continuation resumed the original PR39 and the same five names; npm installation and generation now work locally. Earlier network limitation is historical. Acceptance remains pending.",
+    "Complete local integration passed npm run generate and npm run check: 1416 tests, 1062 Session 20 comparisons, and 1004+3 projections. First local attempt had one missing-document link failure before the guide was written; complete rerun passed."
   ],
-  "nextQueue": ["timeInterval", "timeout", "timeoutWith", "timestamp", "window"]
+  "nextQueue": [
+    "timeInterval",
+    "timeout",
+    "timeoutWith",
+    "timestamp",
+    "window"
+  ]
 }
