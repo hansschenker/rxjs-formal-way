@@ -50,6 +50,17 @@ On 18 November, the completed local integration passed `npm run generate` and `n
 
 An earlier local check ran before the scenario guide was written and failed its new navigation test on that missing document: **1,415 passed / one failed**. It is not counted as a successful check. Writing the complete guide resolved that integration failure; the full unchanged check then passed.
 
-Committed CI validation and final closure are still pending at this revision. Acceptance, inventory and dated logs remain open until complete committed-artifact verification has passed.
+### Complete integration PR and main push
+
+The completed integration and all 117 Session 20 projections were committed together at [`3aca059ce5218b77f435cb4d91b526fdd47674cd`](https://github.com/hansschenker/rxjs-formal-way/commit/3aca059ce5218b77f435cb4d91b526fdd47674cd). The uploaded Git tree `eef2ff3f0bd9d908c2fb0fa77bdb029e08616d4f` exactly matches the local staged tree whose files passed the complete check.
+
+| Verification | Exact checkout | Retrieved result |
+|---|---|---|
+| Original [PR #39 run 44244575089](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44244575089), job `134600328076` | Synthetic merge `0ab01ee39b7cd60f0c3c32a0143c9ee113bd2e4c`; PR head `3aca059ce5218b77f435cb4d91b526fdd47674cd`, base `99e234962b625b43221b4ef9598c56111f804912` | Success: syntax, strict types, **1,416 tests / zero failed**, **198/720/144** comparisons, **1,004+3 committed projections**. Generation and publication steps skipped. |
+| [Main push run 44244766057](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44244766057), job `134600945696` | Exact implementation merge [`a621f8b16f3d5294445524bbba9d0eba96bc8c93`](https://github.com/hansschenker/rxjs-formal-way/commit/a621f8b16f3d5294445524bbba9d0eba96bc8c93) | Success: generation, syntax, strict types, **1,416 tests / zero failed**, **198/720/144** comparisons, and exact drift verification of **1,004+3 projections**. |
+
+PR #39 was merged without force after its completed CI passed. The unchanged main workflow regenerated and verified the already committed files; it produced no additional artifact commit, and the independently fetched main ref remained `a621f8b16f3d5294445524bbba9d0eba96bc8c93`. The generated-artifact commit is therefore the integration commit `3aca059`, not a fabricated later bot commit.
+
+This evidence-only revision requests a separate read-only PR check against those committed artifacts. Final acceptance, inventory and dated-session closure remain pending that independent check and its exact checkout provenance.
 
 **Next untouched queue after acceptance:** `timeInterval`, `timeout`, `timeoutWith`, `timestamp`, `window`.
