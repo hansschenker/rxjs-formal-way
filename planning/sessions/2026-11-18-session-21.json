@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "sessionNumber": 21,
+  "date": "2026-11-18",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-18T06:41:24+01:00",
+  "startingCommit": "4de938c4df06148c4d3fc037ea9d5b89987a426f",
+  "selectedNames": [
+    "timeInterval",
+    "timeout",
+    "timeoutWith",
+    "timestamp",
+    "window"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [],
+  "checks": {
+    "syntax": "not run",
+    "types": "not run",
+    "model": "not run",
+    "runtime": "not run",
+    "generated": "not run",
+    "ci": "not run"
+  },
+  "blockers": [],
+  "authorization": {
+    "instruction": "lets do Session 21 today 18.11.2026",
+    "exception": "The user explicitly authorized Session 21 on 18 November after Session 20 was closed that day. This overrides the one-session/date restriction for this session only; the five-export limit and all acceptance checks remain in force.",
+    "priorSessionRecord": "planning/sessions/2026-11-18.json"
+  },
+  "notes": [
+    "Read live main, daily plan, roadmap and accepted inventory before selection. Exactly the first five pending exports are selected; no carryovers remain from Session 20.",
+    "Preserve the already closed Session 20 log. This separate dated, numbered log records the explicitly requested Session 21 without overwriting prior evidence.",
+    "Reuse schema, runner, renderers and tests; require all five public inspection indexes, independent actual RxJS checks and committed read-only drift verification."
+  ],
+  "nextQueue": [
+    "windowCount",
+    "windowTime",
+    "windowToggle",
+    "windowWhen",
+    "withLatestFrom"
+  ]
+}

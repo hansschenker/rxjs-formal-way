@@ -65,5 +65,13 @@
     "a621f8b16f3d5294445524bbba9d0eba96bc8c93",
     "ab99e17b164931ce6021f3f2a16b746ea2192263",
     "8cfeee8e387d927dda4c270a2654d50a463cb3ed"
+  ],
+  "authorizedAdditionalSessions": [
+    {
+      "sessionNumber": 21,
+      "record": "planning/sessions/2026-11-18-session-21.json",
+      "instruction": "lets do Session 21 today 18.11.2026",
+      "scope": "Specific user-authorized exception on 18 November; the closed Session 20 remains unchanged."
+    }
   ]
 }
