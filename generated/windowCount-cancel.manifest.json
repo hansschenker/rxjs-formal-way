@@ -1,0 +1,360 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "windowCount-3-stride-3",
+    "operator": "windowCount",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Rotate count-limited live multicast windows with overlapping, contiguous and gapped source-index policies.",
+    "cardinality": {
+      "signature": "windowCount : (windowSize:Count,startEvery:Count) → T* → Observable<T>*",
+      "conditions": [
+        "Exactly one initial window handle plus one handle after every startEvery source values; handles can be empty.",
+        "Every source value is sent to all currently open windows; the oldest closes when its configured count is reached.",
+        "For startEvery < windowSize windows overlap; for equality they are adjacent; for startEvery > windowSize gaps occur.",
+        "Source completion closes remaining windows before outer complete; source error errors them before outer error."
+      ]
+    },
+    "scope": {
+      "parameters": "Positive safe integer windowSize, positive safe integer effective stride (zero argument normalized to windowSize); no count overflow.",
+      "callbacks": "No callback. Source values are opaque, retain identity, and are never buffered by this operator.",
+      "time": "Only source event order controls windows; no scheduler is introduced. Explicit event sequence resolves equal-time input order.",
+      "reentrancy": "Atomic post-setup source notifications, with child attachment between reactions. Synchronous producer/reentrant observer mutation excluded.",
+      "exclusions": [
+        "Fractional, negative, non-finite or overflowing window size/stride/count; zero windowSize.",
+        "Synchronous source notifications during initial subscription setup and reentrant window-consumer callbacks.",
+        "Imperative access to Subject implementation, throwing observer teardowns and unmodeled foreign ObservableInput conversions.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Announce initial window zero synchronously, then acquire the source. Construction does not subscribe."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "Result subscriptions are cold and independent. Each inner window is live multicast, no replay; window consumers do not keep the source connected.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result execution"
+        },
+        {
+          "id": "windowObserver:*",
+          "kind": "subscription",
+          "owner": "independent window consumer"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Addressed child notifications precede outer notices. Count closure and new-handle emission are ordered. Tokens stand for Observable handles, not materialized buffers.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to this result execution."
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "A value from the currently owned source subscription."
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "Successful source termination."
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "Source failure with an opaque error value."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Consumer closes the result connection silently."
+      },
+      {
+        "type": "window.subscribe",
+        "origin": "inner",
+        "category": "lifecycle",
+        "description": "Independent observer attaches to an open or previously terminated window token."
+      },
+      {
+        "type": "window.unsubscribe",
+        "origin": "inner",
+        "category": "lifecycle",
+        "description": "Named window consumer closes its own connection."
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "Active",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Active."
+      },
+      {
+        "id": "Stopped",
+        "terminal": false,
+        "description": "Outer execution ended; completed/failed windows and orphaned consumers remain observable."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/windowCount.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/windowCount-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subject.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Observable.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session22-windowCount-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session22-windowCount-rxjs.test.mjs"
+      ],
+      "record": "evidence/SESSION-22.md",
+      "scenarios": "docs/SESSION-22-COUNT-WINDOWS.md",
+      "coverage": "docs/SESSION-22-COUNT-WINDOWS.md"
+    }
+  },
+  "parameters": {
+    "windowSize": 3,
+    "startEvery": 3
+  },
+  "rules": [
+    {
+      "id": "S22-WINDOWCOUNT-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "no upstream connection exists",
+      "actions": [
+        "emit initial Observable handle 0",
+        "subscribe to source"
+      ],
+      "nextState": "Window zero is open and empty before the source is connected.",
+      "explanation": "Construction is inert. Initial handle is emitted before the source subscription, enabling immediate child attachment.",
+      "obligations": [
+        "S22-WINDOWCOUNT-START"
+      ]
+    },
+    {
+      "id": "S22-WINDOWCOUNT-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "safe source count and window identity",
+      "actions": [
+        "send source value to each open window observer",
+        "complete oldest due window",
+        "open next window after delivery at stride boundary"
+      ],
+      "nextState": "Count advances; windows are completed or opened without replaying values.",
+      "explanation": "RxJS 7.8.2 closes when (old count - windowSize + 1) is a nonnegative stride multiple. A new handle opens AFTER the value at each stride boundary, possibly empty at completion.",
+      "obligations": [
+        "S22-WINDOWCOUNT-NEXT"
+      ]
+    },
+    {
+      "id": "S22-WINDOWCOUNT-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Stopped",
+      "guard": "source is live",
+      "actions": [
+        "complete each open child before outer completion",
+        "complete outer result",
+        "release source"
+      ],
+      "nextState": "All remaining open handles remember completion; completed historical handles are unchanged.",
+      "explanation": "Completion does not emit another window. It completes even the empty window opened on the last source next.",
+      "obligations": [
+        "S22-WINDOWCOUNT-SOURCE-COMPLETE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWCOUNT-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Stopped",
+      "guard": "source is live",
+      "actions": [
+        "error each open child with same error identity",
+        "error outer result",
+        "release source"
+      ],
+      "nextState": "Open handles retain the terminal error for late observers; earlier completed windows remain completed.",
+      "explanation": "No replacement error or buffer flush; notification order is each child then the outer subscriber.",
+      "obligations": [
+        "S22-WINDOWCOUNT-SOURCE-ERROR"
+      ]
+    },
+    {
+      "id": "S22-WINDOWCOUNT-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Stopped",
+      "guard": "outer subscriber cancels between events",
+      "actions": [
+        "release source subscription silently"
+      ],
+      "nextState": "Current open Subjects and their consumer subscriptions remain orphaned, unlike window(boundaries).",
+      "explanation": "windowCount finalization clears its internal array but does not complete, error, or unsubscribe its Subject windows. Late window observers can still attach to these silent Subjects.",
+      "obligations": [
+        "S22-WINDOWCOUNT-CANCEL"
+      ]
+    },
+    {
+      "id": "S22-WINDOWCOUNT-OBSERVE-OPEN-ACTIVE",
+      "from": "Active",
+      "event": "window.subscribe",
+      "to": "Active",
+      "guard": "fresh observer ID names an open window; after stop, only cancelled windows stay open",
+      "actions": [
+        "acquire one named window observer subscription, no replay"
+      ],
+      "nextState": "Observer joins the specified live Subject; no additional source subscription is made.",
+      "explanation": "Each window is a multicast Subject exposed as an Observable; consumers hold no upstream lease.",
+      "obligations": [
+        "S22-WINDOWCOUNT-OBSERVE-OPEN-ACTIVE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWCOUNT-OBSERVE-COMPLETE-ACTIVE",
+      "from": "Active",
+      "event": "window.subscribe",
+      "to": "Active",
+      "guard": "fresh observer ID names a completed window",
+      "actions": [
+        "subscribe and synchronously complete the new window observer",
+        "release observer subscription"
+      ],
+      "nextState": "No consumer remains attached; this completed Subject does not replay any values.",
+      "explanation": "Historical completed windows retain the completion notification even after the outer source has stopped.",
+      "obligations": [
+        "S22-WINDOWCOUNT-OBSERVE-COMPLETE-ACTIVE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWCOUNT-OBSERVER-UNSUBSCRIBE-ACTIVE",
+      "from": "Active",
+      "event": "window.unsubscribe",
+      "to": "Active",
+      "guard": "addressed observer owns an open window subscription",
+      "actions": [
+        "release only the addressed child subscription"
+      ],
+      "nextState": "Window and all other consumers are unchanged; source lifetime remains independently owned.",
+      "explanation": "After outer cancellation, orphaned window observers can still unsubscribe independently.",
+      "obligations": [
+        "S22-WINDOWCOUNT-OBSERVER-UNSUBSCRIBE-ACTIVE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWCOUNT-OBSERVE-OPEN-STOPPED",
+      "from": "Stopped",
+      "event": "window.subscribe",
+      "to": "Stopped",
+      "guard": "fresh observer ID names an open window; after stop, only cancelled windows stay open",
+      "actions": [
+        "acquire one named window observer subscription, no replay"
+      ],
+      "nextState": "Observer joins the specified live Subject; no additional source subscription is made.",
+      "explanation": "Each window is a multicast Subject exposed as an Observable; consumers hold no upstream lease.",
+      "obligations": [
+        "S22-WINDOWCOUNT-OBSERVE-OPEN-STOPPED"
+      ]
+    },
+    {
+      "id": "S22-WINDOWCOUNT-OBSERVE-COMPLETE-STOPPED",
+      "from": "Stopped",
+      "event": "window.subscribe",
+      "to": "Stopped",
+      "guard": "fresh observer ID names a completed window",
+      "actions": [
+        "subscribe and synchronously complete the new window observer",
+        "release observer subscription"
+      ],
+      "nextState": "No consumer remains attached; this completed Subject does not replay any values.",
+      "explanation": "Historical completed windows retain the completion notification even after the outer source has stopped.",
+      "obligations": [
+        "S22-WINDOWCOUNT-OBSERVE-COMPLETE-STOPPED"
+      ]
+    },
+    {
+      "id": "S22-WINDOWCOUNT-OBSERVE-ERROR-STOPPED",
+      "from": "Stopped",
+      "event": "window.subscribe",
+      "to": "Stopped",
+      "guard": "fresh observer names a failed window, which can occur only after source error",
+      "actions": [
+        "subscribe and immediately replay terminal error only",
+        "release observer subscription"
+      ],
+      "nextState": "Observer is terminated with the same error identity; no value replay.",
+      "explanation": "A Subject retains its terminal failure for late observers, distinct from cancellation.",
+      "obligations": [
+        "S22-WINDOWCOUNT-OBSERVE-ERROR-STOPPED"
+      ]
+    },
+    {
+      "id": "S22-WINDOWCOUNT-OBSERVER-UNSUBSCRIBE-STOPPED",
+      "from": "Stopped",
+      "event": "window.unsubscribe",
+      "to": "Stopped",
+      "guard": "addressed observer owns an open window subscription",
+      "actions": [
+        "release only the addressed child subscription"
+      ],
+      "nextState": "Window and all other consumers are unchanged; source lifetime remains independently owned.",
+      "explanation": "After outer cancellation, orphaned window observers can still unsubscribe independently.",
+      "obligations": [
+        "S22-WINDOWCOUNT-OBSERVER-UNSUBSCRIBE-STOPPED"
+      ]
+    }
+  ]
+}

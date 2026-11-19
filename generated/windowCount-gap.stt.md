@@ -1,0 +1,20 @@
+# windowCount-2-stride-3: state transition table
+
+> Generated from the canonical model by npm run generate. Do not edit this projection.
+
+Symbolic rules for the declared parameter domain. Guarded rows may be unreachable for a particular configuration.
+
+| Rule | Current control | Event | Guard | Ordered actions | Next state | Obligations |
+|---|---|---|---|---|---|---|
+| S22-WINDOWCOUNT-START | Unsubscribed | subscribe | no upstream connection exists | emit initial Observable handle 0; subscribe to source | Window zero is open and empty before the source is connected. | S22-WINDOWCOUNT-START |
+| S22-WINDOWCOUNT-NEXT | Active | source.next | safe source count and window identity | send source value to each open window observer; complete oldest due window; open next window after delivery at stride boundary | Count advances; windows are completed or opened without replaying values. | S22-WINDOWCOUNT-NEXT |
+| S22-WINDOWCOUNT-SOURCE-COMPLETE | Active | source.complete | source is live | complete each open child before outer completion; complete outer result; release source | All remaining open handles remember completion; completed historical handles are unchanged. | S22-WINDOWCOUNT-SOURCE-COMPLETE |
+| S22-WINDOWCOUNT-SOURCE-ERROR | Active | source.error | source is live | error each open child with same error identity; error outer result; release source | Open handles retain the terminal error for late observers; earlier completed windows remain completed. | S22-WINDOWCOUNT-SOURCE-ERROR |
+| S22-WINDOWCOUNT-CANCEL | Active | cancel | outer subscriber cancels between events | release source subscription silently | Current open Subjects and their consumer subscriptions remain orphaned, unlike window(boundaries). | S22-WINDOWCOUNT-CANCEL |
+| S22-WINDOWCOUNT-OBSERVE-OPEN-ACTIVE | Active | window.subscribe | fresh observer ID names an open window; after stop, only cancelled windows stay open | acquire one named window observer subscription, no replay | Observer joins the specified live Subject; no additional source subscription is made. | S22-WINDOWCOUNT-OBSERVE-OPEN-ACTIVE |
+| S22-WINDOWCOUNT-OBSERVE-COMPLETE-ACTIVE | Active | window.subscribe | fresh observer ID names a completed window | subscribe and synchronously complete the new window observer; release observer subscription | No consumer remains attached; this completed Subject does not replay any values. | S22-WINDOWCOUNT-OBSERVE-COMPLETE-ACTIVE |
+| S22-WINDOWCOUNT-OBSERVER-UNSUBSCRIBE-ACTIVE | Active | window.unsubscribe | addressed observer owns an open window subscription | release only the addressed child subscription | Window and all other consumers are unchanged; source lifetime remains independently owned. | S22-WINDOWCOUNT-OBSERVER-UNSUBSCRIBE-ACTIVE |
+| S22-WINDOWCOUNT-OBSERVE-OPEN-STOPPED | Stopped | window.subscribe | fresh observer ID names an open window; after stop, only cancelled windows stay open | acquire one named window observer subscription, no replay | Observer joins the specified live Subject; no additional source subscription is made. | S22-WINDOWCOUNT-OBSERVE-OPEN-STOPPED |
+| S22-WINDOWCOUNT-OBSERVE-COMPLETE-STOPPED | Stopped | window.subscribe | fresh observer ID names a completed window | subscribe and synchronously complete the new window observer; release observer subscription | No consumer remains attached; this completed Subject does not replay any values. | S22-WINDOWCOUNT-OBSERVE-COMPLETE-STOPPED |
+| S22-WINDOWCOUNT-OBSERVE-ERROR-STOPPED | Stopped | window.subscribe | fresh observer names a failed window, which can occur only after source error | subscribe and immediately replay terminal error only; release observer subscription | Observer is terminated with the same error identity; no value replay. | S22-WINDOWCOUNT-OBSERVE-ERROR-STOPPED |
+| S22-WINDOWCOUNT-OBSERVER-UNSUBSCRIBE-STOPPED | Stopped | window.unsubscribe | addressed observer owns an open window subscription | release only the addressed child subscription | Window and all other consumers are unchanged; source lifetime remains independently owned. | S22-WINDOWCOUNT-OBSERVER-UNSUBSCRIBE-STOPPED |

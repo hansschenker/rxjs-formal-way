@@ -1,0 +1,452 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Stopped",
+    "seen": 1,
+    "nextWindowId": 1,
+    "windows": [
+      {
+        "windowId": 0,
+        "openedAt": 0,
+        "status": "open"
+      }
+    ],
+    "consumers": [],
+    "usedObservers": [
+      "A",
+      "late"
+    ],
+    "reason": "cancel"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "windowCount-3-stride-3",
+      "executionId": "windowCount-cancel-session22-example",
+      "ruleId": "S22-WINDOWCOUNT-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 0,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": []
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "windowId": 0
+            }
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 0,
+      "modelId": "windowCount-3-stride-3",
+      "executionId": "windowCount-cancel-session22-example",
+      "ruleId": "S22-WINDOWCOUNT-OBSERVE-OPEN-ACTIVE",
+      "event": {
+        "type": "window.subscribe",
+        "observerId": "A",
+        "windowId": 0
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 0,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": []
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 0,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ]
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "windowObserver:A",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "windowCount-3-stride-3",
+      "executionId": "windowCount-cancel-session22-example",
+      "ruleId": "S22-WINDOWCOUNT-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": "one"
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 0,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "seen": 1,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "windowObserver:A",
+          "notification": {
+            "kind": "N",
+            "value": "one"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 2,
+      "modelId": "windowCount-3-stride-3",
+      "executionId": "windowCount-cancel-session22-example",
+      "ruleId": "S22-WINDOWCOUNT-CANCEL",
+      "event": {
+        "type": "cancel"
+      },
+      "before": {
+        "phase": "Active",
+        "seen": 1,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ]
+      },
+      "after": {
+        "phase": "Stopped",
+        "seen": 1,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "reason": "cancel"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 3,
+      "modelId": "windowCount-3-stride-3",
+      "executionId": "windowCount-cancel-session22-example",
+      "ruleId": "S22-WINDOWCOUNT-OBSERVE-OPEN-STOPPED",
+      "event": {
+        "type": "window.subscribe",
+        "observerId": "late",
+        "windowId": 0
+      },
+      "before": {
+        "phase": "Stopped",
+        "seen": 1,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "reason": "cancel"
+      },
+      "after": {
+        "phase": "Stopped",
+        "seen": 1,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          },
+          {
+            "observerId": "late",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A",
+          "late"
+        ],
+        "reason": "cancel"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "windowObserver:late",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 4,
+      "modelId": "windowCount-3-stride-3",
+      "executionId": "windowCount-cancel-session22-example",
+      "ruleId": "S22-WINDOWCOUNT-OBSERVER-UNSUBSCRIBE-STOPPED",
+      "event": {
+        "type": "window.unsubscribe",
+        "observerId": "A"
+      },
+      "before": {
+        "phase": "Stopped",
+        "seen": 1,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          },
+          {
+            "observerId": "late",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A",
+          "late"
+        ],
+        "reason": "cancel"
+      },
+      "after": {
+        "phase": "Stopped",
+        "seen": 1,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "late",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A",
+          "late"
+        ],
+        "reason": "cancel"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "windowObserver:A",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 4,
+      "modelId": "windowCount-3-stride-3",
+      "executionId": "windowCount-cancel-session22-example",
+      "ruleId": "S22-WINDOWCOUNT-OBSERVER-UNSUBSCRIBE-STOPPED",
+      "event": {
+        "type": "window.unsubscribe",
+        "observerId": "late"
+      },
+      "before": {
+        "phase": "Stopped",
+        "seen": 1,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "late",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A",
+          "late"
+        ],
+        "reason": "cancel"
+      },
+      "after": {
+        "phase": "Stopped",
+        "seen": 1,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [
+          "A",
+          "late"
+        ],
+        "reason": "cancel"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "windowObserver:late",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}
