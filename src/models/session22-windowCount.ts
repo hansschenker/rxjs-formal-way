@@ -167,7 +167,7 @@ export function createWindowCountModel<T>(windowSize: number, startWindowEvery: 
           actions: [acquire(consumerRef(e.observerId)), delivered(e.observerId, { kind: 'C' }),
             release(consumerRef(e.observerId))] }; });
 
-    add('OBSERVE-ERROR-' + phase.toUpperCase(), phase, 'window.subscribe', phase,
+    if (phase === 'Stopped') add('OBSERVE-ERROR-' + phase.toUpperCase(), phase, 'window.subscribe', phase,
       'fresh observer names a failed window, which can occur only after source error',
       ['subscribe and immediately replay terminal error only', 'release observer subscription'],
       'Observer is terminated with the same error identity; no value replay.',
