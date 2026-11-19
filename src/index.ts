@@ -174,3 +174,6 @@ export type { TimeoutFirst, TimeoutOptions, TimeoutParameters, TimeoutTimer,
 export { createWindowModel, windowExample, windowBoundaryCompleteExample, windowCancelExample } from './models/session21-window.js';
 export type { WindowToken, WindowRecord, WindowConsumer, WindowParameters,
   WindowMemory, WindowState, WindowEvent, WindowModel } from './models/session21-window.js';
+
+export { createWindowCountModel, windowCountExample, windowCountGapExample, windowCountCancelExample } from './models/session22-windowCount.js';
+export type { CountWindowToken, CountWindowRecord, CountWindowConsumer, WindowCountParameters, WindowCountMemory, WindowCountState, WindowCountEvent, WindowCountModel } from './models/session22-windowCount.js';
