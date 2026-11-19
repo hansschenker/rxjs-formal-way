@@ -177,3 +177,6 @@ export type { WindowToken, WindowRecord, WindowConsumer, WindowParameters,
 
 export { createWindowCountModel, windowCountExample, windowCountGapExample, windowCountCancelExample } from './models/session22-windowCount.js';
 export type { CountWindowToken, CountWindowRecord, CountWindowConsumer, WindowCountParameters, WindowCountMemory, WindowCountState, WindowCountEvent, WindowCountModel } from './models/session22-windowCount.js';
+
+export { createWithLatestFromModel, withLatestFromExample, withLatestFromEmptyExample } from './models/session22-withLatestFrom.js';
+export type { LatestParameters, LatestMemory, LatestState, LatestEvent, LatestModel } from './models/session22-withLatestFrom.js';
