@@ -1,0 +1,305 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "withLatestFrom-2-tuple",
+    "operator": "withLatestFrom",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Use latest auxiliary values only at source emission time, gated by all auxiliaries having produced a value.",
+    "cardinality": {
+      "signature": "withLatestFrom : (U₀*,…,Uₙ*) → T* → (T × U₀ × … × Uₙ)*",
+      "conditions": [
+        "An output can occur only on source.next after every auxiliary has produced at least one next.",
+        "Auxiliary next updates latest memory but never emits downstream; unready source values are dropped.",
+        "Auxiliary completion retains last value and never terminates outer; source complete/error terminates regardless of readiness."
+      ]
+    },
+    "scope": {
+      "parameters": "One to sixteen valid Observable auxiliaries; tuple output without deprecated result-selector projection.",
+      "callbacks": "No user callback in this profile. Each output is a fresh array; each member is the unchanged opaque value/reference.",
+      "time": "No scheduler added; source and auxiliary notifications supply time. Same-time ordering is explicit input order.",
+      "reentrancy": "Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.",
+      "exclusions": [
+        "Zero auxiliary arguments, whose pinned implementation leaves ready false indefinitely.",
+        "Deprecated resultSelector/projector overload, throwing projector and callback reentrancy.",
+        "Synchronous setup-time notifications/errors and ObservableInput conversion from Promise/Iterable.",
+        "Unbounded auxiliary counts and arbitrary arbitrary subscription-side effects.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Subscribe auxiliary inputs in argument order first, then subscribe source; post-setup notifications only."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "Independent result subscriptions own independent latest memory and auxiliary/source connections; no sharing or replay introduced.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result execution"
+        },
+        {
+          "id": "aux:*",
+          "kind": "subscription",
+          "owner": "result execution; input-indexed subscriptions"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Ordered action words are model predictions, not executed effects. Callback invocation IDs correlate outcomes; they are not subscription IDs.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to this result execution."
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "A value from the currently owned source subscription."
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "Successful source termination."
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "Source failure with an opaque error value."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Consumer closes the result connection silently."
+      },
+      {
+        "type": "aux.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "One auxiliary emits an opaque latest value."
+      },
+      {
+        "type": "aux.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "One auxiliary stops without terminating result."
+      },
+      {
+        "type": "aux.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "One auxiliary fails and terminates result."
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "Active",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Active."
+      },
+      {
+        "id": "Closed",
+        "terminal": true,
+        "description": "Terminated; no owned subscriptions or retained values."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/withLatestFrom.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/withLatestFrom-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session22-withLatestFrom-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session22-withLatestFrom-rxjs.test.mjs"
+      ],
+      "record": "evidence/SESSION-22.md",
+      "scenarios": "docs/SESSION-22-LATEST-GATE.md",
+      "coverage": "docs/SESSION-22-LATEST-GATE.md"
+    }
+  },
+  "parameters": {
+    "inputCount": 2,
+    "projector": "none"
+  },
+  "rules": [
+    {
+      "id": "S22-WITHLATESTFROM-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "no subscription exists",
+      "actions": [
+        "subscribe to each auxiliary Observable in argument order",
+        "subscribe source last"
+      ],
+      "nextState": "All readiness bits start false; no result is emitted until every auxiliary has a value.",
+      "explanation": "Auxiliary subscriptions precede source subscription even though only source next can trigger output.",
+      "obligations": [
+        "S22-WITHLATESTFROM-START"
+      ]
+    },
+    {
+      "id": "S22-WITHLATESTFROM-AUX-NEXT",
+      "from": "Active",
+      "event": "aux.next",
+      "to": "Active",
+      "guard": "addressed auxiliary remains subscribed",
+      "actions": [
+        "update latest auxiliary value and first-value presence bit, emit nothing"
+      ],
+      "nextState": "Readiness changes only when all auxiliaries have emitted at least once.",
+      "explanation": "Undefined is a valid present value. An auxiliary next never emits an output tuple.",
+      "obligations": [
+        "S22-WITHLATESTFROM-AUX-NEXT"
+      ]
+    },
+    {
+      "id": "S22-WITHLATESTFROM-AUX-COMPLETE",
+      "from": "Active",
+      "event": "aux.complete",
+      "to": "Active",
+      "guard": "addressed auxiliary remains subscribed",
+      "actions": [
+        "release completed auxiliary input only"
+      ],
+      "nextState": "The last value/presence bit is retained; empty completion can permanently block readiness.",
+      "explanation": "Auxiliary completion is not output completion. Its last value remains usable on future source next events.",
+      "obligations": [
+        "S22-WITHLATESTFROM-AUX-COMPLETE"
+      ]
+    },
+    {
+      "id": "S22-WITHLATESTFROM-AUX-ERROR",
+      "from": "Active",
+      "event": "aux.error",
+      "to": "Closed",
+      "guard": "addressed auxiliary remains subscribed",
+      "actions": [
+        "error downstream with identical payload",
+        "cancel source and other live auxiliaries"
+      ],
+      "nextState": "Result terminates; no source value can recover auxiliary failure.",
+      "explanation": "One auxiliary error ends the result even if readiness was never reached.",
+      "obligations": [
+        "S22-WITHLATESTFROM-AUX-ERROR"
+      ]
+    },
+    {
+      "id": "S22-WITHLATESTFROM-SOURCE-BLOCKED",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "at least one auxiliary has not yet produced a value",
+      "actions": [
+        "drop the source value; do not enqueue it for later replay"
+      ],
+      "nextState": "Latest ancillary values may still change but there is no source-triggered output.",
+      "explanation": "When readiness becomes true, earlier source values are lost rather than replayed.",
+      "obligations": [
+        "S22-WITHLATESTFROM-SOURCE-BLOCKED"
+      ]
+    },
+    {
+      "id": "S22-WITHLATESTFROM-SOURCE-READY",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "every auxiliary has previously produced at least one value",
+      "actions": [
+        "emit a fresh tuple containing current source value and latest ancillary values"
+      ],
+      "nextState": "Auxiliary memory remains unchanged until another auxiliary next.",
+      "explanation": "The source, not auxiliary emission, determines output timing. Tuple members retain original value identity.",
+      "obligations": [
+        "S22-WITHLATESTFROM-SOURCE-READY"
+      ]
+    },
+    {
+      "id": "S22-WITHLATESTFROM-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Closed",
+      "guard": "source completes regardless of readiness",
+      "actions": [
+        "complete downstream",
+        "release source and any remaining auxiliaries"
+      ],
+      "nextState": "Closed without a final snapshot or synthetic tuple.",
+      "explanation": "Auxiliary completion is irrelevant to source completion; no pending emissions wait for input readiness.",
+      "obligations": [
+        "S22-WITHLATESTFROM-SOURCE-COMPLETE"
+      ]
+    },
+    {
+      "id": "S22-WITHLATESTFROM-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Closed",
+      "guard": "source fails",
+      "actions": [
+        "error downstream with same error",
+        "release source and live auxiliaries"
+      ],
+      "nextState": "Closed without retries or output tuples.",
+      "explanation": "Errors propagate by identity and are never projected into a value.",
+      "obligations": [
+        "S22-WITHLATESTFROM-SOURCE-ERROR"
+      ]
+    },
+    {
+      "id": "S22-WITHLATESTFROM-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "outer downstream closes its connection",
+      "actions": [
+        "release source and all live auxiliaries, emit nothing"
+      ],
+      "nextState": "Closed; no retained latest values after teardown.",
+      "explanation": "Auxiliary subscriptions are owned by each result execution; no implicit share/replay.",
+      "obligations": [
+        "S22-WITHLATESTFROM-CANCEL"
+      ]
+    }
+  ]
+}

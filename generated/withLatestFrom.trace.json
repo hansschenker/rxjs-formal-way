@@ -1,0 +1,503 @@
+{
+  "status": "finished-input",
+  "consumed": 10,
+  "state": {
+    "phase": "Closed",
+    "reason": "source-complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "withLatestFrom-2-tuple",
+      "executionId": "withLatestFrom-ready-session22-example",
+      "ruleId": "S22-WITHLATESTFROM-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "latest": [
+          null,
+          null
+        ],
+        "hasValue": [
+          false,
+          false
+        ],
+        "live": [
+          true,
+          true
+        ],
+        "ready": false
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "aux:0",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "aux:1",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "withLatestFrom-2-tuple",
+      "executionId": "withLatestFrom-ready-session22-example",
+      "ruleId": "S22-WITHLATESTFROM-SOURCE-BLOCKED",
+      "event": {
+        "type": "source.next",
+        "value": "early"
+      },
+      "before": {
+        "phase": "Active",
+        "latest": [
+          null,
+          null
+        ],
+        "hasValue": [
+          false,
+          false
+        ],
+        "live": [
+          true,
+          true
+        ],
+        "ready": false
+      },
+      "after": {
+        "phase": "Active",
+        "latest": [
+          null,
+          null
+        ],
+        "hasValue": [
+          false,
+          false
+        ],
+        "live": [
+          true,
+          true
+        ],
+        "ready": false
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "withLatestFrom-2-tuple",
+      "executionId": "withLatestFrom-ready-session22-example",
+      "ruleId": "S22-WITHLATESTFROM-AUX-NEXT",
+      "event": {
+        "type": "aux.next",
+        "index": 0,
+        "value": "left"
+      },
+      "before": {
+        "phase": "Active",
+        "latest": [
+          null,
+          null
+        ],
+        "hasValue": [
+          false,
+          false
+        ],
+        "live": [
+          true,
+          true
+        ],
+        "ready": false
+      },
+      "after": {
+        "phase": "Active",
+        "latest": [
+          "left",
+          null
+        ],
+        "hasValue": [
+          true,
+          false
+        ],
+        "live": [
+          true,
+          true
+        ],
+        "ready": false
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "withLatestFrom-2-tuple",
+      "executionId": "withLatestFrom-ready-session22-example",
+      "ruleId": "S22-WITHLATESTFROM-SOURCE-BLOCKED",
+      "event": {
+        "type": "source.next",
+        "value": "still-early"
+      },
+      "before": {
+        "phase": "Active",
+        "latest": [
+          "left",
+          null
+        ],
+        "hasValue": [
+          true,
+          false
+        ],
+        "live": [
+          true,
+          true
+        ],
+        "ready": false
+      },
+      "after": {
+        "phase": "Active",
+        "latest": [
+          "left",
+          null
+        ],
+        "hasValue": [
+          true,
+          false
+        ],
+        "live": [
+          true,
+          true
+        ],
+        "ready": false
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "withLatestFrom-2-tuple",
+      "executionId": "withLatestFrom-ready-session22-example",
+      "ruleId": "S22-WITHLATESTFROM-AUX-NEXT",
+      "event": {
+        "type": "aux.next",
+        "index": 1
+      },
+      "before": {
+        "phase": "Active",
+        "latest": [
+          "left",
+          null
+        ],
+        "hasValue": [
+          true,
+          false
+        ],
+        "live": [
+          true,
+          true
+        ],
+        "ready": false
+      },
+      "after": {
+        "phase": "Active",
+        "latest": [
+          "left",
+          null
+        ],
+        "hasValue": [
+          true,
+          true
+        ],
+        "live": [
+          true,
+          true
+        ],
+        "ready": true
+      },
+      "actions": []
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "withLatestFrom-2-tuple",
+      "executionId": "withLatestFrom-ready-session22-example",
+      "ruleId": "S22-WITHLATESTFROM-SOURCE-READY",
+      "event": {
+        "type": "source.next",
+        "value": "first"
+      },
+      "before": {
+        "phase": "Active",
+        "latest": [
+          "left",
+          null
+        ],
+        "hasValue": [
+          true,
+          true
+        ],
+        "live": [
+          true,
+          true
+        ],
+        "ready": true
+      },
+      "after": {
+        "phase": "Active",
+        "latest": [
+          "left",
+          null
+        ],
+        "hasValue": [
+          true,
+          true
+        ],
+        "live": [
+          true,
+          true
+        ],
+        "ready": true
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              "first",
+              "left",
+              null
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "withLatestFrom-2-tuple",
+      "executionId": "withLatestFrom-ready-session22-example",
+      "ruleId": "S22-WITHLATESTFROM-AUX-COMPLETE",
+      "event": {
+        "type": "aux.complete",
+        "index": 1
+      },
+      "before": {
+        "phase": "Active",
+        "latest": [
+          "left",
+          null
+        ],
+        "hasValue": [
+          true,
+          true
+        ],
+        "live": [
+          true,
+          true
+        ],
+        "ready": true
+      },
+      "after": {
+        "phase": "Active",
+        "latest": [
+          "left",
+          null
+        ],
+        "hasValue": [
+          true,
+          true
+        ],
+        "live": [
+          true,
+          false
+        ],
+        "ready": true
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "aux:1",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 7,
+      "modelId": "withLatestFrom-2-tuple",
+      "executionId": "withLatestFrom-ready-session22-example",
+      "ruleId": "S22-WITHLATESTFROM-AUX-NEXT",
+      "event": {
+        "type": "aux.next",
+        "index": 0,
+        "value": "new-left"
+      },
+      "before": {
+        "phase": "Active",
+        "latest": [
+          "left",
+          null
+        ],
+        "hasValue": [
+          true,
+          true
+        ],
+        "live": [
+          true,
+          false
+        ],
+        "ready": true
+      },
+      "after": {
+        "phase": "Active",
+        "latest": [
+          "new-left",
+          null
+        ],
+        "hasValue": [
+          true,
+          true
+        ],
+        "live": [
+          true,
+          false
+        ],
+        "ready": true
+      },
+      "actions": []
+    },
+    {
+      "sequence": 8,
+      "time": 8,
+      "modelId": "withLatestFrom-2-tuple",
+      "executionId": "withLatestFrom-ready-session22-example",
+      "ruleId": "S22-WITHLATESTFROM-SOURCE-READY",
+      "event": {
+        "type": "source.next",
+        "value": "second"
+      },
+      "before": {
+        "phase": "Active",
+        "latest": [
+          "new-left",
+          null
+        ],
+        "hasValue": [
+          true,
+          true
+        ],
+        "live": [
+          true,
+          false
+        ],
+        "ready": true
+      },
+      "after": {
+        "phase": "Active",
+        "latest": [
+          "new-left",
+          null
+        ],
+        "hasValue": [
+          true,
+          true
+        ],
+        "live": [
+          true,
+          false
+        ],
+        "ready": true
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              "second",
+              "new-left",
+              null
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 9,
+      "time": 9,
+      "modelId": "withLatestFrom-2-tuple",
+      "executionId": "withLatestFrom-ready-session22-example",
+      "ruleId": "S22-WITHLATESTFROM-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "latest": [
+          "new-left",
+          null
+        ],
+        "hasValue": [
+          true,
+          true
+        ],
+        "live": [
+          true,
+          false
+        ],
+        "ready": true
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "source-complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "aux:0",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}
