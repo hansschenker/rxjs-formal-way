@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "sessionNumber": 22,
+  "date": "2026-11-19",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-19T08:38:23+01:00",
+  "startingCommit": "ad723a7d6a96144f657430954064f941e626eefd",
+  "selectedNames": [
+    "windowCount",
+    "windowTime",
+    "windowToggle",
+    "windowWhen",
+    "withLatestFrom"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "windowCount",
+    "windowTime",
+    "windowToggle",
+    "windowWhen",
+    "withLatestFrom"
+  ],
+  "checks": {
+    "syntax": "not yet executed",
+    "types": "not yet executed",
+    "model": "not yet executed",
+    "runtime": "not yet executed",
+    "generated": "not yet executed",
+    "ci": "not yet retrieved"
+  },
+  "blockers": [],
+  "notes": [
+    "Live main, daily plan, roadmap and accepted tracker checked; 105/113 accepted and all five selected exports pending.",
+    "One session only on 19 November; no sixth export; incomplete names must be carried forward.",
+    "Do not accept a name without full generated inspection index, model/native evidence and read-only CI."
+  ],
+  "nextQueue": [
+    "zip",
+    "zipAll",
+    "zipWith"
+  ]
+}
