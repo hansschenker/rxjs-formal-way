@@ -114,6 +114,8 @@ import {
 
 import { createWindowCountModel, windowCountExample, windowCountGapExample, windowCountCancelExample } from '../dist/index.js';
 
+import { createWithLatestFromModel, withLatestFromExample, withLatestFromEmptyExample } from '../dist/index.js';
+
 const canonicalModelPaths = {
   take:'src/models/take.ts', map:'src/models/map.ts', filter:'src/models/filter.ts', scan:'src/models/scan.ts',
   debounceTime:'src/models/debounceTime.ts', switchMap:'src/models/flatten.ts', mergeMap:'src/models/flatten.ts',
@@ -164,6 +166,7 @@ const canonicalModelPaths = {
   timeout:'src/models/session21-timeout.ts', timeoutWith:'src/models/session21-timeout.ts',
   window:'src/models/session21-window.ts',
   windowCount:'src/models/session22-windowCount.ts',
+  withLatestFrom:'src/models/session22-withLatestFrom.ts',
 };
 
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
@@ -297,6 +300,8 @@ const examples = [
   ['windowCount', createWindowCountModel(3, 1), windowCountExample, 'windowCount-overlap-session22-example'],
   ['windowCount-gap', createWindowCountModel(2, 3), windowCountGapExample, 'windowCount-gap-session22-example'],
   ['windowCount-cancel', createWindowCountModel(3), windowCountCancelExample, 'windowCount-cancel-session22-example'],
+  ['withLatestFrom', createWithLatestFromModel(2), withLatestFromExample, 'withLatestFrom-ready-session22-example'],
+  ['withLatestFrom-empty', createWithLatestFromModel(2), withLatestFromEmptyExample, 'withLatestFrom-empty-session22-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();
