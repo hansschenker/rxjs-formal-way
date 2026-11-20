@@ -14,15 +14,15 @@
       ]
     },
     "scope": {
-      "parameters": "One to sixteen valid Observable auxiliaries; tuple output without deprecated result-selector projection.",
+      "parameters": "One to sixteen valid Observable auxiliaries; tuple output without optional result-selector projection.",
       "callbacks": "No user callback in this profile. Each output is a fresh array; each member is the unchanged opaque value/reference.",
       "time": "No scheduler added; source and auxiliary notifications supply time. Same-time ordering is explicit input order.",
       "reentrancy": "Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.",
       "exclusions": [
         "Zero auxiliary arguments, whose pinned implementation leaves ready false indefinitely.",
-        "Deprecated resultSelector/projector overload, throwing projector and callback reentrancy.",
+        "Optional resultSelector/projector overload, throwing projector and callback reentrancy.",
         "Synchronous setup-time notifications/errors and ObservableInput conversion from Promise/Iterable.",
-        "Unbounded auxiliary counts and arbitrary arbitrary subscription-side effects.",
+        "Unbounded auxiliary counts and arbitrary subscription-side effects.",
         "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
       ]
     },
@@ -150,7 +150,8 @@
         "tests/session22-withLatestFrom-model.test.mjs"
       ],
       "runtimeTests": [
-        "tests/session22-withLatestFrom-rxjs.test.mjs"
+        "tests/session22-withLatestFrom-rxjs.test.mjs",
+        "tests/session22-withLatestFrom-differential.test.mjs"
       ],
       "record": "evidence/SESSION-22.md",
       "scenarios": "docs/SESSION-22-LATEST-GATE.md",

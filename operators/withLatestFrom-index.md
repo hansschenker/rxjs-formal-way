@@ -34,12 +34,12 @@ The artifacts below are different projections of one canonical semantic model; n
 | 7 | Formal Manifest | [withLatestFrom manifest](../generated/withLatestFrom.manifest.json)<br>[withLatestFrom-empty manifest](../generated/withLatestFrom-empty.manifest.json) | What is the complete machine-readable specification? |
 | 8 | Canonical Mealy Model | [src/models/session22-withLatestFrom.ts](../src/models/session22-withLatestFrom.ts) | How is the semantics encoded as executable guarded rules? |
 | 9 | RxJS 7.8.2 Source | [withLatestFrom.ts](https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/withLatestFrom.ts)<br>[withLatestFrom-spec.ts](https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/withLatestFrom-spec.ts)<br>[OperatorSubscriber.ts](https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts) | What does the pinned RxJS implementation actually do? |
-| 10 | Tests | [tests/session22-withLatestFrom-model.test.mjs](../tests/session22-withLatestFrom-model.test.mjs)<br>[tests/session22-withLatestFrom-rxjs.test.mjs](../tests/session22-withLatestFrom-rxjs.test.mjs)<br>[Upstream coverage and rule witnesses](../docs/SESSION-22-LATEST-GATE.md) | Does the model satisfy its rules, and does native RxJS exhibit the scoped behavior? |
+| 10 | Tests | [tests/session22-withLatestFrom-model.test.mjs](../tests/session22-withLatestFrom-model.test.mjs)<br>[tests/session22-withLatestFrom-rxjs.test.mjs](../tests/session22-withLatestFrom-rxjs.test.mjs)<br>[tests/session22-withLatestFrom-differential.test.mjs](../tests/session22-withLatestFrom-differential.test.mjs)<br>[Upstream coverage and rule witnesses](../docs/SESSION-22-LATEST-GATE.md) | Does the model satisfy its rules, and does native RxJS exhibit the scoped behavior? |
 | 11 | Evidence Ledger | [evidence/SESSION-22.md](../evidence/SESSION-22.md) | What was actually executed, verified, accepted, and explicitly excluded? |
 
 ## Scope at a glance
 
-**Parameters:** One to sixteen valid Observable auxiliaries; tuple output without deprecated result-selector projection.
+**Parameters:** One to sixteen valid Observable auxiliaries; tuple output without optional result-selector projection.
 
 **Callbacks:** No user callback in this profile. Each output is a fresh array; each member is the unchanged opaque value/reference.
 
@@ -52,9 +52,9 @@ The artifacts below are different projections of one canonical semantic model; n
 **Explicit exclusions:**
 
 - Zero auxiliary arguments, whose pinned implementation leaves ready false indefinitely.
-- Deprecated resultSelector/projector overload, throwing projector and callback reentrancy.
+- Optional resultSelector/projector overload, throwing projector and callback reentrancy.
 - Synchronous setup-time notifications/errors and ObservableInput conversion from Promise/Iterable.
-- Unbounded auxiliary counts and arbitrary arbitrary subscription-side effects.
+- Unbounded auxiliary counts and arbitrary subscription-side effects.
 - Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled.
 
 ## Recommended reading rule

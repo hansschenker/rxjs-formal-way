@@ -55,9 +55,13 @@ On successful source completion, all still-open windows complete before the oute
 
 The canonical profile covers positive safe-integer sizes/strides, count values below overflow, one source Observable, non-reentrant notifications after initial subscription setup, independent child consumers and late terminal-child subscriptions. The overloaded `startWindowEvery = 0` configuration is normalized to `windowSize`. Negative/fractional/NaN/infinite parameters, arbitrary reentrant callbacks, setup-time source emissions, physical Subject identity, throwing consumers/finalizers and universal infinite-trace equivalence are excluded. They are not implicitly accepted.
 
-## Verification plan and navigation
+## Verification and navigation
 
 The [model tests](../tests/session22-windowCount-model.test.mjs) exercise initial ordering, overlap, gaps, identity, late completion/error, cancellation, illegal inputs, state invariants and guarded-rule reachability. The [native RxJS tests](../tests/session22-windowCount-rxjs.test.mjs) use actual 7.8.2 Observables, Subject subscriptions, error identity, teardown logs and virtual-time scheduling; they do not import the canonical model. [Negative TypeScript assertions](../tests/types/session22-windowCount.ts) check event/state contracts.
+
+The [differential test](../tests/session22-windowCount-differential.test.mjs) records native execution before model replay. Three sizes × four strides × three initial consumer counts × three commands at each of three positions × three endings give **2,916 finite comparison executions**. Commands attach/detach actual native subscriptions or send source values; completion, error and outer cancellation are followed by late observations of retained handles and explicit cleanup of orphan subscriptions. Notifications, identity, times, handle order and exact resource actions are compared. Repeated command choices can collapse to the same admitted history, so this is an execution count rather than a distinct-history or equivalence-proof count.
+
+The count validator also requires one recorded handle for every reached stride boundary, each handle's exact opening count, and cancellation/error statuses consistent with the final source count. Existing invalid-state tests reject forged historical registries. Finite legal witnesses cover all twelve retained rule IDs; they do not establish universal guard totality.
 
 Three deterministic histories—overlap, gaps and cancellation—feed the normal generator, each producing manifest, BDD, STT, state diagram, obligations, JSON trace, four-lane trace and prose page. The generated [export-level inspection index](../operators/windowCount-index.md) groups all three profiles under **one** operator export and provides the eleven-step learning path.
 

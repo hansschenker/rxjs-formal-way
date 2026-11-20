@@ -1,0 +1,417 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "windowTime-4-restart-max-unbounded",
+    "operator": "windowTime",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Route source values through live multicast windows closed by supplied scheduler events or per-window counts.",
+    "cardinality": {
+      "signature": "windowTime : (Span, Interval? , Count?) → T* → (T*)*",
+      "conditions": [
+        "One initial handle; sequential mode starts a new window whenever the previous window closes.",
+        "Periodic mode opens independently on creation ticks; windows overlap, abut or leave gaps according to span and interval.",
+        "Source next goes to each current window and can close it at maxSize; the closing value never enters its sequential successor.",
+        "Source terminals reach windows before the outer observer; outer cancellation leaves open child Subjects silent and uncompleted."
+      ]
+    },
+    "scope": {
+      "parameters": "Positive safe-integer span, interval and finite maxSize in 1..1000. Null interval selects restart-on-close; null maxSize is unbounded. Finite safe-integer supplied scheduler time and counters without overflow.",
+      "callbacks": "No user function is invoked. Opaque source values retain identity. Emitted tokens denote Observable handles, not collected arrays.",
+      "time": "Deferred FIFO scheduler profile. Inputs carry supplied now; runWindowTimeTrace enforces now equals trace-envelope time. Explicit timer identities/ticks and input order decide same-time reactions. Delayed timer delivery is admissible at or after its due time.",
+      "reentrancy": "Atomic non-reentrant reactions. Consumers attach between reactions; callbacks that subscribe, cancel or emit during a current reaction are characterized separately if tested.",
+      "exclusions": [
+        "Zero/negative/fractional/non-finite durations, invalid overload normalization and synchronous scheduler execution.",
+        "Setup-time source delivery, arbitrary reentrancy, subject implementation mutation and clock/counter overflow.",
+        "Scheduler-specific physical Action allocation; recurring creation is normalized to one logical timer with explicit firing ticks.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Optional creation timer, initial handle, its close timer, then source acquisition. No synchronous source delivery or clock advancement during setup."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "Each outer execution owns independent source/timer resources. Each inner window is live multicast without replay; consumers hold no upstream lease.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result execution"
+        },
+        {
+          "id": "windowCreation",
+          "kind": "timer",
+          "owner": "outer execution, recurring logical task"
+        },
+        {
+          "id": "windowClose",
+          "kind": "timer",
+          "owner": "window record; generation is window identity"
+        },
+        {
+          "id": "windowObserver:*",
+          "kind": "subscription",
+          "owner": "independent window consumer"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Ordered action words are model predictions, not executed effects. Callback invocation IDs correlate outcomes; they are not subscription IDs.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to this result execution."
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "A value from the currently owned source subscription."
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "Successful source termination."
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "Source failure with an opaque error value."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Consumer closes the result connection silently."
+      },
+      {
+        "type": "timer.window",
+        "origin": "timer",
+        "category": "time",
+        "description": "Current window close timer delivers its generation at or after its deadline."
+      },
+      {
+        "type": "timer.creation",
+        "origin": "timer",
+        "category": "time",
+        "description": "The configured recurring creation task delivers its current firing tick."
+      },
+      {
+        "type": "window.subscribe",
+        "origin": "inner",
+        "category": "lifecycle",
+        "description": "Fresh observer attaches to an emitted current or historical window."
+      },
+      {
+        "type": "window.unsubscribe",
+        "origin": "inner",
+        "category": "lifecycle",
+        "description": "One child observer closes its independent connection."
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify",
+      "schedule",
+      "cancel-timer"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "Active",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Active."
+      },
+      {
+        "id": "Stopped",
+        "terminal": false,
+        "description": "Outer stopped; completed/failed historical handles and orphan child subscriptions remain observable."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/windowTime.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/windowTime-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/util/executeSchedule.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subject.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session22-windowTime-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session22-windowTime-rxjs.test.mjs",
+        "tests/session22-windowTime-differential.test.mjs"
+      ],
+      "record": "evidence/SESSION-22.md",
+      "scenarios": "docs/SESSION-22-TIMED-WINDOWS.md",
+      "coverage": "docs/SESSION-22-TIMED-WINDOWS.md"
+    }
+  },
+  "parameters": {
+    "span": 4,
+    "creationInterval": null,
+    "maxSize": null
+  },
+  "rules": [
+    {
+      "id": "S22-WINDOWTIME-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first connection; safe supplied scheduler time",
+      "actions": [
+        "schedule recurring creation if configured",
+        "emit initial window handle",
+        "schedule its close",
+        "acquire source"
+      ],
+      "nextState": "One empty window is live; its deadline is now + span.",
+      "explanation": "Construction is inert. Periodic creation is scheduled before the initial window; window handle and close timer precede source acquisition.",
+      "obligations": [
+        "S22-WINDOWTIME-START"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTIME-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source is live; counts and possible new window identity remain safe",
+      "actions": [
+        "for each current window in order: deliver source value",
+        "complete and cancel any window reaching maxSize",
+        "restart immediately only in sequential mode"
+      ],
+      "nextState": "Per-window counts advance; a restarted window does not receive the value that closed its predecessor.",
+      "explanation": "RxJS snapshots its active record list, then delivers and closes one record at a time. Overlapping windows can therefore see another window complete before receiving the same value.",
+      "obligations": [
+        "S22-WINDOWTIME-NEXT"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTIME-WINDOW-TIMER",
+      "from": "Active",
+      "event": "timer.window",
+      "to": "Active",
+      "guard": "current live window timer generation; now is at or after its deadline",
+      "actions": [
+        "complete addressed window observers",
+        "cancel its timer",
+        "restart and schedule successor only in sequential mode"
+      ],
+      "nextState": "The specified window completes without replay; historical completed handles remain usable.",
+      "explanation": "A deadline is data, not an automatic transition. Old generations and early timer delivery are rejected.",
+      "obligations": [
+        "S22-WINDOWTIME-WINDOW-TIMER"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTIME-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Stopped",
+      "guard": "source is live",
+      "actions": [
+        "terminate every active window in creation order",
+        "terminate outer result",
+        "cancel creation and initial-window timers",
+        "release source",
+        "cancel later-window timers"
+      ],
+      "nextState": "All current handles remember the source terminal; historical completed handles retain completion.",
+      "explanation": "Inner terminals precede the outer terminal. Cleanup follows registration: creation timer, initial-window timer if still live, source, then later-window timers.",
+      "obligations": [
+        "S22-WINDOWTIME-SOURCE-COMPLETE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTIME-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Stopped",
+      "guard": "source is live",
+      "actions": [
+        "terminate every active window in creation order",
+        "terminate outer result",
+        "cancel creation and initial-window timers",
+        "release source",
+        "cancel later-window timers"
+      ],
+      "nextState": "All current handles remember the source terminal; historical completed handles retain completion.",
+      "explanation": "Inner terminals precede the outer terminal. Cleanup follows registration: creation timer, initial-window timer if still live, source, then later-window timers.",
+      "obligations": [
+        "S22-WINDOWTIME-SOURCE-ERROR"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTIME-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Stopped",
+      "guard": "outer connection is live",
+      "actions": [
+        "release timers and source in registration order without notifications"
+      ],
+      "nextState": "Open window Subjects and their child subscriptions become silent orphans; historical handles remain usable.",
+      "explanation": "windowTime clears its record registry on disposal but does not complete or unsubscribe the Subjects. Child connections hold no upstream lease.",
+      "obligations": [
+        "S22-WINDOWTIME-CANCEL"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTIME-OBSERVE-OPEN-ACTIVE",
+      "from": "Active",
+      "event": "window.subscribe",
+      "to": "Active",
+      "guard": "fresh observer identity names an open window",
+      "actions": [
+        "acquire independent window observer without replay"
+      ],
+      "nextState": "Observer joins the addressed multicast Subject, including a silent orphan after outer cancellation.",
+      "explanation": "Attaching a child never creates or retains a source/timer connection.",
+      "obligations": [
+        "S22-WINDOWTIME-OBSERVE-OPEN-ACTIVE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTIME-OBSERVE-COMPLETE-ACTIVE",
+      "from": "Active",
+      "event": "window.subscribe",
+      "to": "Active",
+      "guard": "fresh observer identity names a completed window",
+      "actions": [
+        "acquire child observer",
+        "deliver completion immediately",
+        "release child observer"
+      ],
+      "nextState": "Observer identity is recorded but no live child subscription remains.",
+      "explanation": "A completed Subject remembers its terminal notification without replaying source values.",
+      "obligations": [
+        "S22-WINDOWTIME-OBSERVE-COMPLETE-ACTIVE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTIME-DETACH-ACTIVE",
+      "from": "Active",
+      "event": "window.unsubscribe",
+      "to": "Active",
+      "guard": "named child observer is attached",
+      "actions": [
+        "release only the addressed child observer"
+      ],
+      "nextState": "Other consumers, source ownership and timer ownership do not change.",
+      "explanation": "Orphaned child subscriptions can be disposed independently after the outer execution stops.",
+      "obligations": [
+        "S22-WINDOWTIME-DETACH-ACTIVE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTIME-OBSERVE-OPEN-STOPPED",
+      "from": "Stopped",
+      "event": "window.subscribe",
+      "to": "Stopped",
+      "guard": "fresh observer identity names an open window",
+      "actions": [
+        "acquire independent window observer without replay"
+      ],
+      "nextState": "Observer joins the addressed multicast Subject, including a silent orphan after outer cancellation.",
+      "explanation": "Attaching a child never creates or retains a source/timer connection.",
+      "obligations": [
+        "S22-WINDOWTIME-OBSERVE-OPEN-STOPPED"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTIME-OBSERVE-COMPLETE-STOPPED",
+      "from": "Stopped",
+      "event": "window.subscribe",
+      "to": "Stopped",
+      "guard": "fresh observer identity names a completed window",
+      "actions": [
+        "acquire child observer",
+        "deliver completion immediately",
+        "release child observer"
+      ],
+      "nextState": "Observer identity is recorded but no live child subscription remains.",
+      "explanation": "A completed Subject remembers its terminal notification without replaying source values.",
+      "obligations": [
+        "S22-WINDOWTIME-OBSERVE-COMPLETE-STOPPED"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTIME-DETACH-STOPPED",
+      "from": "Stopped",
+      "event": "window.unsubscribe",
+      "to": "Stopped",
+      "guard": "named child observer is attached",
+      "actions": [
+        "release only the addressed child observer"
+      ],
+      "nextState": "Other consumers, source ownership and timer ownership do not change.",
+      "explanation": "Orphaned child subscriptions can be disposed independently after the outer execution stops.",
+      "obligations": [
+        "S22-WINDOWTIME-DETACH-STOPPED"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTIME-OBSERVE-ERROR-STOPPED",
+      "from": "Stopped",
+      "event": "window.subscribe",
+      "to": "Stopped",
+      "guard": "fresh observer names a window failed by the source",
+      "actions": [
+        "acquire child observer",
+        "deliver retained error by identity",
+        "release child observer"
+      ],
+      "nextState": "Failed handle remains failed; no source values are replayed.",
+      "explanation": "Error retention differs from both historical completion and silent orphaning on cancellation.",
+      "obligations": [
+        "S22-WINDOWTIME-OBSERVE-ERROR-STOPPED"
+      ]
+    }
+  ]
+}

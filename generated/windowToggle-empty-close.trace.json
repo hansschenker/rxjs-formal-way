@@ -1,0 +1,504 @@
+{
+  "status": "finished-input",
+  "consumed": 8,
+  "state": {
+    "phase": "Stopped",
+    "reason": "source-complete",
+    "nextWindowId": 1,
+    "openingLive": false,
+    "usedObservers": [
+      "A"
+    ],
+    "consumers": [],
+    "windows": [
+      {
+        "windowId": 0,
+        "status": "complete",
+        "announced": true,
+        "closingLive": false
+      }
+    ]
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "windowToggle-signals",
+      "executionId": "windowToggle-empty-close-session22-example",
+      "ruleId": "S22-WINDOWTOGGLE-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "nextWindowId": 0,
+        "openingLive": true,
+        "windows": [],
+        "consumers": [],
+        "usedObservers": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "opening",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "windowToggle-signals",
+      "executionId": "windowToggle-empty-close-session22-example",
+      "ruleId": "S22-WINDOWTOGGLE-OPEN",
+      "event": {
+        "type": "opening.next",
+        "value": "open"
+      },
+      "before": {
+        "phase": "Active",
+        "nextWindowId": 0,
+        "openingLive": true,
+        "windows": [],
+        "consumers": [],
+        "usedObservers": []
+      },
+      "after": {
+        "phase": "Selecting",
+        "nextWindowId": 1,
+        "openingLive": true,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "pending",
+            "announced": false,
+            "closingLive": false
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [],
+        "pending": 0
+      },
+      "actions": [
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "closingSelector",
+            "generation": 0
+          },
+          "index": 0,
+          "value": "open"
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "windowToggle-signals",
+      "executionId": "windowToggle-empty-close-session22-example",
+      "ruleId": "S22-WINDOWTOGGLE-SELECTOR-RETURN",
+      "event": {
+        "type": "selector.return",
+        "resource": {
+          "id": "closingSelector",
+          "generation": 0
+        }
+      },
+      "before": {
+        "phase": "Selecting",
+        "nextWindowId": 1,
+        "openingLive": true,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "pending",
+            "announced": false,
+            "closingLive": false
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [],
+        "pending": 0
+      },
+      "after": {
+        "nextWindowId": 1,
+        "openingLive": true,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open",
+            "announced": true,
+            "closingLive": true
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [],
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "windowId": 0
+            }
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "closing",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 1,
+      "modelId": "windowToggle-signals",
+      "executionId": "windowToggle-empty-close-session22-example",
+      "ruleId": "S22-WINDOWTOGGLE-OBSERVE-OPEN",
+      "event": {
+        "type": "window.subscribe",
+        "observerId": "A",
+        "windowId": 0
+      },
+      "before": {
+        "nextWindowId": 1,
+        "openingLive": true,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open",
+            "announced": true,
+            "closingLive": true
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [],
+        "phase": "Active"
+      },
+      "after": {
+        "nextWindowId": 1,
+        "openingLive": true,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open",
+            "announced": true,
+            "closingLive": true
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "windowObserver:A",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 2,
+      "modelId": "windowToggle-signals",
+      "executionId": "windowToggle-empty-close-session22-example",
+      "ruleId": "S22-WINDOWTOGGLE-CLOSING-COMPLETE",
+      "event": {
+        "type": "closing.complete",
+        "resource": {
+          "id": "closing",
+          "generation": 0
+        }
+      },
+      "before": {
+        "nextWindowId": 1,
+        "openingLive": true,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open",
+            "announced": true,
+            "closingLive": true
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "phase": "Active"
+      },
+      "after": {
+        "nextWindowId": 1,
+        "openingLive": true,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open",
+            "announced": true,
+            "closingLive": false
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "closing",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 3,
+      "modelId": "windowToggle-signals",
+      "executionId": "windowToggle-empty-close-session22-example",
+      "ruleId": "S22-WINDOWTOGGLE-OPENING-COMPLETE",
+      "event": {
+        "type": "opening.complete"
+      },
+      "before": {
+        "nextWindowId": 1,
+        "openingLive": true,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open",
+            "announced": true,
+            "closingLive": false
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "phase": "Active"
+      },
+      "after": {
+        "nextWindowId": 1,
+        "openingLive": false,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open",
+            "announced": true,
+            "closingLive": false
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "opening",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 4,
+      "modelId": "windowToggle-signals",
+      "executionId": "windowToggle-empty-close-session22-example",
+      "ruleId": "S22-WINDOWTOGGLE-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": "still-live"
+      },
+      "before": {
+        "nextWindowId": 1,
+        "openingLive": false,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open",
+            "announced": true,
+            "closingLive": false
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "phase": "Active"
+      },
+      "after": {
+        "nextWindowId": 1,
+        "openingLive": false,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open",
+            "announced": true,
+            "closingLive": false
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "windowObserver:A",
+          "notification": {
+            "kind": "N",
+            "value": "still-live"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 5,
+      "modelId": "windowToggle-signals",
+      "executionId": "windowToggle-empty-close-session22-example",
+      "ruleId": "S22-WINDOWTOGGLE-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "nextWindowId": 1,
+        "openingLive": false,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open",
+            "announced": true,
+            "closingLive": false
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "phase": "Active"
+      },
+      "after": {
+        "phase": "Stopped",
+        "reason": "source-complete",
+        "nextWindowId": 1,
+        "openingLive": false,
+        "usedObservers": [
+          "A"
+        ],
+        "consumers": [],
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "complete",
+            "announced": true,
+            "closingLive": false
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "windowObserver:A",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "windowObserver:A",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

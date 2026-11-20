@@ -16,6 +16,9 @@
   ],
   "workedNames": [
     "windowCount",
+    "windowTime",
+    "windowToggle",
+    "windowWhen",
     "withLatestFrom"
   ],
   "completedNames": [],
@@ -27,19 +30,23 @@
     "withLatestFrom"
   ],
   "checks": {
-    "syntax": "Prior partial main CI 44483312048 passed; complete continuation not yet checked.",
-    "types": "Prior partial main CI passed; complete continuation not yet checked.",
-    "model": "Prior partial suite passed 1604 named tests; complete five-export integration pending.",
-    "runtime": "Existing native tests for windowCount and withLatestFrom passed; remaining three operators and direct comparisons pending.",
-    "generated": "25 windowCount and 17 withLatestFrom projections are committed; 1139 ordinary + 3 specialized projections verified on prior main CI. Remaining indexes and independent read-only verification pending.",
-    "ci": "Retrieved prior main run 44483312048 job 135420556935 success on 9386bdaf4a20787442e90d2f0850497c4c3966a4. No final Session22 acceptance claimed."
+    "syntax": "Passed complete local npm run check; committed full-batch CI pending.",
+    "types": "Strict TypeScript passed locally, including 69 Session22 negative assertions (46 added in this continuation).",
+    "model": "90 Session22 model tests plus two artifact tests; complete local suite 1728 passed, zero failed and zero skipped.",
+    "runtime": "87 Session22 native tests and five differential tests; 2916+432+2592+1876+4500=12316 model/native comparison executions passed locally.",
+    "generated": "All five required eleven-step indexes and 15 configured examples generated. 1222 ordinary + 3 specialized projections drift-verified locally; independent committed read-only CI pending.",
+    "ci": "Prior partial main CI passed 1604 tests; complete five-export committed CI, exact checkout provenance and independent read-only acceptance pending."
   },
   "blockers": [],
   "notes": [
     "User instruction: lets finish session 22. Continue the original five-name session reserved on 19 November; do not start another batch.",
     "Live main, daily plan, roadmap and inventory checked. 105/113 accepted, 8 pending; both earlier implementations and generated indexes retained.",
     "Complete windowTime, windowToggle and windowWhen and verify the whole five-export batch before closing either dated record.",
-    "The 20 November continuation occupies this local-date session slot. No sixth export is selected."
+    "The 20 November continuation occupies this local-date session slot. No sixth export is selected.",
+    "Complete local integration passed generate and unchanged check on Node v24.22.3: 1728 named tests, zero failures/skips, 12316 comparisons and 1222+3 deterministic projections.",
+    "Session22 adds 184 named tests over the Session21 baseline: 90 model, 87 native, five differential and two navigation. The continuation adds 124 over the partial 1604-test state.",
+    "125 total Session22 projections: 42 from prior partial implementation and 83 new in this continuation. Existing count/latest projections regenerated after metadata and ordered-cleanup corrections.",
+    "Corrected withLatestFrom teardown to auxiliaries in argument order before source, strengthened count registry invariants, and corrected unsupported deprecation wording. Native evidence and direct comparisons retain explicit scope boundaries."
   ],
   "nextQueue": [
     "zip",

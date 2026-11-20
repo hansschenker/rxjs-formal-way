@@ -210,7 +210,7 @@ export function createWindowCountModel<T>(windowSize: number, startWindowEvery: 
     exclusions: ['Fractional, negative, non-finite or overflowing window size/stride/count; zero windowSize.',
       'Synchronous source notifications during initial subscription setup and reentrant window-consumer callbacks.',
       'Imperative access to Subject implementation, throwing observer teardowns and unmodeled foreign ObservableInput conversions.'],
-    controls: ['Unsubscribed', 'Active', 'Stopped'], testStem: 'session22-windowCount',
+    controls: ['Unsubscribed', 'Active', 'Stopped'], testStem: 'session22-windowCount', differential: true,
     resources: [{ id: 'windowObserver:*', kind: 'subscription', owner: 'independent window consumer' }],
     inputs: [
       { type: 'window.subscribe', origin: 'inner', category: 'lifecycle', description: 'Independent observer attaches to an open or previously terminated window token.' },
@@ -236,11 +236,13 @@ export function createWindowCountModel<T>(windowSize: number, startWindowEvery: 
       const errors: string[] = [];
       if (!natural(s.seen) || !natural(s.nextWindowId) || s.nextWindowId < 1 || s.windows.length !== s.nextWindowId)
         errors.push('Seen and window identities must be nonnegative consecutive safe integers.');
+      if (s.nextWindowId !== Math.floor(s.seen / startEvery) + 1)
+        errors.push('Every reached stride boundary must have exactly one recorded window.');
       if (s.windows.length && (s.windows[0]?.windowId !== 0 || s.windows[0]?.openedAt !== 0))
         errors.push('Initial handle zero must exist.');
       for (const [id, w] of s.windows.entries()) {
         if (w.windowId !== id || !natural(w.openedAt) || w.openedAt > s.seen ||
-            w.openedAt % startEvery !== 0 || !['open','complete','error'].includes(w.status))
+            w.openedAt !== id * startEvery || !['open','complete','error'].includes(w.status))
           errors.push('Window registry contains an impossible identity/start/status.');
         if (s.phase === 'Active' && (w.status === 'error' || (w.status === 'open') !== (w.openedAt + windowSize > s.seen)))
           errors.push('Active window lifetime contradicts source count.');
@@ -250,6 +252,12 @@ export function createWindowCountModel<T>(windowSize: number, startWindowEvery: 
           errors.push('Cancellation cannot fail a window.');
         if (s.phase === 'Stopped' && s.reason === 'complete' && w.status === 'error')
           errors.push('Completion cannot fail a window.');
+        if (s.phase === 'Stopped' && s.reason === 'cancel' &&
+            (w.status === 'open') !== (w.openedAt + windowSize > s.seen))
+          errors.push('Cancellation retains each window status at its final source count.');
+        if (s.phase === 'Stopped' && s.reason === 'error' &&
+            (w.status === 'error') !== (w.openedAt + windowSize > s.seen))
+          errors.push('Only windows open at source failure can retain the error.');
       }
       if (new Set(s.usedObservers).size !== s.usedObservers.length || s.usedObservers.some(id => typeof id !== 'string' || !id.trim()))
         errors.push('Observer IDs must be unique nonempty strings.');

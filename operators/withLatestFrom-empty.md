@@ -4,7 +4,7 @@
 
 Use latest auxiliary values only at source emission time, gated by all auxiliaries having produced a value.
 
-**Scope:** One to sixteen valid Observable auxiliaries; tuple output without deprecated result-selector projection.. Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.
+**Scope:** One to sixteen valid Observable auxiliaries; tuple output without optional result-selector projection.. Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.
 
 **Dataflow shape:** `withLatestFrom : (U₀*,…,Uₙ*) → T* → (T × U₀ × … × Uₙ)*`. An output can occur only on source.next after every auxiliary has produced at least one next. Auxiliary next updates latest memory but never emits downstream; unready source values are dropped. Auxiliary completion retains last value and never terminates outer; source complete/error terminates regardless of readiness.
 
@@ -41,7 +41,7 @@ Auxiliary subscriptions are owned by each result execution; no implicit share/re
 
 **Callbacks:** No user callback in this profile. Each output is a fresh array; each member is the unchanged opaque value/reference.
 
-**Excluded:** Zero auxiliary arguments, whose pinned implementation leaves ready false indefinitely. Deprecated resultSelector/projector overload, throwing projector and callback reentrancy. Synchronous setup-time notifications/errors and ObservableInput conversion from Promise/Iterable. Unbounded auxiliary counts and arbitrary arbitrary subscription-side effects. Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled.
+**Excluded:** Zero auxiliary arguments, whose pinned implementation leaves ready false indefinitely. Optional resultSelector/projector overload, throwing projector and callback reentrancy. Synchronous setup-time notifications/errors and ObservableInput conversion from Promise/Iterable. Unbounded auxiliary counts and arbitrary subscription-side effects. Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled.
 
 [Concrete scenarios](../docs/SESSION-22-LATEST-GATE.md) distinguish model predictions from separately executed runtime evidence.
 

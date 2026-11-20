@@ -154,7 +154,8 @@
         "tests/session22-windowCount-model.test.mjs"
       ],
       "runtimeTests": [
-        "tests/session22-windowCount-rxjs.test.mjs"
+        "tests/session22-windowCount-rxjs.test.mjs",
+        "tests/session22-windowCount-differential.test.mjs"
       ],
       "record": "evidence/SESSION-22.md",
       "scenarios": "docs/SESSION-22-COUNT-WINDOWS.md",

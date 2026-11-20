@@ -2,7 +2,7 @@
 
 > Generated from the canonical model by npm run generate. Do not edit this projection.
 
-A rule creates an obligation, not a proof of exhaustive behavior. Test identifiers below resolve in tests/session22-withLatestFrom-rxjs.test.mjs.
+A rule creates an obligation, not a proof of exhaustive behavior. Test identifiers below resolve in tests/session22-withLatestFrom-rxjs.test.mjs, tests/session22-withLatestFrom-differential.test.mjs.
 
 ## S22-WITHLATESTFROM-START
 

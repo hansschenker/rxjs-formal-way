@@ -15,7 +15,7 @@
 | 6 | 6 | S22-WITHLATESTFROM-AUX-COMPLETE | {"type":"aux.complete","index":1} | {"phase":"Active","latest":["left",null],"hasValue":[true,true],"live":[true,true],"ready":true} | unsubscribe(aux:1#0) | {"phase":"Active","latest":["left",null],"hasValue":[true,true],"live":[true,false],"ready":true} |
 | 7 | 7 | S22-WITHLATESTFROM-AUX-NEXT | {"type":"aux.next","index":0,"value":"new-left"} | {"phase":"Active","latest":["left",null],"hasValue":[true,true],"live":[true,false],"ready":true} |  | {"phase":"Active","latest":["new-left",null],"hasValue":[true,true],"live":[true,false],"ready":true} |
 | 8 | 8 | S22-WITHLATESTFROM-SOURCE-READY | {"type":"source.next","value":"second"} | {"phase":"Active","latest":["new-left",null],"hasValue":[true,true],"live":[true,false],"ready":true} | downstream.N(["second","new-left",null]) | {"phase":"Active","latest":["new-left",null],"hasValue":[true,true],"live":[true,false],"ready":true} |
-| 9 | 9 | S22-WITHLATESTFROM-SOURCE-COMPLETE | {"type":"source.complete"} | {"phase":"Active","latest":["new-left",null],"hasValue":[true,true],"live":[true,false],"ready":true} | downstream.C(); unsubscribe(source#0); unsubscribe(aux:0#0) | {"phase":"Closed","reason":"source-complete"} |
+| 9 | 9 | S22-WITHLATESTFROM-SOURCE-COMPLETE | {"type":"source.complete"} | {"phase":"Active","latest":["new-left",null],"hasValue":[true,true],"live":[true,false],"ready":true} | downstream.C(); unsubscribe(aux:0#0); unsubscribe(source#0) | {"phase":"Closed","reason":"source-complete"} |
 
 ## Four lanes
 

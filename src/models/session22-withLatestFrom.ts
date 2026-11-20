@@ -24,7 +24,7 @@ export type LatestModel<T> = OperatorModel<LatestParameters, LatestState, Latest
 const auxRef = (index: number): ResourceRef => ({ id: 'aux:' + index, generation: 0 });
 const closed = (reason: Extract<LatestState, { phase: 'Closed' }>['reason']): LatestState => ({ phase: 'Closed', reason });
 const detach = (s: LatestMemory): readonly Action<unknown>[] =>
-  [release(sourceRef), ...s.live.flatMap((yes, i) => yes ? [release(auxRef(i))] : [])];
+  [...s.live.flatMap((yes, i) => yes ? [release(auxRef(i))] : []), release(sourceRef)];
 const legalAux = (s: LatestState, e: LatestEvent<unknown>): boolean =>
   s.phase === 'Active' && 'index' in e && natural(e.index) && e.index < s.live.length && s.live[e.index] === true;
 
@@ -126,16 +126,16 @@ export function createWithLatestFromModel<T>(inputCount = 2): LatestModel<T> {
       'Auxiliary next updates latest memory but never emits downstream; unready source values are dropped.',
       'Auxiliary completion retains last value and never terminates outer; source complete/error terminates regardless of readiness.',
     ],
-    parameters: 'One to sixteen valid Observable auxiliaries; tuple output without deprecated result-selector projection.',
+    parameters: 'One to sixteen valid Observable auxiliaries; tuple output without optional result-selector projection.',
     callbacks: 'No user callback in this profile. Each output is a fresh array; each member is the unchanged opaque value/reference.',
     time: 'No scheduler added; source and auxiliary notifications supply time. Same-time ordering is explicit input order.',
     initialization: 'Subscribe auxiliary inputs in argument order first, then subscribe source; post-setup notifications only.',
     sharing: 'Independent result subscriptions own independent latest memory and auxiliary/source connections; no sharing or replay introduced.',
     exclusions: ['Zero auxiliary arguments, whose pinned implementation leaves ready false indefinitely.',
-      'Deprecated resultSelector/projector overload, throwing projector and callback reentrancy.',
+      'Optional resultSelector/projector overload, throwing projector and callback reentrancy.',
       'Synchronous setup-time notifications/errors and ObservableInput conversion from Promise/Iterable.',
-      'Unbounded auxiliary counts and arbitrary arbitrary subscription-side effects.'],
-    controls: ['Unsubscribed', 'Active', 'Closed'], testStem: 'session22-withLatestFrom',
+      'Unbounded auxiliary counts and arbitrary subscription-side effects.'],
+    controls: ['Unsubscribed', 'Active', 'Closed'], testStem: 'session22-withLatestFrom', differential: true,
     resources: [{ id: 'aux:*', kind: 'subscription', owner: 'result execution; input-indexed subscriptions' }],
     inputs: [
       { type: 'aux.next', origin: 'inner', category: 'notification', description: 'One auxiliary emits an opaque latest value.' },

@@ -1,0 +1,493 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "windowWhen-deferred-closing",
+    "operator": "windowWhen",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Route values through successive live windows; each fresh closing signal ends the current window on next or complete.",
+    "cardinality": {
+      "signature": "windowWhen : (() → U*) → T* → (T*)*",
+      "conditions": [
+        "One initial window plus one successor for each admitted closing next or completion.",
+        "Only current-window consumers receive source values; windows and values are not replayed.",
+        "Source completion/error ends current children before outer; outer cancellation leaves orphaned child Subjects."
+      ]
+    },
+    "scope": {
+      "parameters": "No numeric parameters. A synchronous closing factory returns a valid Observable whose acquisition is non-notifying, or throws an opaque error.",
+      "callbacks": "Factory requests have generation equal to the new window identity. Explicit return/throw must match the current invocation at the same envelope time.",
+      "time": "No timer is introduced. Source and closing streams provide notification times. Equal-time ordering is explicit; runWindowWhenTrace enforces same-time factory outcomes.",
+      "reentrancy": "Atomic non-reentrant reactions; child attachment occurs between completed reactions. Source and closing acquisition do not synchronously notify.",
+      "exclusions": [
+        "Synchronous closing notifications during subscription, recursively empty closing streams, and reentrant factory/observer/source setup.",
+        "Child attachment during the synchronous handle-announcement/factory reaction; native tests characterize this separately.",
+        "ObservableInput conversion beyond valid Observable values, imperative Subject mutation and source setup that emits despite a closed subscriber.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Emit initial handle; invoke selector; acquire returned closing Observable; acquire source last. Initial selector throw still attempts source setup with a closed subscriber."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "Independent outer subscriptions have separate windows and closing occurrences. Inner windows are live multicast without replay; inner consumers hold no upstream lease.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result execution"
+        },
+        {
+          "id": "closing",
+          "kind": "subscription",
+          "owner": "outer execution; current generation"
+        },
+        {
+          "id": "closingSelector",
+          "kind": "callback",
+          "owner": "current synchronous window-opening reaction"
+        },
+        {
+          "id": "windowObserver:*",
+          "kind": "subscription",
+          "owner": "independent window consumer"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Ordered action words are model predictions, not executed effects. Callback invocation IDs correlate outcomes; they are not subscription IDs.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to this result execution."
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "A value from the currently owned source subscription."
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "Successful source termination."
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "Source failure with an opaque error value."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Consumer closes the result connection silently."
+      },
+      {
+        "type": "factory.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "Current selector returns a valid closing Observable."
+      },
+      {
+        "type": "factory.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "Current selector throws an opaque error."
+      },
+      {
+        "type": "closing.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "Current closing occurrence emits; payload is ignored."
+      },
+      {
+        "type": "closing.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "Current closing occurrence completes and rotates."
+      },
+      {
+        "type": "closing.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "Current closing occurrence fails the execution."
+      },
+      {
+        "type": "window.subscribe",
+        "origin": "inner",
+        "category": "lifecycle",
+        "description": "A fresh named observer attaches to a retained handle."
+      },
+      {
+        "type": "window.unsubscribe",
+        "origin": "inner",
+        "category": "lifecycle",
+        "description": "A live named child observer closes its own subscription."
+      }
+    ],
+    "actionTypes": [
+      "notify",
+      "subscribe",
+      "unsubscribe",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "Selecting",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Selecting."
+      },
+      {
+        "id": "Active",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Active."
+      },
+      {
+        "id": "Stopped",
+        "terminal": false,
+        "description": "Outer stopped; retained handles and independently owned orphan consumers remain observable."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/windowWhen.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/windowWhen-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subject.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session22-windowWhen-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session22-windowWhen-rxjs.test.mjs",
+        "tests/session22-windowWhen-differential.test.mjs"
+      ],
+      "record": "evidence/SESSION-22.md",
+      "scenarios": "docs/SESSION-22-WHEN-WINDOWS.md",
+      "coverage": "docs/SESSION-22-WHEN-WINDOWS.md"
+    }
+  },
+  "parameters": {
+    "closing": "deferred-observable",
+    "factory": "explicit-synchronous-outcomes"
+  },
+  "rules": [
+    {
+      "id": "S22-WINDOWWHEN-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Selecting",
+      "guard": "no result connection exists",
+      "actions": [
+        "emit initial window handle zero",
+        "invoke closing selector zero with no argument"
+      ],
+      "nextState": "Initial window is open; source and closing connections await the synchronous factory outcome.",
+      "explanation": "The initial handle and closing selector precede source acquisition. Construction itself does no work.",
+      "obligations": [
+        "S22-WINDOWWHEN-START"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-FACTORY-RETURN",
+      "from": "Selecting",
+      "event": "factory.return",
+      "to": "Active",
+      "guard": "outcome belongs to the current synchronous invocation",
+      "actions": [
+        "acquire closing subscription occurrence",
+        "acquire source only for initial setup"
+      ],
+      "nextState": "One closing occurrence watches the open window; source is connected exactly once.",
+      "explanation": "A valid returned Observable is abstracted by its subscription occurrence, regardless of producer identity.",
+      "obligations": [
+        "S22-WINDOWWHEN-FACTORY-RETURN"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-FACTORY-THROW",
+      "from": "Selecting",
+      "event": "factory.throw",
+      "to": "Stopped",
+      "guard": "throw belongs to the current synchronous invocation",
+      "actions": [
+        "remember error on newly announced window",
+        "error outer",
+        "release source, or record closed-source acquisition attempt during initial setup"
+      ],
+      "nextState": "New window retains the exact error; old windows remain completed.",
+      "explanation": "Initial selector failure still reaches source.subscribe with an already closed subscriber. This non-notifying setup attempt acquires and immediately releases the source.",
+      "obligations": [
+        "S22-WINDOWWHEN-FACTORY-THROW"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-SOURCE-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source connection is live",
+      "actions": [
+        "forward identical payload to every observer of the current window in attachment order"
+      ],
+      "nextState": "No values are buffered and no closing state changes.",
+      "explanation": "Late observers miss earlier values. The outer sequence contains window handles, not source payloads.",
+      "obligations": [
+        "S22-WINDOWWHEN-SOURCE-NEXT"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-CLOSING-NEXT",
+      "from": "Active",
+      "event": "closing.next",
+      "to": "Selecting",
+      "guard": "current closing generation; next window identity remains a safe integer",
+      "actions": [
+        "unsubscribe old closing occurrence",
+        "complete and release old window consumers",
+        "emit successor handle",
+        "invoke next closing selector"
+      ],
+      "nextState": "Old window remembers completion; a new empty window awaits its factory result.",
+      "explanation": "Both next and empty completion rotate. Unsubscribing the old closer precedes child completion and replacement factory invocation.",
+      "obligations": [
+        "S22-WINDOWWHEN-CLOSING-NEXT"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-CLOSING-COMPLETE",
+      "from": "Active",
+      "event": "closing.complete",
+      "to": "Selecting",
+      "guard": "current closing generation; next window identity remains a safe integer",
+      "actions": [
+        "unsubscribe old closing occurrence",
+        "complete and release old window consumers",
+        "emit successor handle",
+        "invoke next closing selector"
+      ],
+      "nextState": "Old window remembers completion; a new empty window awaits its factory result.",
+      "explanation": "Both next and empty completion rotate. Unsubscribing the old closer precedes child completion and replacement factory invocation.",
+      "obligations": [
+        "S22-WINDOWWHEN-CLOSING-COMPLETE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Stopped",
+      "guard": "source connection is live",
+      "actions": [
+        "complete current children",
+        "complete outer",
+        "disconnect inputs in subscription ownership order"
+      ],
+      "nextState": "Every retained window is completed; no replacement window is created.",
+      "explanation": "Initial closing teardown precedes source; after a rotation, source teardown precedes the replacement closer.",
+      "obligations": [
+        "S22-WINDOWWHEN-SOURCE-COMPLETE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Stopped",
+      "guard": "live source, or matching current closing generation",
+      "actions": [
+        "error current children with original payload",
+        "error outer",
+        "disconnect inputs in subscription ownership order"
+      ],
+      "nextState": "Current handle remembers failure; older handles retain successful completion.",
+      "explanation": "Closing failure terminates the outer execution; it does not rotate or invoke the factory again.",
+      "obligations": [
+        "S22-WINDOWWHEN-SOURCE-ERROR"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-CLOSING-ERROR",
+      "from": "Active",
+      "event": "closing.error",
+      "to": "Stopped",
+      "guard": "live source, or matching current closing generation",
+      "actions": [
+        "error current children with original payload",
+        "error outer",
+        "disconnect inputs in subscription ownership order"
+      ],
+      "nextState": "Current handle remembers failure; older handles retain successful completion.",
+      "explanation": "Closing failure terminates the outer execution; it does not rotate or invoke the factory again.",
+      "obligations": [
+        "S22-WINDOWWHEN-CLOSING-ERROR"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Stopped",
+      "guard": "outer connection closes between complete reactions",
+      "actions": [
+        "disconnect inputs silently in subscription ownership order"
+      ],
+      "nextState": "Current Subject stays open but orphaned; existing child subscriptions remain independently owned.",
+      "explanation": "windowWhen finalization drops its reference without completing or unsubscribing the window Subject. Late observers can still attach without receiving values.",
+      "obligations": [
+        "S22-WINDOWWHEN-CANCEL"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-OBSERVE-OPEN-ACTIVE",
+      "from": "Active",
+      "event": "window.subscribe",
+      "to": "Active",
+      "guard": "fresh observer identity names a retained open window",
+      "actions": [
+        "acquire child observer, no replay"
+      ],
+      "nextState": "Child is attached independently to the open Subject.",
+      "explanation": "Retained handles remain observable after outer termination; they do not keep the original source connected.",
+      "obligations": [
+        "S22-WINDOWWHEN-OBSERVE-OPEN-ACTIVE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-OBSERVE-COMPLETE-ACTIVE",
+      "from": "Active",
+      "event": "window.subscribe",
+      "to": "Active",
+      "guard": "fresh observer identity names a retained complete window",
+      "actions": [
+        "acquire child observer",
+        "deliver retained terminal only",
+        "release child observer"
+      ],
+      "nextState": "No child remains attached to a terminated Subject.",
+      "explanation": "Retained handles remain observable after outer termination; they do not keep the original source connected.",
+      "obligations": [
+        "S22-WINDOWWHEN-OBSERVE-COMPLETE-ACTIVE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-OBSERVER-UNSUBSCRIBE-ACTIVE",
+      "from": "Active",
+      "event": "window.unsubscribe",
+      "to": "Active",
+      "guard": "named observer owns a live child subscription",
+      "actions": [
+        "release only that child subscription"
+      ],
+      "nextState": "All peers, window handles and upstream connections are unchanged.",
+      "explanation": "Orphaned consumers can unsubscribe after outer cancellation.",
+      "obligations": [
+        "S22-WINDOWWHEN-OBSERVER-UNSUBSCRIBE-ACTIVE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-OBSERVE-OPEN-STOPPED",
+      "from": "Stopped",
+      "event": "window.subscribe",
+      "to": "Stopped",
+      "guard": "fresh observer identity names a retained open window",
+      "actions": [
+        "acquire child observer, no replay"
+      ],
+      "nextState": "Child is attached independently to the open Subject.",
+      "explanation": "Retained handles remain observable after outer termination; they do not keep the original source connected.",
+      "obligations": [
+        "S22-WINDOWWHEN-OBSERVE-OPEN-STOPPED"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-OBSERVE-COMPLETE-STOPPED",
+      "from": "Stopped",
+      "event": "window.subscribe",
+      "to": "Stopped",
+      "guard": "fresh observer identity names a retained complete window",
+      "actions": [
+        "acquire child observer",
+        "deliver retained terminal only",
+        "release child observer"
+      ],
+      "nextState": "No child remains attached to a terminated Subject.",
+      "explanation": "Retained handles remain observable after outer termination; they do not keep the original source connected.",
+      "obligations": [
+        "S22-WINDOWWHEN-OBSERVE-COMPLETE-STOPPED"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-OBSERVE-ERROR-STOPPED",
+      "from": "Stopped",
+      "event": "window.subscribe",
+      "to": "Stopped",
+      "guard": "fresh observer identity names a retained error window",
+      "actions": [
+        "acquire child observer",
+        "deliver retained terminal only",
+        "release child observer"
+      ],
+      "nextState": "No child remains attached to a terminated Subject.",
+      "explanation": "Retained handles remain observable after outer termination; they do not keep the original source connected.",
+      "obligations": [
+        "S22-WINDOWWHEN-OBSERVE-ERROR-STOPPED"
+      ]
+    },
+    {
+      "id": "S22-WINDOWWHEN-OBSERVER-UNSUBSCRIBE-STOPPED",
+      "from": "Stopped",
+      "event": "window.unsubscribe",
+      "to": "Stopped",
+      "guard": "named observer owns a live child subscription",
+      "actions": [
+        "release only that child subscription"
+      ],
+      "nextState": "All peers, window handles and upstream connections are unchanged.",
+      "explanation": "Orphaned consumers can unsubscribe after outer cancellation.",
+      "obligations": [
+        "S22-WINDOWWHEN-OBSERVER-UNSUBSCRIBE-STOPPED"
+      ]
+    }
+  ]
+}
