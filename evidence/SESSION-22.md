@@ -1,6 +1,6 @@
 # Session 22 — Window policies and source-triggered latest values
 
-**Dates:** reserved on 19 November 2026; continued on 20 November 2026, Europe/Zurich. **Status:** complete local integration passed; committed full-batch CI and final acceptance pending. The five selected exports are **windowCount, windowTime, windowToggle, windowWhen and withLatestFrom**.
+**Dates:** reserved on 19 November 2026; continued on 20 November 2026, Europe/Zurich. **Status:** complete implementation PR and main CI passed; separate read-only verification and final acceptance pending. The five selected exports are **windowCount, windowTime, windowToggle, windowWhen and withLatestFrom**.
 
 The [original reservation](../planning/sessions/2026-11-19.json) and [20 November continuation](../planning/sessions/2026-11-20.json) describe the same session. The user requested **“lets finish session 22”**. No sixth export or new batch is selected. Starting accepted inventory remains **105/113**, with eight pending, until the complete acceptance gates pass.
 
@@ -66,8 +66,14 @@ Read-only semantic peer reviews found no remaining concrete mismatch in toggle/w
 
 Window cancellation, terminal retention and handle invalidation differ by family and are not normalized to one policy. Native-only synchronous setup, finite synchronous closing or invalidated-handle cases do not silently expand the legal canonical event alphabet. Arbitrary reentrancy, throwing observer/producer teardown and universal infinite-trace liveness remain excluded. Resource-release actions describe connection teardown, not an independent proof that every external producer side effect stops.
 
-## Committed verification and closure
+## Committed implementation verification
 
-The complete local result is not yet a claim about a GitHub-tested revision. Main generation verification, a separate read-only run with generation/publication skipped, exact checkout/tree provenance and final acceptance updates remain pending.
+The complete implementation and all projections were committed at `788fcf534f9e92eaf4d8611b53cbaefbd8bc7d38` in [PR #46](https://github.com/hansschenker/rxjs-formal-way/pull/46). Its [PR CI 44684623732](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44684623732), job `136115911537`, passed on Node **v22.16.0**: syntax, strict types, **1,728 tests passed, zero failed, zero skipped**, all **12,316** Session 22 comparison executions, and **1,222 ordinary + 3 specialized projections**. Generation and publication were skipped. The log's actual synthetic checkout was `6026b2c92432c488da28c88c14e4dcb40bc67179`; independently retrieved Git objects show that checkout and PR head share tree `76f083aa276b23d0b9ddce9cf2dfa3552d7058d3`.
 
-After those gates pass, the five selected exports will bring the accepted inventory to **110/113**, leaving **zip, zipAll and zipWith**. Both dated records must close the same Session 22; no sixth export belongs to this continuation.
+PR #46 merged as `771073aa296355422c5ce329cef51f3c08b39050`. [Main CI 44684834473](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44684834473), job `136116566832`, checked out that exact SHA and passed the same complete results on Node **v22.16.0**, including generation before checking and the publication step. Regeneration produced no additional artifact commit: all projections were already committed, and live main remained `771073aa296355422c5ce329cef51f3c08b39050` after the successful run. Both jobs' full logs were retrieved and their actual checkout, comparison markers, test totals and projection totals checked.
+
+## Independent read-only verification and closure
+
+A separate evidence-only PR now records the passing implementation results. Its required read-only run must verify the already committed artifacts with generation and publication skipped; actual checkout and head Git trees must be independently compared before acceptance. That gate and final inventory updates remain pending.
+
+After that gate passes, the five selected exports will bring the accepted inventory to **110/113**, leaving **zip, zipAll and zipWith**. Both dated records must close the same Session 22; no sixth export belongs to this continuation.
