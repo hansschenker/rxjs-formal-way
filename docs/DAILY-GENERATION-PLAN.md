@@ -1,5 +1,11 @@
 # Daily RxJS 7.8.2 operator generation plan
 
+## Catalogue completed — 20 November 2026
+
+Session 23 accepted the final **zip, zipAll and zipWith** reference profiles after implementation/main CI and independent read-only verification passed. The [inventory](../planning/operator-generation.json) now records **113/113 accepted exports, zero pending and zero carryovers**. All 113 pinned native operator exports have public inspection indexes and model/runtime evidence. See the [closed Session 23 record](../planning/sessions/2026-11-20-session-23.json) and [evidence ledger](../evidence/SESSION-23.md).
+
+The recurring **RxJS operator generation session** task is **paused**, as its completion instruction requires. The queue is empty; do not restart catalogue generation or select already accepted names to fill another batch. Further profiles or composed-pipeline work require a separately requested scope. The guardrails and batch history below are retained as the procedure used for this completed catalogue.
+
 ## Guardrails
 
 - Consult the live default branch, `planning/operator-generation.json`, `docs/ROADMAP.md`, and `planning/sessions/YYYY-MM-DD.json` in Europe/Zurich before selecting work.

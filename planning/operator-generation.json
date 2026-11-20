@@ -12,11 +12,7 @@
     "scan",
     "debounceTime"
   ],
-  "queue": [
-    "zip",
-    "zipAll",
-    "zipWith"
-  ],
+  "queue": [],
   "operators": {
     "audit": {
       "status": "accepted",
@@ -1695,19 +1691,67 @@
       "continuationRecord": "planning/sessions/2026-11-20.json"
     },
     "zip": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-20",
+      "sessionNumber": 23,
+      "completedOn": "2026-11-20",
+      "profiles": [
+        "deprecated pipeable export from rxjs/operators; rest Observable arguments; one to sixteen total inputs including source",
+        "tuple output with FIFO pairing and retained completed-input queues; analysis bounds 1..32 per input",
+        "non-notifying acquisition and atomic post-setup notifications; source-first connection and ordered cleanup"
+      ],
+      "evidence": "evidence/SESSION-23.md",
+      "inspectionIndex": "operators/zip-index.md",
+      "testedCommit": "4281e314656fe56c5638b287c87c3be07de29618",
+      "generatedCommit": "cf8d58b91bd9a02d4047b8b52071738c3e3744c0",
+      "implementationRun": 44688585605,
+      "verificationRun": 44688789140,
+      "readOnlyHeadCommit": "0f437315b92cf58cd3bd8ca4014d630f01234ed2",
+      "readOnlyCheckout": "24e5fef8672509bb22914fbd55a9177842996627",
+      "readOnlyTree": "654976bebe9fe6faf30ef07b1e66d9309828c248",
+      "sessionRecord": "planning/sessions/2026-11-20-session-23.json"
     },
     "zipAll": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-20",
+      "sessionNumber": 23,
+      "completedOn": "2026-11-20",
+      "profiles": [
+        "collect zero to sixteen valid Observable occurrences until outer completion; no inner acquisition during collection",
+        "tuple output with FIFO pairing and retained completed-input queues; analysis bounds 1..16 per inner",
+        "non-notifying acquisition and atomic notifications; inner acquisition before outer release, successful inner cleanup before downstream completion"
+      ],
+      "evidence": "evidence/SESSION-23.md",
+      "inspectionIndex": "operators/zipAll-index.md",
+      "testedCommit": "4281e314656fe56c5638b287c87c3be07de29618",
+      "generatedCommit": "cf8d58b91bd9a02d4047b8b52071738c3e3744c0",
+      "implementationRun": 44688585605,
+      "verificationRun": 44688789140,
+      "readOnlyHeadCommit": "0f437315b92cf58cd3bd8ca4014d630f01234ed2",
+      "readOnlyCheckout": "24e5fef8672509bb22914fbd55a9177842996627",
+      "readOnlyTree": "654976bebe9fe6faf30ef07b1e66d9309828c248",
+      "sessionRecord": "planning/sessions/2026-11-20-session-23.json"
     },
     "zipWith": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-20",
+      "sessionNumber": 23,
+      "completedOn": "2026-11-20",
+      "profiles": [
+        "source plus rest Observable inputs; one to sixteen total inputs; shared canonical FIFO kernel with independent export evidence",
+        "tuple output with FIFO pairing, singleton tuples without auxiliaries, and retained completed-input queues; analysis bounds 1..32",
+        "non-notifying acquisition and atomic post-setup notifications; source-first connection and ordered cleanup"
+      ],
+      "evidence": "evidence/SESSION-23.md",
+      "inspectionIndex": "operators/zipWith-index.md",
+      "testedCommit": "4281e314656fe56c5638b287c87c3be07de29618",
+      "generatedCommit": "cf8d58b91bd9a02d4047b8b52071738c3e3744c0",
+      "implementationRun": 44688585605,
+      "verificationRun": 44688789140,
+      "readOnlyHeadCommit": "0f437315b92cf58cd3bd8ca4014d630f01234ed2",
+      "readOnlyCheckout": "24e5fef8672509bb22914fbd55a9177842996627",
+      "readOnlyTree": "654976bebe9fe6faf30ef07b1e66d9309828c248",
+      "sessionRecord": "planning/sessions/2026-11-20-session-23.json"
     }
   }
 }

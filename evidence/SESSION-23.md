@@ -1,6 +1,6 @@
 # Session 23 — Final zip-family exports
 
-**Date:** 20 November 2026, Europe/Zurich. **Status:** complete implementation PR and main CI passed; independent read-only verification and final acceptance pending. Exactly **zip, zipAll and zipWith** are selected. The accepted inventory remains **110/113** until all three pass the complete acceptance gates.
+**Date:** 20 November 2026, Europe/Zurich. **Status: closed and accepted within documented scopes.** Complete implementation PR, main generation CI and independent read-only verification passed. Exactly **zip, zipAll and zipWith** are selected. The final three exports bring the accepted inventory to **113/113**, with zero pending names and zero carryovers.
 
 ## Reservation and authorization
 
@@ -18,7 +18,7 @@ The [teaching guide](../docs/SESSION-23-ZIP-FAMILY.md) follows Intuition → Spe
 | `zipAll` | [Collected inner streams](../docs/SESSION-23-ZIP-ALL.md) | [Deferred join](../src/models/session23-zipAll.ts) | [Inspect](../operators/zipAll-index.md) |
 | `zipWith` | [ZipWith](../docs/SESSION-23-ZIP-WITH.md) | [Shared FIFO model](../src/models/session23-zip-common.ts) | [Inspect](../operators/zipWith-index.md) |
 
-Nine configured examples are registered for **75 new projections**, including all three required eleven-step indexes. The expected complete registry is **1,297 ordinary + 3 specialized projections**. Model definitions and example histories are distinct from independent actual RxJS observations. Detailed parameter, setup, queue-bound, cancellation and sharing scopes remain explicit.
+Nine configured examples are registered for **75 new projections**, including all three required eleven-step indexes. The committed and verified complete registry is **1,297 ordinary + 3 specialized projections**. Model definitions and example histories are distinct from independent actual RxJS observations. Detailed parameter, setup, queue-bound, cancellation and sharing scopes remain explicit.
 
 ## Source inspection and model scope
 
@@ -69,8 +69,25 @@ The complete implementation and all 75 new projections were committed at `cf8d58
 
 PR #48 merged as `4281e314656fe56c5638b287c87c3be07de29618`. [Main CI 44688585605](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44688585605), job `136128700055`, checked out that exact merge and passed the same complete results on **Node v22.16.0**. Generation before checking and the publication step succeeded. Regeneration produced no additional artifact commit: all projections were already committed, and live main remained `4281e314656fe56c5638b287c87c3be07de29618` after the completed successful run. Both jobs' full logs were retrieved and actual checkout, test totals, comparison markers and projection counts checked.
 
-## Independent read-only verification and closure pending
+## Independent read-only verification
 
-A separate evidence-only PR records these implementation results and supplies the independent read-only acceptance gate. Its workflow must verify the committed artifacts with generation/publication skipped; the actual checkout and head Git trees must be fetched independently and compared before final acceptance.
+The evidence-only [PR #49](https://github.com/hansschenker/rxjs-formal-way/pull/49) changed only this ledger. [Read-only CI 44688789140](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44688789140), job `136129347375`, passed on **Node v22.16.0**: syntax, strict types, **1,845 tests passed, zero failures/skips**, all **27,168** Session 23 comparisons, and **1,297 ordinary + 3 specialized committed projections**. Both generation and publication were explicitly **skipped**. The full job log was retrieved and checked.
 
-After that gate passes, the inventory will contain **113/113 exports accepted within documented scopes**, with no pending names or carryovers. The existing recurring generation task explicitly instructs itself to pause at that point; it remains enabled until acceptance is complete.
+| Provenance item | Exact value |
+|---|---|
+| Read-only PR head | `0f437315b92cf58cd3bd8ca4014d630f01234ed2` |
+| Actual synthetic checkout in CI log | `24e5fef8672509bb22914fbd55a9177842996627` |
+| Independently fetched identical Git tree | `654976bebe9fe6faf30ef07b1e66d9309828c248` |
+| Read-only PR merge | `df163cf53066f69102ff9f4bd0f3fcfc42bc9f8d` |
+
+The head and actual checkout Git commit objects were fetched independently before merging. Identical tree SHAs establish that the files checked by CI match the reviewed head. Acceptance rests on these complete successful committed checks, not on the earlier locally failed navigation assertion.
+
+## Final catalogue closure
+
+**Session 23 closed on 20 November 2026 Europe/Zurich.** The [inventory](../planning/operator-generation.json), [roadmap](../docs/ROADMAP.md), [daily plan](../docs/DAILY-GENERATION-PLAN.md) and [separate numbered session record](../planning/sessions/2026-11-20-session-23.json) record **113/113 accepted pipeable exports, zero pending names, zero carryovers and no unresolved in-scope blockers**. All three final eleven-step inspection indexes are committed and independently drift-verified. The catalogue test matches every pinned native operator export to published model/runtime evidence.
+
+The user-authorized 20 November exception remains explicit. Both closed Session 22 records are preserved unchanged. Exactly three names were worked in this final batch; the queue is empty and no additional catalogue session is selected.
+
+The existing **RxJS operator generation session** recurring task was **paused**, with disabled state confirmed at **20 November 2026, 07:36:36 Europe/Zurich**, after the acceptance checks passed. Its existing prompt explicitly required pausing when the planned inventory was accepted. Only its enabled state changed; its prompt, title and schedule were preserved.
+
+Catalogue generation is complete within the declared reference scopes. Broader overload coverage, arbitrary reentrancy, universal proofs, a general effect interpreter and composed-pipeline verification remain distinct work; this closure does not claim those goals are complete.

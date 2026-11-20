@@ -3,7 +3,7 @@
   "sessionNumber": 23,
   "date": "2026-11-20",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "startedAt": "2026-11-20T07:17:04+01:00",
   "startingCommit": "d739fcfad8c054065b4cc22fa7224fb49699b1cd",
   "selectedNames": [
@@ -16,19 +16,19 @@
     "zipAll",
     "zipWith"
   ],
-  "completedNames": [],
-  "carryovers": [
+  "completedNames": [
     "zip",
     "zipAll",
     "zipWith"
   ],
+  "carryovers": [],
   "checks": {
-    "syntax": "Passed complete local npm run check; committed full-batch CI pending.",
-    "types": "Strict TypeScript passed locally, including 47 Session23 negative assertions; no compiler settings relaxed.",
-    "model": "54 model tests plus two navigation tests and one complete 113-export catalogue test; full local suite 1845 passed, zero failures/skips.",
-    "runtime": "57 native tests and three differential tests; 7776+9024+10368=27168 finite model/runtime comparison executions passed, with native histories recorded first.",
-    "generated": "All three eleven-step indexes and nine examples generated; 75 new projections. 1297 ordinary + 3 specialized projections drift-verified locally. Independent committed read-only gate pending.",
-    "ci": "Local full check passed; implementation PR/main CI, independent read-only verification and exact checkout/tree provenance remain pending."
+    "syntax": "Passed complete local check, implementation PR CI 44688399407, main push CI 44688585605 and independent read-only CI 44688789140.",
+    "types": "Strict TypeScript passed in every complete check, including 47 Session23 negative assertions; compiler settings and dependency pins unchanged.",
+    "model": "54 Session23 model tests plus two navigation tests and one full 113-export catalogue test. Complete suite 1845 passed, zero failures and zero skips in main and independent read-only CI.",
+    "runtime": "57 native tests and three differential tests; 7776+9024+10368=27168 finite comparison executions passed, observing supplied times, payload identity, notifications and ordered connection lifetimes.",
+    "generated": "All three required eleven-step indexes and nine examples committed: 75 new projections. 1297 ordinary + 3 specialized projections generated on main and independently drift-verified without regeneration. All 113 native operator exports have index/model/runtime evidence coverage.",
+    "ci": "Main push run 44688585605 job 136128700055 success; independent read-only PR49 run 44688789140 job 136129347375 success. Generation/publication skipped for read-only verification; independently retrieved head and actual checkout Git trees are identical."
   },
   "blockers": [],
   "authorization": {
@@ -46,7 +46,52 @@
     "Session23 adds 117 named tests over 1728: 54 model, 57 native, three differential, two navigation and one complete catalogue check. The 47 negative compiler assertions are separate.",
     "The first full run failed one newly added navigation assertion that assumed detailed-guide and coverage links were identical. Per-export coverage expectations were corrected and manifest assertions strengthened; all 1845 tests passed on rerun. No semantic model or validation gate was relaxed.",
     "Peer review corrected unsupported ObservableInput-characterization wording; conversions remain excluded. Exact pipeable zip identity, completed FIFO drain and zipAll acquisition/finalization order are explicit.",
-    "All three operator pinned source bodies match installed Git blob hashes. Upstream spec bodies inspected; upstream suite not executed. Finite evidence is not unrestricted or infinite-trace equivalence."
+    "All three operator pinned source bodies match installed Git blob hashes. Upstream spec bodies inspected; upstream suite not executed. Finite evidence is not unrestricted or infinite-trace equivalence.",
+    "Implementation PR48 CI 44688399407 and main CI 44688585605 passed 1845 tests, 27168 Session23 comparisons and 1297+3 projections on Node v22.16.0. Artifacts were already committed; main generation produced no additional artifact commit.",
+    "Independent read-only PR49 CI 44688789140 passed with generation/publication skipped. Head 0f437315b92cf58cd3bd8ca4014d630f01234ed2 and actual checkout 24e5fef8672509bb22914fbd55a9177842996627 have independently retrieved identical tree 654976bebe9fe6faf30ef07b1e66d9309828c248. PR49 merged as df163cf53066f69102ff9f4bd0f3fcfc42bc9f8d.",
+    "Final three names accepted within documented scopes: 113/113 accepted, zero pending, zero carryovers and no unresolved in-scope blockers. No additional operator was selected.",
+    "The recurring RxJS operator generation session was paused after the acceptance checks passed, as its existing completion instruction requires. Its title, prompt and schedule were preserved; only enabled state changed.",
+    "The explicit date exception applies to this Session23 only. Both closed Session22 records remain unchanged. No further catalogue generation batch is scheduled; broader pipeline verification and additional profiles remain separate future work."
   ],
-  "nextQueue": []
+  "nextQueue": [],
+  "completedOn": "2026-11-20",
+  "closedAt": "2026-11-20T07:38:15+01:00",
+  "catalogueComplete": true,
+  "generationStatus": "complete",
+  "inventoryAfterClosure": {
+    "accepted": 113,
+    "pending": 0,
+    "carryovers": 0
+  },
+  "verification": {
+    "implementationPR": 48,
+    "implementationPRRun": 44688399407,
+    "implementationPRJob": 136128101122,
+    "implementationPRCheckout": "21fdbc087bac5d97520f82e21a167b34aca02594",
+    "implementationTree": "78f1e2f39887b473d7fe2402b65f6be8d1ff968b",
+    "mainRun": 44688585605,
+    "mainJob": 136128700055,
+    "mainCheckout": "4281e314656fe56c5638b287c87c3be07de29618",
+    "generatedCommit": "cf8d58b91bd9a02d4047b8b52071738c3e3744c0",
+    "readOnlyPR": 49,
+    "readOnlyRun": 44688789140,
+    "readOnlyJob": 136129347375,
+    "readOnlyHeadCommit": "0f437315b92cf58cd3bd8ca4014d630f01234ed2",
+    "readOnlyCheckout": "24e5fef8672509bb22914fbd55a9177842996627",
+    "readOnlyTree": "654976bebe9fe6faf30ef07b1e66d9309828c248",
+    "catalogueExportCount": 113
+  },
+  "commits": [
+    "a9cc9d559e8588e9cd95d307e616fd0dbd45d9d5",
+    "cf8d58b91bd9a02d4047b8b52071738c3e3744c0",
+    "4281e314656fe56c5638b287c87c3be07de29618",
+    "0f437315b92cf58cd3bd8ca4014d630f01234ed2",
+    "df163cf53066f69102ff9f4bd0f3fcfc42bc9f8d"
+  ],
+  "recurringGeneration": {
+    "title": "RxJS operator generation session",
+    "isEnabled": false,
+    "pausedAt": "2026-11-20T07:36:36+01:00",
+    "reason": "All 113 planned pipeable exports accepted within documented scopes; completion instruction requires pausing instead of regenerating accepted names."
+  }
 }
