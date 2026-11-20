@@ -13,7 +13,10 @@
     "windowWhen",
     "withLatestFrom"
   ],
-  "workedNames": [],
+  "workedNames": [
+    "windowCount",
+    "withLatestFrom"
+  ],
   "completedNames": [],
   "carryovers": [
     "windowCount",
@@ -34,11 +37,14 @@
   "notes": [
     "Live main, daily plan, roadmap and accepted tracker checked; 105/113 accepted and all five selected exports pending.",
     "One session only on 19 November; no sixth export; incomplete names must be carried forward.",
-    "Do not accept a name without full generated inspection index, model/native evidence and read-only CI."
+    "Do not accept a name without full generated inspection index, model/native evidence and read-only CI.",
+    "Continued on 20 November at the explicit request to finish Session22. Two prior implementations and their generated indexes are merged; three models plus complete independent verification and final acceptance remain. This is the same five-name session."
   ],
   "nextQueue": [
     "zip",
     "zipAll",
     "zipWith"
-  ]
+  ],
+  "continuedOn": "2026-11-20",
+  "continuationRecord": "planning/sessions/2026-11-20.json"
 }

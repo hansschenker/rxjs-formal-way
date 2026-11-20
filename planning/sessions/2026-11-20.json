@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "sessionNumber": 22,
+  "date": "2026-11-20",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "continuationOf": "2026-11-19",
+  "startedAt": "2026-11-20T06:42:34+01:00",
+  "startingCommit": "800946330271bbaaf745ccb978d535a3fe62d7c7",
+  "selectedNames": [
+    "windowCount",
+    "windowTime",
+    "windowToggle",
+    "windowWhen",
+    "withLatestFrom"
+  ],
+  "workedNames": [
+    "windowCount",
+    "withLatestFrom"
+  ],
+  "completedNames": [],
+  "carryovers": [
+    "windowCount",
+    "windowTime",
+    "windowToggle",
+    "windowWhen",
+    "withLatestFrom"
+  ],
+  "checks": {
+    "syntax": "Prior partial main CI 44483312048 passed; complete continuation not yet checked.",
+    "types": "Prior partial main CI passed; complete continuation not yet checked.",
+    "model": "Prior partial suite passed 1604 named tests; complete five-export integration pending.",
+    "runtime": "Existing native tests for windowCount and withLatestFrom passed; remaining three operators and direct comparisons pending.",
+    "generated": "25 windowCount and 17 withLatestFrom projections are committed; 1139 ordinary + 3 specialized projections verified on prior main CI. Remaining indexes and independent read-only verification pending.",
+    "ci": "Retrieved prior main run 44483312048 job 135420556935 success on 9386bdaf4a20787442e90d2f0850497c4c3966a4. No final Session22 acceptance claimed."
+  },
+  "blockers": [],
+  "notes": [
+    "User instruction: lets finish session 22. Continue the original five-name session reserved on 19 November; do not start another batch.",
+    "Live main, daily plan, roadmap and inventory checked. 105/113 accepted, 8 pending; both earlier implementations and generated indexes retained.",
+    "Complete windowTime, windowToggle and windowWhen and verify the whole five-export batch before closing either dated record.",
+    "The 20 November continuation occupies this local-date session slot. No sixth export is selected."
+  ],
+  "nextQueue": [
+    "zip",
+    "zipAll",
+    "zipWith"
+  ]
+}
