@@ -1,8 +1,8 @@
 # Session 22 — Window policies and source-triggered latest values
 
-**Dates:** reserved on 19 November 2026; continued on 20 November 2026, Europe/Zurich. **Status:** complete implementation PR and main CI passed; separate read-only verification and final acceptance pending. The five selected exports are **windowCount, windowTime, windowToggle, windowWhen and withLatestFrom**.
+**Dates:** reserved on 19 November 2026; continued on 20 November 2026, Europe/Zurich. **Status: closed and accepted within the documented scopes.** Complete implementation PR, main generation CI and separate read-only verification passed. The five selected exports are **windowCount, windowTime, windowToggle, windowWhen and withLatestFrom**.
 
-The [original reservation](../planning/sessions/2026-11-19.json) and [20 November continuation](../planning/sessions/2026-11-20.json) describe the same session. The user requested **“lets finish session 22”**. No sixth export or new batch is selected. Starting accepted inventory remains **105/113**, with eight pending, until the complete acceptance gates pass.
+The [original reservation](../planning/sessions/2026-11-19.json) and [20 November continuation](../planning/sessions/2026-11-20.json) describe the same session. The user requested **“lets finish session 22”**. No sixth export or new batch is selected. The accepted inventory moved from **105/113** to **110/113**, leaving three pending exports and zero carryovers after the complete acceptance gates passed.
 
 ## Existing implementation and continuation provenance
 
@@ -72,8 +72,21 @@ The complete implementation and all projections were committed at `788fcf534f9e9
 
 PR #46 merged as `771073aa296355422c5ce329cef51f3c08b39050`. [Main CI 44684834473](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44684834473), job `136116566832`, checked out that exact SHA and passed the same complete results on Node **v22.16.0**, including generation before checking and the publication step. Regeneration produced no additional artifact commit: all projections were already committed, and live main remained `771073aa296355422c5ce329cef51f3c08b39050` after the successful run. Both jobs' full logs were retrieved and their actual checkout, comparison markers, test totals and projection totals checked.
 
-## Independent read-only verification and closure
+## Independent read-only verification
 
-A separate evidence-only PR now records the passing implementation results. Its required read-only run must verify the already committed artifacts with generation and publication skipped; actual checkout and head Git trees must be independently compared before acceptance. That gate and final inventory updates remain pending.
+The evidence-only [PR #47](https://github.com/hansschenker/rxjs-formal-way/pull/47) changed only this ledger. [Read-only CI 44685325950](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44685325950), job `136118166086`, passed on Node **v22.16.0**: syntax, strict types, **1,728 tests passed, zero failed, zero skipped**, all **12,316** Session 22 comparisons, and **1,222 ordinary + 3 specialized committed projections** drift-verified. The job's generation and publication steps were explicitly **skipped**. Its full logs were retrieved and checked.
 
-After that gate passes, the five selected exports will bring the accepted inventory to **110/113**, leaving **zip, zipAll and zipWith**. Both dated records must close the same Session 22; no sixth export belongs to this continuation.
+| Provenance item | Exact value |
+|---|---|
+| Read-only PR head | `4d8bca667d58c3c5eba0bdf44368128bc9eb4686` |
+| Actual synthetic checkout in CI log | `791dfd118f7f389cac601284eafbdb1b6f590b37` |
+| Independently retrieved identical Git tree | `579229ca82d62a98acfeadc4cf1a808850aa9560` |
+| Read-only PR merge | `6316c8f9a268a44b9ead812234f7bc3e9ffdf9cc` |
+
+Both Git commit objects were fetched independently before merging PR #47. Equal tree SHAs establish that the files checked by CI match the reviewed head. The earlier failed partial PR #45 run remains recorded as a failure; acceptance rests on the complete successful runs above.
+
+## Closure
+
+All five selected exports—**windowCount, windowTime, windowToggle, windowWhen and withLatestFrom**—are accepted within their documented parameter and execution scopes. The [inventory](../planning/operator-generation.json), [roadmap](../docs/ROADMAP.md), [original reservation](../planning/sessions/2026-11-19.json) and [continuation](../planning/sessions/2026-11-20.json) close the same **Session 22**, originally reserved **19 November** and completed **20 November 2026 Europe/Zurich**.
+
+**110/113 exports accepted; three pending; zero carryovers and no unresolved in-scope blockers.** All five required eleven-step inspection indexes are committed and independently drift-verified. The remaining queue is **zip, zipAll and zipWith**, ordinarily eligible for the next session on **21 November 2026 Europe/Zurich**. No sixth export or new batch was included in this continuation.

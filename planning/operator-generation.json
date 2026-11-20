@@ -13,11 +13,6 @@
     "debounceTime"
   ],
   "queue": [
-    "windowCount",
-    "windowTime",
-    "windowToggle",
-    "windowWhen",
-    "withLatestFrom",
     "zip",
     "zipAll",
     "zipWith"
@@ -1236,7 +1231,7 @@
       "status": "accepted",
       "session": "2026-11-16",
       "profiles": [
-        "bounded trailing FIFO memory, counts 0\u20138",
+        "bounded trailing FIFO memory, counts 0–8",
         "emit only values with sufficient subsequent source arrivals",
         "completion does not flush held suffix; zero is identity"
       ],
@@ -1288,7 +1283,7 @@
       "status": "accepted",
       "session": "2026-11-16",
       "profiles": [
-        "virtual FIFO scheduling with deferred source connection, delays 0\u20138",
+        "virtual FIFO scheduling with deferred source connection, delays 0–8",
         "unsubscribe before scheduled action prevents source acquisition",
         "source notifications are not independently rescheduled"
       ],
@@ -1590,29 +1585,114 @@
       "sessionRecord": "planning/sessions/2026-11-18-session-21.json"
     },
     "windowCount": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-19",
+      "sessionNumber": 22,
+      "completedOn": "2026-11-20",
+      "profiles": [
+        "positive safe-integer size/stride; zero stride normalizes to size",
+        "contiguous, overlapping and gapped live windows with explicit child lifetimes",
+        "post-setup atomic notifications; retained terminal handles and orphaned open children after cancellation"
+      ],
+      "evidence": "evidence/SESSION-22.md",
+      "inspectionIndex": "operators/windowCount-index.md",
+      "testedCommit": "771073aa296355422c5ce329cef51f3c08b39050",
+      "generatedCommit": "788fcf534f9e92eaf4d8611b53cbaefbd8bc7d38",
+      "implementationRun": 44684834473,
+      "verificationRun": 44685325950,
+      "readOnlyHeadCommit": "4d8bca667d58c3c5eba0bdf44368128bc9eb4686",
+      "readOnlyCheckout": "791dfd118f7f389cac601284eafbdb1b6f590b37",
+      "readOnlyTree": "579229ca82d62a98acfeadc4cf1a808850aa9560",
+      "sessionRecord": "planning/sessions/2026-11-19.json",
+      "continuationRecord": "planning/sessions/2026-11-20.json"
     },
     "windowTime": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-19",
+      "sessionNumber": 22,
+      "completedOn": "2026-11-20",
+      "profiles": [
+        "span/interval/maxSize integers 1..1000; null interval selects restart and null maxSize is unbounded",
+        "externally driven deferred FIFO scheduler, explicit time, timer generations and size closure",
+        "sequential, overlapping and gapped live windows; generation-sensitive cleanup and retained child lifetimes"
+      ],
+      "evidence": "evidence/SESSION-22.md",
+      "inspectionIndex": "operators/windowTime-index.md",
+      "testedCommit": "771073aa296355422c5ce329cef51f3c08b39050",
+      "generatedCommit": "788fcf534f9e92eaf4d8611b53cbaefbd8bc7d38",
+      "implementationRun": 44684834473,
+      "verificationRun": 44685325950,
+      "readOnlyHeadCommit": "4d8bca667d58c3c5eba0bdf44368128bc9eb4686",
+      "readOnlyCheckout": "791dfd118f7f389cac601284eafbdb1b6f590b37",
+      "readOnlyTree": "579229ca82d62a98acfeadc4cf1a808850aa9560",
+      "sessionRecord": "planning/sessions/2026-11-19.json",
+      "continuationRecord": "planning/sessions/2026-11-20.json"
     },
     "windowToggle": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-19",
+      "sessionNumber": 22,
+      "completedOn": "2026-11-20",
+      "profiles": [
+        "one semantic profile: opening-triggered overlapping windows and synchronous correlated selector outcomes",
+        "valid deferred closing Observables; closing next closes while closing complete preserves the window",
+        "opening-error and outer-cancellation disposal distinct from source/closing/selector failure; explicit child lifetimes"
+      ],
+      "evidence": "evidence/SESSION-22.md",
+      "inspectionIndex": "operators/windowToggle-index.md",
+      "testedCommit": "771073aa296355422c5ce329cef51f3c08b39050",
+      "generatedCommit": "788fcf534f9e92eaf4d8611b53cbaefbd8bc7d38",
+      "implementationRun": 44684834473,
+      "verificationRun": 44685325950,
+      "readOnlyHeadCommit": "4d8bca667d58c3c5eba0bdf44368128bc9eb4686",
+      "readOnlyCheckout": "791dfd118f7f389cac601284eafbdb1b6f590b37",
+      "readOnlyTree": "579229ca82d62a98acfeadc4cf1a808850aa9560",
+      "sessionRecord": "planning/sessions/2026-11-19.json",
+      "continuationRecord": "planning/sessions/2026-11-20.json"
     },
     "windowWhen": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-19",
+      "sessionNumber": 22,
+      "completedOn": "2026-11-20",
+      "profiles": [
+        "one semantic profile: successive windows and synchronous correlated closing-factory outcomes",
+        "valid deferred closing Observables; both closing next and complete rotate",
+        "initial closed-source attempt on factory failure, generation-sensitive teardown and orphaned children after cancellation"
+      ],
+      "evidence": "evidence/SESSION-22.md",
+      "inspectionIndex": "operators/windowWhen-index.md",
+      "testedCommit": "771073aa296355422c5ce329cef51f3c08b39050",
+      "generatedCommit": "788fcf534f9e92eaf4d8611b53cbaefbd8bc7d38",
+      "implementationRun": 44684834473,
+      "verificationRun": 44685325950,
+      "readOnlyHeadCommit": "4d8bca667d58c3c5eba0bdf44368128bc9eb4686",
+      "readOnlyCheckout": "791dfd118f7f389cac601284eafbdb1b6f590b37",
+      "readOnlyTree": "579229ca82d62a98acfeadc4cf1a808850aa9560",
+      "sessionRecord": "planning/sessions/2026-11-19.json",
+      "continuationRecord": "planning/sessions/2026-11-20.json"
     },
     "withLatestFrom": {
-      "status": "pending",
-      "session": null,
-      "profiles": []
+      "status": "accepted",
+      "session": "2026-11-19",
+      "sessionNumber": 22,
+      "completedOn": "2026-11-20",
+      "profiles": [
+        "one to sixteen auxiliary Observables; tuple output and subscription-local latest-value memory",
+        "first-value readiness with opaque payloads; source-only trigger and retained completed-auxiliary values",
+        "post-setup atomic notifications; live auxiliaries released in argument order before source"
+      ],
+      "evidence": "evidence/SESSION-22.md",
+      "inspectionIndex": "operators/withLatestFrom-index.md",
+      "testedCommit": "771073aa296355422c5ce329cef51f3c08b39050",
+      "generatedCommit": "788fcf534f9e92eaf4d8611b53cbaefbd8bc7d38",
+      "implementationRun": 44684834473,
+      "verificationRun": 44685325950,
+      "readOnlyHeadCommit": "4d8bca667d58c3c5eba0bdf44368128bc9eb4686",
+      "readOnlyCheckout": "791dfd118f7f389cac601284eafbdb1b6f590b37",
+      "readOnlyTree": "579229ca82d62a98acfeadc4cf1a808850aa9560",
+      "sessionRecord": "planning/sessions/2026-11-19.json",
+      "continuationRecord": "planning/sessions/2026-11-20.json"
     },
     "zip": {
       "status": "pending",

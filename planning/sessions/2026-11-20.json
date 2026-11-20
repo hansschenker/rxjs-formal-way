@@ -3,7 +3,7 @@
   "sessionNumber": 22,
   "date": "2026-11-20",
   "timezone": "Europe/Zurich",
-  "status": "started",
+  "status": "closed",
   "continuationOf": "2026-11-19",
   "startedAt": "2026-11-20T06:42:34+01:00",
   "startingCommit": "800946330271bbaaf745ccb978d535a3fe62d7c7",
@@ -21,36 +21,77 @@
     "windowWhen",
     "withLatestFrom"
   ],
-  "completedNames": [],
-  "carryovers": [
+  "completedNames": [
     "windowCount",
     "windowTime",
     "windowToggle",
     "windowWhen",
     "withLatestFrom"
   ],
+  "carryovers": [],
   "checks": {
-    "syntax": "Passed complete local npm run check; committed full-batch CI pending.",
-    "types": "Strict TypeScript passed locally, including 69 Session22 negative assertions (46 added in this continuation).",
-    "model": "90 Session22 model tests plus two artifact tests; complete local suite 1728 passed, zero failed and zero skipped.",
-    "runtime": "87 Session22 native tests and five differential tests; 2916+432+2592+1876+4500=12316 model/native comparison executions passed locally.",
-    "generated": "All five required eleven-step indexes and 15 configured examples generated. 1222 ordinary + 3 specialized projections drift-verified locally; independent committed read-only CI pending.",
-    "ci": "Prior partial main CI passed 1604 tests; complete five-export committed CI, exact checkout provenance and independent read-only acceptance pending."
+    "syntax": "Passed complete local check, implementation PR CI 44684623732, main push CI 44684834473 and independent read-only PR CI 44685325950.",
+    "types": "Strict TypeScript passed in all complete checks, including 69 Session22 negative assertions; 46 added during continuation. No checks relaxed.",
+    "model": "90 Session22 model tests plus two artifact tests; complete suite 1728 passed, zero failed and zero skipped in main and independent read-only CI.",
+    "runtime": "87 Session22 native tests and five differential tests; 2916+432+2592+1876+4500=12316 finite model/native comparison executions passed, observing time, ordered notifications, function outcomes and resource lifetimes.",
+    "generated": "All five required eleven-step inspection indexes and 15 configured examples committed. 125 Session22 projections, 83 newly added in continuation. 1222 ordinary + 3 specialized projections generated on main and independently drift-verified without regeneration.",
+    "ci": "Main push run 44684834473 job 136116566832 success; independent read-only PR47 run 44685325950 job 136118166086 success. Generation/publication skipped in read-only verification; independently retrieved head and actual checkout have identical Git trees."
   },
   "blockers": [],
   "notes": [
     "User instruction: lets finish session 22. Continue the original five-name session reserved on 19 November; do not start another batch.",
     "Live main, daily plan, roadmap and inventory checked. 105/113 accepted, 8 pending; both earlier implementations and generated indexes retained.",
-    "Complete windowTime, windowToggle and windowWhen and verify the whole five-export batch before closing either dated record.",
+    "At continuation start: Complete windowTime, windowToggle and windowWhen and verify the whole five-export batch before closing either dated record.",
     "The 20 November continuation occupies this local-date session slot. No sixth export is selected.",
     "Complete local integration passed generate and unchanged check on Node v24.22.3: 1728 named tests, zero failures/skips, 12316 comparisons and 1222+3 deterministic projections.",
     "Session22 adds 184 named tests over the Session21 baseline: 90 model, 87 native, five differential and two navigation. The continuation adds 124 over the partial 1604-test state.",
     "125 total Session22 projections: 42 from prior partial implementation and 83 new in this continuation. Existing count/latest projections regenerated after metadata and ordered-cleanup corrections.",
-    "Corrected withLatestFrom teardown to auxiliaries in argument order before source, strengthened count registry invariants, and corrected unsupported deprecation wording. Native evidence and direct comparisons retain explicit scope boundaries."
+    "Corrected withLatestFrom teardown to auxiliaries in argument order before source, strengthened count registry invariants, and corrected unsupported deprecation wording. Native evidence and direct comparisons retain explicit scope boundaries.",
+    "Complete implementation PR46 CI 44684623732 and main push CI 44684834473 passed all 1728 tests, 12316 comparison executions and 1222+3 projection checks. All artifacts were committed at 788fcf534f9e92eaf4d8611b53cbaefbd8bc7d38; main regeneration produced no additional artifact commit.",
+    "Independent read-only PR47 CI 44685325950 passed with generation/publication skipped. Head 4d8bca667d58c3c5eba0bdf44368128bc9eb4686 and actual checkout 791dfd118f7f389cac601284eafbdb1b6f590b37 share independently retrieved tree 579229ca82d62a98acfeadc4cf1a808850aa9560. PR47 merged as 6316c8f9a268a44b9ead812234f7bc3e9ffdf9cc.",
+    "All five exports accepted within documented scopes: 110/113 accepted, 3 pending and zero carryovers. All five required inspection indexes are committed and independently drift-verified.",
+    "Pinned source/spec bodies inspected; upstream RxJS suite not executed. Finite executions and rule witnesses are not unrestricted equivalence proofs. Native-only synchronous cases and excluded parameters remain distinct from canonical profiles.",
+    "Both dated records close the same Session22, reserved on 19 November and completed on 20 November Europe/Zurich. The continuation occupies 20 November; no sixth export or second batch was selected. Next ordinary eligible date is 21 November."
   ],
   "nextQueue": [
     "zip",
     "zipAll",
     "zipWith"
-  ]
+  ],
+  "completedOn": "2026-11-20",
+  "closedAt": "2026-11-20T07:07:52+01:00",
+  "nextSessionNotBefore": "2026-11-21",
+  "commits": [
+    "e083bf36bb3c96d71b864dfac2110d4dab38179d",
+    "6be9350e85243a61592f99bfc9c003c67ce34c5c",
+    "9386bdaf4a20787442e90d2f0850497c4c3966a4",
+    "800946330271bbaaf745ccb978d535a3fe62d7c7",
+    "d891e2a1769d80ba771cb993b3078443ca0318c0",
+    "788fcf534f9e92eaf4d8611b53cbaefbd8bc7d38",
+    "771073aa296355422c5ce329cef51f3c08b39050",
+    "4d8bca667d58c3c5eba0bdf44368128bc9eb4686",
+    "6316c8f9a268a44b9ead812234f7bc3e9ffdf9cc"
+  ],
+  "verification": {
+    "implementationPR": 46,
+    "implementationPRRun": 44684623732,
+    "implementationPRJob": 136115911537,
+    "implementationPRCheckout": "6026b2c92432c488da28c88c14e4dcb40bc67179",
+    "implementationTree": "76f083aa276b23d0b9ddce9cf2dfa3552d7058d3",
+    "mainRun": 44684834473,
+    "mainJob": 136116566832,
+    "mainCheckout": "771073aa296355422c5ce329cef51f3c08b39050",
+    "generatedCommit": "788fcf534f9e92eaf4d8611b53cbaefbd8bc7d38",
+    "readOnlyPR": 47,
+    "readOnlyRun": 44685325950,
+    "readOnlyJob": 136118166086,
+    "readOnlyHeadCommit": "4d8bca667d58c3c5eba0bdf44368128bc9eb4686",
+    "readOnlyCheckout": "791dfd118f7f389cac601284eafbdb1b6f590b37",
+    "readOnlyTree": "579229ca82d62a98acfeadc4cf1a808850aa9560"
+  },
+  "inventoryAfterClosure": {
+    "accepted": 110,
+    "pending": 3,
+    "carryovers": 0
+  }
 }
