@@ -76,7 +76,7 @@ test('S22 WITHLATESTFROM MODEL: empty auxiliary completion makes readiness unrea
 test('S22 WITHLATESTFROM MODEL: source completion before readiness stops all auxiliary resources', () => {
   const r = execute(createWithLatestFromModel(), [start, complete]);
   assert.deepEqual(r.actions, [sub('aux:0'), sub('aux:1'), sub('source'),
-    notify({ kind: 'C' }), unsub('source'), unsub('aux:0'), unsub('aux:1')]);
+    notify({ kind: 'C' }), unsub('aux:0'), unsub('aux:1'), unsub('source')]);
 });
 
 test('S22 WITHLATESTFROM MODEL: errors preserve identity and terminate without synthetic output', () => {
@@ -87,13 +87,14 @@ test('S22 WITHLATESTFROM MODEL: errors preserve identity and terminate without s
       [notify({ kind: 'E', error: fault })]);
     assert.equal(r.state.phase, 'Closed');
     assert.equal(r.actions.filter(a => a.type === 'unsubscribe').length, 3);
+    assert.deepEqual(r.actions.slice(-3), [unsub('aux:0'), unsub('aux:1'), unsub('source')]);
   }
 });
 
 test('S22 WITHLATESTFROM MODEL: cancellation releases only live connections without a notification', () => {
   const r = execute(createWithLatestFromModel(), [start, { type: 'aux.complete', index: 1 }, { type: 'cancel' }]);
   assert.deepEqual(r.actions, [sub('aux:0'), sub('aux:1'), sub('source'),
-    unsub('aux:1'), unsub('source'), unsub('aux:0')]);
+    unsub('aux:1'), unsub('aux:0'), unsub('source')]);
   assert.equal(r.state.reason, 'cancel');
 });
 

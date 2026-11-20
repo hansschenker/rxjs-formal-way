@@ -170,10 +170,15 @@ test('S22 WINDOWCOUNT MODEL: state-dependent constraints reject forged count, id
     { ...s, seen: -1 }, { ...s, nextWindowId: 9 }, { ...s, windows: [] },
     { ...s, windows: [{ windowId: 0, openedAt: 0, status: 'complete' }, ...s.windows.slice(1)] },
     { ...s, windows: s.windows.map(w => ({ ...w, openedAt: 99 })) },
+    { ...s, windows: s.windows.map(w => ({ ...w, openedAt: 0 })) },
+    { ...s, windows: s.windows.slice(0, 1), nextWindowId: 1 },
     { ...s, usedObservers: ['A', 'A'] },
     { ...s, consumers: [{ observerId: 'A', windowId: 9 }] },
     { ...s, phase: 'Stopped', reason: 'complete' },
   ]) assert.throws(() => stepModel(m, bad, sourceNext(3)));
+  const cancelled = stepModel(m, s, { type: 'cancel' }).state;
+  const forged = { ...cancelled, consumers: [], windows: cancelled.windows.map(w => ({ ...w, status: 'complete' })) };
+  assert.throws(() => stepModel(m, forged, attach('late', 0)));
 });
 
 test('S22 WINDOWCOUNT MODEL: reactions are immutable even with frozen nested windows/consumer memory', () => {

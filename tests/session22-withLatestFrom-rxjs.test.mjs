@@ -81,12 +81,14 @@ test('S22 RX withLatestFrom: auxiliary error propagates identical object and rel
   const f = setup(), fault = {}; f.connect(); f.log.length = 0; f.b.error(fault);
   assert.deepEqual(f.log[0], ['E', fault]);
   assert.equal(f.log[0][1], fault);
+  assert.deepEqual(f.log.slice(1), ['a-', 'b-', 'src-']);
   assert.deepEqual(f.counters(), { srcOn: 1, srcOff: 1, aOn: 1, aOff: 1, bOn: 1, bOff: 1 });
 });
 
 test('S22 RX withLatestFrom: source error preserves identity', () => {
   const f = setup(), err = {}; f.connect(); f.log.length = 0; f.src.error(err);
   assert.equal(f.log[0][1], err);
+  assert.deepEqual(f.log.slice(1), ['a-', 'b-', 'src-']);
   assert.equal(f.subscription.closed, true);
 });
 
@@ -139,4 +141,28 @@ test('S22 RX withLatestFrom: virtual scheduler confirms source-only readiness an
     expectSubscriptions(first.subscriptions).toBe('^-------!');
     expectSubscriptions(second.subscriptions).toBe('^-------!');
   });
+});
+
+test('S22 RX withLatestFrom: zero auxiliaries never become ready and still forward source completion (native-only)', () => {
+  const source = new Subject(), log = [];
+  const sub = source.pipe(withLatestFrom()).subscribe({ next: value => log.push(value), complete: () => log.push('C') });
+  source.next('discarded'); source.next(undefined);
+  assert.deepEqual(log, []); assert.equal(sub.closed, false);
+  source.complete(); assert.deepEqual(log, ['C']); assert.equal(sub.closed, true);
+});
+
+test('S22 RX withLatestFrom: optional projector runs only on ready source values and its throw closes inputs (native-only)', () => {
+  const source = new Subject(), auxiliary = new Subject(), calls = [], output = [], fault = {};
+  const first = {}, second = {}, latest = {}, projected = {};
+  const sub = source.pipe(withLatestFrom(auxiliary, (value, cached) => {
+    calls.push([value, cached]);
+    if (calls.length === 2) throw fault;
+    return projected;
+  })).subscribe({ next: value => output.push(['N', value]), error: error => output.push(['E', error]) });
+  source.next('too early'); assert.deepEqual(calls, []);
+  auxiliary.next(latest); assert.deepEqual(calls, []);
+  source.next(first); source.next(second);
+  assert.deepEqual(calls, [[first, latest], [second, latest]]);
+  assert.equal(output[0][1], projected); assert.equal(output[1][1], fault);
+  assert.equal(sub.closed, true); assert.equal(source.observed, false); assert.equal(auxiliary.observed, false);
 });

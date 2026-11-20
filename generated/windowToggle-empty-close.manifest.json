@@ -1,0 +1,541 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "windowToggle-signals",
+    "operator": "windowToggle",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Open live multicast windows from an opening signal and close each from its own selector-created signal.",
+    "cardinality": {
+      "signature": "Cω: windowToggle : (O* × (O! → C*)) → T* → (T*)*",
+      "conditions": [
+        "No initial window; each successful opening reaction announces one handle.",
+        "Source values go to every currently open window; opening and closing payloads are control inputs.",
+        "Closing next closes its own window; closing complete only disconnects that signal.",
+        "Source/closing/selector failure errors current windows; opening failure disposes them silently."
+      ]
+    },
+    "scope": {
+      "parameters": "Valid Observable opening signal; synchronous closingSelector returns a valid Observable. Fresh safe-integer window generations.",
+      "callbacks": "Selector invocation carries the exact opening payload. Correlated return/throw is supplied synchronously; the model never executes user code.",
+      "time": "No clock or timer. Sources supply time; input order resolves equal-time events. runWindowToggleTrace enforces selector outcome at invocation envelope time.",
+      "reentrancy": "Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.",
+      "exclusions": [
+        "Setup-time synchronous opening/source/closing emissions and arbitrary callback/observer reentrancy.",
+        "Foreign ObservableInput conversions, invalid closing-selector returns, direct Subject mutation and non-safe generation overflow.",
+        "Late subscription to disposed handles throws synchronously and is characterized natively outside the legal model event alphabet.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "Acquire opening signal, then source; assume neither acquisition emits before setup returns. No initial window is emitted."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "Each outer connection owns its opening/source/closing subscriptions. Each window multicasts live values without replay; children hold no upstream lease.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "source",
+          "kind": "subscription",
+          "owner": "result execution"
+        },
+        {
+          "id": "opening",
+          "kind": "subscription",
+          "owner": "outer execution"
+        },
+        {
+          "id": "closing",
+          "kind": "subscription",
+          "owner": "outer execution; one generation per window"
+        },
+        {
+          "id": "closingSelector",
+          "kind": "callback",
+          "owner": "opening reaction; correlated by window generation"
+        },
+        {
+          "id": "windowObserver:*",
+          "kind": "subscription",
+          "owner": "independent window consumer"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Ordered action words are model predictions, not executed effects. Callback invocation IDs correlate outcomes; they are not subscription IDs.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to this result execution."
+      },
+      {
+        "type": "source.next",
+        "origin": "source",
+        "category": "notification",
+        "description": "A value from the currently owned source subscription."
+      },
+      {
+        "type": "source.complete",
+        "origin": "source",
+        "category": "notification",
+        "description": "Successful source termination."
+      },
+      {
+        "type": "source.error",
+        "origin": "source",
+        "category": "notification",
+        "description": "Source failure with an opaque error value."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Consumer closes the result connection silently."
+      },
+      {
+        "type": "opening.next",
+        "origin": "outer",
+        "category": "notification",
+        "description": "Opening signal carries the selector input."
+      },
+      {
+        "type": "opening.complete",
+        "origin": "outer",
+        "category": "notification",
+        "description": "No future openings; existing windows persist."
+      },
+      {
+        "type": "opening.error",
+        "origin": "outer",
+        "category": "notification",
+        "description": "Outer error with silent current-window disposal."
+      },
+      {
+        "type": "selector.return",
+        "origin": "callback",
+        "category": "callback",
+        "description": "Matching synchronous valid Observable result."
+      },
+      {
+        "type": "selector.throw",
+        "origin": "callback",
+        "category": "callback",
+        "description": "Matching synchronous selector failure."
+      },
+      {
+        "type": "closing.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "Identified closing signal closes its window."
+      },
+      {
+        "type": "closing.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "Identified closing signal completes without closing its window."
+      },
+      {
+        "type": "closing.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "One closing signal fails all live windows and the result."
+      },
+      {
+        "type": "window.subscribe",
+        "origin": "inner",
+        "category": "lifecycle",
+        "description": "Independent consumer attaches to an announced usable window."
+      },
+      {
+        "type": "window.unsubscribe",
+        "origin": "inner",
+        "category": "lifecycle",
+        "description": "Independent consumer closes its own connection."
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify",
+      "invoke-callback"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "Active",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Active."
+      },
+      {
+        "id": "Selecting",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Selecting."
+      },
+      {
+        "id": "Stopped",
+        "terminal": false,
+        "description": "Outer execution stopped; retained terminal handles and orphaned child subscriptions remain observable."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/windowToggle.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/windowToggle-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subject.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/Subscription.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session22-windowToggle-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session22-windowToggle-rxjs.test.mjs",
+        "tests/session22-windowToggle-differential.test.mjs"
+      ],
+      "record": "evidence/SESSION-22.md",
+      "scenarios": "docs/SESSION-22-TOGGLE-WINDOWS.md",
+      "coverage": "docs/SESSION-22-TOGGLE-WINDOWS.md"
+    }
+  },
+  "parameters": {
+    "closing": "valid-Observable-result",
+    "setup": "post-setup-notifications"
+  },
+  "rules": [
+    {
+      "id": "S22-WINDOWTOGGLE-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "first result connection",
+      "actions": [
+        "subscribe opening signal",
+        "subscribe source; emit no initial window"
+      ],
+      "nextState": "Active, no windows or consumers; opening signal is live.",
+      "explanation": "Openings are acquired before source. Construction is inert; only opening next can request a window.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-START"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-OPEN",
+      "from": "Active",
+      "event": "opening.next",
+      "to": "Selecting",
+      "guard": "opening signal is live and next identity can advance safely",
+      "actions": [
+        "create unannounced window record",
+        "invoke closingSelector with exact opening payload"
+      ],
+      "nextState": "Selecting with one pending window identity; no handle has been emitted for it.",
+      "explanation": "The implementation creates its Subject before calling the selector, but announces it only after successful conversion.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-OPEN"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-SELECTOR-RETURN",
+      "from": "Selecting",
+      "event": "selector.return",
+      "to": "Active",
+      "guard": "matching synchronous selector returns a valid Observable",
+      "actions": [
+        "announce Observable handle",
+        "subscribe its closing signal"
+      ],
+      "nextState": "Pending window becomes open, announced and attached to its uniquely identified closing subscription.",
+      "explanation": "The outcome abstracts the valid Observable result; its subscription occurrence is identified by the window generation.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-SELECTOR-RETURN"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-SELECTOR-THROW",
+      "from": "Selecting",
+      "event": "selector.throw",
+      "to": "Stopped",
+      "guard": "matching synchronous selector throws",
+      "actions": [
+        "error open window consumers",
+        "error outer result",
+        "release opening, source and live closings"
+      ],
+      "nextState": "Stopped with retained errored handles; failed pending window was never announced.",
+      "explanation": "The private new Subject is failed too, but no public observer can attach to that unannounced identity.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-SELECTOR-THROW"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-SOURCE-NEXT",
+      "from": "Active",
+      "event": "source.next",
+      "to": "Active",
+      "guard": "source is connected between atomic reactions",
+      "actions": [
+        "send the same value to each open window consumer in window creation and observer attachment order"
+      ],
+      "nextState": "All window and closing state remains unchanged.",
+      "explanation": "No current windows means the source value is dropped. Windows multicast live values without replay or buffering.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-SOURCE-NEXT"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-CLOSING-NEXT",
+      "from": "Active",
+      "event": "closing.next",
+      "to": "Active",
+      "guard": "addressed closing subscription is live",
+      "actions": [
+        "complete this window consumers",
+        "release this closing subscription"
+      ],
+      "nextState": "Window retains completion; other windows, source and opening signal are unchanged.",
+      "explanation": "A closing value is a control signal; it is not forwarded as a source value.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-CLOSING-NEXT"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-CLOSING-COMPLETE",
+      "from": "Active",
+      "event": "closing.complete",
+      "to": "Active",
+      "guard": "addressed closing subscription is live",
+      "actions": [
+        "release this closing subscription only"
+      ],
+      "nextState": "Window stays open without a live closing signal.",
+      "explanation": "RxJS 7.8.2 installs noop for closing completion. Empty completion does not close a window.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-CLOSING-COMPLETE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-OPENING-COMPLETE",
+      "from": "Active",
+      "event": "opening.complete",
+      "to": "Active",
+      "guard": "opening subscription is live",
+      "actions": [
+        "release opening subscription only"
+      ],
+      "nextState": "No more windows can open; source and current windows continue.",
+      "explanation": "Opening completion is not output completion and does not implicitly close any current window.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-OPENING-COMPLETE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-SOURCE-ERROR",
+      "from": "Active",
+      "event": "source.error",
+      "to": "Stopped",
+      "guard": "source is connected",
+      "actions": [
+        "error every open window consumer before outer error",
+        "release opening, source and remaining closings"
+      ],
+      "nextState": "Stopped; failed windows retain their exact error for late observers; completed windows remain completed.",
+      "explanation": "Source and closing errors use handleError, which drains the window array before source finalization.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-SOURCE-ERROR"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-CLOSING-ERROR",
+      "from": "Active",
+      "event": "closing.error",
+      "to": "Stopped",
+      "guard": "addressed closing subscription is live",
+      "actions": [
+        "error every open window consumer before outer error",
+        "release opening, source and remaining closings"
+      ],
+      "nextState": "Stopped; failed windows retain their exact error for late observers; completed windows remain completed.",
+      "explanation": "Source and closing errors use handleError, which drains the window array before source finalization.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-CLOSING-ERROR"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-SOURCE-COMPLETE",
+      "from": "Active",
+      "event": "source.complete",
+      "to": "Stopped",
+      "guard": "source is connected",
+      "actions": [
+        "complete all open window consumers before outer completion",
+        "release opening, source and live closings"
+      ],
+      "nextState": "Stopped; every announced window retains completion and can complete late consumers.",
+      "explanation": "The implementation removes each Subject from its active array before completing the outer result.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-SOURCE-COMPLETE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-OPENING-ERROR",
+      "from": "Active",
+      "event": "opening.error",
+      "to": "Stopped",
+      "guard": "opening subscription is live",
+      "actions": [
+        "error outer result only",
+        "release opening, source and live closings; dispose current Subjects silently"
+      ],
+      "nextState": "Stopped; current handles are disposed and existing child subscriptions remain orphaned.",
+      "explanation": "Opening errors use the default subscriber path, not handleError. Current window consumers receive no error or complete.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-OPENING-ERROR"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Stopped",
+      "guard": "outer consumer cancels between reactions",
+      "actions": [
+        "release opening, source and live closings; dispose current Subjects silently"
+      ],
+      "nextState": "Stopped; attached child Subscriptions remain independently closeable and current handles reject late subscription.",
+      "explanation": "Subject.unsubscribe is not Subject.complete. Historical completed windows are not disposed.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-CANCEL"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-OBSERVE-OPEN",
+      "from": "Active",
+      "event": "window.subscribe",
+      "to": "Active",
+      "guard": "fresh observer names an announced open window",
+      "actions": [
+        "acquire one child observer connection without replay"
+      ],
+      "nextState": "Consumer is attached; no upstream lease is added.",
+      "explanation": "Window consumers share values only inside this outer execution; they do not own the source connection.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-OBSERVE-OPEN"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-OBSERVE-COMPLETE-ACTIVE",
+      "from": "Active",
+      "event": "window.subscribe",
+      "to": "Active",
+      "guard": "fresh observer names an announced complete window",
+      "actions": [
+        "acquire observer",
+        "deliver retained terminal notification without value replay",
+        "release observer"
+      ],
+      "nextState": "No consumer remains attached; the historical handle retains its terminal state.",
+      "explanation": "Only announced handles are addressable; a selector failure never exposes its private pending window.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-OBSERVE-COMPLETE-ACTIVE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-OBSERVER-CLOSE-ACTIVE",
+      "from": "Active",
+      "event": "window.unsubscribe",
+      "to": "Active",
+      "guard": "addressed child observer still owns a subscription",
+      "actions": [
+        "release only the addressed observer"
+      ],
+      "nextState": "Other children and upstream resources are unchanged.",
+      "explanation": "Orphaned consumers after disposal remain independently owned.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-OBSERVER-CLOSE-ACTIVE"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-OBSERVE-COMPLETE-STOPPED",
+      "from": "Stopped",
+      "event": "window.subscribe",
+      "to": "Stopped",
+      "guard": "fresh observer names an announced complete window",
+      "actions": [
+        "acquire observer",
+        "deliver retained terminal notification without value replay",
+        "release observer"
+      ],
+      "nextState": "No consumer remains attached; the historical handle retains its terminal state.",
+      "explanation": "Only announced handles are addressable; a selector failure never exposes its private pending window.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-OBSERVE-COMPLETE-STOPPED"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-OBSERVE-ERROR-STOPPED",
+      "from": "Stopped",
+      "event": "window.subscribe",
+      "to": "Stopped",
+      "guard": "fresh observer names an announced error window",
+      "actions": [
+        "acquire observer",
+        "deliver retained terminal notification without value replay",
+        "release observer"
+      ],
+      "nextState": "No consumer remains attached; the historical handle retains its terminal state.",
+      "explanation": "Only announced handles are addressable; a selector failure never exposes its private pending window.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-OBSERVE-ERROR-STOPPED"
+      ]
+    },
+    {
+      "id": "S22-WINDOWTOGGLE-OBSERVER-CLOSE-STOPPED",
+      "from": "Stopped",
+      "event": "window.unsubscribe",
+      "to": "Stopped",
+      "guard": "addressed child observer still owns a subscription",
+      "actions": [
+        "release only the addressed observer"
+      ],
+      "nextState": "Other children and upstream resources are unchanged.",
+      "explanation": "Orphaned consumers after disposal remain independently owned.",
+      "obligations": [
+        "S22-WINDOWTOGGLE-OBSERVER-CLOSE-STOPPED"
+      ]
+    }
+  ]
+}

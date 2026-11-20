@@ -239,14 +239,14 @@
         {
           "type": "unsubscribe",
           "resource": {
-            "id": "source",
+            "id": "aux:1",
             "generation": 0
           }
         },
         {
           "type": "unsubscribe",
           "resource": {
-            "id": "aux:1",
+            "id": "source",
             "generation": 0
           }
         }

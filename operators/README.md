@@ -8,6 +8,18 @@ The repository-wide method is documented in [RxJS Operator Inspection Workflow](
 
 Each configured profile has one canonical TypeScript rule set and eight generated views. Read the plain-language page first; use the milestone guide for assumptions and verification.
 
+## Session 22 inspection pages
+
+| Export | Behavior to inspect | Inspection index |
+|---|---|---|
+| windowCount | Count and stride select live overlapping, contiguous or gapped windows | [windowCount](windowCount-index.md) |
+| windowTime | Scheduler-owned deadlines, periodic creation, maximum size and timer generations | [windowTime](windowTime-index.md) |
+| windowToggle | Opening signals and independently owned per-window closing signals | [windowToggle](windowToggle-index.md) |
+| windowWhen | Successive closing-signal setup, rotation on next or completion and retained handles | [windowWhen](windowWhen-index.md) |
+| withLatestFrom | Auxiliary readiness and memory, source-only output, ordered connection cleanup | [withLatestFrom](withLatestFrom-index.md) |
+
+The [Session 22 guide](../docs/SESSION-22-WINDOW-POLICIES.md), [scenario map](../docs/SESSION-22-SCENARIOS.md) and [evidence ledger](../evidence/SESSION-22.md) link the five scoped models and actual verification. Fifteen configured examples belong to these five exports; multiple histories of one profile are not additional exports.
+
 ## Session 21 inspection pages
 
 | Export | Behavior to inspect | Inspection index |

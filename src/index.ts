@@ -180,3 +180,16 @@ export type { CountWindowToken, CountWindowRecord, CountWindowConsumer, WindowCo
 
 export { createWithLatestFromModel, withLatestFromExample, withLatestFromEmptyExample } from './models/session22-withLatestFrom.js';
 export type { LatestParameters, LatestMemory, LatestState, LatestEvent, LatestModel } from './models/session22-withLatestFrom.js';
+
+export { createWindowTimeModel, runWindowTimeTrace, windowTimeExample, windowTimeOverlapExample,
+  windowTimeGapExample, windowTimeCancelExample } from './models/session22-windowTime.js';
+export type { TimedWindowToken, TimedWindowRecord, TimedWindowConsumer, WindowTimeParameters,
+  WindowTimeMemory, WindowTimeState, WindowTimeEvent, WindowTimeModel } from './models/session22-windowTime.js';
+export { createWindowToggleModel, runWindowToggleTrace, windowToggleExample,
+  windowToggleEmptyCloseExample, windowToggleCancelExample } from './models/session22-windowToggle.js';
+export type { ToggleWindowToken, ToggleWindowRecord, ToggleWindowConsumer, WindowToggleParameters,
+  WindowToggleMemory, WindowToggleStop, WindowToggleState, WindowToggleEvent, WindowToggleModel } from './models/session22-windowToggle.js';
+export { createWindowWhenModel, runWindowWhenTrace, windowWhenExample,
+  windowWhenCompleteExample, windowWhenCancelExample } from './models/session22-windowWhen.js';
+export type { WindowWhenParameters, WindowWhenToken, WindowWhenRecord, WindowWhenConsumer,
+  WindowWhenMemory, WindowWhenState, WindowWhenEvent, WindowWhenModel } from './models/session22-windowWhen.js';

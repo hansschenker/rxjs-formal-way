@@ -1,0 +1,605 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "now": 6,
+    "nextWindowId": 2,
+    "windows": [
+      {
+        "windowId": 0,
+        "openedAt": 0,
+        "seen": 1,
+        "status": "complete",
+        "deadline": null
+      },
+      {
+        "windowId": 1,
+        "openedAt": 4,
+        "seen": 1,
+        "status": "complete",
+        "deadline": null
+      }
+    ],
+    "consumers": [],
+    "usedObservers": [
+      "A",
+      "B"
+    ],
+    "creation": null,
+    "phase": "Stopped",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "windowTime-4-restart-max-unbounded",
+      "executionId": "windowTime-session22-example",
+      "ruleId": "S22-WINDOWTIME-START",
+      "event": {
+        "type": "subscribe",
+        "now": 0
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "now": 0,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 0,
+            "status": "open",
+            "deadline": 4
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [],
+        "creation": null,
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "windowId": 0
+            }
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "windowClose",
+            "generation": 0
+          },
+          "delay": 4
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 0,
+      "modelId": "windowTime-4-restart-max-unbounded",
+      "executionId": "windowTime-session22-example",
+      "ruleId": "S22-WINDOWTIME-OBSERVE-OPEN-ACTIVE",
+      "event": {
+        "type": "window.subscribe",
+        "observerId": "A",
+        "windowId": 0,
+        "now": 0
+      },
+      "before": {
+        "now": 0,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 0,
+            "status": "open",
+            "deadline": 4
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [],
+        "creation": null,
+        "phase": "Active"
+      },
+      "after": {
+        "now": 0,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 0,
+            "status": "open",
+            "deadline": 4
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "creation": null,
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "windowObserver:A",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "windowTime-4-restart-max-unbounded",
+      "executionId": "windowTime-session22-example",
+      "ruleId": "S22-WINDOWTIME-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": "one",
+        "now": 1
+      },
+      "before": {
+        "now": 0,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 0,
+            "status": "open",
+            "deadline": 4
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "creation": null,
+        "phase": "Active"
+      },
+      "after": {
+        "now": 1,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 1,
+            "status": "open",
+            "deadline": 4
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "creation": null,
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "windowObserver:A",
+          "notification": {
+            "kind": "N",
+            "value": "one"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 4,
+      "modelId": "windowTime-4-restart-max-unbounded",
+      "executionId": "windowTime-session22-example",
+      "ruleId": "S22-WINDOWTIME-WINDOW-TIMER",
+      "event": {
+        "type": "timer.window",
+        "resource": {
+          "id": "windowClose",
+          "generation": 0
+        },
+        "now": 4
+      },
+      "before": {
+        "now": 1,
+        "nextWindowId": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 1,
+            "status": "open",
+            "deadline": 4
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "A",
+            "windowId": 0
+          }
+        ],
+        "usedObservers": [
+          "A"
+        ],
+        "creation": null,
+        "phase": "Active"
+      },
+      "after": {
+        "now": 4,
+        "nextWindowId": 2,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 1,
+            "status": "complete",
+            "deadline": null
+          },
+          {
+            "windowId": 1,
+            "openedAt": 4,
+            "seen": 0,
+            "status": "open",
+            "deadline": 8
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [
+          "A"
+        ],
+        "creation": null,
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "windowObserver:A",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "windowObserver:A",
+            "generation": 0
+          }
+        },
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "windowClose",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "windowId": 1
+            }
+          }
+        },
+        {
+          "type": "schedule",
+          "resource": {
+            "id": "windowClose",
+            "generation": 1
+          },
+          "delay": 4
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "windowTime-4-restart-max-unbounded",
+      "executionId": "windowTime-session22-example",
+      "ruleId": "S22-WINDOWTIME-OBSERVE-OPEN-ACTIVE",
+      "event": {
+        "type": "window.subscribe",
+        "observerId": "B",
+        "windowId": 1,
+        "now": 4
+      },
+      "before": {
+        "now": 4,
+        "nextWindowId": 2,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 1,
+            "status": "complete",
+            "deadline": null
+          },
+          {
+            "windowId": 1,
+            "openedAt": 4,
+            "seen": 0,
+            "status": "open",
+            "deadline": 8
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [
+          "A"
+        ],
+        "creation": null,
+        "phase": "Active"
+      },
+      "after": {
+        "now": 4,
+        "nextWindowId": 2,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 1,
+            "status": "complete",
+            "deadline": null
+          },
+          {
+            "windowId": 1,
+            "openedAt": 4,
+            "seen": 0,
+            "status": "open",
+            "deadline": 8
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "B",
+            "windowId": 1
+          }
+        ],
+        "usedObservers": [
+          "A",
+          "B"
+        ],
+        "creation": null,
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "windowObserver:B",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "windowTime-4-restart-max-unbounded",
+      "executionId": "windowTime-session22-example",
+      "ruleId": "S22-WINDOWTIME-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": "two",
+        "now": 5
+      },
+      "before": {
+        "now": 4,
+        "nextWindowId": 2,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 1,
+            "status": "complete",
+            "deadline": null
+          },
+          {
+            "windowId": 1,
+            "openedAt": 4,
+            "seen": 0,
+            "status": "open",
+            "deadline": 8
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "B",
+            "windowId": 1
+          }
+        ],
+        "usedObservers": [
+          "A",
+          "B"
+        ],
+        "creation": null,
+        "phase": "Active"
+      },
+      "after": {
+        "now": 5,
+        "nextWindowId": 2,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 1,
+            "status": "complete",
+            "deadline": null
+          },
+          {
+            "windowId": 1,
+            "openedAt": 4,
+            "seen": 1,
+            "status": "open",
+            "deadline": 8
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "B",
+            "windowId": 1
+          }
+        ],
+        "usedObservers": [
+          "A",
+          "B"
+        ],
+        "creation": null,
+        "phase": "Active"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "windowObserver:B",
+          "notification": {
+            "kind": "N",
+            "value": "two"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "windowTime-4-restart-max-unbounded",
+      "executionId": "windowTime-session22-example",
+      "ruleId": "S22-WINDOWTIME-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete",
+        "now": 6
+      },
+      "before": {
+        "now": 5,
+        "nextWindowId": 2,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 1,
+            "status": "complete",
+            "deadline": null
+          },
+          {
+            "windowId": 1,
+            "openedAt": 4,
+            "seen": 1,
+            "status": "open",
+            "deadline": 8
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "B",
+            "windowId": 1
+          }
+        ],
+        "usedObservers": [
+          "A",
+          "B"
+        ],
+        "creation": null,
+        "phase": "Active"
+      },
+      "after": {
+        "now": 6,
+        "nextWindowId": 2,
+        "windows": [
+          {
+            "windowId": 0,
+            "openedAt": 0,
+            "seen": 1,
+            "status": "complete",
+            "deadline": null
+          },
+          {
+            "windowId": 1,
+            "openedAt": 4,
+            "seen": 1,
+            "status": "complete",
+            "deadline": null
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [
+          "A",
+          "B"
+        ],
+        "creation": null,
+        "phase": "Stopped",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "windowObserver:B",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "windowObserver:B",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "cancel-timer",
+          "resource": {
+            "id": "windowClose",
+            "generation": 1
+          }
+        }
+      ]
+    }
+  ]
+}

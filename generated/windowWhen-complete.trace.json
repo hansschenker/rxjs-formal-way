@@ -1,0 +1,459 @@
+{
+  "status": "finished-input",
+  "consumed": 7,
+  "state": {
+    "phase": "Stopped",
+    "current": 1,
+    "windows": [
+      {
+        "windowId": 0,
+        "status": "complete"
+      },
+      {
+        "windowId": 1,
+        "status": "complete"
+      }
+    ],
+    "consumers": [],
+    "usedObservers": [
+      "current"
+    ],
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "windowWhen-deferred-closing",
+      "executionId": "windowWhen-complete-session22-example",
+      "ruleId": "S22-WINDOWWHEN-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Selecting",
+        "sourceConnected": false,
+        "current": 0,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": []
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "windowId": 0
+            }
+          }
+        },
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "closingSelector",
+            "generation": 0
+          },
+          "index": 0
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 0,
+      "modelId": "windowWhen-deferred-closing",
+      "executionId": "windowWhen-complete-session22-example",
+      "ruleId": "S22-WINDOWWHEN-FACTORY-RETURN",
+      "event": {
+        "type": "factory.return",
+        "generation": 0
+      },
+      "before": {
+        "phase": "Selecting",
+        "sourceConnected": false,
+        "current": 0,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": []
+      },
+      "after": {
+        "phase": "Active",
+        "current": 0,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "closing",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 2,
+      "time": 1,
+      "modelId": "windowWhen-deferred-closing",
+      "executionId": "windowWhen-complete-session22-example",
+      "ruleId": "S22-WINDOWWHEN-CLOSING-COMPLETE",
+      "event": {
+        "type": "closing.complete",
+        "generation": 0
+      },
+      "before": {
+        "phase": "Active",
+        "current": 0,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": []
+      },
+      "after": {
+        "phase": "Selecting",
+        "current": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "complete"
+          },
+          {
+            "windowId": 1,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [],
+        "sourceConnected": true
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "closing",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": {
+              "windowId": 1
+            }
+          }
+        },
+        {
+          "type": "invoke-callback",
+          "resource": {
+            "id": "closingSelector",
+            "generation": 1
+          },
+          "index": 1
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 1,
+      "modelId": "windowWhen-deferred-closing",
+      "executionId": "windowWhen-complete-session22-example",
+      "ruleId": "S22-WINDOWWHEN-FACTORY-RETURN",
+      "event": {
+        "type": "factory.return",
+        "generation": 1
+      },
+      "before": {
+        "phase": "Selecting",
+        "current": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "complete"
+          },
+          {
+            "windowId": 1,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [],
+        "sourceConnected": true
+      },
+      "after": {
+        "phase": "Active",
+        "current": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "complete"
+          },
+          {
+            "windowId": 1,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "closing",
+            "generation": 1
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 1,
+      "modelId": "windowWhen-deferred-closing",
+      "executionId": "windowWhen-complete-session22-example",
+      "ruleId": "S22-WINDOWWHEN-OBSERVE-OPEN-ACTIVE",
+      "event": {
+        "type": "window.subscribe",
+        "windowId": 1,
+        "observerId": "current"
+      },
+      "before": {
+        "phase": "Active",
+        "current": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "complete"
+          },
+          {
+            "windowId": 1,
+            "status": "open"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": []
+      },
+      "after": {
+        "phase": "Active",
+        "current": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "complete"
+          },
+          {
+            "windowId": 1,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "current",
+            "windowId": 1
+          }
+        ],
+        "usedObservers": [
+          "current"
+        ]
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "windowObserver:current",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 5,
+      "time": 2,
+      "modelId": "windowWhen-deferred-closing",
+      "executionId": "windowWhen-complete-session22-example",
+      "ruleId": "S22-WINDOWWHEN-SOURCE-NEXT",
+      "event": {
+        "type": "source.next",
+        "value": "after-empty-closing"
+      },
+      "before": {
+        "phase": "Active",
+        "current": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "complete"
+          },
+          {
+            "windowId": 1,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "current",
+            "windowId": 1
+          }
+        ],
+        "usedObservers": [
+          "current"
+        ]
+      },
+      "after": {
+        "phase": "Active",
+        "current": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "complete"
+          },
+          {
+            "windowId": 1,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "current",
+            "windowId": 1
+          }
+        ],
+        "usedObservers": [
+          "current"
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "windowObserver:current",
+          "notification": {
+            "kind": "N",
+            "value": "after-empty-closing"
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 3,
+      "modelId": "windowWhen-deferred-closing",
+      "executionId": "windowWhen-complete-session22-example",
+      "ruleId": "S22-WINDOWWHEN-SOURCE-COMPLETE",
+      "event": {
+        "type": "source.complete"
+      },
+      "before": {
+        "phase": "Active",
+        "current": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "complete"
+          },
+          {
+            "windowId": 1,
+            "status": "open"
+          }
+        ],
+        "consumers": [
+          {
+            "observerId": "current",
+            "windowId": 1
+          }
+        ],
+        "usedObservers": [
+          "current"
+        ]
+      },
+      "after": {
+        "phase": "Stopped",
+        "current": 1,
+        "windows": [
+          {
+            "windowId": 0,
+            "status": "complete"
+          },
+          {
+            "windowId": 1,
+            "status": "complete"
+          }
+        ],
+        "consumers": [],
+        "usedObservers": [
+          "current"
+        ],
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "windowObserver:current",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "windowObserver:current",
+            "generation": 0
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "source",
+            "generation": 0
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "closing",
+            "generation": 1
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -15,6 +15,9 @@
   ],
   "workedNames": [
     "windowCount",
+    "windowTime",
+    "windowToggle",
+    "windowWhen",
     "withLatestFrom"
   ],
   "completedNames": [],
@@ -26,19 +29,23 @@
     "withLatestFrom"
   ],
   "checks": {
-    "syntax": "not yet executed",
-    "types": "not yet executed",
-    "model": "not yet executed",
-    "runtime": "not yet executed",
-    "generated": "not yet executed",
-    "ci": "not yet retrieved"
+    "syntax": "Passed complete local npm run check; committed full-batch CI pending.",
+    "types": "Strict TypeScript passed locally, including 69 Session22 negative assertions (46 added in this continuation).",
+    "model": "90 Session22 model tests plus two artifact tests; complete local suite 1728 passed, zero failed and zero skipped.",
+    "runtime": "87 Session22 native tests and five differential tests; 2916+432+2592+1876+4500=12316 model/native comparison executions passed locally.",
+    "generated": "All five required eleven-step indexes and 15 configured examples generated. 1222 ordinary + 3 specialized projections drift-verified locally; independent committed read-only CI pending.",
+    "ci": "Prior partial main CI passed 1604 tests; complete five-export committed CI, exact checkout provenance and independent read-only acceptance pending."
   },
   "blockers": [],
   "notes": [
     "Live main, daily plan, roadmap and accepted tracker checked; 105/113 accepted and all five selected exports pending.",
     "One session only on 19 November; no sixth export; incomplete names must be carried forward.",
     "Do not accept a name without full generated inspection index, model/native evidence and read-only CI.",
-    "Continued on 20 November at the explicit request to finish Session22. Two prior implementations and their generated indexes are merged; three models plus complete independent verification and final acceptance remain. This is the same five-name session."
+    "Continued on 20 November at the explicit request to finish Session22. Two prior implementations and their generated indexes are merged; three models plus complete independent verification and final acceptance remain. This is the same five-name session.",
+    "Complete local integration passed generate and unchanged check on Node v24.22.3: 1728 named tests, zero failures/skips, 12316 comparisons and 1222+3 deterministic projections.",
+    "Session22 adds 184 named tests over the Session21 baseline: 90 model, 87 native, five differential and two navigation. The continuation adds 124 over the partial 1604-test state.",
+    "125 total Session22 projections: 42 from prior partial implementation and 83 new in this continuation. Existing count/latest projections regenerated after metadata and ordered-cleanup corrections.",
+    "Corrected withLatestFrom teardown to auxiliaries in argument order before source, strengthened count registry invariants, and corrected unsupported deprecation wording. Native evidence and direct comparisons retain explicit scope boundaries."
   ],
   "nextQueue": [
     "zip",
