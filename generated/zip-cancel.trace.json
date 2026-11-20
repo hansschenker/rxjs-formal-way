@@ -1,0 +1,290 @@
+{
+  "status": "finished-input",
+  "consumed": 5,
+  "state": {
+    "phase": "Closed",
+    "reason": "cancel"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "zip-3-fifo-8",
+      "executionId": "zip-cancel-session23-example",
+      "ruleId": "S23-ZIP-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [],
+          [],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          0,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input:0",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input:1",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input:2",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "zip-3-fifo-8",
+      "executionId": "zip-cancel-session23-example",
+      "ruleId": "S23-ZIP-BUFFER",
+      "event": {
+        "type": "input.next",
+        "index": 2,
+        "value": "queued"
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [],
+          [],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          0,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [],
+          [],
+          [
+            "queued"
+          ]
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          0,
+          0,
+          1
+        ],
+        "emitted": 0
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "zip-3-fifo-8",
+      "executionId": "zip-cancel-session23-example",
+      "ruleId": "S23-ZIP-COMPLETE-BUFFERED",
+      "event": {
+        "type": "input.complete",
+        "index": 2
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [],
+          [],
+          [
+            "queued"
+          ]
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          0,
+          0,
+          1
+        ],
+        "emitted": 0
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [],
+          [],
+          [
+            "queued"
+          ]
+        ],
+        "live": [
+          true,
+          true,
+          false
+        ],
+        "received": [
+          0,
+          0,
+          1
+        ],
+        "emitted": 0
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input:2",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "zip-3-fifo-8",
+      "executionId": "zip-cancel-session23-example",
+      "ruleId": "S23-ZIP-BUFFER",
+      "event": {
+        "type": "input.next",
+        "index": 0,
+        "value": "waiting"
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [],
+          [],
+          [
+            "queued"
+          ]
+        ],
+        "live": [
+          true,
+          true,
+          false
+        ],
+        "received": [
+          0,
+          0,
+          1
+        ],
+        "emitted": 0
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [
+            "waiting"
+          ],
+          [],
+          [
+            "queued"
+          ]
+        ],
+        "live": [
+          true,
+          true,
+          false
+        ],
+        "received": [
+          1,
+          0,
+          1
+        ],
+        "emitted": 0
+      },
+      "actions": []
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "zip-3-fifo-8",
+      "executionId": "zip-cancel-session23-example",
+      "ruleId": "S23-ZIP-CANCEL",
+      "event": {
+        "type": "cancel"
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [
+            "waiting"
+          ],
+          [],
+          [
+            "queued"
+          ]
+        ],
+        "live": [
+          true,
+          true,
+          false
+        ],
+        "received": [
+          1,
+          0,
+          1
+        ],
+        "emitted": 0
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "cancel"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input:0",
+            "generation": 0
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input:1",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

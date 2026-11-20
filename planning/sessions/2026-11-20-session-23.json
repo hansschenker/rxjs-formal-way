@@ -11,7 +11,11 @@
     "zipAll",
     "zipWith"
   ],
-  "workedNames": [],
+  "workedNames": [
+    "zip",
+    "zipAll",
+    "zipWith"
+  ],
   "completedNames": [],
   "carryovers": [
     "zip",
@@ -19,12 +23,12 @@
     "zipWith"
   ],
   "checks": {
-    "syntax": "Pending Session23 implementation and complete verification.",
-    "types": "Pending Session23 implementation and complete verification.",
-    "model": "Pending Session23 implementation and complete verification.",
-    "runtime": "Pending Session23 implementation and complete verification.",
-    "generated": "Pending Session23 implementation and complete verification.",
-    "ci": "Pending Session23 implementation and complete verification."
+    "syntax": "Passed complete local npm run check; committed full-batch CI pending.",
+    "types": "Strict TypeScript passed locally, including 47 Session23 negative assertions; no compiler settings relaxed.",
+    "model": "54 model tests plus two navigation tests and one complete 113-export catalogue test; full local suite 1845 passed, zero failures/skips.",
+    "runtime": "57 native tests and three differential tests; 7776+9024+10368=27168 finite model/runtime comparison executions passed, with native histories recorded first.",
+    "generated": "All three eleven-step indexes and nine examples generated; 75 new projections. 1297 ordinary + 3 specialized projections drift-verified locally. Independent committed read-only gate pending.",
+    "ci": "Local full check passed; implementation PR/main CI, independent read-only verification and exact checkout/tree provenance remain pending."
   },
   "blockers": [],
   "authorization": {
@@ -37,7 +41,12 @@
     "Preserve both closed Session22 records. This separate numbered record reserves the explicitly requested final Session23.",
     "The inventory follows src/operators/index.ts: zip is the deprecated pipeable export, not the static creation function. Compare the correct exported operator against native RxJS.",
     "Require independent native observations, complete generated inspection indexes and committed read-only drift verification before acceptance.",
-    "After all 113 exports are accepted within their documented scopes, stop catalogue-generation work and pause its recurring automation if present."
+    "After all 113 exports are accepted within their documented scopes, stop catalogue-generation work and pause its recurring automation if present.",
+    "Complete local integration passed generate and unchanged check on Node v24.22.3: 1845 named tests, zero failures/skips, 27168 comparisons and 1297+3 deterministic projections.",
+    "Session23 adds 117 named tests over 1728: 54 model, 57 native, three differential, two navigation and one complete catalogue check. The 47 negative compiler assertions are separate.",
+    "The first full run failed one newly added navigation assertion that assumed detailed-guide and coverage links were identical. Per-export coverage expectations were corrected and manifest assertions strengthened; all 1845 tests passed on rerun. No semantic model or validation gate was relaxed.",
+    "Peer review corrected unsupported ObservableInput-characterization wording; conversions remain excluded. Exact pipeable zip identity, completed FIFO drain and zipAll acquisition/finalization order are explicit.",
+    "All three operator pinned source bodies match installed Git blob hashes. Upstream spec bodies inspected; upstream suite not executed. Finite evidence is not unrestricted or infinite-trace equivalence."
   ],
   "nextQueue": []
 }

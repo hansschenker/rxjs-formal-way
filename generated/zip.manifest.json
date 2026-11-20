@@ -1,0 +1,282 @@
+{
+  "metadata": {
+    "schemaVersion": "1.1",
+    "id": "zip-3-fifo-8",
+    "operator": "zip",
+    "rxjsVersion": "7.8.2",
+    "purpose": "Pair values by arrival index using one FIFO per input; retain completed input queues until exhausted.",
+    "cardinality": {
+      "signature": "zip : (U₁*, …, Uₙ*) → T* → (T × U₁ × … × Uₙ)*",
+      "conditions": [
+        "Input zero is the upstream source; remaining inputs are supplied as rest Observable arguments.",
+        "Output tuple k contains value k from each input; every admitted value contributes to at most one tuple.",
+        "The result completes when a completed input has no remaining queued value, including immediately after the last tuple.",
+        "With zero auxiliaries, each upstream value becomes a singleton tuple; no identity shortcut is assumed."
+      ]
+    },
+    "scope": {
+      "parameters": "One to sixteen total Observable inputs including source, tuple output, FIFO analysis bound 1..32 per input. The bound limits modeled histories; RxJS itself does not enforce it.",
+      "callbacks": "No user projector in the canonical profile. Payloads remain opaque and retain identity inside fresh output tuples.",
+      "time": "Source and auxiliary notifications supply time; the operator introduces no clock or scheduler. Equal-time arrivals retain explicit event order.",
+      "reentrancy": "Atomic non-reentrant reactions; synchronous callback outcomes are explicit microsteps. Ordered source teardown assumes source setup has returned.",
+      "exclusions": [
+        "Synchronous acquisition-time notifications, arbitrary ObservableInput conversions and unbounded FIFO histories.",
+        "Optional legacy zip projector and array-argument overload behavior; these are separately characterized natively.",
+        "Unsafe count overflow and more than sixteen inputs.",
+        "Throwing observer/producer teardown, arbitrary reentrancy and universal infinite-trace liveness are not modeled."
+      ]
+    },
+    "initialization": {
+      "control": "Unsubscribed",
+      "event": "subscribe",
+      "sourceSubscription": "At first connection, source input zero then auxiliary inputs connect in argument order. Acquisition is non-notifying in this canonical profile."
+    },
+    "ownership": {
+      "state": "subscription-local",
+      "sharing": "No implicit sharing or replay. Each result subscription owns its memory and resource generations; supplied producers may themselves be shared.",
+      "reset": "Create fresh bookkeeping for each result connection. Payload objects are not cloned.",
+      "resources": [
+        {
+          "id": "input:*",
+          "kind": "subscription",
+          "owner": "result execution; source index zero then auxiliary indexes"
+        }
+      ]
+    },
+    "dispatch": {
+      "policy": "atomic-non-reentrant",
+      "actionSemantics": "Ordered action words are model predictions, not executed effects. Callback invocation IDs correlate outcomes; they are not subscription IDs.",
+      "cancellationCheckpoints": [
+        "Between external reactions. Cancellation during synchronous multi-action delivery is characterized separately, not silently admitted into this profile."
+      ]
+    },
+    "inputs": [
+      {
+        "type": "subscribe",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "First connection to the result."
+      },
+      {
+        "type": "input.next",
+        "origin": "inner",
+        "category": "notification",
+        "description": "Opaque value from an indexed live input; input zero is upstream source."
+      },
+      {
+        "type": "input.complete",
+        "origin": "inner",
+        "category": "notification",
+        "description": "Indexed input completes; its queued values may remain usable."
+      },
+      {
+        "type": "input.error",
+        "origin": "inner",
+        "category": "notification",
+        "description": "Indexed input fails with an opaque error."
+      },
+      {
+        "type": "cancel",
+        "origin": "downstream",
+        "category": "lifecycle",
+        "description": "Close the result connection silently."
+      }
+    ],
+    "actionTypes": [
+      "subscribe",
+      "unsubscribe",
+      "notify"
+    ],
+    "controls": [
+      {
+        "id": "Unsubscribed",
+        "terminal": false,
+        "description": "Description only; no resources acquired."
+      },
+      {
+        "id": "Active",
+        "terminal": false,
+        "description": "See the typed state and named transitions for Active."
+      },
+      {
+        "id": "Closed",
+        "terminal": true,
+        "description": "Terminated; no owned subscriptions or retained values."
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/zip.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/operators/zip-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/operators/OperatorSubscriber.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/src/internal/observable/zip.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Version-pinned implementation and cleanup semantics."
+      },
+      {
+        "url": "https://github.com/ReactiveX/rxjs/blob/e5351d02e225e275ac0e497c7b66eaa5f0c88791/spec/observables/zip-spec.ts",
+        "revision": "e5351d02e225e275ac0e497c7b66eaa5f0c88791",
+        "purpose": "Upstream scenario basis; test bodies inspected, not claimed to have been executed as the upstream suite."
+      }
+    ],
+    "evidence": {
+      "status": "source-inspected",
+      "modelTests": [
+        "tests/session23-zip-model.test.mjs"
+      ],
+      "runtimeTests": [
+        "tests/session23-zip-rxjs.test.mjs",
+        "tests/session23-zip-differential.test.mjs"
+      ],
+      "record": "evidence/SESSION-23.md",
+      "scenarios": "docs/SESSION-23-ZIP.md",
+      "coverage": "docs/SESSION-23-SCENARIOS.md"
+    }
+  },
+  "parameters": {
+    "operator": "zip",
+    "inputCount": 3,
+    "bufferLimit": 8,
+    "projector": "none"
+  },
+  "rules": [
+    {
+      "id": "S23-ZIP-START",
+      "from": "Unsubscribed",
+      "event": "subscribe",
+      "to": "Active",
+      "guard": "no connection yet",
+      "actions": [
+        "acquire source input zero, then each auxiliary in argument order"
+      ],
+      "nextState": "Every FIFO is empty, every input is live, and received/emitted counts are zero.",
+      "explanation": "Pipeable zip and zipWith acquire the upstream source first. No producer runs during model construction.",
+      "obligations": [
+        "S23-ZIP-START"
+      ]
+    },
+    {
+      "id": "S23-ZIP-BUFFER",
+      "from": "Active",
+      "event": "input.next",
+      "to": "Active",
+      "guard": "addressed input live; within FIFO/count scope; another FIFO remains empty",
+      "actions": [
+        "append the opaque value to its input FIFO; emit nothing"
+      ],
+      "nextState": "Only that FIFO and its received count change.",
+      "explanation": "Fast arrivals are retained in order. There is no latest-value replacement, source throttling or implicit backpressure.",
+      "obligations": [
+        "S23-ZIP-BUFFER"
+      ]
+    },
+    {
+      "id": "S23-ZIP-EMIT",
+      "from": "Active",
+      "event": "input.next",
+      "to": "Active",
+      "guard": "addressed input live; every FIFO becomes nonempty; no completed FIFO is exhausted",
+      "actions": [
+        "append input value",
+        "remove one oldest value from every FIFO",
+        "emit one fresh tuple in input order"
+      ],
+      "nextState": "Received count advances for arriving input; emitted count advances once; unmatched values remain queued.",
+      "explanation": "Any input can trigger a tuple. Exactly one tuple is emitted per admitted arrival because a stable state has an empty FIFO.",
+      "obligations": [
+        "S23-ZIP-EMIT"
+      ]
+    },
+    {
+      "id": "S23-ZIP-EMIT-LAST",
+      "from": "Active",
+      "event": "input.next",
+      "to": "Closed",
+      "guard": "addressed input live; tuple ready; removing it exhausts a previously completed FIFO",
+      "actions": [
+        "emit one final tuple in input order",
+        "complete downstream",
+        "release remaining live inputs in subscription order"
+      ],
+      "nextState": "Closed and all queued values released.",
+      "explanation": "A completed input can contribute its queued values, but no tuple is possible after its final queued value is consumed.",
+      "obligations": [
+        "S23-ZIP-EMIT-LAST"
+      ]
+    },
+    {
+      "id": "S23-ZIP-COMPLETE-BUFFERED",
+      "from": "Active",
+      "event": "input.complete",
+      "to": "Active",
+      "guard": "addressed input live and its FIFO is nonempty",
+      "actions": [
+        "release this completed input connection only"
+      ],
+      "nextState": "Input becomes non-live; its FIFO remains available for later tuples.",
+      "explanation": "Completion stops future arrivals, not already buffered contributions. Other inputs may still drain the retained values.",
+      "obligations": [
+        "S23-ZIP-COMPLETE-BUFFERED"
+      ]
+    },
+    {
+      "id": "S23-ZIP-COMPLETE-EMPTY",
+      "from": "Active",
+      "event": "input.complete",
+      "to": "Closed",
+      "guard": "addressed input live and its FIFO is empty",
+      "actions": [
+        "complete downstream",
+        "release all remaining live inputs in subscription order"
+      ],
+      "nextState": "Closed; unmatched values in other FIFOs are discarded.",
+      "explanation": "Once one completed input has no remaining value, no future complete tuple can be formed.",
+      "obligations": [
+        "S23-ZIP-COMPLETE-EMPTY"
+      ]
+    },
+    {
+      "id": "S23-ZIP-ERROR",
+      "from": "Active",
+      "event": "input.error",
+      "to": "Closed",
+      "guard": "addressed input live",
+      "actions": [
+        "error downstream with the same opaque payload",
+        "release every remaining live input in subscription order"
+      ],
+      "nextState": "Closed; queued values are discarded without a final tuple.",
+      "explanation": "Any input error terminates the combined result immediately.",
+      "obligations": [
+        "S23-ZIP-ERROR"
+      ]
+    },
+    {
+      "id": "S23-ZIP-CANCEL",
+      "from": "Active",
+      "event": "cancel",
+      "to": "Closed",
+      "guard": "result connection remains active",
+      "actions": [
+        "release remaining live input connections without a notification"
+      ],
+      "nextState": "Closed; queued values are released.",
+      "explanation": "Closing the result connection is silent cancellation, not successful completion.",
+      "obligations": [
+        "S23-ZIP-CANCEL"
+      ]
+    }
+  ]
+}

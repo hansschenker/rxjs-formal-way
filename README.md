@@ -6,9 +6,15 @@ A coherent method for describing, analyzing, documenting, visualizing, and testi
 
 The project grew from stateful transducers, through six-component Mealy analysis, to transition tables, diagrams, BDD and test obligations. Formal machinery supports the explanation; an RxJS user should not need automata theory to understand the final operator description.
 
-## Current checkpoint: Session 22 — window policies and source-triggered latest values
+## Current checkpoint: Session 23 — final positional joins
 
-Session 22 accepted **windowCount, windowTime, windowToggle, windowWhen and withLatestFrom** within their documented scopes. The original **19 November 2026** reservation was continued and completed on **20 November 2026 Europe/Zurich**. **110/113 exports are accepted, three remain pending, and there are no carryovers.** Main CI and independent read-only verification passed **1,728 named tests**, **12,316 Session 22 comparison executions**, strict types with **69 Session 22 negative assertions**, and **1,222 ordinary + 3 specialized committed projections**. Fifteen configured examples provide **125 Session 22 projections**; 83 were newly added during the continuation. Exact revisions, evidence limits and acceptance are recorded in the [evidence ledger](evidence/SESSION-22.md) and [inventory](planning/operator-generation.json).
+The final catalogue session covers **zip, zipAll and zipWith** on **20 November 2026 Europe/Zurich**, following the user's explicit date exception after Session 22 closed. The [separate numbered reservation](planning/sessions/2026-11-20-session-23.json) preserves the earlier closed records. All three models and inspection indexes are integrated. Complete local generation/check passed **1,845 tests**, **27,168 Session 23 comparison executions**, **47 negative TypeScript assertions**, and **1,297 ordinary + 3 specialized projections**. A catalogue check confirms all 113 native exports have index and model/runtime evidence coverage. Committed CI and final acceptance remain pending in the [Session 23 evidence ledger](evidence/SESSION-23.md). The accepted [inventory](planning/operator-generation.json) remains **110/113** until the final three pass all gates.
+
+Start with the [teaching guide](docs/SESSION-23-ZIP-FAMILY.md), [scenario map](docs/SESSION-23-SCENARIOS.md), or inspection indexes for [zip](operators/zip-index.md), [zipAll](operators/zipAll-index.md), and [zipWith](operators/zipWith-index.md). This catalogue's zip entry is the deprecated pipeable export from rxjs/operators. ZipAll connects the collected inner streams only after outer completion; the direct exports connect source and supplied inputs when the result is subscribed.
+
+## Previous checkpoint: Session 22 — window policies and source-triggered latest values
+
+Session 22 accepted **windowCount, windowTime, windowToggle, windowWhen and withLatestFrom** within their documented scopes. The original **19 November 2026** reservation was continued and completed on **20 November 2026 Europe/Zurich**. **At that checkpoint, 110/113 exports were accepted, three remained pending, and there were no carryovers.** Main CI and independent read-only verification passed **1,728 named tests**, **12,316 Session 22 comparison executions**, strict types with **69 Session 22 negative assertions**, and **1,222 ordinary + 3 specialized committed projections**. Fifteen configured examples provide **125 Session 22 projections**; 83 were newly added during the continuation. Exact revisions, evidence limits and acceptance are recorded in the [evidence ledger](evidence/SESSION-22.md) and [inventory](planning/operator-generation.json).
 
 Read the [teaching guide](docs/SESSION-22-WINDOW-POLICIES.md), [scenario map](docs/SESSION-22-SCENARIOS.md), or inspection indexes for [windowCount](operators/windowCount-index.md), [windowTime](operators/windowTime-index.md), [windowToggle](operators/windowToggle-index.md), [windowWhen](operators/windowWhen-index.md), and [withLatestFrom](operators/withLatestFrom-index.md). The [original record](planning/sessions/2026-11-19.json) and [continuation](planning/sessions/2026-11-20.json) represent the same Session 22.
 
@@ -242,13 +248,15 @@ Keep terminal exclusivity, post-terminal silence, cancellation distinct from com
 
 Earlier repositories remain provenance, not material to delete: rxjs-mealy-analysis, rxjs-operator-mealy-analysis, rxjs-operator-mealy-tuples, rxjs-mealy-to-testcase, bdd-to-mealy, rxjs-comega-type-notation-and-mealy-machine-tuples, and the Mealy-to-documentation experiments.
 
-Continue according to the live queue and dated session log. Unfinished names carry first; the ordinary plan permits one session per local date and at most five distinct names per session. Session 21's specific user-authorized date exception is recorded above. Both dated Session 22 records are closed, including the [20 November continuation](planning/sessions/2026-11-20.json). The remaining exports are **zip, zipAll and zipWith**, ordinarily eligible on **21 November 2026 Europe/Zurich**. Full catalogue migration, a general effect interpreter, dependent proofs and interactive visualization remain later work. The migration map preserves the original broader plan.
+Continue according to the live queue and dated session record. The user explicitly authorized the final Session 23 on 20 November after Session 22 closed, superseding the ordinary 21 November start for this session only. Exactly the three remaining exports are reserved in the [Session 23 record](planning/sessions/2026-11-20-session-23.json). Once the entire inventory is accepted within its documented scopes, catalogue-generation work stops and its recurring task is paused. A general effect interpreter, dependent proofs, broader overload coverage and interactive visualization remain later work. The migration map preserves the original broader plan.
 
 ## Collaboration
 
 **GPT-6 (OpenAI)** is the main AI contributor to Session 3's
 identity-source flattening, shared replay models and independent runtime
 tests. Historical contributor credits remain intact.
+
+**GPT-6 Astra Pro (OpenAI)** is the main AI contributor to completion of Sessions 22–23: canonical models, independent runtime comparisons, generated inspection pages and recorded verification, under Hans Schenker’s direction.
 
 Hans Schenker directs the research and teaching goals. The initial consolidation credits **GPT-5.6 Sol (OpenAI)** in project history. **GPT-6 Astra Pro** is the main contributor to the source review, composition/ownership guidance, regression harness and M01/M02/Session-2 implementations. The supplied Gemini discussion is credited as inspiration, not authoritative implementation evidence.
 

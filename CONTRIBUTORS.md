@@ -52,3 +52,10 @@ When artifacts are migrated into this repository, preserve source attribution in
 ## Session 4 — comparison memory, Set flush, adjacent pairs and prefix execution
 
 - **GPT-6 (OpenAI)** — main contributor to the five source-reviewed reference models, shared pure infrastructure, guarded rules, Cω and six-tuple behavior analysis, independent RxJS tests and bounded comparisons, deterministic views and CI/evidence records under Hans Schenker's project direction. The Git commit trailers record AI assistance without implying a verified GitHub account.
+
+## Sessions 22–23: final window and zip families
+
+- **Hans Schenker** — project direction, teaching goals, scope and explicit session-date decisions.
+- **GPT-6 Astra Pro (OpenAI)** — main AI contributor to completing the window-family batch and the final three positional-join exports, including pure canonical models, independent native comparisons, generated inspection indexes, scope documentation and CI evidence.
+
+These session commits use `Co-Authored-By: ChatGPT <chatgpt@openai.com>` to record AI assistance. Earlier contributor credits and provenance remain intact.

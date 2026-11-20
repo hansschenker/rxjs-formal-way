@@ -1,0 +1,244 @@
+{
+  "status": "finished-input",
+  "consumed": 4,
+  "state": {
+    "phase": "Closed",
+    "reason": "cancel"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-cancel-session23-example",
+      "ruleId": "S23-ZIPWITH-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [],
+          [],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          0,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input:0",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input:1",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input:2",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-cancel-session23-example",
+      "ruleId": "S23-ZIPWITH-BUFFER",
+      "event": {
+        "type": "input.next",
+        "index": 0,
+        "value": {
+          "pending": "A"
+        }
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [],
+          [],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          0,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [
+            {
+              "pending": "A"
+            }
+          ],
+          [],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          1,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-cancel-session23-example",
+      "ruleId": "S23-ZIPWITH-BUFFER",
+      "event": {
+        "type": "input.next",
+        "index": 1
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [
+            {
+              "pending": "A"
+            }
+          ],
+          [],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          1,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [
+            {
+              "pending": "A"
+            }
+          ],
+          [
+            null
+          ],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          1,
+          1,
+          0
+        ],
+        "emitted": 0
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-cancel-session23-example",
+      "ruleId": "S23-ZIPWITH-CANCEL",
+      "event": {
+        "type": "cancel"
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [
+            {
+              "pending": "A"
+            }
+          ],
+          [
+            null
+          ],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          1,
+          1,
+          0
+        ],
+        "emitted": 0
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "cancel"
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input:0",
+            "generation": 0
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input:1",
+            "generation": 0
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input:2",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

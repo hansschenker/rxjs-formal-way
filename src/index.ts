@@ -193,3 +193,10 @@ export { createWindowWhenModel, runWindowWhenTrace, windowWhenExample,
   windowWhenCompleteExample, windowWhenCancelExample } from './models/session22-windowWhen.js';
 export type { WindowWhenParameters, WindowWhenToken, WindowWhenRecord, WindowWhenConsumer,
   WindowWhenMemory, WindowWhenState, WindowWhenEvent, WindowWhenModel } from './models/session22-windowWhen.js';
+
+export { createZipFamilyModel, zipInputRef } from './models/session23-zip-common.js';
+export type { ZipOperator, ZipParameters, ZipMemory, ZipState, ZipEvent, ZipModel } from './models/session23-zip-common.js';
+export { createZipModel, zipExample, zipDrainExample, zipCancelExample } from './models/session23-zip.js';
+export { createZipWithModel, zipWithExample, zipWithDrainExample, zipWithCancelExample } from './models/session23-zipWith.js';
+export { createZipAllModel, zipAllExample, zipAllEmptyExample, zipAllCancelExample } from './models/session23-zipAll.js';
+export type { ZipAllParameters, ZipAllSlot, ZipAllState, ZipAllEvent, ZipAllModel } from './models/session23-zipAll.js';
