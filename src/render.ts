@@ -13,7 +13,7 @@ export function renderTable<P>(manifest: OperatorManifest<P>): string {
 export function renderBdd<P>(manifest: OperatorManifest<P>): string {
   const inputs = new Map(manifest.metadata.inputs.map(i => [i.type, i.description]));
   const scenarios = manifest.metadata.evidence.scenarios;
-  return header(`${manifest.metadata.id}: ${scenarios ? 'Rule BDD' : 'Convertible BDD'}`) +
+  return header(`${manifest.metadata.id}: ${scenarios ? 'Rule BDD (Convertible BDD)' : 'Convertible BDD'}`) +
     'Restricted project profile: And denotes next state, not general Gherkin conjunction.\n\n' +
     (scenarios ? `These are guarded transition rules, not end-to-end executions. Read the [concrete Scenario BDD](../${scenarios}) for complete histories and their test witnesses.\n\n` : '') +
     manifest.rules.map(r => `## ${r.id}\n\n\`\`\`text\nGiven ${r.from} and ${r.guard}\nWhen ${inputs.get(r.event)}\n${(r.actions.length ? r.actions : ['emit no action']).map(a => `Then ${a}`).join('\n')}\nAnd ${r.nextState}\n\`\`\`\n`).join('\n');
