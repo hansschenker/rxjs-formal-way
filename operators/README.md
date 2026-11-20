@@ -8,6 +8,16 @@ The repository-wide method is documented in [RxJS Operator Inspection Workflow](
 
 Each configured profile has one canonical TypeScript rule set and eight generated views. Read the plain-language page first; use the milestone guide for assumptions and verification.
 
+## Session 23 inspection pages
+
+| Export | Behavior to inspect | Inspection index |
+|---|---|---|
+| zip | Deprecated pipeable entry; source-first acquisition and FIFO pairing by position | [zip](zip-index.md) |
+| zipAll | Collect inner descriptions until outer completes, then connect and pair their queued values | [zipAll](zipAll-index.md) |
+| zipWith | Pipeable FIFO tuple policy with independent evidence for the nondeprecated export | [zipWith](zipWith-index.md) |
+
+The [Session 23 guide](../docs/SESSION-23-ZIP-FAMILY.md), [scenario map](../docs/SESSION-23-SCENARIOS.md) and [evidence ledger](../evidence/SESSION-23.md) link the three scoped definitions and actual checks. Nine configured histories provide 75 projections. The direct exports share a canonical FIFO kernel, while zipAll adds its collection barrier and distinct teardown order.
+
 ## Session 22 inspection pages
 
 | Export | Behavior to inspect | Inspection index |

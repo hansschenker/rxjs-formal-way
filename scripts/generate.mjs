@@ -122,6 +122,10 @@ import { createWindowToggleModel, runWindowToggleTrace, windowToggleExample,
 import { createWindowWhenModel, runWindowWhenTrace, windowWhenExample,
   windowWhenCompleteExample, windowWhenCancelExample } from '../dist/index.js';
 
+import { createZipModel, zipExample, zipDrainExample, zipCancelExample,
+  createZipWithModel, zipWithExample, zipWithDrainExample, zipWithCancelExample,
+  createZipAllModel, zipAllExample, zipAllEmptyExample, zipAllCancelExample } from '../dist/index.js';
+
 const canonicalModelPaths = {
   take:'src/models/take.ts', map:'src/models/map.ts', filter:'src/models/filter.ts', scan:'src/models/scan.ts',
   debounceTime:'src/models/debounceTime.ts', switchMap:'src/models/flatten.ts', mergeMap:'src/models/flatten.ts',
@@ -176,6 +180,9 @@ const canonicalModelPaths = {
   windowTime:'src/models/session22-windowTime.ts',
   windowToggle:'src/models/session22-windowToggle.ts',
   windowWhen:'src/models/session22-windowWhen.ts',
+  zip:'src/models/session23-zip-common.ts',
+  zipAll:'src/models/session23-zipAll.ts',
+  zipWith:'src/models/session23-zip-common.ts',
 };
 
 // Examples supply callback outcomes and clock readings; generation executes no external effects.
@@ -321,6 +328,15 @@ const examples = [
   ['windowWhen', createWindowWhenModel(), windowWhenExample, 'windowWhen-session22-example', runWindowWhenTrace],
   ['windowWhen-complete', createWindowWhenModel(), windowWhenCompleteExample, 'windowWhen-complete-session22-example', runWindowWhenTrace],
   ['windowWhen-cancel', createWindowWhenModel(), windowWhenCancelExample, 'windowWhen-cancel-session22-example', runWindowWhenTrace],
+  ['zip', createZipModel(3, 8), zipExample, 'zip-session23-example'],
+  ['zip-drain', createZipModel(3, 8), zipDrainExample, 'zip-drain-session23-example'],
+  ['zip-cancel', createZipModel(3, 8), zipCancelExample, 'zip-cancel-session23-example'],
+  ['zipAll', createZipAllModel(), zipAllExample, 'zipAll-session23-example'],
+  ['zipAll-empty', createZipAllModel(), zipAllEmptyExample, 'zipAll-empty-session23-example'],
+  ['zipAll-cancel', createZipAllModel(), zipAllCancelExample, 'zipAll-cancel-session23-example'],
+  ['zipWith', createZipWithModel(3, 8), zipWithExample, 'zipWith-session23-example'],
+  ['zipWith-drain', createZipWithModel(3, 8), zipWithDrainExample, 'zipWith-drain-session23-example'],
+  ['zipWith-cancel', createZipWithModel(3, 8), zipWithCancelExample, 'zipWith-cancel-session23-example'],
 ];
 const json = value => JSON.stringify(value, null, 2) + '\n';
 const files = new Map();

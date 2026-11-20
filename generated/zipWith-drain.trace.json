@@ -1,0 +1,558 @@
+{
+  "status": "finished-input",
+  "consumed": 9,
+  "state": {
+    "phase": "Closed",
+    "reason": "exhausted"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-drain-session23-example",
+      "ruleId": "S23-ZIPWITH-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [],
+          [],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          0,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input:0",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input:1",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "input:2",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-drain-session23-example",
+      "ruleId": "S23-ZIPWITH-BUFFER",
+      "event": {
+        "type": "input.next",
+        "index": 0,
+        "value": "A1"
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [],
+          [],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          0,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A1"
+          ],
+          [],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          1,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-drain-session23-example",
+      "ruleId": "S23-ZIPWITH-BUFFER",
+      "event": {
+        "type": "input.next",
+        "index": 0,
+        "value": "A2"
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A1"
+          ],
+          [],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          1,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A1",
+            "A2"
+          ],
+          [],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          2,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-drain-session23-example",
+      "ruleId": "S23-ZIPWITH-COMPLETE-BUFFERED",
+      "event": {
+        "type": "input.complete",
+        "index": 0
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A1",
+            "A2"
+          ],
+          [],
+          []
+        ],
+        "live": [
+          true,
+          true,
+          true
+        ],
+        "received": [
+          2,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A1",
+            "A2"
+          ],
+          [],
+          []
+        ],
+        "live": [
+          false,
+          true,
+          true
+        ],
+        "received": [
+          2,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input:0",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-drain-session23-example",
+      "ruleId": "S23-ZIPWITH-BUFFER",
+      "event": {
+        "type": "input.next",
+        "index": 1,
+        "value": "B1"
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A1",
+            "A2"
+          ],
+          [],
+          []
+        ],
+        "live": [
+          false,
+          true,
+          true
+        ],
+        "received": [
+          2,
+          0,
+          0
+        ],
+        "emitted": 0
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A1",
+            "A2"
+          ],
+          [
+            "B1"
+          ],
+          []
+        ],
+        "live": [
+          false,
+          true,
+          true
+        ],
+        "received": [
+          2,
+          1,
+          0
+        ],
+        "emitted": 0
+      },
+      "actions": []
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-drain-session23-example",
+      "ruleId": "S23-ZIPWITH-EMIT",
+      "event": {
+        "type": "input.next",
+        "index": 2,
+        "value": "C1"
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A1",
+            "A2"
+          ],
+          [
+            "B1"
+          ],
+          []
+        ],
+        "live": [
+          false,
+          true,
+          true
+        ],
+        "received": [
+          2,
+          1,
+          0
+        ],
+        "emitted": 0
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A2"
+          ],
+          [],
+          []
+        ],
+        "live": [
+          false,
+          true,
+          true
+        ],
+        "received": [
+          2,
+          1,
+          1
+        ],
+        "emitted": 1
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              "A1",
+              "B1",
+              "C1"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-drain-session23-example",
+      "ruleId": "S23-ZIPWITH-BUFFER",
+      "event": {
+        "type": "input.next",
+        "index": 1,
+        "value": "B2"
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A2"
+          ],
+          [],
+          []
+        ],
+        "live": [
+          false,
+          true,
+          true
+        ],
+        "received": [
+          2,
+          1,
+          1
+        ],
+        "emitted": 1
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A2"
+          ],
+          [
+            "B2"
+          ],
+          []
+        ],
+        "live": [
+          false,
+          true,
+          true
+        ],
+        "received": [
+          2,
+          2,
+          1
+        ],
+        "emitted": 1
+      },
+      "actions": []
+    },
+    {
+      "sequence": 7,
+      "time": 7,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-drain-session23-example",
+      "ruleId": "S23-ZIPWITH-COMPLETE-BUFFERED",
+      "event": {
+        "type": "input.complete",
+        "index": 1
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A2"
+          ],
+          [
+            "B2"
+          ],
+          []
+        ],
+        "live": [
+          false,
+          true,
+          true
+        ],
+        "received": [
+          2,
+          2,
+          1
+        ],
+        "emitted": 1
+      },
+      "after": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A2"
+          ],
+          [
+            "B2"
+          ],
+          []
+        ],
+        "live": [
+          false,
+          false,
+          true
+        ],
+        "received": [
+          2,
+          2,
+          1
+        ],
+        "emitted": 1
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input:1",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 8,
+      "modelId": "zipWith-3-fifo-8",
+      "executionId": "zipWith-drain-session23-example",
+      "ruleId": "S23-ZIPWITH-EMIT-LAST",
+      "event": {
+        "type": "input.next",
+        "index": 2,
+        "value": "C2"
+      },
+      "before": {
+        "phase": "Active",
+        "queues": [
+          [
+            "A2"
+          ],
+          [
+            "B2"
+          ],
+          []
+        ],
+        "live": [
+          false,
+          false,
+          true
+        ],
+        "received": [
+          2,
+          2,
+          1
+        ],
+        "emitted": 1
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "exhausted"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              "A2",
+              "B2",
+              "C2"
+            ]
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "input:2",
+            "generation": 0
+          }
+        }
+      ]
+    }
+  ]
+}

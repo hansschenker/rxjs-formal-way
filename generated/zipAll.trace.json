@@ -1,0 +1,437 @@
+{
+  "status": "finished-input",
+  "consumed": 9,
+  "state": {
+    "phase": "Closed",
+    "reason": "complete"
+  },
+  "steps": [
+    {
+      "sequence": 0,
+      "time": 0,
+      "modelId": "zipAll-deferred-fifo-8-8",
+      "executionId": "zipAll-session23-example",
+      "ruleId": "S23-ZIPALL-START",
+      "event": {
+        "type": "subscribe"
+      },
+      "before": {
+        "phase": "Unsubscribed"
+      },
+      "after": {
+        "phase": "Collecting",
+        "sources": []
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 1,
+      "time": 1,
+      "modelId": "zipAll-deferred-fifo-8-8",
+      "executionId": "zipAll-session23-example",
+      "ruleId": "S23-ZIPALL-COLLECT",
+      "event": {
+        "type": "outer.next",
+        "value": "letters"
+      },
+      "before": {
+        "phase": "Collecting",
+        "sources": []
+      },
+      "after": {
+        "phase": "Collecting",
+        "sources": [
+          "letters"
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 2,
+      "time": 2,
+      "modelId": "zipAll-deferred-fifo-8-8",
+      "executionId": "zipAll-session23-example",
+      "ruleId": "S23-ZIPALL-COLLECT",
+      "event": {
+        "type": "outer.next",
+        "value": "digits"
+      },
+      "before": {
+        "phase": "Collecting",
+        "sources": [
+          "letters"
+        ]
+      },
+      "after": {
+        "phase": "Collecting",
+        "sources": [
+          "letters",
+          "digits"
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 3,
+      "time": 3,
+      "modelId": "zipAll-deferred-fifo-8-8",
+      "executionId": "zipAll-session23-example",
+      "ruleId": "S23-ZIPALL-OUTER-JOIN",
+      "event": {
+        "type": "outer.complete"
+      },
+      "before": {
+        "phase": "Collecting",
+        "sources": [
+          "letters",
+          "digits"
+        ]
+      },
+      "after": {
+        "phase": "Joining",
+        "emitted": 0,
+        "slots": [
+          {
+            "source": "letters",
+            "queue": [],
+            "live": true,
+            "received": 0
+          },
+          {
+            "source": "digits",
+            "queue": [],
+            "live": true,
+            "received": 0
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        },
+        {
+          "type": "subscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "outer",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 4,
+      "time": 4,
+      "modelId": "zipAll-deferred-fifo-8-8",
+      "executionId": "zipAll-session23-example",
+      "ruleId": "S23-ZIPALL-INNER-BUFFER",
+      "event": {
+        "type": "inner.next",
+        "index": 0,
+        "value": "A"
+      },
+      "before": {
+        "phase": "Joining",
+        "emitted": 0,
+        "slots": [
+          {
+            "source": "letters",
+            "queue": [],
+            "live": true,
+            "received": 0
+          },
+          {
+            "source": "digits",
+            "queue": [],
+            "live": true,
+            "received": 0
+          }
+        ]
+      },
+      "after": {
+        "phase": "Joining",
+        "emitted": 0,
+        "slots": [
+          {
+            "source": "letters",
+            "queue": [
+              "A"
+            ],
+            "live": true,
+            "received": 1
+          },
+          {
+            "source": "digits",
+            "queue": [],
+            "live": true,
+            "received": 0
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 5,
+      "time": 5,
+      "modelId": "zipAll-deferred-fifo-8-8",
+      "executionId": "zipAll-session23-example",
+      "ruleId": "S23-ZIPALL-INNER-BUFFER",
+      "event": {
+        "type": "inner.next",
+        "index": 0,
+        "value": "B"
+      },
+      "before": {
+        "phase": "Joining",
+        "emitted": 0,
+        "slots": [
+          {
+            "source": "letters",
+            "queue": [
+              "A"
+            ],
+            "live": true,
+            "received": 1
+          },
+          {
+            "source": "digits",
+            "queue": [],
+            "live": true,
+            "received": 0
+          }
+        ]
+      },
+      "after": {
+        "phase": "Joining",
+        "emitted": 0,
+        "slots": [
+          {
+            "source": "letters",
+            "queue": [
+              "A",
+              "B"
+            ],
+            "live": true,
+            "received": 2
+          },
+          {
+            "source": "digits",
+            "queue": [],
+            "live": true,
+            "received": 0
+          }
+        ]
+      },
+      "actions": []
+    },
+    {
+      "sequence": 6,
+      "time": 6,
+      "modelId": "zipAll-deferred-fifo-8-8",
+      "executionId": "zipAll-session23-example",
+      "ruleId": "S23-ZIPALL-INNER-COMPLETE-BUFFERED",
+      "event": {
+        "type": "inner.complete",
+        "index": 0
+      },
+      "before": {
+        "phase": "Joining",
+        "emitted": 0,
+        "slots": [
+          {
+            "source": "letters",
+            "queue": [
+              "A",
+              "B"
+            ],
+            "live": true,
+            "received": 2
+          },
+          {
+            "source": "digits",
+            "queue": [],
+            "live": true,
+            "received": 0
+          }
+        ]
+      },
+      "after": {
+        "phase": "Joining",
+        "emitted": 0,
+        "slots": [
+          {
+            "source": "letters",
+            "queue": [
+              "A",
+              "B"
+            ],
+            "live": false,
+            "received": 2
+          },
+          {
+            "source": "digits",
+            "queue": [],
+            "live": true,
+            "received": 0
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 0
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 7,
+      "time": 7,
+      "modelId": "zipAll-deferred-fifo-8-8",
+      "executionId": "zipAll-session23-example",
+      "ruleId": "S23-ZIPALL-INNER-EMIT",
+      "event": {
+        "type": "inner.next",
+        "index": 1,
+        "value": "1"
+      },
+      "before": {
+        "phase": "Joining",
+        "emitted": 0,
+        "slots": [
+          {
+            "source": "letters",
+            "queue": [
+              "A",
+              "B"
+            ],
+            "live": false,
+            "received": 2
+          },
+          {
+            "source": "digits",
+            "queue": [],
+            "live": true,
+            "received": 0
+          }
+        ]
+      },
+      "after": {
+        "phase": "Joining",
+        "emitted": 1,
+        "slots": [
+          {
+            "source": "letters",
+            "queue": [
+              "B"
+            ],
+            "live": false,
+            "received": 2
+          },
+          {
+            "source": "digits",
+            "queue": [],
+            "live": true,
+            "received": 1
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              "A",
+              "1"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "sequence": 8,
+      "time": 8,
+      "modelId": "zipAll-deferred-fifo-8-8",
+      "executionId": "zipAll-session23-example",
+      "ruleId": "S23-ZIPALL-INNER-DRAIN",
+      "event": {
+        "type": "inner.next",
+        "index": 1,
+        "value": "2"
+      },
+      "before": {
+        "phase": "Joining",
+        "emitted": 1,
+        "slots": [
+          {
+            "source": "letters",
+            "queue": [
+              "B"
+            ],
+            "live": false,
+            "received": 2
+          },
+          {
+            "source": "digits",
+            "queue": [],
+            "live": true,
+            "received": 1
+          }
+        ]
+      },
+      "after": {
+        "phase": "Closed",
+        "reason": "complete"
+      },
+      "actions": [
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "N",
+            "value": [
+              "B",
+              "2"
+            ]
+          }
+        },
+        {
+          "type": "unsubscribe",
+          "resource": {
+            "id": "inner",
+            "generation": 1
+          }
+        },
+        {
+          "type": "notify",
+          "target": "downstream",
+          "notification": {
+            "kind": "C"
+          }
+        }
+      ]
+    }
+  ]
+}
