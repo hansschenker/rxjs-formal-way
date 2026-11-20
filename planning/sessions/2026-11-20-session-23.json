@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "sessionNumber": 23,
+  "date": "2026-11-20",
+  "timezone": "Europe/Zurich",
+  "status": "started",
+  "startedAt": "2026-11-20T07:17:04+01:00",
+  "startingCommit": "d739fcfad8c054065b4cc22fa7224fb49699b1cd",
+  "selectedNames": [
+    "zip",
+    "zipAll",
+    "zipWith"
+  ],
+  "workedNames": [],
+  "completedNames": [],
+  "carryovers": [
+    "zip",
+    "zipAll",
+    "zipWith"
+  ],
+  "checks": {
+    "syntax": "Pending Session23 implementation and complete verification.",
+    "types": "Pending Session23 implementation and complete verification.",
+    "model": "Pending Session23 implementation and complete verification.",
+    "runtime": "Pending Session23 implementation and complete verification.",
+    "generated": "Pending Session23 implementation and complete verification.",
+    "ci": "Pending Session23 implementation and complete verification."
+  },
+  "blockers": [],
+  "authorization": {
+    "instruction": "lets do this final session 23 today as planned on 20.11.2026 Zurich Time",
+    "exception": "The user explicitly authorized Session23 on 20 November after Session22 closed that day. This supersedes the recorded ordinary 21 November start for this session only. The maximum-five-export limit and all acceptance gates remain in force; exactly the final three pending names are selected.",
+    "priorSessionRecord": "planning/sessions/2026-11-20.json"
+  },
+  "notes": [
+    "Consulted live main, the daily plan, roadmap and accepted inventory: 110/113 accepted, three pending and zero Session22 carryovers.",
+    "Preserve both closed Session22 records. This separate numbered record reserves the explicitly requested final Session23.",
+    "The inventory follows src/operators/index.ts: zip is the deprecated pipeable export, not the static creation function. Compare the correct exported operator against native RxJS.",
+    "Require independent native observations, complete generated inspection indexes and committed read-only drift verification before acceptance.",
+    "After all 113 exports are accepted within their documented scopes, stop catalogue-generation work and pause its recurring automation if present."
+  ],
+  "nextQueue": []
+}
