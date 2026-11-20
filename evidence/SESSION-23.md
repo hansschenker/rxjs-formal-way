@@ -1,6 +1,6 @@
 # Session 23 — Final zip-family exports
 
-**Date:** 20 November 2026, Europe/Zurich. **Status:** complete local integration passed; committed implementation/main CI and independent read-only acceptance pending. Exactly **zip, zipAll and zipWith** are selected. The accepted inventory remains **110/113** until all three pass the complete acceptance gates.
+**Date:** 20 November 2026, Europe/Zurich. **Status:** complete implementation PR and main CI passed; independent read-only verification and final acceptance pending. Exactly **zip, zipAll and zipWith** are selected. The accepted inventory remains **110/113** until all three pass the complete acceptance gates.
 
 ## Reservation and authorization
 
@@ -63,8 +63,14 @@ Generated histories are predictions, not native recordings. Concrete rule witnes
 
 The **113-export catalogue** concerns the pinned pipeable operator export index and the declared reference profiles. It is not the whole RxJS public API, every overload, a replacement runtime, or a universal interpreter. Broader pipeline verification remains a distinct project goal.
 
-## Committed verification and closure pending
+## Committed implementation verification
 
-Complete implementation/main CI, separate read-only verification with generation/publication skipped, exact checkout/tree provenance and final inventory updates remain pending. Local success is not represented as a committed acceptance result.
+The complete implementation and all 75 new projections were committed at `cf8d58b91bd9a02d4047b8b52071738c3e3744c0` in [PR #48](https://github.com/hansschenker/rxjs-formal-way/pull/48). [Implementation PR CI 44688399407](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44688399407), job `136128101122`, passed on **Node v22.16.0**: syntax, strict types, **1,845 tests passed, zero failures/skips**, all **27,168** Session 23 comparisons, and **1,297 ordinary + 3 specialized committed projections** drift-verified. Generation and publication were skipped. The actual synthetic checkout in the full retrieved log was `21fdbc087bac5d97520f82e21a167b34aca02594`. Independently fetched head and checkout Git objects have identical tree `78f1e2f39887b473d7fe2402b65f6be8d1ff968b`.
 
-After those gates pass, the inventory will contain **113/113 exports accepted within documented scopes**, with no pending names or carryovers. The existing recurring generation task explicitly instructs itself to pause at that point; it remains enabled until acceptance is complete.
+PR #48 merged as `4281e314656fe56c5638b287c87c3be07de29618`. [Main CI 44688585605](https://github.com/hansschenker/rxjs-formal-way/actions/runs/44688585605), job `136128700055`, checked out that exact merge and passed the same complete results on **Node v22.16.0**. Generation before checking and the publication step succeeded. Regeneration produced no additional artifact commit: all projections were already committed, and live main remained `4281e314656fe56c5638b287c87c3be07de29618` after the completed successful run. Both jobs' full logs were retrieved and actual checkout, test totals, comparison markers and projection counts checked.
+
+## Independent read-only verification and closure pending
+
+A separate evidence-only PR records these implementation results and supplies the independent read-only acceptance gate. Its workflow must verify the committed artifacts with generation/publication skipped; the actual checkout and head Git trees must be fetched independently and compared before final acceptance.
+
+After that gate passes, the inventory will contain **113/113 exports accepted within documented scopes**, with no pending names or carryovers. The existing recurring generation task explicitly instructs itself to pause at that point; it remains enabled until acceptance is complete.
